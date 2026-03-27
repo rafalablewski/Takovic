@@ -3,100 +3,260 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "@/components/layout/sidebar-context";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  LayoutDashboard,
+  SlidersHorizontal,
+  Star,
+  PieChart,
+  Newspaper,
+  Search,
+  GitCompareArrows,
+  Calculator,
+  Settings,
+  HelpCircle,
+  ChevronLeft,
+  ChevronRight,
+  TrendingUp,
+} from "lucide-react";
 
-const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboardIcon },
-  { name: "Screener", href: "/screener", icon: FilterIcon },
-  { name: "Watchlist", href: "/watchlist", icon: StarIcon },
-  { name: "Portfolio", href: "/portfolio", icon: PieChartIcon },
-  { name: "News", href: "/news", icon: NewspaperIcon },
+const mainNavigation = [
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Screener", href: "/screener", icon: SlidersHorizontal },
+  { name: "Watchlist", href: "/watchlist", icon: Star },
+  { name: "Portfolio", href: "/portfolio", icon: PieChart },
+  { name: "News", href: "/news", icon: Newspaper },
+];
+
+const analysisTools = [
+  { name: "Stock Lookup", href: "/lookup", icon: Search },
+  { name: "Compare Stocks", href: "/compare", icon: GitCompareArrows },
+  { name: "Valuation", href: "/valuation", icon: Calculator },
+];
+
+const secondaryLinks = [
+  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Help", href: "/help", icon: HelpCircle },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { collapsed, toggle } = useSidebar();
+
+  function isActive(href: string) {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(href + "/");
+  }
 
   return (
-    <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-      <div className="flex flex-1 flex-col border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+    <TooltipProvider delayDuration={0}>
+      <aside
+        className={cn(
+          "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
+          "border-r border-border bg-background transition-all duration-200 ease-in-out",
+          collapsed ? "lg:w-[52px]" : "lg:w-[240px]"
+        )}
+      >
         {/* Logo */}
-        <div className="flex h-16 items-center gap-2 border-b border-zinc-200 px-6 dark:border-zinc-800">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600" />
-          <span className="text-lg font-bold tracking-tight">Takovic</span>
+        <div
+          className={cn(
+            "flex h-14 shrink-0 items-center gap-2.5 px-3",
+            collapsed && "justify-center px-0"
+          )}
+        >
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground">
+            <TrendingUp className="h-3.5 w-3.5 text-background" />
+          </div>
+          {!collapsed && (
+            <span className="text-[15px] font-semibold tracking-tight text-foreground">
+              Takovic
+            </span>
+          )}
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col gap-1 p-4">
-          {navigation.map((item) => {
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href));
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
+        <ScrollArea className="flex-1 px-2">
+          <div className="flex flex-col gap-6 py-2">
+            {/* Main */}
+            <NavSection label="Navigation" collapsed={collapsed}>
+              {mainNavigation.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.name}
+                  active={isActive(item.href)}
+                  collapsed={collapsed}
+                />
+              ))}
+            </NavSection>
+
+            {/* Analysis */}
+            <NavSection label="Analysis" collapsed={collapsed}>
+              {analysisTools.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.name}
+                  active={isActive(item.href)}
+                  collapsed={collapsed}
+                />
+              ))}
+            </NavSection>
+
+            {/* Secondary */}
+            <NavSection label="Account" collapsed={collapsed}>
+              {secondaryLinks.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.name}
+                  active={isActive(item.href)}
+                  collapsed={collapsed}
+                />
+              ))}
+            </NavSection>
+          </div>
+        </ScrollArea>
+
+        {/* Bottom: profile + collapse */}
+        <div className="mt-auto border-t border-border px-2 py-3">
+          {/* Profile */}
+          <Link
+            href="/settings"
+            className={cn(
+              "flex items-center gap-2.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent",
+              collapsed && "justify-center px-0"
+            )}
+          >
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background">
+              RA
+            </div>
+            {!collapsed && (
+              <div className="flex flex-1 items-center justify-between overflow-hidden">
+                <div className="flex flex-col">
+                  <span className="truncate text-[13px] font-medium leading-tight text-foreground">
+                    Rafal
+                  </span>
+                  <span className="text-[10px] font-medium leading-tight text-muted-foreground">
+                    Professional
+                  </span>
+                </div>
+              </div>
+            )}
+          </Link>
+
+          {/* Collapse toggle */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={toggle}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                    : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+                  "mt-1.5 flex h-7 w-full items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+                  collapsed && "w-full"
                 )}
               >
-                <item.icon className="h-5 w-5" />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Footer */}
-        <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
-          <p className="text-xs text-zinc-500">
-            Takovic v0.1.0
-          </p>
+                {collapsed ? (
+                  <ChevronRight className="h-3.5 w-3.5" />
+                ) : (
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="text-xs">
+              {collapsed ? "Expand" : "Collapse"}
+            </TooltipContent>
+          </Tooltip>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </TooltipProvider>
   );
 }
 
-// Simple inline SVG icons (replace with lucide-react later)
-function LayoutDashboardIcon({ className }: { className?: string }) {
+/* ------------------------------------------------------------------ */
+/*  NavSection                                                         */
+/* ------------------------------------------------------------------ */
+
+function NavSection({
+  label,
+  collapsed,
+  children,
+}: {
+  label: string;
+  collapsed: boolean;
+  children: React.ReactNode;
+}) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />
-    </svg>
+    <div className="flex flex-col gap-0.5">
+      {!collapsed && (
+        <span className="mb-1 px-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/70">
+          {label}
+        </span>
+      )}
+      {children}
+    </div>
   );
 }
 
-function FilterIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
-    </svg>
-  );
-}
+/* ------------------------------------------------------------------ */
+/*  NavItem                                                            */
+/* ------------------------------------------------------------------ */
 
-function StarIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-    </svg>
+function NavItem({
+  href,
+  icon: Icon,
+  label,
+  active,
+  collapsed,
+}: {
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  active: boolean;
+  collapsed: boolean;
+}) {
+  const content = (
+    <Link
+      href={href}
+      className={cn(
+        "group flex items-center gap-2.5 rounded-md px-2 py-[7px] text-[13px] font-medium transition-colors duration-100",
+        collapsed && "justify-center px-0 py-2",
+        active
+          ? "bg-accent text-foreground"
+          : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+      )}
+    >
+      <Icon
+        className={cn(
+          "h-[14px] w-[14px] shrink-0",
+          active
+            ? "text-foreground"
+            : "text-muted-foreground group-hover:text-foreground"
+        )}
+      />
+      {!collapsed && <span>{label}</span>}
+    </Link>
   );
-}
 
-function PieChartIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-    </svg>
-  );
-}
+  if (collapsed) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{content}</TooltipTrigger>
+        <TooltipContent side="right" className="text-xs">
+          {label}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
 
-function NewspaperIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
-    </svg>
-  );
+  return content;
 }
