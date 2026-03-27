@@ -113,6 +113,20 @@ export async function getMarketNews(limit = 30) {
   });
 }
 
+// SEC filings
+export async function getSECFilings(ticker: string, type?: string, limit = 50) {
+  const params: Record<string, string> = { limit: limit.toString() };
+  if (type) params.type = type;
+  return fetchFMP<FMPSECFiling[]>(`/sec_filings/${ticker}`, params);
+}
+
+// Press releases
+export async function getPressReleases(ticker: string, limit = 30) {
+  return fetchFMP<FMPPressRelease[]>(`/press-releases/${ticker}`, {
+    limit: limit.toString(),
+  });
+}
+
 // Stock screener
 export async function screenStocks(params: Record<string, string>) {
   return fetchFMP<FMPScreenerResult[]>("/stock-screener", params);
@@ -223,6 +237,23 @@ export interface FMPNews {
   site: string;
   url: string;
   image: string;
+}
+
+export interface FMPSECFiling {
+  symbol: string;
+  cik: string;
+  type: string; // 10-K, 10-Q, 8-K, S-1, DEF 14A, etc.
+  link: string;
+  finalLink: string;
+  acceptedDate: string;
+  fillingDate: string;
+}
+
+export interface FMPPressRelease {
+  symbol: string;
+  date: string;
+  title: string;
+  text: string;
 }
 
 export interface FMPScreenerResult {
