@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -78,6 +78,7 @@ export function Header() {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
   const marketOpen = useMarketStatus();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const notificationCount = 3;
 
@@ -163,19 +164,19 @@ export function Header() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
                 <User className="mr-2 h-3.5 w-3.5" />
                 Profile
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
                 <CreditCard className="mr-2 h-3.5 w-3.5" />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
                 <Settings className="mr-2 h-3.5 w-3.5" />
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/help")}>
                 <HelpCircle className="mr-2 h-3.5 w-3.5" />
                 Help
               </DropdownMenuItem>

@@ -131,9 +131,10 @@ export function Sidebar() {
         {/* Bottom: profile + collapse */}
         <div className="mt-auto border-t border-border px-2 py-3">
           {/* Profile */}
-          <div
+          <Link
+            href="/settings"
             className={cn(
-              "flex items-center gap-2.5 rounded-md px-2 py-1.5",
+              "flex items-center gap-2.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent",
               collapsed && "justify-center px-0"
             )}
           >
@@ -152,7 +153,7 @@ export function Sidebar() {
                 </div>
               </div>
             )}
-          </div>
+          </Link>
 
           {/* Collapse toggle */}
           <Tooltip>
