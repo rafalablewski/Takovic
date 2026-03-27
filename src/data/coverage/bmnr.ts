@@ -9,25 +9,71 @@
 // Overview
 // ---------------------------------------------------------------------------
 
+export interface CasePoint {
+  title: string;
+  detail: string;
+}
+
+export interface OverviewMetric {
+  label: string;
+  value: string | number;
+  description: string;
+  format?: "currency" | "percent" | "number" | "eth" | "multiplier" | "text";
+  group: "valuation" | "holdings" | "staking" | "shares" | "dividend" | "other";
+}
+
 export const OVERVIEW = {
   thesis:
-    "BMNR is an ETH treasury company accumulating Ethereum through strategic capital raises (ATM offerings, registered directs) and generating yield via native ETH staking. The company operates as a pure-play ETH exposure vehicle for equity investors, similar to MicroStrategy's BTC strategy.",
-  keyMetrics: [
-    { label: "ETH Holdings", value: "2,141 ETH", note: "As of last 8-K" },
-    { label: "NAV per Share", value: "$0.096", note: "ETH holdings / diluted shares" },
-    { label: "NAV Premium", value: "~9.9x", note: "Stock price / NAV per share" },
-    { label: "Staking Ratio", value: "~30%", note: "Portion of ETH staked" },
-    { label: "Staking Yield", value: "~3.5% APY", note: "Base Ethereum staking" },
-    { label: "Market Cap", value: "~$46M", note: "At $0.95/share" },
-  ],
-  catalysts: [
-    "Continued ETH accumulation through weekly capital raises",
-    "Potential increase in staking ratio (currently 30% → target higher)",
-    "EigenLayer restaking could boost yield to 5-7%+",
-    "ETH ETF inflows driving underlying asset appreciation",
-    "Possible uplisting to major exchange",
-    "Dividend initiation from staking yield",
-  ],
+    "BMNR: ETH treasury company accumulating ETH through strategic capital raises and generating yield via staking. Key metrics: NAV per share, NAV premium/discount, and dividend yield.",
+
+  bullCase: [
+    { title: "ETH price appreciation", detail: "Cycle targets $10K-$15K+" },
+    { title: "NAV premium expansion", detail: "MSTR trades 2-3x; BMNR could follow" },
+    { title: "ETF/index inclusion", detail: "Forces passive buying, liquidity premium" },
+    { title: "Dividend growth", detail: "Staking scales → higher payouts" },
+    { title: "MAVAN launch", detail: "Proprietary staking = higher yields" },
+    { title: "Regulatory clarity", detail: "ETH not a security, staking approved" },
+  ] as CasePoint[],
+
+  bearCase: [
+    { title: "ETH price crash", detail: "Crypto winter, -70% drawdowns possible" },
+    { title: "NAV discount", detail: "Premium compresses or inverts" },
+    { title: "Dilution risk", detail: "Aggressive ATM erodes ETH/share" },
+    { title: "Slashing events", detail: "Validator penalties reduce holdings" },
+    { title: "Regulatory action", detail: "SEC deems ETH a security" },
+    { title: "Execution risk", detail: "MAVAN delays, competition" },
+  ] as CasePoint[],
+
+  metrics: [
+    // Valuation
+    { label: "NAV/Share", value: 21.36, description: "Book value per share", format: "currency", group: "valuation" },
+    { label: "Stock Price", value: 18.39, description: "Market price", format: "currency", group: "valuation" },
+    { label: "Premium/Discount", value: -0.139, description: "Trading below NAV", format: "percent", group: "valuation" },
+    { label: "Dividend Yield", value: 0.0022, description: "$0.04/share annually", format: "percent", group: "valuation" },
+    // Holdings
+    { label: "Total ETH", value: 4595562, description: "Holdings", format: "eth", group: "holdings" },
+    { label: "ETH Price", value: 2185, description: "Current", format: "currency", group: "holdings" },
+    { label: "Total Value", value: 10.04e9, description: "ETH holdings", format: "currency", group: "holdings" },
+    // Staking
+    { label: "ETH Staked", value: 3080000, description: "67.0% of holdings", format: "eth", group: "staking" },
+    { label: "Staking Revenue", value: 209e6, description: "95,758 ETH/yr", format: "currency", group: "staking" },
+    // Shares
+    { label: "Shares", value: 470e6, description: "Outstanding", format: "number", group: "shares" },
+    { label: "Market Cap", value: 8.64e9, description: "Equity", format: "currency", group: "shares" },
+    { label: "NAV Multiple", value: 0.86, description: "Premium/Discount", format: "multiplier", group: "shares" },
+    { label: "ETH/Share", value: 0.009778, description: "Per share", format: "text", group: "shares" },
+    // Dividend
+    { label: "Quarterly Div", value: 0.01, description: "Per share", format: "currency", group: "dividend" },
+    { label: "Annual Div", value: 0.04, description: "Per share", format: "currency", group: "dividend" },
+    { label: "Div Yield", value: 0.0022, description: "Annualized", format: "percent", group: "dividend" },
+    { label: "Payout", value: 18.8e6, description: "Annual total", format: "currency", group: "dividend" },
+    // Other assets
+    { label: "MrBeast Equity", value: 200e6, description: "Beast Industries", format: "currency", group: "other" },
+    { label: "Orbs Stake", value: 83e6, description: "Eightco (OpenAI + Beast)", format: "currency", group: "other" },
+    { label: "BTC Worth", value: 16.5e6, description: "196 BTC", format: "currency", group: "other" },
+    { label: "Total NAV", value: 11.54e9, description: "$24.55/share", format: "currency", group: "other" },
+    { label: "Prem/(Disc) NAV", value: -0.251, description: "Discount to NAV", format: "percent", group: "other" },
+  ] as OverviewMetric[],
 };
 
 // ---------------------------------------------------------------------------
