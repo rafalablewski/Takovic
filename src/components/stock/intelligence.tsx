@@ -128,6 +128,7 @@ interface IntelligenceData {
   company: EdgarCompanyInfo | null;
   filings: IntelligenceFiling[];
   pressReleases: FMPPressRelease[];
+  source: "edgar" | "fmp";
 }
 
 export function Intelligence({ ticker }: { ticker: string }) {
@@ -188,7 +189,10 @@ export function Intelligence({ ticker }: { ticker: string }) {
         <CardHeader className="p-5 pb-0">
           <CardTitle className="text-sm font-medium">Intelligence</CardTitle>
           <CardDescription className="text-xs">
-            SEC EDGAR filings and press releases for {ticker}
+            {data.source === "edgar" ? "SEC EDGAR" : "FMP"} filings and press releases for {ticker}
+            {data.source === "fmp" && (
+              <span className="ml-1 text-amber-600 dark:text-amber-400">(EDGAR unavailable, using fallback)</span>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-5 pt-4">
