@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent, cn } from "@/lib/utils";
 import { runAllModels } from "@/lib/analysis/valuation";
+import { isCryptoTreasury } from "@/lib/analysis/crypto-treasury-registry";
+import { CryptoTreasuryValuation } from "@/components/stock/crypto-treasury-valuation";
 import type { StockValuationParams, ValuationResult } from "@/types/analysis";
 import {
   Calculator,
@@ -63,6 +65,7 @@ export default function ValuationPage() {
   const [tickerInput, setTickerInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cryptoTicker, setCryptoTicker] = useState<string | null>(null);
 
   // User-adjustable overrides
   const [dcfGrowthHigh, setDcfGrowthHigh] = useState<number | null>(null);
@@ -80,6 +83,14 @@ export default function ValuationPage() {
     setLoading(true);
     setError(null);
     setStockParams(null);
+    setCryptoTicker(null);
+
+    // Check if this is a crypto treasury company
+    if (isCryptoTreasury(ticker)) {
+      setCryptoTicker(ticker);
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(`/api/valuation/${ticker}`);
@@ -166,8 +177,11 @@ export default function ValuationPage() {
         </CardContent>
       </Card>
 
-      {/* Stock-specific parameters (shown after loading) */}
-      {stockParams && (
+      {/* Crypto treasury company UI */}
+      {cryptoTicker && <CryptoTreasuryValuation ticker={cryptoTicker} />}
+
+      {/* Traditional stock parameters (shown after loading) */}
+      {stockParams && !cryptoTicker && (
         <>
           {/* Company Overview Bar */}
           <Card>
@@ -671,7 +685,7 @@ export default function ValuationPage() {
       )}
 
       {/* Empty state */}
-      {!stockParams && !loading && !error && (
+      {!stockParams && !cryptoTicker && !loading && !error && (
         <Card>
           <CardContent className="p-12 text-center">
             <Calculator className="mx-auto h-10 w-10 text-muted-foreground/40" />
@@ -680,6 +694,9 @@ export default function ValuationPage() {
             </p>
             <p className="mt-1 text-xs text-muted-foreground/70">
               Combines DCF, Dividend Discount, Graham Number, Peter Lynch, Comparable Multiples, and Earnings Power Value
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground/70">
+              Crypto treasury companies (BMNR, MSTR) use a specialized NAV-based model with staking yield and dilution analysis
             </p>
           </CardContent>
         </Card>

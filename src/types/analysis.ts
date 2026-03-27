@@ -186,6 +186,107 @@ export interface StockValuationParams {
   betaOrRisk: number;
 }
 
+// ---------------------------------------------------------------------------
+// Crypto Treasury Valuation (BMNR, MSTR-style companies)
+// ---------------------------------------------------------------------------
+
+/** Underlying crypto asset held by the treasury company */
+export type CryptoAsset = "ETH" | "BTC";
+
+/** Static profile data for a known crypto treasury company */
+export interface CryptoTreasuryProfile {
+  ticker: string;
+  companyName: string;
+  asset: CryptoAsset;
+  /** Current asset holdings (e.g. ETH count) */
+  assetHoldings: number;
+  /** Current asset price in USD */
+  assetPrice: number;
+  /** Total diluted shares outstanding */
+  sharesOutstanding: number;
+  /** Current stock price */
+  currentStockPrice: number;
+  /** Fraction of holdings currently staked (0-1) */
+  stakingRatio: number;
+  /** Market cap in USD */
+  marketCap: number;
+}
+
+/** User-adjustable parameters for crypto treasury valuation */
+export interface CryptoTreasuryInputs {
+  /** Annual asset price growth rate — decimal (0.10 = 10%) */
+  assetGrowthRate: number;
+  /** Staking yield APY — decimal (0.035 = 3.5%) */
+  stakingYield: number;
+  /** NAV premium/discount multiplier (1.0 = at NAV) */
+  navPremium: number;
+  /** Annual operating costs as fraction of AUM (0.01 = 1%) */
+  operatingCostRate: number;
+  /** Annual share dilution rate — decimal (0.08 = 8%) */
+  dilutionRate: number;
+  /** Discount rate / WACC — decimal (0.12 = 12%) */
+  discountRate: number;
+  /** Projection horizon in years */
+  projectionYears: number;
+}
+
+/** Single year in the projection table */
+export interface CryptoTreasuryYearProjection {
+  year: number;
+  assetPrice: number;
+  assetHoldings: number;
+  stakingIncome: number; // assets earned from staking
+  operatingCostAssets: number; // assets consumed by ops
+  newSharesIssued: number;
+  assetsFromDilution: number; // new assets bought with dilution proceeds
+  totalShares: number;
+  nav: number; // total net asset value
+  navPerShare: number;
+  impliedStockPrice: number; // navPerShare * premium
+}
+
+/** Full result from the crypto treasury valuation model */
+export interface CryptoTreasuryResult {
+  profile: CryptoTreasuryProfile;
+  inputs: CryptoTreasuryInputs;
+  projections: CryptoTreasuryYearProjection[];
+  fairValuePerShare: number;
+  currentPrice: number;
+  upsidePercent: number;
+  verdict: ValuationResult["verdict"];
+  terminalNAVPerShare: number;
+  terminalAssetPrice: number;
+  /** Sensitivity: rows = asset growth rates, cols = discount rates */
+  sensitivityMatrix: {
+    assetGrowthRates: number[];
+    discountRates: number[];
+    values: number[][]; // fair value per share
+  };
+  /** Sensitivity: rows = NAV premiums, cols = asset growth rates */
+  premiumSensitivity: {
+    navPremiums: number[];
+    assetGrowthRates: number[];
+    values: number[][];
+  };
+}
+
+/** Preset value for a slider parameter (bearish → bullish) */
+export interface SliderPreset {
+  value: number;
+  label: string;
+}
+
+/** Slider parameter configuration */
+export interface SliderParam {
+  key: string;
+  label: string;
+  description: string;
+  presets: SliderPreset[];
+  defaultIndex: number; // which preset is selected by default
+  suffix: string; // e.g. "%" or "x"
+  category: "growth" | "yield" | "valuation";
+}
+
 export interface ScreenerResult {
   stock: {
     ticker: string;
