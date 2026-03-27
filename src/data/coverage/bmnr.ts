@@ -349,24 +349,66 @@ export const WALL_STREET_NOTE =
 // Capital Structure
 // ---------------------------------------------------------------------------
 
+export interface CapitalMetric {
+  label: string;
+  value: string | number;
+  format?: "number" | "currency" | "percent" | "text";
+}
+
+export interface CapitalInfoRow {
+  label: string;
+  value: string;
+}
+
 export const CAPITAL_STRUCTURE = {
+  description:
+    "ETH treasury capital strategy, share structure, ATM programs, warrant detail, and dilution analysis. Single-class common stock with rapid execution capability.",
+  summary:
+    "ETH treasury company with 470M shares outstanding. Active ATM program and convertible notes add dilution risk.",
+
+  // Key headline metrics
+  headlines: [
+    { label: "Shares Outstanding", value: 470e6, format: "number" },
+    { label: "Fully Diluted", value: 484.2e6, format: "number" },
+    { label: "Basic Mkt Cap", value: 8.64e9, format: "currency" },
+    { label: "FD Mkt Cap", value: 8.90e9, format: "currency" },
+  ] as CapitalMetric[],
+
+  // Info grid
+  info: [
+    { label: "Stock Price", value: "$18.39" },
+    { label: "Dilution", value: "+3.0%" },
+    { label: "Common Stock", value: "470M" },
+    { label: "Convertible Notes", value: "Various" },
+    { label: "ATM Program", value: "Active" },
+    { label: "Source", value: "SEC / Market" },
+  ] as CapitalInfoRow[],
+
+  // Detailed sections (collapsible)
   shareClass: "Single class — Common Stock",
-  sharesOutstanding: 48_500_000,
-  sharesAuthorized: 500_000_000,
+  sharesOutstanding: 470_000_000,
+  fullyDiluted: 484_200_000,
+  sharesAuthorized: 1_000_000_000,
+
   warrants: {
-    description: "Multiple warrant series outstanding from prior financing rounds",
-    estimatedDilution: "Significant — exact count from latest 10-K/10-Q",
+    description: "Multiple warrant series outstanding from prior financing rounds and convertible note conversions",
+    estimatedDilution: "~14.2M additional shares if all exercised (+3.0%)",
   },
   atmProgram: {
     active: true,
     description: "At-the-market offering program for continuous equity raises",
-    facility: "Up to $50M (estimated)",
-    usage: "Used weekly for ETH purchases",
+    facility: "Up to $2B capacity (estimated)",
+    usage: "Used weekly for ETH purchases — primary capital deployment vehicle",
   },
   registeredDirects: {
     active: true,
     description: "Registered direct offerings for larger block raises",
     frequency: "As needed for larger ETH acquisitions",
+  },
+  convertibleNotes: {
+    active: true,
+    description: "Various convertible note series outstanding",
+    detail: "Conversion prices at varying strikes; adds dilution on conversion",
   },
   dilutionAnalysis: {
     annualRate: "15-25% estimated based on recent activity",

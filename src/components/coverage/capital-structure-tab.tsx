@@ -1,108 +1,252 @@
+"use client";
+
+import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { CAPITAL_STRUCTURE } from "@/data/coverage/bmnr";
-import { Layers, AlertTriangle } from "lucide-react";
+import type { CapitalMetric } from "@/data/coverage/bmnr";
+import {
+  Layers,
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Banknote,
+} from "lucide-react";
+
+// ---------------------------------------------------------------------------
+// Format helpers
+// ---------------------------------------------------------------------------
+
+function fmtHeadline(m: CapitalMetric): string {
+  const v = m.value;
+  if (typeof v === "string") return v;
+  switch (m.format) {
+    case "currency":
+      if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
+      if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
+      return `$${v.toLocaleString()}`;
+    case "number":
+      if (Math.abs(v) >= 1e9) return `${(v / 1e9).toFixed(2)}B`;
+      if (Math.abs(v) >= 1e6) return `${(v / 1e6).toFixed(1)}M`;
+      return v.toLocaleString();
+    case "percent":
+      return `${(v * 100).toFixed(1)}%`;
+    default:
+      return String(v);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Collapsible
+// ---------------------------------------------------------------------------
+
+function Collapsible({
+  title,
+  icon,
+  badge,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  badge?: React.ReactNode;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <Card>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between p-5 text-left"
+      >
+        <div className="flex items-center gap-2">
+          {icon}
+          <span className="text-sm font-medium text-foreground">{title}</span>
+          {badge}
+        </div>
+        {open ? (
+          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        )}
+      </button>
+      {open && <CardContent className="px-5 pb-5 pt-0">{children}</CardContent>}
+    </Card>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
 
 export function CapitalStructureTab({ ticker }: { ticker: string }) {
   const data = ticker === "BMNR" ? CAPITAL_STRUCTURE : null;
   if (!data) return <p className="text-sm text-muted-foreground">No capital structure data.</p>;
 
   return (
-    <div className="space-y-6">
-      {/* Share structure */}
+    <div className="space-y-4">
+      {/* Description */}
+      <Card>
+        <CardContent className="p-5">
+          <p className="text-sm text-muted-foreground leading-relaxed">{data.description}</p>
+        </CardContent>
+      </Card>
+
+      {/* Key Metrics — Capital Summary */}
       <Card>
         <CardHeader className="p-5 pb-0">
           <div className="flex items-center gap-2">
             <Layers className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-sm font-medium">Share Structure</CardTitle>
+            <CardTitle className="text-sm font-medium">Key Metrics</CardTitle>
+            <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Capital Summary</span>
           </div>
         </CardHeader>
-        <CardContent className="p-5 pt-3">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div>
-              <p className="text-xs text-muted-foreground">Share Class</p>
-              <p className="mt-0.5 text-sm font-medium">{data.shareClass}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Outstanding</p>
-              <p className="mt-0.5 text-sm font-semibold tabular-nums">{(data.sharesOutstanding / 1e6).toFixed(1)}M</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Authorized</p>
-              <p className="mt-0.5 text-sm font-semibold tabular-nums">{(data.sharesAuthorized / 1e6).toFixed(0)}M</p>
-            </div>
+        <CardContent className="p-5 pt-4 space-y-5">
+          {/* Headline numbers */}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {data.headlines.map((h) => (
+              <div key={h.label} className="text-center">
+                <p className="text-2xl font-semibold tabular-nums text-foreground">
+                  {fmtHeadline(h)}
+                </p>
+                <p className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                  {h.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Info grid */}
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 sm:grid-cols-3 border-t border-border pt-4">
+            {data.info.map((row) => (
+              <div key={row.label} className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">{row.label}</span>
+                <span className="text-sm font-medium tabular-nums text-foreground">{row.value}</span>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Programs */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader className="p-5 pb-0">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-medium">ATM Program</CardTitle>
-              {data.atmProgram.active && (
-                <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">Active</Badge>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent className="p-5 pt-3 space-y-2">
-            <p className="text-xs text-muted-foreground">{data.atmProgram.description}</p>
-            <div className="flex justify-between text-xs">
-              <span className="text-muted-foreground">Facility</span>
-              <span className="font-medium">{data.atmProgram.facility}</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-muted-foreground">Usage</span>
-              <span className="font-medium">{data.atmProgram.usage}</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="p-5 pb-0">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-medium">Registered Directs</CardTitle>
-              {data.registeredDirects.active && (
-                <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">Active</Badge>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent className="p-5 pt-3 space-y-2">
-            <p className="text-xs text-muted-foreground">{data.registeredDirects.description}</p>
-            <div className="flex justify-between text-xs">
-              <span className="text-muted-foreground">Frequency</span>
-              <span className="font-medium">{data.registeredDirects.frequency}</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Warrants + Dilution */}
+      {/* Capital Structure summary */}
       <Card>
         <CardHeader className="p-5 pb-0">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-amber-500" />
-            <CardTitle className="text-sm font-medium">Dilution Analysis</CardTitle>
-          </div>
+          <CardTitle className="text-sm font-medium">Capital Structure</CardTitle>
         </CardHeader>
-        <CardContent className="p-5 pt-3 space-y-3">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-              <p className="text-xs text-muted-foreground">Annual Dilution Rate</p>
-              <p className="mt-0.5 text-sm font-semibold text-amber-600 dark:text-amber-400">{data.dilutionAnalysis.annualRate}</p>
-            </div>
-            <div className="sm:col-span-2">
-              <p className="text-xs text-muted-foreground">Warrants</p>
-              <p className="mt-0.5 text-sm text-muted-foreground">{data.warrants.description}</p>
-            </div>
-          </div>
-          <div className="rounded-md bg-muted/40 p-3 space-y-1.5">
-            <p className="text-xs"><span className="font-medium text-emerald-600 dark:text-emerald-400">Bull case:</span> <span className="text-muted-foreground">{data.dilutionAnalysis.mitigant}</span></p>
-            <p className="text-xs"><span className="font-medium text-red-600 dark:text-red-400">Bear case:</span> <span className="text-muted-foreground">{data.dilutionAnalysis.riskScenario}</span></p>
-          </div>
+        <CardContent className="p-5 pt-3">
+          <p className="text-sm text-muted-foreground leading-relaxed">{data.summary}</p>
         </CardContent>
       </Card>
+
+      {/* Share Structure */}
+      <Collapsible
+        title="Share Structure"
+        icon={<Layers className="h-4 w-4 text-muted-foreground" />}
+      >
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <MetricCell label="Share Class" value={data.shareClass} />
+          <MetricCell label="Outstanding" value={fmtNum(data.sharesOutstanding)} />
+          <MetricCell label="Fully Diluted" value={fmtNum(data.fullyDiluted)} />
+          <MetricCell label="Authorized" value={fmtNum(data.sharesAuthorized)} />
+        </div>
+      </Collapsible>
+
+      {/* ATM Program */}
+      <Collapsible
+        title="ATM Program"
+        icon={<Banknote className="h-4 w-4 text-muted-foreground" />}
+        badge={data.atmProgram.active ? <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">Active</Badge> : undefined}
+      >
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">{data.atmProgram.description}</p>
+          <div className="grid grid-cols-2 gap-4">
+            <MetricCell label="Facility" value={data.atmProgram.facility} />
+            <MetricCell label="Usage" value={data.atmProgram.usage} />
+          </div>
+        </div>
+      </Collapsible>
+
+      {/* Convertible Notes */}
+      <Collapsible
+        title="Convertible Notes"
+        icon={<FileText className="h-4 w-4 text-muted-foreground" />}
+        badge={data.convertibleNotes.active ? <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-[10px]">Active</Badge> : undefined}
+      >
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">{data.convertibleNotes.description}</p>
+          <p className="text-xs text-muted-foreground">{data.convertibleNotes.detail}</p>
+        </div>
+      </Collapsible>
+
+      {/* Registered Directs */}
+      <Collapsible
+        title="Registered Directs"
+        icon={<FileText className="h-4 w-4 text-muted-foreground" />}
+        badge={data.registeredDirects.active ? <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">Active</Badge> : undefined}
+      >
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">{data.registeredDirects.description}</p>
+          <MetricCell label="Frequency" value={data.registeredDirects.frequency} />
+        </div>
+      </Collapsible>
+
+      {/* Warrants */}
+      <Collapsible
+        title="Warrants"
+        icon={<FileText className="h-4 w-4 text-muted-foreground" />}
+      >
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">{data.warrants.description}</p>
+          <MetricCell label="Estimated Dilution" value={data.warrants.estimatedDilution} />
+        </div>
+      </Collapsible>
+
+      {/* Dilution Analysis */}
+      <Collapsible
+        title="Dilution Analysis"
+        icon={<AlertTriangle className="h-4 w-4 text-amber-500" />}
+      >
+        <div className="space-y-3">
+          <MetricCell label="Annual Dilution Rate" value={data.dilutionAnalysis.annualRate} highlight="amber" />
+          <div className="rounded-md bg-muted/40 p-3 space-y-1.5">
+            <p className="text-xs">
+              <span className="font-medium text-emerald-600 dark:text-emerald-400">Bull case: </span>
+              <span className="text-muted-foreground">{data.dilutionAnalysis.mitigant}</span>
+            </p>
+            <p className="text-xs">
+              <span className="font-medium text-red-600 dark:text-red-400">Bear case: </span>
+              <span className="text-muted-foreground">{data.dilutionAnalysis.riskScenario}</span>
+            </p>
+          </div>
+        </div>
+      </Collapsible>
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function MetricCell({ label, value, highlight }: { label: string; value: string; highlight?: "amber" }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className={cn(
+        "mt-0.5 text-sm font-medium",
+        highlight === "amber" ? "text-amber-600 dark:text-amber-400" : "text-foreground"
+      )}>
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function fmtNum(n: number): string {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  return n.toLocaleString();
 }
