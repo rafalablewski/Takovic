@@ -2,21 +2,13 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import {
-  Plus,
-  Trash2,
-  Star,
-  TrendingUp,
-  TrendingDown,
-  Eye,
-} from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 interface WatchlistStock {
   ticker: string;
@@ -54,28 +46,33 @@ const dividendKings: WatchlistStock[] = [
   { ticker: "ABT", name: "Abbott Labs", price: 112.80, change: 0.45, range52w: "$95.00 - $120.00", score: 3.9, sentiment: "somewhat_bullish" },
 ];
 
-function SentimentBadge({ sentiment }: { sentiment: string }) {
-  const config: Record<string, { label: string; variant: "success" | "warning" | "danger" | "secondary" }> = {
-    bullish: { label: "Bullish", variant: "success" },
-    somewhat_bullish: { label: "Somewhat Bullish", variant: "success" },
-    neutral: { label: "Neutral", variant: "secondary" },
-    somewhat_bearish: { label: "Somewhat Bearish", variant: "warning" },
-    bearish: { label: "Bearish", variant: "danger" },
-  };
-  const c = config[sentiment] ?? { label: "Neutral", variant: "secondary" };
-  return <Badge variant={c.variant}>{c.label}</Badge>;
+function sentimentBadgeVariant(
+  sentiment: string
+): "success" | "danger" | "warning" | "secondary" {
+  switch (sentiment) {
+    case "bullish":
+    case "somewhat_bullish":
+      return "success";
+    case "bearish":
+    case "somewhat_bearish":
+      return "danger";
+    default:
+      return "secondary";
+  }
 }
 
-function ScoreBadge({ score }: { score: number }) {
-  let color = "text-red-600 bg-red-50 dark:bg-red-950/30";
-  if (score >= 4.0) color = "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30";
-  else if (score >= 3.5) color = "text-blue-600 bg-blue-50 dark:bg-blue-950/30";
-  else if (score >= 3.0) color = "text-amber-600 bg-amber-50 dark:bg-amber-950/30";
-  return (
-    <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-bold tabular-nums ${color}`}>
-      {score.toFixed(1)}
-    </span>
-  );
+function sentimentLabel(sentiment: string): string {
+  return sentiment
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function scoreColor(score: number): string {
+  if (score >= 4.0) return "text-emerald-600 dark:text-emerald-400";
+  if (score >= 3.5) return "text-blue-600 dark:text-blue-400";
+  if (score >= 3.0) return "text-amber-600 dark:text-amber-400";
+  return "text-red-600 dark:text-red-400";
 }
 
 function WatchlistTable({ stocks }: { stocks: WatchlistStock[] }) {
@@ -83,58 +80,72 @@ function WatchlistTable({ stocks }: { stocks: WatchlistStock[] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border bg-muted/30">
-            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Stock</th>
-            <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">Price</th>
-            <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">Day Change</th>
-            <th className="hidden px-4 py-3 text-left text-xs font-medium text-muted-foreground md:table-cell">52W Range</th>
-            <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground">Score</th>
-            <th className="hidden px-4 py-3 text-center text-xs font-medium text-muted-foreground lg:table-cell">Sentiment</th>
-            <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground">Actions</th>
+          <tr className="border-b border-border">
+            <th className="px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Stock
+            </th>
+            <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Price
+            </th>
+            <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Change
+            </th>
+            <th className="hidden px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground md:table-cell">
+              52W Range
+            </th>
+            <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              Score
+            </th>
+            <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground lg:table-cell">
+              Signal
+            </th>
+            <th className="px-5 py-2.5 text-center text-xs font-medium uppercase tracking-wider text-muted-foreground w-12">
+            </th>
           </tr>
         </thead>
         <tbody>
           {stocks.map((stock) => (
             <tr
               key={stock.ticker}
-              className="border-b border-border/50 transition-colors hover:bg-muted/30"
+              className="border-b border-border/50 transition-colors hover:bg-muted/50"
             >
-              <td className="px-4 py-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-xs font-bold text-blue-600">
-                    {stock.ticker.substring(0, 2)}
-                  </div>
-                  <div>
-                    <span className="font-semibold">{stock.ticker}</span>
-                    <p className="text-xs text-muted-foreground">{stock.name}</p>
-                  </div>
-                </div>
+              <td className="px-5 py-3">
+                <span className="font-medium text-foreground">{stock.ticker}</span>
+                <p className="text-xs text-muted-foreground">{stock.name}</p>
               </td>
-              <td className="px-4 py-3 text-right font-medium tabular-nums">
+              <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
                 {formatCurrency(stock.price)}
               </td>
-              <td className={`px-4 py-3 text-right tabular-nums ${stock.change >= 0 ? "text-emerald-600" : "text-red-600"}`}>
-                <div className="flex items-center justify-end gap-1">
-                  {stock.change >= 0 ? (
-                    <TrendingUp className="h-3.5 w-3.5" />
-                  ) : (
-                    <TrendingDown className="h-3.5 w-3.5" />
-                  )}
-                  <span className="font-medium">{formatPercent(stock.change)}</span>
-                </div>
+              <td
+                className={`px-5 py-3 text-right tabular-nums font-medium ${
+                  stock.change >= 0
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-red-600 dark:text-red-400"
+                }`}
+              >
+                {formatPercent(stock.change)}
               </td>
-              <td className="hidden px-4 py-3 text-xs tabular-nums text-muted-foreground md:table-cell">
+              <td className="hidden px-5 py-3 text-xs tabular-nums text-muted-foreground md:table-cell">
                 {stock.range52w}
               </td>
-              <td className="px-4 py-3 text-center">
-                <ScoreBadge score={stock.score} />
+              <td className={`px-5 py-3 text-right tabular-nums font-semibold ${scoreColor(stock.score)}`}>
+                {stock.score.toFixed(1)}
               </td>
-              <td className="hidden px-4 py-3 text-center lg:table-cell">
-                <SentimentBadge sentiment={stock.sentiment} />
+              <td className="hidden px-5 py-3 text-right lg:table-cell">
+                <Badge
+                  variant={sentimentBadgeVariant(stock.sentiment)}
+                  className="text-[10px]"
+                >
+                  {sentimentLabel(stock.sentiment)}
+                </Badge>
               </td>
-              <td className="px-4 py-3 text-center">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-600">
-                  <Trash2 className="h-4 w-4" />
+              <td className="px-5 py-3 text-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground hover:text-red-600 dark:hover:text-red-400"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </td>
             </tr>
@@ -151,39 +162,35 @@ export default function WatchlistPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Eye className="h-6 w-6 text-blue-500" />
-            Watchlist
-          </h1>
+          <h1 className="text-xl font-semibold text-foreground">Watchlist</h1>
           <p className="text-sm text-muted-foreground">
-            Track your favorite stocks and monitor performance
+            Track stocks and monitor performance
           </p>
         </div>
-        <Button className="gap-2">
+        <Button size="sm" className="gap-1.5">
           <Plus className="h-4 w-4" />
           Add Stock
         </Button>
       </div>
 
-      {/* Watchlist Tabs */}
+      {/* Tabs */}
       <Tabs defaultValue="my-stocks">
         <TabsList>
-          <TabsTrigger value="my-stocks" className="gap-1.5">
-            <Star className="h-3.5 w-3.5" />
+          <TabsTrigger value="my-stocks">
             My Stocks
-            <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-[10px]">
               {myStocks.length}
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="tech-giants" className="gap-1.5">
+          <TabsTrigger value="tech-giants">
             Tech Giants
-            <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-[10px]">
               {techGiants.length}
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="dividend-kings" className="gap-1.5">
+          <TabsTrigger value="dividend-kings">
             Dividend Kings
-            <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
+            <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-[10px]">
               {dividendKings.length}
             </Badge>
           </TabsTrigger>
@@ -191,18 +198,15 @@ export default function WatchlistPage() {
 
         <TabsContent value="my-stocks">
           <Card>
-            <CardHeader className="pb-3">
+            <CardHeader className="p-5 pb-0">
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>My Stocks</CardTitle>
-                  <CardDescription>Your primary watchlist</CardDescription>
-                </div>
-                <p className="text-sm text-muted-foreground">
+                <CardTitle className="text-sm font-medium">My Stocks</CardTitle>
+                <span className="text-xs text-muted-foreground tabular-nums">
                   {myStocks.length} stocks
-                </p>
+                </span>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-0 pt-3">
               <WatchlistTable stocks={myStocks} />
             </CardContent>
           </Card>
@@ -210,18 +214,15 @@ export default function WatchlistPage() {
 
         <TabsContent value="tech-giants">
           <Card>
-            <CardHeader className="pb-3">
+            <CardHeader className="p-5 pb-0">
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Tech Giants</CardTitle>
-                  <CardDescription>Top technology companies by market cap</CardDescription>
-                </div>
-                <p className="text-sm text-muted-foreground">
+                <CardTitle className="text-sm font-medium">Tech Giants</CardTitle>
+                <span className="text-xs text-muted-foreground tabular-nums">
                   {techGiants.length} stocks
-                </p>
+                </span>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-0 pt-3">
               <WatchlistTable stocks={techGiants} />
             </CardContent>
           </Card>
@@ -229,18 +230,15 @@ export default function WatchlistPage() {
 
         <TabsContent value="dividend-kings">
           <Card>
-            <CardHeader className="pb-3">
+            <CardHeader className="p-5 pb-0">
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Dividend Kings</CardTitle>
-                  <CardDescription>Companies with 50+ years of consecutive dividend increases</CardDescription>
-                </div>
-                <p className="text-sm text-muted-foreground">
+                <CardTitle className="text-sm font-medium">Dividend Kings</CardTitle>
+                <span className="text-xs text-muted-foreground tabular-nums">
                   {dividendKings.length} stocks
-                </p>
+                </span>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-0 pt-3">
               <WatchlistTable stocks={dividendKings} />
             </CardContent>
           </Card>

@@ -12,9 +12,7 @@ import { formatCurrency, formatPercent } from "@/lib/utils";
 import {
   Filter,
   Download,
-  ArrowUpDown,
   Search,
-  SlidersHorizontal,
   ChevronDown,
 } from "lucide-react";
 
@@ -31,29 +29,40 @@ const mockStocks = [
   { rank: 10, ticker: "ABBV", name: "AbbVie Inc.", sector: "Healthcare", price: 171.32, change: -0.45, pe: 18.9, score: 3.9, sentiment: "somewhat_bullish" },
 ];
 
-function SentimentBadge({ sentiment }: { sentiment: string }) {
-  const config: Record<string, { label: string; variant: "success" | "warning" | "danger" | "secondary" }> = {
-    bullish: { label: "Bullish", variant: "success" },
-    somewhat_bullish: { label: "Somewhat Bullish", variant: "success" },
-    neutral: { label: "Neutral", variant: "secondary" },
-    somewhat_bearish: { label: "Somewhat Bearish", variant: "warning" },
-    bearish: { label: "Bearish", variant: "danger" },
-  };
-  const c = config[sentiment] ?? { label: "Neutral", variant: "secondary" };
-  return <Badge variant={c.variant}>{c.label}</Badge>;
+function sentimentBadgeVariant(
+  sentiment: string
+): "success" | "danger" | "warning" | "secondary" {
+  switch (sentiment) {
+    case "bullish":
+    case "somewhat_bullish":
+      return "success";
+    case "bearish":
+    case "somewhat_bearish":
+      return "danger";
+    default:
+      return "secondary";
+  }
 }
 
-function ScoreBadge({ score }: { score: number }) {
-  let color = "text-red-600 bg-red-50 dark:bg-red-950/30";
-  if (score >= 4.0) color = "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30";
-  else if (score >= 3.5) color = "text-blue-600 bg-blue-50 dark:bg-blue-950/30";
-  else if (score >= 3.0) color = "text-amber-600 bg-amber-50 dark:bg-amber-950/30";
-  return (
-    <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-bold tabular-nums ${color}`}>
-      {score.toFixed(1)}
-    </span>
-  );
+function sentimentLabel(sentiment: string): string {
+  return sentiment
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
+
+function scoreColor(score: number): string {
+  if (score >= 4.0) return "text-emerald-600 dark:text-emerald-400";
+  if (score >= 3.5) return "text-blue-600 dark:text-blue-400";
+  if (score >= 3.0) return "text-amber-600 dark:text-amber-400";
+  return "text-red-600 dark:text-red-400";
+}
+
+const selectClass =
+  "h-9 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring";
+
+const inputClass =
+  "h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring";
 
 export default function ScreenerPage() {
   return (
@@ -61,35 +70,25 @@ export default function ScreenerPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Stock Screener</h1>
+          <h1 className="text-xl font-semibold text-foreground">Stock Screener</h1>
           <p className="text-sm text-muted-foreground">
-            Filter and discover stocks matching your investment criteria
+            Filter and discover stocks matching your criteria
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
-            <ArrowUpDown className="h-4 w-4" />
-            Sort
-          </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export CSV
-          </Button>
-        </div>
+        <Button variant="outline" size="sm" className="gap-1.5">
+          <Download className="h-4 w-4" />
+          Export
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Filter Sidebar */}
         <div className="lg:col-span-1">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <SlidersHorizontal className="h-4 w-4" />
-                Filters
-              </CardTitle>
-              <CardDescription>Narrow your search</CardDescription>
+            <CardHeader className="p-5 pb-0">
+              <CardTitle className="text-sm font-medium">Filters</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
+            <CardContent className="p-5 pt-4 space-y-4">
               {/* Search */}
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
@@ -111,18 +110,16 @@ export default function ScreenerPage() {
                   Sector
                 </label>
                 <div className="relative">
-                  <select className="h-9 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring">
+                  <select className={selectClass}>
                     <option>All Sectors</option>
                     <option>Technology</option>
                     <option>Healthcare</option>
                     <option>Finance</option>
                     <option>Energy</option>
-                    <option>Consumer Discretionary</option>
-                    <option>Consumer Staples</option>
+                    <option>Consumer</option>
                     <option>Industrials</option>
                     <option>Utilities</option>
                     <option>Real Estate</option>
-                    <option>Materials</option>
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 </div>
@@ -134,13 +131,12 @@ export default function ScreenerPage() {
                   Market Cap
                 </label>
                 <div className="relative">
-                  <select className="h-9 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring">
+                  <select className={selectClass}>
                     <option>Any</option>
                     <option>Mega ($200B+)</option>
                     <option>Large ($10B-$200B)</option>
                     <option>Mid ($2B-$10B)</option>
-                    <option>Small ($300M-$2B)</option>
-                    <option>Micro (&lt;$300M)</option>
+                    <option>Small (&lt;$2B)</option>
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 </div>
@@ -149,59 +145,42 @@ export default function ScreenerPage() {
               {/* P/E Range */}
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
-                  P/E Ratio Range
+                  P/E Range
                 </label>
                 <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                  <span className="text-xs text-muted-foreground">to</span>
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
+                  <input type="number" placeholder="Min" className={inputClass} />
+                  <span className="text-xs text-muted-foreground">-</span>
+                  <input type="number" placeholder="Max" className={inputClass} />
                 </div>
               </div>
 
-              {/* ROE Range */}
+              {/* ROE Min */}
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
-                  ROE Minimum (%)
+                  ROE Min (%)
                 </label>
-                <input
-                  type="number"
-                  placeholder="e.g. 15"
-                  className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                />
+                <input type="number" placeholder="e.g. 15" className={inputClass} />
               </div>
 
               {/* Dividend Yield */}
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
-                  Dividend Yield Minimum (%)
+                  Div Yield Min (%)
                 </label>
-                <input
-                  type="number"
-                  placeholder="e.g. 2.0"
-                  className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                />
+                <input type="number" placeholder="e.g. 2.0" className={inputClass} />
               </div>
 
-              {/* Snowflake Score */}
+              {/* Min Score */}
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-muted-foreground">
-                  Min Snowflake Score
+                  Min Score
                 </label>
                 <div className="relative">
-                  <select className="h-9 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring">
+                  <select className={selectClass}>
                     <option>Any</option>
                     <option>4.0+ (Excellent)</option>
                     <option>3.5+ (Good)</option>
                     <option>3.0+ (Average)</option>
-                    <option>2.5+ (Below Average)</option>
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 </div>
@@ -211,7 +190,7 @@ export default function ScreenerPage() {
 
               <div className="flex gap-2">
                 <Button className="flex-1" size="sm">
-                  <Filter className="mr-1 h-3.5 w-3.5" />
+                  <Filter className="mr-1.5 h-3.5 w-3.5" />
                   Apply
                 </Button>
                 <Button variant="outline" size="sm" className="flex-1">
@@ -225,47 +204,42 @@ export default function ScreenerPage() {
         {/* Results Table */}
         <div className="lg:col-span-3">
           <Card>
-            <CardHeader className="pb-3">
+            <CardHeader className="p-5 pb-0">
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Results</CardTitle>
-                  <CardDescription>
-                    Showing <span className="font-semibold text-foreground">247</span> stocks matching filters
-                  </CardDescription>
-                </div>
-                <Badge variant="secondary" className="tabular-nums">
-                  247 results
-                </Badge>
+                <CardTitle className="text-sm font-medium">Results</CardTitle>
+                <span className="text-xs text-muted-foreground tabular-nums">
+                  247 stocks
+                </span>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-0 pt-3">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border bg-muted/30">
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">
+                    <tr className="border-b border-border">
+                      <th className="px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         #
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">
-                        Ticker
+                      <th className="px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                        Stock
                       </th>
-                      <th className="hidden px-4 py-3 text-left text-xs font-medium text-muted-foreground sm:table-cell">
+                      <th className="hidden px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:table-cell">
                         Sector
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                      <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         Price
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                      <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         Change
                       </th>
-                      <th className="hidden px-4 py-3 text-right text-xs font-medium text-muted-foreground md:table-cell">
+                      <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground md:table-cell">
                         P/E
                       </th>
-                      <th className="px-4 py-3 text-center text-xs font-medium text-muted-foreground">
+                      <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         Score
                       </th>
-                      <th className="hidden px-4 py-3 text-center text-xs font-medium text-muted-foreground lg:table-cell">
-                        Sentiment
+                      <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground lg:table-cell">
+                        Signal
                       </th>
                     </tr>
                   </thead>
@@ -273,44 +247,43 @@ export default function ScreenerPage() {
                     {mockStocks.map((stock) => (
                       <tr
                         key={stock.ticker}
-                        className="border-b border-border/50 transition-colors hover:bg-muted/30"
+                        className="border-b border-border/50 transition-colors hover:bg-muted/50"
                       >
-                        <td className="px-4 py-3 text-xs text-muted-foreground tabular-nums">
+                        <td className="px-5 py-3 text-xs tabular-nums text-muted-foreground">
                           {stock.rank}
                         </td>
-                        <td className="px-4 py-3">
-                          <div>
-                            <span className="font-semibold">{stock.ticker}</span>
-                            <p className="text-xs text-muted-foreground">
-                              {stock.name}
-                            </p>
-                          </div>
+                        <td className="px-5 py-3">
+                          <span className="font-medium text-foreground">{stock.ticker}</span>
+                          <p className="text-xs text-muted-foreground">{stock.name}</p>
                         </td>
-                        <td className="hidden px-4 py-3 sm:table-cell">
-                          <Badge variant="outline" className="text-xs font-normal">
-                            {stock.sector}
-                          </Badge>
+                        <td className="hidden px-5 py-3 text-xs text-muted-foreground sm:table-cell">
+                          {stock.sector}
                         </td>
-                        <td className="px-4 py-3 text-right font-medium tabular-nums">
+                        <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
                           {formatCurrency(stock.price)}
                         </td>
                         <td
-                          className={`px-4 py-3 text-right font-medium tabular-nums ${
+                          className={`px-5 py-3 text-right tabular-nums font-medium ${
                             stock.change >= 0
-                              ? "text-emerald-600"
-                              : "text-red-600"
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-red-600 dark:text-red-400"
                           }`}
                         >
                           {formatPercent(stock.change)}
                         </td>
-                        <td className="hidden px-4 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
+                        <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
                           {stock.pe.toFixed(1)}
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <ScoreBadge score={stock.score} />
+                        <td className={`px-5 py-3 text-right tabular-nums font-semibold ${scoreColor(stock.score)}`}>
+                          {stock.score.toFixed(1)}
                         </td>
-                        <td className="hidden px-4 py-3 text-center lg:table-cell">
-                          <SentimentBadge sentiment={stock.sentiment} />
+                        <td className="hidden px-5 py-3 text-right lg:table-cell">
+                          <Badge
+                            variant={sentimentBadgeVariant(stock.sentiment)}
+                            className="text-[10px]"
+                          >
+                            {sentimentLabel(stock.sentiment)}
+                          </Badge>
                         </td>
                       </tr>
                     ))}
@@ -319,8 +292,8 @@ export default function ScreenerPage() {
               </div>
 
               {/* Pagination */}
-              <div className="flex items-center justify-between border-t border-border px-4 py-3">
-                <p className="text-xs text-muted-foreground">
+              <div className="flex items-center justify-between border-t border-border px-5 py-3">
+                <p className="text-xs text-muted-foreground tabular-nums">
                   Page 1 of 25
                 </p>
                 <div className="flex gap-1">

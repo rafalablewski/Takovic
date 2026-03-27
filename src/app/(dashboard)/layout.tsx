@@ -14,7 +14,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           "flex flex-1 flex-col transition-all duration-300 ease-in-out",
-          collapsed ? "lg:pl-[68px]" : "lg:pl-64"
+          collapsed ? "lg:pl-[52px]" : "lg:pl-[240px]"
         )}
       >
         <Header />

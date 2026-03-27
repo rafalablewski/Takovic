@@ -2,7 +2,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
@@ -11,18 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import {
-  TrendingUp,
-  TrendingDown,
   ArrowUpRight,
   ArrowDownRight,
-  Bot,
-  Newspaper,
-  Eye,
-  BarChart3,
-  DollarSign,
-  Briefcase,
   Sparkles,
-  Clock,
   ChevronRight,
 } from "lucide-react";
 
@@ -38,30 +28,30 @@ const marketIndices = [
 ];
 
 const watchlist = [
-  { ticker: "AAPL", name: "Apple Inc.", price: 189.84, changePct: 1.23, sentiment: "bullish" },
-  { ticker: "MSFT", name: "Microsoft Corp.", price: 422.86, changePct: 0.67, sentiment: "bullish" },
-  { ticker: "NVDA", name: "NVIDIA Corp.", price: 924.79, changePct: -1.42, sentiment: "somewhat_bearish" },
-  { ticker: "GOOGL", name: "Alphabet Inc.", price: 155.72, changePct: 0.34, sentiment: "neutral" },
-  { ticker: "AMZN", name: "Amazon.com Inc.", price: 186.13, changePct: 2.18, sentiment: "bullish" },
-  { ticker: "TSLA", name: "Tesla Inc.", price: 171.05, changePct: -3.25, sentiment: "bearish" },
+  { ticker: "AAPL", price: 189.84, changePct: 1.23 },
+  { ticker: "MSFT", price: 422.86, changePct: 0.67 },
+  { ticker: "NVDA", price: 924.79, changePct: -1.42 },
+  { ticker: "GOOGL", price: 155.72, changePct: 0.34 },
+  { ticker: "AMZN", price: 186.13, changePct: 2.18 },
+  { ticker: "TSLA", price: 171.05, changePct: -3.25 },
 ];
 
 const recentAnalyses = [
   {
     ticker: "AAPL",
-    date: "Mar 27, 2026",
+    date: "Mar 27",
     sentiment: "bullish",
     summary: "Strong services revenue growth offsets iPhone plateau; buy thesis intact.",
   },
   {
     ticker: "TSLA",
-    date: "Mar 26, 2026",
+    date: "Mar 26",
     sentiment: "bearish",
     summary: "Margin compression continues amid pricing war; delivery miss likely in Q1.",
   },
   {
     ticker: "NVDA",
-    date: "Mar 25, 2026",
+    date: "Mar 25",
     sentiment: "somewhat_bullish",
     summary: "Blackwell ramp on track; supply constraints easing — upside to consensus.",
   },
@@ -135,56 +125,47 @@ function sentimentLabel(sentiment: string): string {
 export default function DashboardPage() {
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
-    year: "numeric",
     month: "long",
     day: "numeric",
   });
 
   return (
     <div className="space-y-6">
-      {/* ----------------------------------------------------------------- */}
-      {/* Greeting                                                          */}
-      {/* ----------------------------------------------------------------- */}
+      {/* Greeting */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-xl font-semibold text-foreground">
           {getGreeting()}, Rafal
         </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          {today} &mdash; Here&apos;s your market command center.
-        </p>
+        <p className="text-sm text-muted-foreground">{today}</p>
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Top Row — Market Overview Cards                                   */}
-      {/* ----------------------------------------------------------------- */}
+      {/* Market Index Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {marketIndices.map((idx) => {
           const positive = idx.change >= 0;
           return (
             <Card key={idx.name}>
-              <CardHeader className="pb-2">
-                <CardDescription className="text-xs font-medium uppercase tracking-wider">
+              <CardContent className="p-5">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   {idx.name}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-1">
-                <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                </p>
+                <p className="mt-2 text-lg font-semibold tabular-nums text-foreground">
                   {idx.value.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                   })}
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="mt-1 flex items-center gap-1">
                   {positive ? (
-                    <ArrowUpRight className="h-4 w-4 text-green-600" />
+                    <ArrowUpRight className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                   ) : (
-                    <ArrowDownRight className="h-4 w-4 text-red-600" />
+                    <ArrowDownRight className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
                   )}
                   <span
-                    className={
+                    className={`text-sm tabular-nums font-medium ${
                       positive
-                        ? "text-sm font-medium text-green-600"
-                        : "text-sm font-medium text-red-600"
-                    }
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
                   >
                     {positive ? "+" : ""}
                     {idx.change.toFixed(2)} ({formatPercent(idx.changePct)})
@@ -196,35 +177,25 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Second Row — Portfolio Summary + AI Digest                        */}
-      {/* ----------------------------------------------------------------- */}
+      {/* Portfolio Summary + AI Digest */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Portfolio Summary */}
         <Card className="lg:col-span-2">
-          <CardHeader>
+          <CardHeader className="p-5 pb-0">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5 text-zinc-500" />
-                <CardTitle>Portfolio Summary</CardTitle>
-              </div>
-              <Badge variant="outline" className="text-xs">
-                Live
-              </Badge>
+              <CardTitle className="text-sm font-medium">Portfolio Summary</CardTitle>
+              <span className="text-xs text-muted-foreground">Updated live</span>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Main value */}
+          <CardContent className="p-5 pt-4 space-y-4">
             <div>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Total Portfolio Value
-              </p>
-              <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+              <p className="text-xs text-muted-foreground">Total Value</p>
+              <p className="text-2xl font-semibold tabular-nums text-foreground">
                 {formatCurrency(284619.42)}
               </p>
-              <div className="mt-1 flex items-center gap-2">
-                <ArrowUpRight className="h-4 w-4 text-green-600" />
-                <span className="text-sm font-medium text-green-600">
+              <div className="mt-1 flex items-center gap-1.5">
+                <ArrowUpRight className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                <span className="text-sm tabular-nums font-medium text-emerald-600 dark:text-emerald-400">
                   +{formatCurrency(1843.27)} ({formatPercent(0.65)}) today
                 </span>
               </div>
@@ -232,173 +203,132 @@ export default function DashboardPage() {
 
             <Separator />
 
-            {/* Mini stat cards */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <div className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
-                <div className="flex items-center gap-1.5">
-                  <BarChart3 className="h-3.5 w-3.5 text-zinc-400" />
-                  <p className="text-xs text-zinc-500">Holdings</p>
+              {[
+                { label: "Holdings", value: "24" },
+                {
+                  label: "Best Today",
+                  value: `AMZN ${formatPercent(2.18)}`,
+                  color: "text-emerald-600 dark:text-emerald-400",
+                },
+                {
+                  label: "Worst Today",
+                  value: `TSLA ${formatPercent(-3.25)}`,
+                  color: "text-red-600 dark:text-red-400",
+                },
+                { label: "Cash", value: formatCurrency(18420, "USD", true) },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <p
+                    className={`mt-0.5 text-sm font-medium tabular-nums ${
+                      stat.color ?? "text-foreground"
+                    }`}
+                  >
+                    {stat.value}
+                  </p>
                 </div>
-                <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                  24
-                </p>
-              </div>
-              <div className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
-                <div className="flex items-center gap-1.5">
-                  <TrendingUp className="h-3.5 w-3.5 text-green-500" />
-                  <p className="text-xs text-zinc-500">Best Today</p>
-                </div>
-                <p className="mt-1 text-lg font-semibold text-green-600">
-                  AMZN {formatPercent(2.18)}
-                </p>
-              </div>
-              <div className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
-                <div className="flex items-center gap-1.5">
-                  <TrendingDown className="h-3.5 w-3.5 text-red-500" />
-                  <p className="text-xs text-zinc-500">Worst Today</p>
-                </div>
-                <p className="mt-1 text-lg font-semibold text-red-600">
-                  TSLA {formatPercent(-3.25)}
-                </p>
-              </div>
-              <div className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
-                <div className="flex items-center gap-1.5">
-                  <DollarSign className="h-3.5 w-3.5 text-zinc-400" />
-                  <p className="text-xs text-zinc-500">Cash</p>
-                </div>
-                <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                  {formatCurrency(18420, "USD", true)}
-                </p>
-              </div>
+              ))}
             </div>
           </CardContent>
         </Card>
 
         {/* AI Market Digest */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-violet-500" />
-              <CardTitle>AI Market Digest</CardTitle>
-            </div>
-            <div className="flex items-center gap-2 pt-1">
-              <Badge variant="default">AI Digest</Badge>
-              <span className="text-xs text-zinc-400">{today}</span>
+        <Card className="border-primary/20">
+          <CardHeader className="p-5 pb-0">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium">AI Market Digest</CardTitle>
+              <Badge variant="secondary" className="text-[10px]">
+                {today}
+              </Badge>
             </div>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <ul className="space-y-2.5">
+          <CardContent className="p-5 pt-4">
+            <ul className="space-y-3">
               {aiDigestBullets.map((bullet, i) => (
-                <li key={i} className="flex gap-2 text-sm text-zinc-600 dark:text-zinc-300">
-                  <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-400" />
+                <li key={i} className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed">
+                  <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary/60" />
                   <span>{bullet}</span>
                 </li>
               ))}
             </ul>
           </CardContent>
-          <CardFooter>
-            <Button className="w-full" size="sm">
-              <Bot className="h-4 w-4" />
+          <CardFooter className="p-5 pt-0">
+            <Button variant="outline" className="w-full" size="sm">
               Generate Full Report
             </Button>
           </CardFooter>
         </Card>
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Third Row — Watchlist + Recent Analysis                           */}
-      {/* ----------------------------------------------------------------- */}
+      {/* Watchlist + Recent Analysis */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Watchlist Quick View */}
+        {/* Watchlist */}
         <Card>
-          <CardHeader>
+          <CardHeader className="p-5 pb-0">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Eye className="h-5 w-5 text-zinc-500" />
-                <CardTitle>Watchlist</CardTitle>
-              </div>
-              <Badge variant="secondary" className="text-xs">
-                {watchlist.length} stocks
-              </Badge>
+              <CardTitle className="text-sm font-medium">Watchlist</CardTitle>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
+                View All <ChevronRight className="ml-0.5 h-3 w-3" />
+              </Button>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-1">
-              {/* Header row */}
-              <div className="grid grid-cols-12 gap-2 px-2 pb-2 text-xs font-medium uppercase tracking-wider text-zinc-400">
-                <div className="col-span-2">Ticker</div>
-                <div className="col-span-4">Name</div>
-                <div className="col-span-2 text-right">Price</div>
-                <div className="col-span-2 text-right">Change</div>
-                <div className="col-span-2 text-right">Signal</div>
-              </div>
-              <Separator />
+          <CardContent className="p-5 pt-3">
+            {/* Header */}
+            <div className="grid grid-cols-3 gap-2 pb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <div>Ticker</div>
+              <div className="text-right">Price</div>
+              <div className="text-right">Change</div>
+            </div>
+            <Separator />
+            <div className="divide-y divide-border/50">
               {watchlist.map((stock) => {
                 const positive = stock.changePct >= 0;
                 return (
                   <div
                     key={stock.ticker}
-                    className="grid grid-cols-12 items-center gap-2 rounded-md px-2 py-2.5 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                    className="grid grid-cols-3 items-center gap-2 py-2.5 transition-colors hover:bg-muted/50 rounded-md px-1 -mx-1"
                   >
-                    <div className="col-span-2">
-                      <span className="font-semibold text-zinc-900 dark:text-zinc-50">
-                        {stock.ticker}
-                      </span>
-                    </div>
-                    <div className="col-span-4 truncate text-sm text-zinc-500">
-                      {stock.name}
-                    </div>
-                    <div className="col-span-2 text-right text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-sm font-medium text-foreground">
+                      {stock.ticker}
+                    </span>
+                    <span className="text-right text-sm tabular-nums text-foreground">
                       {formatCurrency(stock.price)}
-                    </div>
-                    <div
-                      className={`col-span-2 text-right text-sm font-medium ${
-                        positive ? "text-green-600" : "text-red-600"
+                    </span>
+                    <span
+                      className={`text-right text-sm tabular-nums font-medium ${
+                        positive
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       {formatPercent(stock.changePct)}
-                    </div>
-                    <div className="col-span-2 flex justify-end">
-                      <Badge
-                        variant={sentimentBadgeVariant(stock.sentiment)}
-                        className="text-[10px]"
-                      >
-                        {sentimentLabel(stock.sentiment)}
-                      </Badge>
-                    </div>
+                    </span>
                   </div>
                 );
               })}
             </div>
           </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="sm" className="ml-auto text-xs">
-              View All <ChevronRight className="h-3 w-3" />
-            </Button>
-          </CardFooter>
         </Card>
 
         {/* Recent Analysis */}
         <Card>
-          <CardHeader>
+          <CardHeader className="p-5 pb-0">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-zinc-500" />
-                <CardTitle>Recent Analysis</CardTitle>
-              </div>
-              <Badge variant="secondary" className="text-xs">
-                AI-Powered
-              </Badge>
+              <CardTitle className="text-sm font-medium">Recent Analysis</CardTitle>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
+                View All <ChevronRight className="ml-0.5 h-3 w-3" />
+              </Button>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-5 pt-3">
             <div className="space-y-4">
               {recentAnalyses.map((analysis, i) => (
                 <div key={i}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                        <span className="text-sm font-medium text-foreground">
                           {analysis.ticker}
                         </span>
                         <Badge
@@ -408,11 +338,11 @@ export default function DashboardPage() {
                           {sentimentLabel(analysis.sentiment)}
                         </Badge>
                       </div>
-                      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300">
+                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                         {analysis.summary}
                       </p>
                     </div>
-                    <span className="shrink-0 text-xs text-zinc-400">
+                    <span className="shrink-0 text-xs text-muted-foreground">
                       {analysis.date}
                     </span>
                   </div>
@@ -423,53 +353,34 @@ export default function DashboardPage() {
               ))}
             </div>
           </CardContent>
-          <CardFooter>
-            <Button variant="ghost" size="sm" className="ml-auto text-xs">
-              View All <ChevronRight className="h-3 w-3" />
-            </Button>
-          </CardFooter>
         </Card>
       </div>
 
-      {/* ----------------------------------------------------------------- */}
-      {/* Bottom Row — Latest News                                          */}
-      {/* ----------------------------------------------------------------- */}
+      {/* Latest News */}
       <div>
-        <div className="mb-4 flex items-center gap-2">
-          <Newspaper className="h-5 w-5 text-zinc-500" />
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            Latest News
-          </h2>
-        </div>
+        <h2 className="mb-4 text-sm font-medium text-foreground">Latest News</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {latestNews.map((news, i) => (
             <Card
               key={i}
-              className="overflow-hidden transition-shadow hover:shadow-md"
+              className="transition-colors hover:bg-muted/30"
             >
-              {/* Image placeholder */}
-              <div className="flex h-36 items-center justify-center bg-zinc-100 dark:bg-zinc-800">
-                <Newspaper className="h-10 w-10 text-zinc-300 dark:text-zinc-600" />
-              </div>
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-2">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
                   <Badge
                     variant={sentimentBadgeVariant(news.sentiment)}
                     className="text-[10px]"
                   >
                     {sentimentLabel(news.sentiment)}
                   </Badge>
-                  <div className="flex items-center gap-1 text-xs text-zinc-400">
-                    <Clock className="h-3 w-3" />
+                  <span className="text-xs text-muted-foreground">
                     {news.timeAgo}
-                  </div>
+                  </span>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="font-medium leading-snug text-zinc-900 dark:text-zinc-50">
+                <p className="text-sm font-medium leading-snug text-foreground">
                   {news.headline}
                 </p>
-                <p className="mt-1.5 text-xs text-zinc-400">{news.source}</p>
+                <p className="mt-2 text-xs text-muted-foreground">{news.source}</p>
               </CardContent>
             </Card>
           ))}

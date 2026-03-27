@@ -2,54 +2,20 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import {
-  Wallet,
-  TrendingUp,
-  PieChart,
-  BarChart3,
   ArrowUpRight,
   ArrowDownRight,
-  Banknote,
 } from "lucide-react";
 
 const portfolioStats = [
-  {
-    label: "Total Value",
-    value: "$127,450.00",
-    detail: null,
-    icon: Wallet,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50 dark:bg-blue-950/30",
-  },
-  {
-    label: "Day Change",
-    value: "+$1,230.50",
-    detail: "+0.97%",
-    icon: TrendingUp,
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
-  },
-  {
-    label: "Total Return",
-    value: "+$23,450.00",
-    detail: "+22.5%",
-    icon: ArrowUpRight,
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-50 dark:bg-emerald-950/30",
-  },
-  {
-    label: "Cash",
-    value: "$5,200.00",
-    detail: "4.1% of portfolio",
-    icon: Banknote,
-    color: "text-amber-600",
-    bgColor: "bg-amber-50 dark:bg-amber-950/30",
-  },
+  { label: "Total Value", value: 127450.0, formatted: "$127,450.00" },
+  { label: "Day Change", value: 1230.5, formatted: "+$1,230.50", detail: "+0.97%", positive: true },
+  { label: "Total Return", value: 23450.0, formatted: "+$23,450.00", detail: "+22.5%", positive: true },
+  { label: "Cash", value: 5200.0, formatted: "$5,200.00", detail: "4.1% of portfolio", positive: null },
 ];
 
 const holdings = [
@@ -130,95 +96,85 @@ const sectorAllocation = [
 ];
 
 export default function PortfolioPage() {
+  const totalMarketValue = holdings.reduce((s, h) => s + h.marketValue, 0);
+  const totalGainLoss = holdings.reduce((s, h) => s + h.gainLoss, 0);
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-          <PieChart className="h-6 w-6 text-blue-500" />
-          Portfolio
-        </h1>
+        <h1 className="text-xl font-semibold text-foreground">Portfolio</h1>
         <p className="text-sm text-muted-foreground">
-          Track your holdings, performance, and asset allocation
+          Holdings, performance, and allocation
         </p>
       </div>
 
       {/* Stats Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {portfolioStats.map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={stat.label}>
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      {stat.label}
-                    </p>
-                    <p className="text-2xl font-bold tracking-tight">
-                      {stat.value}
-                    </p>
-                    {stat.detail && (
-                      <p className={`text-sm font-medium ${stat.color}`}>
-                        {stat.detail}
-                      </p>
-                    )}
-                  </div>
-                  <div className={`rounded-lg p-2.5 ${stat.bgColor}`}>
-                    <Icon className={`h-5 w-5 ${stat.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {portfolioStats.map((stat) => (
+          <Card key={stat.label}>
+            <CardContent className="p-5">
+              <p className="text-xs font-medium text-muted-foreground">
+                {stat.label}
+              </p>
+              <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
+                {stat.formatted}
+              </p>
+              {stat.detail && (
+                <p
+                  className={`mt-0.5 text-sm tabular-nums font-medium ${
+                    stat.positive === true
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : stat.positive === false
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-muted-foreground"
+                  }`}
+                >
+                  {stat.detail}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Holdings Table */}
       <Card>
-        <CardHeader className="pb-3">
+        <CardHeader className="p-5 pb-0">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-blue-500" />
-                Holdings
-              </CardTitle>
-              <CardDescription>
-                {holdings.length} positions across {sectorAllocation.length} sectors
-              </CardDescription>
-            </div>
-            <Badge variant="secondary" className="tabular-nums">
-              {holdings.length} holdings
-            </Badge>
+            <CardTitle className="text-sm font-medium">Holdings</CardTitle>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {holdings.length} positions
+            </span>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 pt-3">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">
+                <tr className="border-b border-border">
+                  <th className="px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     Stock
                   </th>
-                  <th className="hidden px-4 py-3 text-right text-xs font-medium text-muted-foreground sm:table-cell">
+                  <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground sm:table-cell">
                     Shares
                   </th>
-                  <th className="hidden px-4 py-3 text-right text-xs font-medium text-muted-foreground md:table-cell">
+                  <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground md:table-cell">
                     Avg Cost
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                  <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     Price
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                  <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     Mkt Value
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground">
+                  <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                     Gain/Loss
                   </th>
-                  <th className="hidden px-4 py-3 text-right text-xs font-medium text-muted-foreground lg:table-cell">
+                  <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground lg:table-cell">
                     Return
                   </th>
-                  <th className="hidden px-4 py-3 text-right text-xs font-medium text-muted-foreground md:table-cell">
+                  <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground md:table-cell">
                     Weight
                   </th>
                 </tr>
@@ -227,70 +183,77 @@ export default function PortfolioPage() {
                 {holdings.map((h) => (
                   <tr
                     key={h.ticker}
-                    className="border-b border-border/50 transition-colors hover:bg-muted/30"
+                    className="border-b border-border/50 transition-colors hover:bg-muted/50"
                   >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/10 text-xs font-bold text-blue-600">
-                          {h.ticker.substring(0, 2)}
-                        </div>
-                        <div>
-                          <span className="font-semibold">{h.ticker}</span>
-                          <p className="text-xs text-muted-foreground">
-                            {h.name}
-                          </p>
-                        </div>
-                      </div>
+                    <td className="px-5 py-3">
+                      <span className="font-medium text-foreground">{h.ticker}</span>
+                      <p className="text-xs text-muted-foreground">{h.name}</p>
                     </td>
-                    <td className="hidden px-4 py-3 text-right tabular-nums sm:table-cell">
+                    <td className="hidden px-5 py-3 text-right tabular-nums text-foreground sm:table-cell">
                       {h.shares}
                     </td>
-                    <td className="hidden px-4 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
+                    <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
                       {formatCurrency(h.avgCost)}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium tabular-nums">
+                    <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
                       {formatCurrency(h.currentPrice)}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium tabular-nums">
+                    <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
                       {formatCurrency(h.marketValue)}
                     </td>
-                    <td className={`px-4 py-3 text-right tabular-nums ${h.gainLoss >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    <td
+                      className={`px-5 py-3 text-right tabular-nums font-medium ${
+                        h.gainLoss >= 0
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
                       <div className="flex items-center justify-end gap-1">
                         {h.gainLoss >= 0 ? (
                           <ArrowUpRight className="h-3.5 w-3.5" />
                         ) : (
                           <ArrowDownRight className="h-3.5 w-3.5" />
                         )}
-                        <span className="font-medium">
-                          {formatCurrency(Math.abs(h.gainLoss))}
-                        </span>
+                        {formatCurrency(Math.abs(h.gainLoss))}
                       </div>
                     </td>
-                    <td className={`hidden px-4 py-3 text-right font-medium tabular-nums lg:table-cell ${h.gainLossPct >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                    <td
+                      className={`hidden px-5 py-3 text-right tabular-nums font-medium lg:table-cell ${
+                        h.gainLossPct >= 0
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
                       {formatPercent(h.gainLossPct)}
                     </td>
-                    <td className="hidden px-4 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
+                    <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
                       {h.weight.toFixed(1)}%
                     </td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-border bg-muted/20">
-                  <td className="px-4 py-3 font-semibold" colSpan={1}>
+                <tr className="border-t-2 border-border">
+                  <td className="px-5 py-3 text-sm font-semibold text-foreground">
                     Total
                   </td>
-                  <td className="hidden px-4 py-3 sm:table-cell" />
-                  <td className="hidden px-4 py-3 md:table-cell" />
-                  <td className="px-4 py-3" />
-                  <td className="px-4 py-3 text-right font-bold tabular-nums">
-                    {formatCurrency(holdings.reduce((s, h) => s + h.marketValue, 0))}
+                  <td className="hidden px-5 py-3 sm:table-cell" />
+                  <td className="hidden px-5 py-3 md:table-cell" />
+                  <td className="px-5 py-3" />
+                  <td className="px-5 py-3 text-right tabular-nums font-semibold text-foreground">
+                    {formatCurrency(totalMarketValue)}
                   </td>
-                  <td className="px-4 py-3 text-right font-bold tabular-nums text-emerald-600">
-                    {formatCurrency(holdings.reduce((s, h) => s + h.gainLoss, 0))}
+                  <td
+                    className={`px-5 py-3 text-right tabular-nums font-semibold ${
+                      totalGainLoss >= 0
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {formatCurrency(totalGainLoss)}
                   </td>
-                  <td className="hidden px-4 py-3 lg:table-cell" />
-                  <td className="hidden px-4 py-3 md:table-cell" />
+                  <td className="hidden px-5 py-3 lg:table-cell" />
+                  <td className="hidden px-5 py-3 md:table-cell" />
                 </tr>
               </tfoot>
             </table>
@@ -300,42 +263,32 @@ export default function PortfolioPage() {
 
       {/* Sector Allocation */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <PieChart className="h-5 w-5 text-violet-500" />
-            Sector Allocation
-          </CardTitle>
-          <CardDescription>
-            Portfolio distribution across market sectors
-          </CardDescription>
+        <CardHeader className="p-5 pb-0">
+          <CardTitle className="text-sm font-medium">Sector Allocation</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-5 pt-4">
           {/* Stacked bar */}
-          <div className="mb-6 flex h-4 overflow-hidden rounded-full">
+          <div className="mb-5 flex h-2 overflow-hidden rounded-full">
             {sectorAllocation.map((s) => (
               <div
                 key={s.sector}
                 className={`${s.color} transition-all`}
                 style={{ width: `${s.weight}%` }}
-                title={`${s.sector}: ${s.weight}%`}
               />
             ))}
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {sectorAllocation.map((s) => (
               <div
                 key={s.sector}
-                className="flex items-center gap-3 rounded-lg border border-border/50 p-3"
+                className="flex items-center gap-3"
               >
-                <div className={`h-3 w-3 rounded-full ${s.color}`} />
+                <div className={`h-2.5 w-2.5 rounded-full ${s.color}`} />
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{s.sector}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {s.weight}% allocation
-                  </p>
+                  <p className="text-sm text-foreground">{s.sector}</p>
                 </div>
-                <span className="text-lg font-bold tabular-nums">
+                <span className="text-sm font-medium tabular-nums text-foreground">
                   {s.weight}%
                 </span>
               </div>

@@ -5,8 +5,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/components/layout/sidebar-context";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
@@ -24,9 +22,8 @@ import {
   Calculator,
   Settings,
   HelpCircle,
-  User,
-  ChevronsLeft,
-  ChevronsRight,
+  ChevronLeft,
+  ChevronRight,
   TrendingUp,
 } from "lucide-react";
 
@@ -41,10 +38,10 @@ const mainNavigation = [
 const analysisTools = [
   { name: "Stock Lookup", href: "/lookup", icon: Search },
   { name: "Compare Stocks", href: "/compare", icon: GitCompareArrows },
-  { name: "Valuation Calculator", href: "/valuation", icon: Calculator },
+  { name: "Valuation", href: "/valuation", icon: Calculator },
 ];
 
-const accountLinks = [
+const secondaryLinks = [
   { name: "Settings", href: "/settings", icon: Settings },
   { name: "Help", href: "/help", icon: HelpCircle },
 ];
@@ -63,39 +60,34 @@ export function Sidebar() {
       <aside
         className={cn(
           "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
-          "border-r border-sidebar-border bg-sidebar transition-all duration-300 ease-in-out",
-          collapsed ? "lg:w-[68px]" : "lg:w-64"
+          "border-r border-border bg-background transition-all duration-200 ease-in-out",
+          collapsed ? "lg:w-[52px]" : "lg:w-[240px]"
         )}
       >
-        {/* Logo / Brand */}
+        {/* Logo */}
         <div
           className={cn(
-            "flex h-16 shrink-0 items-center gap-3 border-b border-sidebar-border px-4",
+            "flex h-14 shrink-0 items-center gap-2.5 px-3",
             collapsed && "justify-center px-0"
           )}
         >
-          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 shadow-md shadow-blue-600/25">
-            <TrendingUp className="h-5 w-5 text-white" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground">
+            <TrendingUp className="h-3.5 w-3.5 text-background" />
           </div>
           {!collapsed && (
-            <div className="flex flex-col">
-              <span className="text-base font-bold tracking-tight text-sidebar-foreground">
-                Takovic
-              </span>
-              <span className="text-[10px] font-medium leading-none text-muted-foreground">
-                Financial Analytics
-              </span>
-            </div>
+            <span className="text-[15px] font-semibold tracking-tight text-foreground">
+              Takovic
+            </span>
           )}
         </div>
 
-        {/* Scrollable nav area */}
-        <ScrollArea className="flex-1">
-          <div className="flex flex-col gap-1 p-3">
-            {/* Main Navigation */}
-            <SidebarSection label="Main" collapsed={collapsed}>
+        {/* Navigation */}
+        <ScrollArea className="flex-1 px-2">
+          <div className="flex flex-col gap-6 py-2">
+            {/* Main */}
+            <NavSection label="Navigation" collapsed={collapsed}>
               {mainNavigation.map((item) => (
-                <SidebarLink
+                <NavItem
                   key={item.href}
                   href={item.href}
                   icon={item.icon}
@@ -104,14 +96,12 @@ export function Sidebar() {
                   collapsed={collapsed}
                 />
               ))}
-            </SidebarSection>
+            </NavSection>
 
-            <Separator className="my-2 bg-sidebar-border" />
-
-            {/* Analysis Tools */}
-            <SidebarSection label="Analysis Tools" collapsed={collapsed}>
+            {/* Analysis */}
+            <NavSection label="Analysis" collapsed={collapsed}>
               {analysisTools.map((item) => (
-                <SidebarLink
+                <NavItem
                   key={item.href}
                   href={item.href}
                   icon={item.icon}
@@ -120,79 +110,70 @@ export function Sidebar() {
                   collapsed={collapsed}
                 />
               ))}
-            </SidebarSection>
+            </NavSection>
+
+            {/* Secondary */}
+            <NavSection label="Account" collapsed={collapsed}>
+              {secondaryLinks.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.name}
+                  active={isActive(item.href)}
+                  collapsed={collapsed}
+                />
+              ))}
+            </NavSection>
           </div>
         </ScrollArea>
 
-        {/* Bottom section: Account links + collapse toggle */}
-        <div className="mt-auto border-t border-sidebar-border p-3">
-          {/* Account links */}
-          <div className="flex flex-col gap-1">
-            {accountLinks.map((item) => (
-              <SidebarLink
-                key={item.href}
-                href={item.href}
-                icon={item.icon}
-                label={item.name}
-                active={isActive(item.href)}
-                collapsed={collapsed}
-              />
-            ))}
-          </div>
-
-          <Separator className="my-2 bg-sidebar-border" />
-
-          {/* Profile row */}
+        {/* Bottom: profile + collapse */}
+        <div className="mt-auto border-t border-border px-2 py-3">
+          {/* Profile */}
           <div
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2",
+              "flex items-center gap-2.5 rounded-md px-2 py-1.5",
               collapsed && "justify-center px-0"
             )}
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-500 text-xs font-semibold text-white">
-              JD
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background">
+              RA
             </div>
             {!collapsed && (
-              <div className="flex flex-1 flex-col overflow-hidden">
-                <span className="truncate text-sm font-medium text-sidebar-foreground">
-                  John Doe
-                </span>
-                <span className="truncate text-xs text-muted-foreground">
-                  Pro Plan
-                </span>
+              <div className="flex flex-1 items-center justify-between overflow-hidden">
+                <div className="flex flex-col">
+                  <span className="truncate text-[13px] font-medium leading-tight text-foreground">
+                    Rafal
+                  </span>
+                  <span className="text-[10px] font-medium leading-tight text-muted-foreground">
+                    Professional
+                  </span>
+                </div>
               </div>
             )}
           </div>
 
-          <Separator className="my-2 bg-sidebar-border" />
-
           {/* Collapse toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={toggle}
                 className={cn(
-                  "w-full text-muted-foreground hover:text-sidebar-foreground",
-                  collapsed && "justify-center px-0"
+                  "mt-1.5 flex h-7 w-full items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+                  collapsed && "w-full"
                 )}
               >
                 {collapsed ? (
-                  <ChevronsRight className="h-4 w-4" />
+                  <ChevronRight className="h-3.5 w-3.5" />
                 ) : (
-                  <>
-                    <ChevronsLeft className="h-4 w-4" />
-                    <span className="text-xs">Collapse</span>
-                  </>
+                  <ChevronLeft className="h-3.5 w-3.5" />
                 )}
-              </Button>
+              </button>
             </TooltipTrigger>
-            {collapsed && (
-              <TooltipContent side="right">
-                <p>Expand sidebar</p>
-              </TooltipContent>
-            )}
+            <TooltipContent side="right" className="text-xs">
+              {collapsed ? "Expand" : "Collapse"}
+            </TooltipContent>
           </Tooltip>
         </div>
       </aside>
@@ -201,10 +182,10 @@ export function Sidebar() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Helper components                                                  */
+/*  NavSection                                                         */
 /* ------------------------------------------------------------------ */
 
-function SidebarSection({
+function NavSection({
   label,
   collapsed,
   children,
@@ -214,9 +195,9 @@ function SidebarSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-0.5">
       {!collapsed && (
-        <span className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <span className="mb-1 px-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/70">
           {label}
         </span>
       )}
@@ -225,7 +206,11 @@ function SidebarSection({
   );
 }
 
-function SidebarLink({
+/* ------------------------------------------------------------------ */
+/*  NavItem                                                            */
+/* ------------------------------------------------------------------ */
+
+function NavItem({
   href,
   icon: Icon,
   label,
@@ -242,23 +227,19 @@ function SidebarLink({
     <Link
       href={href}
       className={cn(
-        "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
-        collapsed && "justify-center px-0",
+        "group flex items-center gap-2.5 rounded-md px-2 py-[7px] text-[13px] font-medium transition-colors duration-100",
+        collapsed && "justify-center px-0 py-2",
         active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground"
-          : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+          ? "bg-accent text-foreground"
+          : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
       )}
     >
-      {/* Active indicator bar */}
-      {active && (
-        <span className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-primary" />
-      )}
       <Icon
         className={cn(
-          "h-[18px] w-[18px] shrink-0 transition-colors",
+          "h-[14px] w-[14px] shrink-0",
           active
-            ? "text-sidebar-accent-foreground"
-            : "text-muted-foreground group-hover:text-sidebar-foreground"
+            ? "text-foreground"
+            : "text-muted-foreground group-hover:text-foreground"
         )}
       />
       {!collapsed && <span>{label}</span>}
@@ -269,8 +250,8 @@ function SidebarLink({
     return (
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
-        <TooltipContent side="right">
-          <p>{label}</p>
+        <TooltipContent side="right" className="text-xs">
+          {label}
         </TooltipContent>
       </Tooltip>
     );
