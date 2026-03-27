@@ -31,21 +31,57 @@ export const OVERVIEW = {
 };
 
 // ---------------------------------------------------------------------------
-// Investment Analysis — 8-Category Scorecard
+// Investment Analysis
 // ---------------------------------------------------------------------------
+
+// --- Scorecard types ---
+
+export type LetterGrade = "A" | "B" | "C" | "D" | "F";
 
 export interface ScorecardItem {
   category: string;
-  score: number; // 1-5
-  weight: number; // relative importance
+  grade: LetterGrade;
+  weight: number; // relative importance %
   assessment: string;
   details: string[];
 }
 
+export interface EcosystemMetricStatus {
+  label: string;
+  value: string;
+  status: "bullish" | "healthy" | "growing" | "deflationary" | "upgraded" | "neutral" | "bearish" | "warning";
+  statusLabel: string;
+}
+
+export interface EcosystemHealth {
+  title: string;
+  description: string;
+  overallGrade: LetterGrade;
+  metrics: EcosystemMetricStatus[];
+  commentary: string;
+}
+
+// --- Scorecard data ---
+
+export const ECOSYSTEM_HEALTH: EcosystemHealth = {
+  title: "Ecosystem Health",
+  description: "Ethereum network fundamentals (see Ethereum tab for details)",
+  overallGrade: "A",
+  metrics: [
+    { label: "ETF Flows (7d)", value: "+$340M", status: "bullish", statusLabel: "Bullish" },
+    { label: "Staking Rate", value: "28.3%", status: "healthy", statusLabel: "Healthy" },
+    { label: "DeFi TVL Trend", value: "$62.4B", status: "growing", statusLabel: "Growing" },
+    { label: "Supply Growth", value: "-0.2%", status: "deflationary", statusLabel: "Deflationary" },
+    { label: "Protocol Progress", value: "Fusaka Live", status: "upgraded", statusLabel: "Upgraded" },
+  ],
+  commentary:
+    "Strong ecosystem tailwinds despite ETH price weakness (-62% from 2025 highs). Ethereum daily txns hit ATH (2.5M), active addresses ATH (1M daily). Tom Lee: ETH prices see V-shaped recoveries from 50%+ drops (8th time since 2018). GENIUS Act + SEC Project Crypto transformational.",
+};
+
 export const SCORECARD: ScorecardItem[] = [
   {
     category: "Asset Quality",
-    score: 4,
+    grade: "A",
     weight: 20,
     assessment: "Strong — pure ETH exposure, highly liquid asset",
     details: [
@@ -57,19 +93,19 @@ export const SCORECARD: ScorecardItem[] = [
   },
   {
     category: "Accumulation Strategy",
-    score: 3,
+    grade: "B",
     weight: 15,
-    assessment: "Active — frequent raises, but high dilution",
+    assessment: "Active — frequent raises, rapid execution",
     details: [
       "Weekly/bi-weekly capital raises via ATM and registered directs",
       "35+ purchase events tracked since Jul 2025",
-      "Rapid execution capability",
+      "Rapid execution capability — can deploy capital within days",
       "Risk: dilution rate 15-25% annually",
     ],
   },
   {
     category: "Management & Governance",
-    score: 2,
+    grade: "C",
     weight: 15,
     assessment: "Early stage — limited track record",
     details: [
@@ -81,7 +117,7 @@ export const SCORECARD: ScorecardItem[] = [
   },
   {
     category: "Valuation",
-    score: 2,
+    grade: "C",
     weight: 15,
     assessment: "Premium — trading well above NAV",
     details: [
@@ -93,19 +129,19 @@ export const SCORECARD: ScorecardItem[] = [
   },
   {
     category: "Yield Generation",
-    score: 3,
+    grade: "B",
     weight: 10,
-    assessment: "Moderate — base staking only, upside from restaking",
+    assessment: "Moderate — base staking with upside from restaking",
     details: [
       "~3.5% APY from native ETH staking",
-      "Only 30% of holdings staked currently",
+      "Only 30% of holdings staked currently — room to grow",
       "Restaking (EigenLayer) could boost to 5-7%+",
       "No dividend paid yet — yield retained for accumulation",
     ],
   },
   {
     category: "Liquidity & Structure",
-    score: 2,
+    grade: "C",
     weight: 10,
     assessment: "Thin — micro-cap with limited float",
     details: [
@@ -116,29 +152,131 @@ export const SCORECARD: ScorecardItem[] = [
     ],
   },
   {
-    category: "Regulatory Risk",
-    score: 3,
+    category: "Regulatory Environment",
+    grade: "B",
     weight: 10,
-    assessment: "Moderate — crypto regulatory environment evolving",
+    assessment: "Improving — GENIUS Act + SEC Project Crypto positive",
     details: [
       "SEC classifies under SIC 6199 (Finance Services)",
-      "ETH regulatory clarity improving (not a security per SEC)",
-      "ETH ETFs approved — positive precedent",
-      "Risk: staking regulation, tax treatment changes",
+      "ETH not classified as security — positive clarity",
+      "ETH ETFs approved — institutional legitimacy",
+      "GENIUS Act and SEC Project Crypto transformational for crypto equities",
     ],
   },
   {
     category: "Competitive Position",
-    score: 3,
+    grade: "B",
     weight: 5,
-    assessment: "Niche — few public ETH treasury competitors",
+    assessment: "First-mover in public ETH treasury space",
     details: [
-      "First-mover in public ETH treasury space",
-      "ETH ETFs are direct competition for passive exposure",
-      "Differentiated by: staking yield, equity structure, potential leverage",
+      "Few direct competitors for public ETH treasury equity",
+      "ETH ETFs are competition for passive exposure",
+      "Differentiated by: staking yield, leverage, equity structure",
       "Moat: early accumulation advantage if ETH appreciates",
     ],
   },
+];
+
+// --- Investment Thesis ---
+
+export const INVESTMENT_SUMMARY =
+  "BMNR represents a leveraged, yield-generating bet on Ethereum via public equity markets. The company accumulates ETH through capital raises, stakes a portion for yield, and trades at a significant NAV premium reflecting the market's appetite for structured ETH exposure. The thesis depends on: (1) ETH price appreciation, (2) premium sustainability, (3) accretive dilution (ETH growth > share dilution), and (4) staking yield expansion.";
+
+export const GROWTH_DRIVERS = [
+  {
+    driver: "ETH Price Appreciation",
+    impact: "high" as const,
+    description: "Primary value driver. ETH at $2,185 is -62% from 2025 highs. V-shaped recovery pattern (8th occurrence since 2018). ETF inflows accelerating.",
+  },
+  {
+    driver: "Staking Yield Expansion",
+    impact: "medium" as const,
+    description: "Currently 30% staked at ~3.5% APY. Increasing staking ratio to 80%+ and adding restaking (EigenLayer) could boost effective yield to 5-7%.",
+  },
+  {
+    driver: "Accretive Capital Raises",
+    impact: "high" as const,
+    description: "Issuing equity at 9.9x NAV premium means each $1 raised buys ~$1 of ETH but is backed by ~$0.10 of NAV. If ETH appreciates, dilution becomes accretive.",
+  },
+  {
+    driver: "Regulatory Tailwinds",
+    impact: "medium" as const,
+    description: "GENIUS Act + SEC Project Crypto creating favorable environment. ETH ETF staking approval would be transformational for yield narrative.",
+  },
+  {
+    driver: "Dividend Initiation",
+    impact: "medium" as const,
+    description: "Staking yield could fund a dividend, attracting income-focused investors and potentially justifying a higher NAV premium.",
+  },
+  {
+    driver: "Institutional Adoption",
+    impact: "low" as const,
+    description: "Uplisting to major exchange or institutional coverage initiation could drive re-rating and volume improvement.",
+  },
+];
+
+export const COMPETITIVE_MOAT = {
+  moatType: "Narrow — first-mover with accumulation advantage",
+  strengths: [
+    "First public ETH treasury company — brand recognition in niche",
+    "2,141 ETH accumulated — cost basis advantage if ETH appreciates",
+    "Operational infrastructure for rapid capital deployment",
+    "NYSE listing provides regulatory compliance framework",
+  ],
+  weaknesses: [
+    "Low barriers to entry — any company can adopt ETH treasury strategy",
+    "ETH ETFs provide cheaper, more liquid passive exposure",
+    "No proprietary technology or IP moat",
+    "Dependent on capital markets remaining open for equity raises",
+  ],
+  vsETFs: "BMNR differentiates from ETH ETFs through: (1) staking yield (ETFs can't stake yet), (2) leveraged exposure via NAV premium, (3) equity structure enabling options/margin. However, if staking ETFs are approved, this advantage narrows significantly.",
+};
+
+// --- Risk Assessment ---
+
+export interface RiskItem {
+  risk: string;
+  severity: "critical" | "high" | "medium" | "low";
+  likelihood: "high" | "medium" | "low";
+  mitigation: string;
+}
+
+export const RISK_MATRIX: RiskItem[] = [
+  { risk: "ETH price decline (>50%)", severity: "critical", likelihood: "medium", mitigation: "Dollar-cost averaging via continuous purchases; staking yield provides income floor" },
+  { risk: "NAV premium compression to 1x", severity: "critical", likelihood: "medium", mitigation: "Dividend initiation, staking yield expansion, and operational track record could sustain premium" },
+  { risk: "Excessive dilution eroding per-share value", severity: "high", likelihood: "high", mitigation: "Only accretive if ETH appreciation > dilution rate; management must balance growth vs. existing shareholders" },
+  { risk: "Regulatory crackdown on crypto equities", severity: "high", likelihood: "low", mitigation: "NYSE listing provides compliance framework; GENIUS Act trajectory is favorable" },
+  { risk: "Smart contract / staking risk", severity: "high", likelihood: "low", mitigation: "Use institutional-grade staking providers; diversify across validators" },
+  { risk: "Liquidity crisis — unable to raise capital", severity: "high", likelihood: "low", mitigation: "Maintain ATM program capacity; diversify funding sources" },
+  { risk: "Management execution risk", severity: "medium", likelihood: "medium", mitigation: "Transparent 8-K reporting; simple business model reduces execution complexity" },
+  { risk: "Competitor entry (larger ETH treasury co)", severity: "medium", likelihood: "medium", mitigation: "First-mover advantage; established accumulation base" },
+];
+
+export const STRATEGIC_ASSESSMENT =
+  "BMNR is a high-risk, high-reward position suitable for investors with strong ETH conviction seeking leveraged equity exposure. The 9.9x NAV premium is the primary risk — if ETH drops 50% AND the premium compresses to 2x, the stock could decline 80%+. Conversely, ETH recovery to ATH ($4,800) with sustained premium implies 2-3x upside. Position sizing should reflect crypto-like volatility.";
+
+export const POSITION_SIZING = {
+  recommendation: "Small position (1-3% of portfolio) due to micro-cap, high-volatility, binary outcome profile",
+  priceTargets: [
+    { scenario: "Bear", ethPrice: 1500, navPremium: 2.0, impliedPrice: 0.13, upside: -86 },
+    { scenario: "Base", ethPrice: 3500, navPremium: 5.0, impliedPrice: 0.75, upside: -21 },
+    { scenario: "Bull", ethPrice: 5000, navPremium: 8.0, impliedPrice: 1.71, upside: 80 },
+    { scenario: "Moon", ethPrice: 8000, navPremium: 10.0, impliedPrice: 3.43, upside: 261 },
+  ],
+  notes: "Price targets assume 48.5M shares outstanding (no further dilution). Actual targets will be lower with dilution factored in. See Valuation Calculator for dynamic modeling.",
+};
+
+// --- Analysis Archive ---
+
+export interface AnalysisArchiveEntry {
+  date: string;
+  title: string;
+  summary: string;
+  verdict: string;
+}
+
+export const ANALYSIS_ARCHIVE: AnalysisArchiveEntry[] = [
+  // Append-only — each update creates a dated snapshot
 ];
 
 // ---------------------------------------------------------------------------
