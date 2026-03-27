@@ -1,5 +1,28 @@
+"use client";
+
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { SidebarProvider, useSidebar } from "@/components/layout/sidebar-context";
+import { cn } from "@/lib/utils";
+
+function DashboardShell({ children }: { children: React.ReactNode }) {
+  const { collapsed } = useSidebar();
+
+  return (
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div
+        className={cn(
+          "flex flex-1 flex-col transition-all duration-300 ease-in-out",
+          collapsed ? "lg:pl-[68px]" : "lg:pl-64"
+        )}
+      >
+        <Header />
+        <main className="flex-1 bg-muted/30 p-6">{children}</main>
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardLayout({
   children,
@@ -7,14 +30,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex flex-1 flex-col lg:pl-64">
-        <Header />
-        <main className="flex-1 bg-zinc-50 p-6 dark:bg-zinc-950">
-          {children}
-        </main>
-      </div>
-    </div>
+    <SidebarProvider>
+      <DashboardShell>{children}</DashboardShell>
+    </SidebarProvider>
   );
 }
