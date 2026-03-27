@@ -66,6 +66,18 @@ export async function getBalanceSheet(
   );
 }
 
+// Cash flow statement
+export async function getCashFlowStatement(
+  ticker: string,
+  period: "annual" | "quarter" = "annual",
+  limit = 5
+) {
+  return fetchFMP<FMPCashFlowStatement[]>(
+    `/cash-flow-statement/${ticker}`,
+    { period, limit: limit.toString() }
+  );
+}
+
 // Key metrics
 export async function getKeyMetrics(
   ticker: string,
@@ -181,6 +193,18 @@ export interface FMPKeyMetrics {
   grossProfitMargin: number;
   operatingProfitMargin: number;
   netProfitMargin: number;
+}
+
+export interface FMPCashFlowStatement {
+  date: string;
+  period: string;
+  freeCashFlow: number;
+  operatingCashFlow: number;
+  capitalExpenditure: number;
+  dividendsPaid: number;
+  netCashUsedForInvestingActivites: number;
+  debtRepayment: number;
+  commonStockRepurchased: number;
 }
 
 export interface FMPSearchResult {
