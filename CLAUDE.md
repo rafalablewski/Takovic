@@ -6,6 +6,40 @@
 
 ---
 
+## Current State (as of 2026-03-27)
+
+### What's Built
+- **Next.js 15** app with App Router, TypeScript, Tailwind CSS 4
+- **Theme system**: oklch() colors, light + dark modes, 18 semantic token pairs
+- **Database**: 10-table Drizzle schema deployed to Neon PostgreSQL
+- **API clients**: FMP (8 endpoints), Claude AI (summaries + sentiment), Redis cache (Upstash)
+- **Scoring engine**: 5-dimension snowflake scores (value, growth, profitability, health, dividend)
+- **UI library**: 9 shadcn/ui primitives (Button, Card, Badge, Tabs, Avatar, DropdownMenu, Tooltip, ScrollArea, Separator)
+- **Layout**: Collapsible sidebar (240px/52px), sticky header with Cmd+K search, market status indicator
+- **6 dashboard pages**: Dashboard, Stock `[ticker]`, Screener, Watchlist, Portfolio, News — all rendered with mock data
+- **3 API routes**: `/api/stocks/[ticker]`, `/api/stocks/search`, `/api/analysis/[ticker]`
+- **Drizzle migration**: Generated SQL for all tables, deployed to Neon
+
+### What's NOT Built Yet
+- Entity registry system (`src/lib/entities.ts`, `src/data/entity-context.ts`, `src/data/tab-registry.ts`)
+- Stock-specific data files (`src/data/{ticker}/`)
+- Real data wiring — all 6 pages use hardcoded mock data
+- Auth.js v5 (login/register routes empty)
+- Watchlist, Portfolio, News, Screener CRUD APIs (directories empty)
+- Shared components (`src/components/shared/` empty)
+- Chart components (`src/components/charts/` empty)
+- React hooks (`src/hooks/` empty)
+- Zustand stores (`src/stores/` empty)
+- Error boundaries, loading skeletons, empty states
+- Search functionality (UI exists, not wired)
+
+### Known Debt
+- `sentimentBadgeVariant()` and `sentimentLabel()` duplicated in 4+ page files — must consolidate into `src/lib/utils.ts`
+- `scoreColor()` duplicated in 3 pages — must extract to utils
+- Mock data hardcoded in page components — must wire to API routes
+
+---
+
 ## 50 Rules for Stock Entities
 
 All stock-specific entities (tickers, companies) follow these rules for structured, consistent, long-lived profiles. "Entity" = a stock/company tracked in the platform.
@@ -159,53 +193,103 @@ If you can only follow 10 rules, prioritize these:
 
 ### Tech Stack
 - **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS 4, shadcn/ui
-- **Backend**: Next.js Route Handlers + Python FastAPI (AI services)
+- **Backend**: Next.js Route Handlers + Python FastAPI (AI services, planned)
 - **Database**: PostgreSQL (Neon) via Drizzle ORM + Redis (Upstash) for caching
-- **AI**: Claude API (Anthropic) for stock summaries and sentiment
-- **Data**: Financial Modeling Prep API (primary), Alpha Vantage (backup)
-- **Charts**: TradingView Lightweight Charts + Recharts
-- **Auth**: Auth.js v5
+- **AI**: Claude API (Anthropic) — Sonnet 4.6 for summaries, Haiku 4.5 for sentiment
+- **Data**: Financial Modeling Prep API (primary), Alpha Vantage (backup, planned)
+- **Charts**: TradingView Lightweight Charts + Recharts (installed, not yet implemented)
+- **Auth**: Auth.js v5 (planned, not yet implemented)
 
 ### Key Directories
 ```
 src/
-├── app/              # Next.js App Router pages & API routes
+├── app/                    # Next.js App Router
+│   ├── (auth)/             # Login/Register (empty)
+│   ├── (dashboard)/        # Authenticated app layout
+│   │   ├── layout.tsx      # Sidebar + Header shell
+│   │   ├── page.tsx        # Dashboard home
+│   │   ├── stock/[ticker]/ # Stock analysis page
+│   │   ├── screener/       # Stock screener
+│   │   ├── watchlist/      # Watchlists
+│   │   ├── portfolio/      # Portfolio tracker
+│   │   └── news/           # News feed
+│   └── api/                # Route Handlers
+│       ├── stocks/         # Stock data + search (implemented)
+│       ├── analysis/       # AI analysis (implemented)
+│       ├── watchlist/      # CRUD (empty)
+│       ├── portfolio/      # CRUD (empty)
+│       └── news/           # Feed (empty)
 ├── components/
-│   ├── ui/           # shadcn/ui primitives (Button, Card, Badge, etc.)
-│   ├── charts/       # Financial chart components (shared, prop-driven)
-│   ├── stock/        # Stock-specific composite components
-│   ├── layout/       # Sidebar, Header
-│   └── shared/       # Reusable patterns extracted from pages
+│   ├── ui/                 # 9 shadcn/ui primitives
+│   ├── layout/             # Sidebar, Header, SidebarContext
+│   ├── charts/             # Chart components (empty)
+│   ├── stock/              # Stock composites (empty)
+│   ├── shared/             # Reusable patterns (empty)
+│   ├── screener/           # Screener components (empty)
+│   └── news/               # News components (empty)
 ├── lib/
-│   ├── db/           # Drizzle schema, connection, migrations
-│   ├── api/          # FMP client, Alpha Vantage client
-│   ├── ai/           # Claude API client, prompt templates
-│   ├── analysis/     # Snowflake score calculations, valuation models
-│   ├── cache.ts      # Redis cache helpers with TTL strategy
-│   └── utils.ts      # cn(), formatCurrency(), sentimentColor(), etc.
-├── types/            # Shared TypeScript interfaces (stock.ts, analysis.ts, news.ts)
-├── hooks/            # React hooks (useStock, useWatchlist, useScreener)
-└── stores/           # Zustand state management
+│   ├── db/                 # Drizzle schema + migrations
+│   │   └── schema.ts       # 10 tables, 3 enums, relations
+│   ├── api/
+│   │   └── fmp.ts          # FMP client (8 endpoints, typed responses)
+│   ├── ai/
+│   │   └── claude.ts       # Claude summaries + sentiment
+│   ├── analysis/
+│   │   └── scores.ts       # Snowflake score engine (5 dimensions)
+│   ├── cache.ts            # Redis helpers + TTL constants
+│   └── utils.ts            # cn(), formatCurrency(), sentimentColor(), etc.
+├── types/
+│   ├── stock.ts            # Stock, StockQuote, StockProfile, KeyMetrics
+│   ├── analysis.ts         # Sentiment, SnowflakeScores, ScreenerFilters
+│   └── news.ts             # NewsArticle, MarketDigest
+├── hooks/                  # React hooks (empty)
+└── stores/                 # Zustand state (empty)
 ```
 
-### Database Schema
+### Database Schema (Neon PostgreSQL)
 Defined in `src/lib/db/schema.ts` using Drizzle ORM. 10 tables:
-- `users`, `user_preferences`
-- `stocks`, `stock_analyses`, `financial_data`
-- `watchlists`, `watchlist_stocks`
-- `portfolios`, `portfolio_holdings`
-- `news_articles`
+- `users` (id, email, name, plan enum), `user_preferences` (theme, notifications)
+- `stocks` (ticker unique, name, exchange, sector, industry, marketCap)
+- `stock_analyses` (5 snowflake scores, aiSummary, sentiment, strengths[], weaknesses[])
+- `financial_data` (period enum, year, revenue, netIncome, eps, ratios — unique on stock+period+year)
+- `watchlists` → `watchlist_stocks` (user's stock lists)
+- `portfolios` → `portfolio_holdings` (shares, avgCostBasis)
+- `news_articles` (title, summary, sourceUrl, sentiment, publishedAt)
 
 ### CSS Theme System
 - All colors use `oklch()` in `src/app/globals.css`
 - Light (`:root`) and dark (`.dark`) themes fully defined
-- Semantic tokens: `--background`, `--foreground`, `--card`, `--primary`, `--muted`, `--border`, `--sidebar-*`, `--chart-*`
+- Semantic tokens: `--background`, `--foreground`, `--card`, `--primary`, `--muted`, `--border`, `--sidebar-*`, `--chart-1` through `--chart-5`
 - Components use Tailwind classes mapped to these tokens (e.g. `bg-card`, `text-muted-foreground`)
+- Font: Inter with OpenType features cv02, cv03, cv04, cv11
 
 ### Design Principles
-- Typography: `text-xl` for page titles, `text-sm` for data, `text-xs` for labels
+- Typography: `text-xl font-semibold` for page titles, `text-sm` for data, `text-xs text-muted-foreground` for labels
 - Numbers: Always use `tabular-nums` class for financial data
 - Colors: `text-emerald-600 dark:text-emerald-400` for positive, `text-red-600 dark:text-red-400` for negative
-- Cards: `bg-card` with `border-border` and `shadow-sm`. No colored backgrounds unless intentional accent
-- Tables: `text-xs font-medium uppercase tracking-wider text-muted-foreground` for headers
+- Cards: `bg-card` with `border-border` and `shadow-sm`. No colored backgrounds unless intentional accent (e.g. `border-primary/20` on AI digest)
+- Tables: `text-xs font-medium uppercase tracking-wider text-muted-foreground` for headers, `hover:bg-muted/50` for rows
 - Spacing: `space-y-6` between sections, `gap-4` between cards, `p-5` card padding
+- Page background: `bg-muted/30` (from dashboard layout)
+- Sidebar: `bg-background` with `border-r border-border` (same as content, not a separate shade)
+
+### Caching Strategy
+| Data Type | TTL | Cache Key |
+|-----------|-----|-----------|
+| Stock quotes | 60s | `quote:{ticker}` |
+| Company profiles | 24h | `profile:{ticker}` |
+| Financial statements | 24h | `financials:{ticker}:{period}` |
+| Key metrics | 24h | `metrics:{ticker}` |
+| News articles | 15m | `news:{ticker}` |
+| AI summaries | 7 days | `ai:summary:{ticker}` |
+| Screener results | 1h | `screener:{hash}` |
+| Search results | 5m | `search:{query}` |
+
+### Scoring Engine
+Five dimensions, each 0–5 scale:
+- **Value**: P/E (inverted), P/B, FCF yield
+- **Growth**: Revenue CAGR, EPS growth (needs 2+ years data)
+- **Profitability**: ROE, ROA, net margin, gross margin
+- **Health**: D/E (inverted), current ratio, cash position
+- **Dividend**: Yield (0 if none)
+- **Overall**: Weighted — growth 25%, profitability 25%, health 20%, value 20%, dividend 10%
