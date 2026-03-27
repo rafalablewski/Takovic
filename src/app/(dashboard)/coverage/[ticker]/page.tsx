@@ -1,0 +1,108 @@
+"use client";
+
+import { use, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { getCoveredStock, getTabsForStock } from "@/data/coverage/registry";
+import { OverviewTab } from "@/components/coverage/overview-tab";
+import { AnalysisTab } from "@/components/coverage/analysis-tab";
+import { WallStreetTab } from "@/components/coverage/wall-street-tab";
+import { CapitalStructureTab } from "@/components/coverage/capital-structure-tab";
+import { EthereumTab } from "@/components/coverage/ethereum-tab";
+import { ETHPurchasesTab } from "@/components/coverage/eth-purchases-tab";
+import {
+  LayoutDashboard,
+  BarChart3,
+  Building2,
+  Layers,
+  Coins,
+  ShoppingCart,
+  Clock,
+} from "lucide-react";
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  LayoutDashboard,
+  BarChart3,
+  Building2,
+  Layers,
+  Coins,
+  ShoppingCart,
+};
+
+interface PageProps {
+  params: Promise<{ ticker: string }>;
+}
+
+export default function CoveragePage({ params }: PageProps) {
+  const { ticker } = use(params);
+  const upperTicker = ticker.toUpperCase();
+  const stock = getCoveredStock(upperTicker);
+  const tabs = getTabsForStock(upperTicker);
+  const [activeTab, setActiveTab] = useState(tabs[0]?.id ?? "overview");
+
+  if (!stock) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-xl font-semibold text-foreground">Coverage</h1>
+          <p className="text-sm text-muted-foreground">
+            No active coverage for {upperTicker}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold text-foreground">{stock.name}</h1>
+            <Badge variant="secondary" className="text-[10px]">{stock.ticker}</Badge>
+            <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">
+              Active Coverage
+            </Badge>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">{stock.sector}</p>
+          <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+            <Clock className="h-3 w-3" />
+            Coverage initiated {stock.coverageDate} &middot; {stock.analyst}
+          </p>
+        </div>
+      </div>
+
+      {/* Tab navigation */}
+      <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
+        {tabs.map((tab) => {
+          const Icon = ICON_MAP[tab.icon];
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-xs font-medium transition-colors",
+                isActive
+                  ? "border-foreground text-foreground"
+                  : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"
+              )}
+            >
+              {Icon && <Icon className="h-3.5 w-3.5" />}
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Tab content */}
+      {activeTab === "overview" && <OverviewTab ticker={upperTicker} />}
+      {activeTab === "analysis" && <AnalysisTab ticker={upperTicker} />}
+      {activeTab === "wall-street" && <WallStreetTab ticker={upperTicker} />}
+      {activeTab === "capital-structure" && <CapitalStructureTab ticker={upperTicker} />}
+      {activeTab === "ethereum" && <EthereumTab ticker={upperTicker} />}
+      {activeTab === "eth-purchases" && <ETHPurchasesTab ticker={upperTicker} />}
+    </div>
+  );
+}
