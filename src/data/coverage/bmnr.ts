@@ -554,30 +554,20 @@ export const TIMELINE_EVENTS: TimelineEvent[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Ethereum (stock-specific)
+// Ethereum (stock-specific) — see bmnr-ethereum.ts for full intelligence
 // ---------------------------------------------------------------------------
 
-export const ETHEREUM_CONTEXT = {
-  correlation: "BMNR trades as a leveraged ETH proxy due to NAV premium and dilution dynamics",
-  protocolMilestones: [
-    { date: "2024-03", event: "Dencun upgrade (EIP-4844) — reduced L2 fees", impact: "Neutral for treasury" },
-    { date: "2025-Q1", event: "Pectra upgrade — account abstraction, staking improvements", impact: "Positive for staking yield" },
-    { date: "2025-H2", event: "Potential Verkle Trees implementation", impact: "Improves scalability" },
-  ],
-  institutionalAdoption: [
-    "ETH ETFs approved and trading (BlackRock, Fidelity, etc.)",
-    "ETH staking ETFs under SEC review",
-    "Major banks offering ETH custody",
-    "Tokenization of real-world assets on Ethereum growing",
-  ],
-  ecosystemMetrics: [
-    { label: "TVL (DeFi)", value: "$80B+", source: "DefiLlama" },
-    { label: "Daily Active Addresses", value: "~400K", source: "Etherscan" },
-    { label: "Staking Rate", value: "~28%", source: "Beaconcha.in" },
-    { label: "Annual Issuance", value: "~0.5%", source: "Ultra Sound Money" },
-    { label: "Supply (post-merge)", value: "Deflationary in high-activity periods", source: "" },
-  ],
-};
+// Re-export from dedicated file to keep this file under 500 lines
+export {
+  ETHEREUM_INTELLIGENCE,
+  type EthCorrelationMetric,
+  type NetworkMetric,
+  type ETFFlow,
+  type ThesisSection,
+  type ValueAccrualStep,
+  type RoadmapMilestone,
+  type EcosystemNewsItem,
+} from "./bmnr-ethereum";
 
 // ---------------------------------------------------------------------------
 // ETH Purchases — from 8-K/PR filings
