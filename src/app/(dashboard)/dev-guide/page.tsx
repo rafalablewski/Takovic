@@ -451,31 +451,31 @@ const topWorkflows = [
     name: "Superpowers",
     stars: "118k",
     approach: "TDD-first with Iron Laws and whole-plan review",
-    best_for: "Building Takovic\u2019s test suite and CI pipeline",
+    bestFor: "Building Takovic\u2019s test suite and CI pipeline",
   },
   {
     name: "Spec Kit",
     stars: "83k",
     approach: "Spec-driven development with constitution pattern",
-    best_for: "Entity registry system and data file specs",
+    bestFor: "Entity registry system and data file specs",
   },
   {
     name: "Get Shit Done",
     stars: "43k",
     approach: "Fresh 200K contexts with wave execution",
-    best_for: "Wiring mock data to real API endpoints fast",
+    bestFor: "Wiring mock data to real API endpoints fast",
   },
   {
     name: "BMAD-METHOD",
     stars: "43k",
     approach: "Full SDLC with agent personas",
-    best_for: "Full feature buildout (Auth, CRUD, charts)",
+    bestFor: "Full feature buildout (Auth, CRUD, charts)",
   },
   {
     name: "HumanLayer",
     stars: "10k",
     approach: "RPI pattern (Request-Plan-Implement)",
-    best_for: "Scaling Takovic beyond 50+ stock entities",
+    bestFor: "Scaling Takovic beyond 50+ stock entities",
   },
 ];
 
@@ -547,7 +547,7 @@ export default function DevGuidePage() {
         <CardContent className="p-5">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10">
-              <Target className="h-4.5 w-4.5 text-primary" />
+              <Target className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">
@@ -595,7 +595,7 @@ export default function DevGuidePage() {
                   <span className="font-medium text-muted-foreground">
                     Best for:
                   </span>{" "}
-                  {wf.best_for}
+                  {wf.bestFor}
                 </p>
               </CardContent>
             </Card>
@@ -636,7 +636,7 @@ export default function DevGuidePage() {
                 <CardContent className="p-0">
                   <div className="divide-y divide-border/50">
                     {section.tips.map((tip, i) => (
-                      <div key={i} className="p-4">
+                      <div key={tip.title} className="p-4">
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <div className="flex items-center gap-2">
