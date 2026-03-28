@@ -104,19 +104,19 @@ export function OverviewTab({ ticker }: { ticker: string }) {
         </CardContent>
       </Card>
 
-      {/* Bull Case */}
-      <CaseSection
-        title="Bull Case"
-        points={data.bullCase}
-        variant="bull"
-      />
-
-      {/* Bear Case */}
-      <CaseSection
-        title="Bear Case"
-        points={data.bearCase}
-        variant="bear"
-      />
+      {/* Bull / Bear Case — side by side */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <CaseSection
+          title="Bull Case"
+          points={data.bullCase}
+          variant="bull"
+        />
+        <CaseSection
+          title="Bear Case"
+          points={data.bearCase}
+          variant="bear"
+        />
+      </div>
 
       {/* Metrics Table */}
       <Card>
