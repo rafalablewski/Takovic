@@ -22,6 +22,7 @@ import {
   Calculator,
   Settings,
   HelpCircle,
+  BookOpen,
   ChevronLeft,
   ChevronRight,
   TrendingUp,
@@ -42,6 +43,7 @@ const analysisTools = [
 ];
 
 const secondaryLinks = [
+  { name: "Dev Guide", href: "/dev-guide", icon: BookOpen },
   { name: "Settings", href: "/settings", icon: Settings },
   { name: "Help", href: "/help", icon: HelpCircle },
 ];

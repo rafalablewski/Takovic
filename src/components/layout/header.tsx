@@ -35,6 +35,7 @@ const titleMap: Record<string, string> = {
   "/lookup": "Stock Lookup",
   "/compare": "Compare Stocks",
   "/valuation": "Valuation",
+  "/dev-guide": "Developer Guide",
   "/settings": "Settings",
   "/help": "Help",
 };
