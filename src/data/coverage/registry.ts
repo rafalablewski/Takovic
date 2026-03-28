@@ -16,17 +16,24 @@ export interface CoverageTab {
   icon: string; // lucide icon name
 }
 
-/** Universal tabs available for all covered stocks */
-export const UNIVERSAL_TABS: CoverageTab[] = [
+/** Tabs that appear before stock-specific custom tabs */
+export const TABS_BEFORE_CUSTOM: CoverageTab[] = [
   { id: "overview", label: "Overview", description: "Company thesis and key metrics", icon: "LayoutDashboard" },
-  { id: "analysis", label: "Investment Analysis", description: "Scorecard, moat, risks, growth drivers", icon: "BarChart3" },
-  { id: "comparables", label: "Comparable Analysis", description: "Peer comps, competitive positioning", icon: "GitCompareArrows" },
-  { id: "financials", label: "Financials", description: "Quarterly data, balance sheet, key metrics", icon: "DollarSign" },
-  { id: "wall-street", label: "Wall Street", description: "Analyst ratings, price targets, reports", icon: "Building2" },
-  { id: "capital-structure", label: "Capital Structure", description: "Share structure, dilution, programs", icon: "Layers" },
-  { id: "timeline", label: "Timeline", description: "SEC filings, events, milestones", icon: "Clock" },
-  { id: "valuation", label: "Valuation Model", description: "DCF projections, scenario analysis", icon: "Calculator" },
 ];
+
+/** Tabs that appear after stock-specific custom tabs */
+export const TABS_AFTER_CUSTOM: CoverageTab[] = [
+  { id: "valuation", label: "Model", description: "DCF projections, scenario analysis", icon: "Calculator" },
+  { id: "comparables", label: "Comps", description: "Peer comps, competitive positioning", icon: "GitCompareArrows" },
+  { id: "capital-structure", label: "Capital", description: "Share structure, dilution, programs", icon: "Layers" },
+  { id: "financials", label: "Financials", description: "Quarterly data, balance sheet, key metrics", icon: "DollarSign" },
+  { id: "timeline", label: "Timeline", description: "SEC filings, events, milestones", icon: "Clock" },
+  { id: "analysis", label: "Investment", description: "Scorecard, moat, risks, growth drivers", icon: "BarChart3" },
+  { id: "wall-street", label: "Wall Street", description: "Analyst ratings, price targets, reports", icon: "Building2" },
+];
+
+/** All universal tabs combined (for stocks with no custom tabs) */
+export const UNIVERSAL_TABS: CoverageTab[] = [...TABS_BEFORE_CUSTOM, ...TABS_AFTER_CUSTOM];
 
 // ---------------------------------------------------------------------------
 // Covered stock profiles
@@ -78,5 +85,6 @@ export function isCovered(ticker: string): boolean {
 export function getTabsForStock(ticker: string): CoverageTab[] {
   const stock = getCoveredStock(ticker);
   if (!stock) return UNIVERSAL_TABS;
-  return [...UNIVERSAL_TABS, ...stock.customTabs];
+  // Overview → custom (Ethereum, Purchases, etc.) → Model, Comps, Capital, ...
+  return [...TABS_BEFORE_CUSTOM, ...stock.customTabs, ...TABS_AFTER_CUSTOM];
 }
