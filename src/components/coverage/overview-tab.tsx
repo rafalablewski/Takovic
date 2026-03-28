@@ -118,60 +118,40 @@ export function OverviewTab({ ticker }: { ticker: string }) {
         />
       </div>
 
-      {/* Metrics Table */}
+      {/* Metrics Grid — 5 columns */}
       <Card>
         <CardHeader className="p-5 pb-0">
           <CardTitle className="text-sm font-medium">Key Metrics</CardTitle>
         </CardHeader>
         <CardContent className="p-5 pt-3">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr>
-                  <th className="pb-2 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Metric
-                  </th>
-                  <th className="pb-2 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Value
-                  </th>
-                  <th className="pb-2 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground pl-4">
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/50">
-                {data.metrics.map((metric) => {
-                  const isNegative =
-                    typeof metric.value === "number" && metric.value < 0;
-                  const isPercent = metric.format === "percent";
-                  return (
-                    <tr
-                      key={metric.label}
-                      className="transition-colors hover:bg-muted/50"
-                    >
-                      <td className="py-2.5 text-xs font-medium text-foreground">
-                        {metric.label}
-                      </td>
-                      <td
-                        className={cn(
-                          "py-2.5 text-right text-sm font-semibold tabular-nums",
-                          isPercent && isNegative
-                            ? "text-red-600 dark:text-red-400"
-                            : isPercent && !isNegative
-                              ? "text-emerald-600 dark:text-emerald-400"
-                              : "text-foreground"
-                        )}
-                      >
-                        {formatMetricValue(metric)}
-                      </td>
-                      <td className="py-2.5 text-xs text-muted-foreground pl-4">
-                        {metric.description}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
+            {data.metrics.map((metric) => {
+              const isNegative =
+                typeof metric.value === "number" && metric.value < 0;
+              const isPercent = metric.format === "percent";
+              return (
+                <div key={metric.label}>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    {metric.label}
+                  </p>
+                  <p
+                    className={cn(
+                      "mt-0.5 text-sm font-semibold tabular-nums",
+                      isPercent && isNegative
+                        ? "text-red-600 dark:text-red-400"
+                        : isPercent && !isNegative
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-foreground"
+                    )}
+                  >
+                    {formatMetricValue(metric)}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/70">
+                    {metric.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
