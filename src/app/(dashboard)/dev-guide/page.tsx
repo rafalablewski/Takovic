@@ -492,6 +492,7 @@ const quickReference = [
   { command: "/schedule", description: "Refresh AI summary caches (7d TTL)" },
   { command: "Esc Esc", description: "Rewind hardcoded tickers/bad patterns" },
   { command: "ultrathink", description: "For scoring engine & schema work" },
+  { command: "/insights", description: "Get codebase insights & suggestions" },
 ];
 
 // ---------------------------------------------------------------------------
