@@ -12,19 +12,17 @@ import { WallStreetTab } from "@/components/coverage/wall-street-tab";
 import { CapitalStructureTab } from "@/components/coverage/capital-structure-tab";
 import { TimelineTab } from "@/components/coverage/timeline-tab";
 import { ValuationTab } from "@/components/coverage/valuation-tab";
-import { EthereumTab } from "@/components/coverage/ethereum-tab";
-import { ETHPurchasesTab } from "@/components/coverage/eth-purchases-tab";
+import { OperationsTab } from "@/components/coverage/operations-tab";
 import {
   LayoutDashboard,
   BarChart3,
   Building2,
   Layers,
-  Coins,
-  ShoppingCart,
   Clock,
   GitCompareArrows,
   DollarSign,
   Calculator,
+  Briefcase,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -32,8 +30,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   BarChart3,
   Building2,
   Layers,
-  Coins,
-  ShoppingCart,
+  Briefcase,
   Clock,
   GitCompareArrows,
   DollarSign,
@@ -109,6 +106,7 @@ export default function CoveragePage({ params }: PageProps) {
 
       {/* Tab content */}
       {activeTab === "overview" && <OverviewTab ticker={upperTicker} />}
+      {activeTab === "operations" && <OperationsTab ticker={upperTicker} />}
       {activeTab === "analysis" && <AnalysisTab ticker={upperTicker} />}
       {activeTab === "comparables" && <ComparablesTab ticker={upperTicker} />}
       {activeTab === "financials" && <FinancialsTab ticker={upperTicker} />}
@@ -116,8 +114,6 @@ export default function CoveragePage({ params }: PageProps) {
       {activeTab === "capital-structure" && <CapitalStructureTab ticker={upperTicker} />}
       {activeTab === "timeline" && <TimelineTab ticker={upperTicker} />}
       {activeTab === "valuation" && <ValuationTab ticker={upperTicker} />}
-      {activeTab === "ethereum" && <EthereumTab ticker={upperTicker} />}
-      {activeTab === "eth-purchases" && <ETHPurchasesTab ticker={upperTicker} />}
     </div>
   );
 }

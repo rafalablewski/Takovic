@@ -60,8 +60,7 @@ const COVERED_STOCKS: Record<string, CoveredStock> = {
     status: "active",
     description: "ETH treasury company accumulating ETH through strategic capital raises and generating yield via staking. Key metrics: NAV per share, NAV premium/discount, and dividend yield.",
     customTabs: [
-      { id: "ethereum", label: "Ethereum", description: "BMNR-ETH correlation, protocol roadmap, ecosystem", icon: "Coins" },
-      { id: "eth-purchases", label: "ETH Purchases", description: "Complete record of all ETH acquisitions from 8-K filings", icon: "ShoppingCart" },
+      { id: "operations", label: "Business Operations", description: "Ethereum ecosystem, staking, ETH acquisitions", icon: "Briefcase" },
     ],
   },
 };
