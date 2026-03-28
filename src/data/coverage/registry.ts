@@ -20,8 +20,12 @@ export interface CoverageTab {
 export const UNIVERSAL_TABS: CoverageTab[] = [
   { id: "overview", label: "Overview", description: "Company thesis and key metrics", icon: "LayoutDashboard" },
   { id: "analysis", label: "Investment Analysis", description: "Scorecard, moat, risks, growth drivers", icon: "BarChart3" },
+  { id: "comparables", label: "Comparable Analysis", description: "Peer comps, competitive positioning", icon: "GitCompareArrows" },
+  { id: "financials", label: "Financials", description: "Quarterly data, balance sheet, key metrics", icon: "DollarSign" },
   { id: "wall-street", label: "Wall Street", description: "Analyst ratings, price targets, reports", icon: "Building2" },
   { id: "capital-structure", label: "Capital Structure", description: "Share structure, dilution, programs", icon: "Layers" },
+  { id: "timeline", label: "Timeline", description: "SEC filings, events, milestones", icon: "Clock" },
+  { id: "valuation", label: "Valuation Model", description: "DCF projections, scenario analysis", icon: "Calculator" },
 ];
 
 // ---------------------------------------------------------------------------

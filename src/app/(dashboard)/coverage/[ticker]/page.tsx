@@ -6,8 +6,12 @@ import { cn } from "@/lib/utils";
 import { getCoveredStock, getTabsForStock } from "@/data/coverage/registry";
 import { OverviewTab } from "@/components/coverage/overview-tab";
 import { AnalysisTab } from "@/components/coverage/analysis-tab";
+import { ComparablesTab } from "@/components/coverage/comparables-tab";
+import { FinancialsTab } from "@/components/coverage/financials-tab";
 import { WallStreetTab } from "@/components/coverage/wall-street-tab";
 import { CapitalStructureTab } from "@/components/coverage/capital-structure-tab";
+import { TimelineTab } from "@/components/coverage/timeline-tab";
+import { ValuationTab } from "@/components/coverage/valuation-tab";
 import { EthereumTab } from "@/components/coverage/ethereum-tab";
 import { ETHPurchasesTab } from "@/components/coverage/eth-purchases-tab";
 import {
@@ -18,6 +22,9 @@ import {
   Coins,
   ShoppingCart,
   Clock,
+  GitCompareArrows,
+  DollarSign,
+  Calculator,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -27,6 +34,10 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Layers,
   Coins,
   ShoppingCart,
+  Clock,
+  GitCompareArrows,
+  DollarSign,
+  Calculator,
 };
 
 interface PageProps {
@@ -99,8 +110,12 @@ export default function CoveragePage({ params }: PageProps) {
       {/* Tab content */}
       {activeTab === "overview" && <OverviewTab ticker={upperTicker} />}
       {activeTab === "analysis" && <AnalysisTab ticker={upperTicker} />}
+      {activeTab === "comparables" && <ComparablesTab ticker={upperTicker} />}
+      {activeTab === "financials" && <FinancialsTab ticker={upperTicker} />}
       {activeTab === "wall-street" && <WallStreetTab ticker={upperTicker} />}
       {activeTab === "capital-structure" && <CapitalStructureTab ticker={upperTicker} />}
+      {activeTab === "timeline" && <TimelineTab ticker={upperTicker} />}
+      {activeTab === "valuation" && <ValuationTab ticker={upperTicker} />}
       {activeTab === "ethereum" && <EthereumTab ticker={upperTicker} />}
       {activeTab === "eth-purchases" && <ETHPurchasesTab ticker={upperTicker} />}
     </div>

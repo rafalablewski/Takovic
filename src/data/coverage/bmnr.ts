@@ -418,6 +418,142 @@ export const CAPITAL_STRUCTURE = {
 };
 
 // ---------------------------------------------------------------------------
+// Comparable Analysis
+// ---------------------------------------------------------------------------
+
+export interface ComparableCompany {
+  ticker: string;
+  name: string;
+  asset: "ETH" | "BTC" | "Mixed";
+  holdings: string; // human-readable
+  holdingsValue: string;
+  navPremium: string;
+  stakingYield: string;
+  marketCap: string;
+  threatLevel: "high" | "medium" | "low";
+  competitiveFocus: string;
+  keyDifferentiator: string;
+}
+
+export const COMPARABLES: ComparableCompany[] = [
+  {
+    ticker: "MSTR",
+    name: "MicroStrategy (Strategy)",
+    asset: "BTC",
+    holdings: "499,096 BTC",
+    holdingsValue: "$43.4B",
+    navPremium: "1.75x",
+    stakingYield: "0%",
+    marketCap: "$75.9B",
+    threatLevel: "low",
+    competitiveFocus: "BTC treasury pioneer — different asset, but sets NAV premium precedent",
+    keyDifferentiator: "BTC-only, no staking yield, much larger scale",
+  },
+  {
+    ticker: "COIN",
+    name: "Coinbase",
+    asset: "Mixed",
+    holdings: "N/A (exchange)",
+    holdingsValue: "N/A",
+    navPremium: "N/A",
+    stakingYield: "Staking-as-a-service",
+    marketCap: "$46B",
+    threatLevel: "medium",
+    competitiveFocus: "Could launch ETH treasury strategy or offer competing staking products",
+    keyDifferentiator: "Exchange model, staking infrastructure provider",
+  },
+  {
+    ticker: "ETHE",
+    name: "Grayscale Ethereum Trust",
+    asset: "ETH",
+    holdings: "~2.6M ETH",
+    holdingsValue: "$5.7B",
+    navPremium: "~1.0x",
+    stakingYield: "0%",
+    marketCap: "$5.7B",
+    threatLevel: "high",
+    competitiveFocus: "Direct ETH exposure competitor — cheaper, more liquid, no staking",
+    keyDifferentiator: "ETF structure, no staking yield, institutional access",
+  },
+  {
+    ticker: "ETHD",
+    name: "Various ETH ETFs",
+    asset: "ETH",
+    holdings: "Various",
+    holdingsValue: "$10B+ combined",
+    navPremium: "~1.0x",
+    stakingYield: "0% (pending SEC approval)",
+    marketCap: "N/A",
+    threatLevel: "high",
+    competitiveFocus: "Passive ETH exposure at 1.0x NAV — staking ETFs would narrow BMNR's yield advantage",
+    keyDifferentiator: "Low-cost passive, no staking (yet), high liquidity",
+  },
+];
+
+export const COMPARABLES_INSIGHT =
+  "Each card combines quantitative metrics (holdings, NAV, premium) with qualitative intelligence (threat level, competitive focus). BMNR's ETH staking yield vs BTC treasuries' 0% is the key structural differentiator.";
+
+// ---------------------------------------------------------------------------
+// Financials
+// ---------------------------------------------------------------------------
+
+export interface QuarterlyFinancial {
+  period: string; // e.g. "Q3 2025"
+  revenue: number;
+  stakingRevenue: number;
+  operatingExpenses: number;
+  netIncome: number;
+  ethHoldings: number;
+  ethPrice: number;
+  cashPosition: number;
+  totalAssets: number;
+  totalLiabilities: number;
+  shareholdersEquity: number;
+}
+
+export const FINANCIALS_DESCRIPTION =
+  "Quarterly financial data, balance sheet trends, and key metric evolution. Focus on ETH holdings growth, staking revenue, and cash position management.";
+
+export const QUARTERLY_FINANCIALS: QuarterlyFinancial[] = [
+  { period: "Q3 2025", revenue: 1_200_000, stakingRevenue: 800_000, operatingExpenses: 3_500_000, netIncome: -2_300_000, ethHoldings: 743, ethPrice: 2380, cashPosition: 5_200_000, totalAssets: 12_800_000, totalLiabilities: 2_100_000, shareholdersEquity: 10_700_000 },
+  { period: "Q4 2025", revenue: 4_800_000, stakingRevenue: 3_200_000, operatingExpenses: 4_100_000, netIncome: 700_000, ethHoldings: 1403, ethPrice: 2450, cashPosition: 3_800_000, totalAssets: 38_200_000, totalLiabilities: 3_400_000, shareholdersEquity: 34_800_000 },
+  { period: "Q1 2026", revenue: 8_500_000, stakingRevenue: 6_100_000, operatingExpenses: 5_200_000, netIncome: 3_300_000, ethHoldings: 2141, ethPrice: 2185, cashPosition: 4_100_000, totalAssets: 51_600_000, totalLiabilities: 4_800_000, shareholdersEquity: 46_800_000 },
+];
+
+// ---------------------------------------------------------------------------
+// Timeline
+// ---------------------------------------------------------------------------
+
+export interface TimelineEvent {
+  date: string;
+  type: "filing" | "purchase" | "corporate" | "milestone" | "market";
+  title: string;
+  description: string;
+  source?: string; // "8-K", "PR", "10-Q", etc.
+}
+
+export const TIMELINE_DESCRIPTION =
+  "SEC filings, weekly holdings updates, corporate events, and key milestones. Chronological record tracking BMNR's evolution from mining company to ETH treasury.";
+
+export const TIMELINE_EVENTS: TimelineEvent[] = [
+  { date: "2025-06-15", type: "corporate", title: "Strategic pivot announced", description: "BMNR announces transition from crypto mining to ETH treasury strategy", source: "8-K" },
+  { date: "2025-07-01", type: "milestone", title: "Coverage initiated", description: "Takovic Research initiates coverage on BMNR" },
+  { date: "2025-07-07", type: "purchase", title: "First ETH purchase", description: "50 ETH acquired at $2,450 avg — inaugural treasury purchase", source: "8-K" },
+  { date: "2025-07-14", type: "filing", title: "ATM program filed", description: "At-the-market offering program registered with SEC", source: "S-3" },
+  { date: "2025-08-04", type: "purchase", title: "First registered direct", description: "70 ETH via registered direct offering — largest single purchase at the time", source: "8-K" },
+  { date: "2025-09-02", type: "purchase", title: "Record weekly purchase", description: "80 ETH acquired at $2,350 avg — record weekly purchase", source: "8-K" },
+  { date: "2025-09-30", type: "filing", title: "Q3 2025 10-Q filed", description: "First quarterly filing as ETH treasury company. 743 ETH on balance sheet.", source: "10-Q" },
+  { date: "2025-11-03", type: "milestone", title: "1,000 ETH milestone", description: "Treasury crosses 1,000 ETH — 1,033 ETH total after 18 purchases" },
+  { date: "2025-11-15", type: "corporate", title: "Staking program launched", description: "BMNR begins staking ~30% of ETH holdings via institutional validator", source: "8-K" },
+  { date: "2025-12-31", type: "filing", title: "Q4 2025 10-Q filed", description: "1,403 ETH on balance sheet. First quarter with positive net income from staking.", source: "10-Q" },
+  { date: "2026-01-06", type: "purchase", title: "Post-holiday accumulation", description: "75 ETH at $2,280 avg — largest post-holiday purchase", source: "8-K" },
+  { date: "2026-02-10", type: "market", title: "ETH drops below $2,200", description: "ETH price weakness; BMNR accelerates purchases at lower prices" },
+  { date: "2026-03-03", type: "purchase", title: "Accelerated accumulation", description: "85 ETH purchased — pace increasing as ETH trades near cycle lows", source: "8-K" },
+  { date: "2026-03-17", type: "milestone", title: "2,000 ETH milestone", description: "Treasury crosses 2,000 ETH with 163 ETH purchase — 2,141 total", source: "8-K" },
+  { date: "2026-03-27", type: "filing", title: "Q1 2026 10-Q expected", description: "Upcoming quarterly filing — 2,141+ ETH expected on balance sheet", source: "10-Q" },
+];
+
+// ---------------------------------------------------------------------------
 // Ethereum (stock-specific)
 // ---------------------------------------------------------------------------
 
