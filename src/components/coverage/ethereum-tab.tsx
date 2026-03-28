@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ETHEREUM_INTELLIGENCE } from "@/data/coverage/bmnr";
 import type { ValueAccrualStep, RoadmapMilestone } from "@/data/coverage/bmnr";
+import { EcosystemNewsFeed } from "@/components/coverage/ecosystem-news-feed";
 import {
   Activity,
   TrendingUp,
@@ -233,6 +234,9 @@ export function EthereumTab({ ticker }: { ticker: string }) {
           ))}
         </div>
       </Collapsible>
+
+      {/* ---- Ecosystem Intelligence News Feed ---- */}
+      <EcosystemNewsFeed />
 
       {/* ---- CFA Notes ---- */}
       <Card>
