@@ -49,24 +49,24 @@ const sections: GuideSection[] = [
     id: "prompting",
     icon: MessageSquare,
     title: "Prompting",
-    subtitle: "How to communicate effectively with Claude",
+    subtitle: "Talk to Claude like a senior engineer on the team",
     tips: [
       {
-        title: "Challenge Claude, don't babysit",
+        title: "Challenge Claude on stock pages",
         description:
-          'Use prompts like "grill me on these changes and don\'t make a PR until I pass your test" or "prove to me this works." Have Claude diff between main and your branch instead of manually reviewing.',
+          'After building a new stock page or component, say "grill me on these changes \u2014 diff this branch against main and prove the snowflake scores render correctly." Don\u2019t manually review \u2014 let Claude verify that scoreColor(), sentimentBadgeVariant(), and data wiring all work.',
         source: "Boris Cherny",
       },
       {
         title: "Iterate after mediocre fixes",
         description:
-          'When the first solution is suboptimal, say "knowing everything you know now, scrap this and implement the elegant solution" to get a fundamentally better approach.',
+          'If Claude patches a bug in the screener filter logic but the solution is messy, say "knowing everything you know now, scrap this and implement the elegant solution." This often produces cleaner code for complex filtering across sectors, P/E ranges, and score thresholds.',
         source: "Boris Cherny",
       },
       {
         title: "Minimal micromanagement",
         description:
-          "Paste the bug, say \"fix.\" Avoid directing implementation details \u2014 Claude resolves most bugs independently when given the freedom to explore the codebase.",
+          'Paste the bug (e.g. "portfolio total value doesn\u2019t sum correctly" or "news sentiment badge shows wrong color"), say "fix." Claude can trace through the mock data, find the rendering logic, and resolve it without you directing the approach.',
         source: "Boris Cherny",
       },
     ],
@@ -75,35 +75,35 @@ const sections: GuideSection[] = [
     id: "planning",
     icon: ClipboardList,
     title: "Planning & Specs",
-    subtitle: "Structure your work before writing code",
+    subtitle: "Plan before coding \u2014 especially for new features",
     tips: [
       {
-        title: "Always start with plan mode",
+        title: "Plan mode for every new feature",
         description:
-          "Begin every project or feature with a planning phase. This prevents wasted context on dead-end approaches and produces better architecture.",
+          'Before building watchlist CRUD, portfolio tracking, or chart components, start in plan mode. Example: "Plan how to wire the screener page to the /api/stocks/search route, replacing all 10 mock stocks with real FMP data. Consider caching (SCREENER TTL: 1h) and the existing ScreenerFilters type."',
         source: "Boris Cherny",
       },
       {
         title: "Interview-based specification",
         description:
-          "Start with a minimal spec and ask Claude to interview you using the AskUserQuestion tool to flesh out requirements. Then execute the full spec in a fresh session with clean context.",
+          'For complex features like the entity registry system (entities.ts, entity-context.ts, tab-registry.ts), start with a minimal spec and tell Claude: "Interview me about requirements using AskUserQuestion." Once the spec is solid, execute in a fresh session with clean context.',
         source: "Thariq Shehzad",
       },
       {
         title: "Phase-wise gated plans",
         description:
-          "Break plans into phases, each gated by tests (unit, automation, integration). Don\u2019t proceed to the next phase until the current one passes all checks.",
+          "Break large features into gated phases. Example for wiring real data: Phase 1 \u2014 replace dashboard mock data with API calls, verify renders. Phase 2 \u2014 wire stock/[ticker] page, verify snowflake scores. Phase 3 \u2014 wire screener with filters. Don\u2019t proceed until each phase works.",
       },
       {
-        title: "Secondary review",
+        title: "Second Claude as staff engineer",
         description:
-          "Spin up a second Claude instance acting as a staff engineer to review your plan. Alternatively, use a cross-model approach (e.g., Claude for planning, Codex for review).",
+          'Spin up a second Claude instance to review your plan. Example: "Review this plan to implement Auth.js v5 in Takovic. Check if the Drizzle schema (users table with plan enum) and the existing (auth)/ route group are properly accounted for."',
         source: "Boris Cherny",
       },
       {
         title: "Prototype over PRD",
         description:
-          "Build 20\u201330 quick versions instead of writing lengthy product requirement documents. The cost of building is now low enough that prototyping is faster than specifying.",
+          "Need a new chart component for snowflake-chart.tsx? Build 3\u20135 quick versions with Recharts or TradingView Lightweight Charts rather than writing a detailed spec. At today\u2019s build speeds, prototyping is faster than specifying.",
         source: "Boris Cherny",
       },
     ],
@@ -112,42 +112,44 @@ const sections: GuideSection[] = [
     id: "claude-md",
     icon: FileText,
     title: "CLAUDE.md Management",
-    subtitle: "Keep your project context files effective",
+    subtitle: "How our project instructions file is structured",
     tips: [
       {
-        title: "Keep files under 200 lines",
+        title: "Our CLAUDE.md is the single source of truth",
         description:
-          "Each CLAUDE.md file should stay under 200 lines. Shorter files get more consistent compliance. HumanLayer\u2019s ~60-line file is considered a best practice benchmark.",
+          'Takovic\u2019s CLAUDE.md contains 50 entity rules, the full tech stack, directory structure, DB schema, caching TTLs, scoring engine weights, and design tokens. It\u2019s large (~296 lines) \u2014 consider splitting the 50 entity rules into .claude/rules/entity-rules.md to stay closer to the recommended 200-line limit.',
         source: "Boris Cherny, Dex Horthy",
       },
       {
-        title: "Use conditional importance tags",
+        title: "Use @imports for linked files",
         description:
-          'Wrap domain rules in <important if="..."> tags to prevent Claude from ignoring them as files grow larger. This keeps critical rules front-and-center.',
-        source: "Dex Horthy",
+          "Our CLAUDE.md starts with @AGENTS.md to pull in Next.js-specific rules. Use this pattern to keep concerns separated \u2014 framework rules in AGENTS.md, business rules in CLAUDE.md, and entity rules in .claude/rules/ if split out.",
       },
       {
-        title: "Split into .claude/rules/",
+        title: "Current State section prevents hallucination",
         description:
-          "For extensive guidance, use the .claude/rules/ directory structure. Multiple CLAUDE.md files load via ancestor/descendant in monorepos.",
+          'The "What\u2019s Built" and "What\u2019s NOT Built Yet" sections are critical. They tell Claude that src/components/shared/, src/hooks/, and src/stores/ are empty, preventing it from importing nonexistent code. Update these sections whenever you ship a feature.',
       },
       {
-        title: "First-run success test",
+        title: "Known Debt section drives priorities",
         description:
-          "Any developer launching Claude should be able to run tests on first try. If setup commands are missing, your CLAUDE.md is incomplete.",
-        source: "Dex Horthy",
+          "The Known Debt section lists sentimentBadgeVariant() duplicated in 4+ files, scoreColor() in 3 pages, and mock data wiring. Claude reads this and proactively consolidates when touching those files. Keep this list current.",
       },
       {
-        title: "Settings over prose",
+        title: "TL;DR Priority table is your safety net",
         description:
-          "Use settings.json for behavior that must be enforced by the harness (permissions, formatting) rather than relying on CLAUDE.md instructions alone.",
+          "The top-10 priority table (barrel exports, no hardcoding, shared types, 500-line cap, etc.) ensures Claude follows the most critical rules even when context is compressed. If Claude ignores rules, move them higher in this table.",
+      },
+      {
+        title: "Design Principles prevent style drift",
+        description:
+          "Typography (text-xl font-semibold for titles), number formatting (tabular-nums), color conventions (emerald for positive, red for negative), and spacing (space-y-6, gap-4, p-5) are all codified. This is why every page looks consistent without manual review.",
+      },
+      {
+        title: "Settings.json for enforcement",
+        description:
+          "Rules you want guaranteed (not just suggested) belong in .claude/settings.json. Example: permission patterns for Bash(npm run *), Edit(src/**) enforce access control at the harness level, not through prose instructions Claude might skip.",
         source: "Dani \u00c1vila",
-      },
-      {
-        title: "Finish migrations completely",
-        description:
-          "Partially migrated frameworks confuse models. Complete migrations fully before expecting Claude to work reliably with the codebase.",
-        source: "Boris Cherny",
       },
     ],
   },
@@ -155,30 +157,30 @@ const sections: GuideSection[] = [
     id: "agents",
     icon: Bot,
     title: "Agents & Subagents",
-    subtitle: "Delegate work to specialized agents",
+    subtitle: "Delegate Takovic tasks to specialized agents",
     tips: [
       {
-        title: "Feature-specific over generic",
+        title: "Feature-specific agents for Takovic",
         description:
-          'Create agents with specialized context and skills (e.g., "stock-page-builder") rather than generic roles like "QA agent" or "backend agent."',
+          'Create agents like "stock-page-builder" (knows entity rules 1\u201350, shared components, barrel exports), "data-wiring-agent" (knows FMP endpoints, cache TTLs, Drizzle schema), or "chart-builder" (knows Recharts/TradingView, design tokens). Generic "QA agent" or "backend agent" won\u2019t know our conventions.',
         source: "Boris Cherny",
       },
       {
-        title: 'Say "use subagents"',
+        title: "Offload to subagents to keep context clean",
         description:
-          'Explicitly direct Claude to "use subagents" for task distribution. This keeps the main context window clean and focused on orchestration.',
+          'When building a full stock entity (4 registries, 12 data files, barrel exports, shared components), tell Claude to "use subagents." One agent scaffolds data files while the main context handles the page component. This prevents context bloat from 50 entity rules.',
         source: "Boris Cherny",
       },
       {
-        title: "Test-time compute separation",
+        title: "Separate build and QA agents",
         description:
-          "Separate context windows improve results. Have one agent build features while another QAs. The isolation prevents confirmation bias.",
+          "Have one agent build the portfolio CRUD API while another verifies the Drizzle schema relations (portfolios \u2192 portfolio_holdings \u2192 stocks) and tests the endpoint. Isolation prevents confirmation bias \u2014 the QA agent finds issues the builder missed.",
         source: "Boris Cherny",
       },
       {
-        title: "Team coordination with worktrees",
+        title: "Parallel agents with git worktrees",
         description:
-          "Use agent teams with tmux and git worktrees for parallel development. Each agent gets its own isolated branch to work on.",
+          "Use agent teams with worktrees for parallel work. Example: one agent wires the watchlist page to real data while another builds the chart components in src/components/charts/. Each gets an isolated branch, then merge.",
       },
     ],
   },
@@ -186,42 +188,42 @@ const sections: GuideSection[] = [
     id: "commands-skills",
     icon: Terminal,
     title: "Commands & Skills",
-    subtitle: "Automate repeated workflows",
+    subtitle: "Automate repeated Takovic workflows",
     tips: [
       {
-        title: "Commands over subagents for workflows",
+        title: "Slash commands for common Takovic tasks",
         description:
-          "Prefer commands (.claude/commands/) for workflow orchestration. They\u2019re lighter weight and inject knowledge into existing context rather than spawning new ones.",
+          'Create .claude/commands/ for workflows you repeat: /add-stock (scaffolds entity in 4 registries + 12 data files), /wire-page (replaces mock data with API calls on a page), /check-barrels (verifies all src/data/{ticker}/index.ts re-exports). Lighter weight than agents.',
         source: "Boris Cherny",
       },
       {
         title: "Repetition threshold",
         description:
-          "If you\u2019re doing something multiple times a day, convert it into a slash command or skill. The investment pays off within a single day.",
+          "If you\u2019re running the barrel checker, consolidating duplicate helpers, or scaffolding entity files multiple times a day, convert it to a slash command. Example: /consolidate-helpers could find all sentimentBadgeVariant() copies and merge them into src/lib/utils.ts.",
         source: "Boris Cherny",
       },
       {
-        title: "Context forking for skills",
+        title: "Fork context for heavy analysis",
         description:
-          'Use context: fork in skill definitions to isolate execution in subagents. The main context only sees results, keeping it clean for the primary task.',
+          'Use context: fork in skill definitions so that computationally heavy tasks (e.g., reviewing all 10 Drizzle table relations, or auditing all 6 dashboard pages for mock data) run in an isolated subagent. Your main context stays clean.',
         source: "Lydia Hallie",
       },
       {
-        title: "Write descriptions as triggers",
+        title: "Write skill triggers for Takovic patterns",
         description:
-          'Skill descriptions should be written for model consumption ("when should I fire?") not as human-readable summaries. This improves auto-discovery.',
+          'Skill descriptions should trigger on model-relevant cues. Example: "TRIGGER when: user adds a new stock entity, creates data files in src/data/, or mentions barrel exports." Not "Stock entity management skill."',
         source: "Thariq Shehzad",
       },
       {
-        title: "Include a gotchas section",
+        title: "Gotchas section for known pitfalls",
         description:
-          "Build a failure-points section in skills that documents Claude\u2019s known weak patterns. This preemptively steers around common mistakes.",
+          'Document Claude\u2019s weak patterns in skills. Example gotchas for Takovic: "Always update barrel index.ts when adding data files (Rule 9)." "Never hardcode tickers in JSX (Rule 19)." "Use tabular-nums class on all financial numbers." "sentiment type is a union, not a string."',
         source: "Thariq Shehzad",
       },
       {
-        title: "Constraint-based guidance",
+        title: "Constraints over step-by-step scripts",
         description:
-          "Give goals and constraints rather than step-by-step prescriptions. Claude performs better with guardrails than with rigid scripts.",
+          'Tell Claude "every stock entity needs 4 registries, 12 core data files, and barrel exports \u2014 follow Rules 1\u201318" rather than scripting each file creation step. Claude performs better with guardrails than rigid instructions.',
         source: "Thariq Shehzad",
       },
     ],
@@ -230,30 +232,29 @@ const sections: GuideSection[] = [
     id: "hooks",
     icon: Zap,
     title: "Hooks",
-    subtitle: "Automate quality gates and formatting",
+    subtitle: "Automate formatting and quality gates",
     tips: [
       {
-        title: "Auto-format with PostToolUse",
+        title: "Auto-format on every edit",
         description:
-          "A PostToolUse hook handles the final 10% of formatting automatically, preventing CI failures from linting issues. Set it up once, never worry about formatting again.",
+          "Set up a PostToolUse hook that runs Prettier/ESLint after every file edit. This catches Tailwind class ordering issues, ensures oklch() color tokens are used correctly, and prevents CI failures from inconsistent formatting across our 6 dashboard pages.",
         source: "Boris Cherny",
       },
       {
-        title: "Permission routing to Opus",
+        title: "Barrel export checker hook",
         description:
-          "Route permission requests through a hook that sends them to Opus for security scanning and auto-approval. Reduces manual confirmations while maintaining safety.",
+          'Create a PreToolUse hook that runs whenever files in src/data/{ticker}/ are edited. It verifies that every export is re-exported in the barrel index.ts (Rule 9 \u2014 the #1 cause of "data exists but doesn\u2019t appear" bugs). Catch violations before they reach a commit.',
+      },
+      {
+        title: "Stop hook for multi-step entity work",
+        description:
+          'Use a Stop hook to verify completion when building stock entities. Claude sometimes stops after creating data files but before updating the barrel or registering in entities.ts. The hook prompts: "Did you update all 4 registries?"',
         source: "Boris Cherny",
       },
       {
-        title: "Stop hook for continuation",
+        title: "Measure skill/command adoption",
         description:
-          "Use a Stop hook to prompt continuation verification at turn end. This catches cases where Claude stops prematurely on multi-step tasks.",
-        source: "Boris Cherny",
-      },
-      {
-        title: "Measure skill adoption",
-        description:
-          "Deploy PreToolUse hooks to measure how often skills fire. This identifies undertriggering \u2014 skills that exist but never activate.",
+          "Deploy PreToolUse hooks to track how often your /add-stock or /wire-page commands fire. If a command exists but never activates, the trigger description needs rewriting or the workflow isn\u2019t matching real usage patterns.",
         source: "Thariq Shehzad",
       },
     ],
@@ -262,40 +263,40 @@ const sections: GuideSection[] = [
     id: "workflows",
     icon: Layers,
     title: "Workflows & Context",
-    subtitle: "Manage context windows and sessions",
+    subtitle: "Manage sessions effectively on a large codebase",
     tips: [
       {
-        title: "Compact at 50% context",
+        title: "Compact at 50% \u2014 critical for Takovic",
         description:
-          "Manually run /compact when context reaches 50% capacity. Avoid the \"agent dumb zone\" where context is nearly full. Use /clear when switching tasks entirely.",
+          "Our CLAUDE.md is ~296 lines with 50 entity rules, plus 6 page files, 3 API routes, and lib files. Context fills fast. Run /compact at 50% usage. Use /clear when switching between unrelated tasks (e.g., from wiring screener data to building chart components).",
       },
       {
-        title: "Vanilla wins on small tasks",
+        title: "Vanilla Claude for small fixes",
         description:
-          "Plain Claude Code without elaborate workflows outperforms complex setups on smaller tasks. Only reach for heavy orchestration on large, multi-step features.",
+          "For fixing a duplicated sentimentBadgeVariant() or updating a cache TTL in lib/cache.ts, plain Claude Code outperforms complex workflows. Save orchestration for multi-file features like the entity registry system.",
       },
       {
-        title: "Opus for planning, Sonnet for code",
+        title: "Opus for architecture, Sonnet for code",
         description:
-          "Use /model to switch between models strategically. Opus excels at architectural planning; Sonnet is faster and more cost-effective for code generation.",
+          "Use Opus (/model) when planning the entity registry system, Auth.js v5 integration, or Zustand store architecture. Switch to Sonnet for implementing individual pages, API routes, or component files \u2014 it\u2019s faster and cheaper for code generation.",
         source: "Cat Wu",
       },
       {
-        title: 'Use "ultrathink" for hard problems',
+        title: 'Use "ultrathink" for scoring engine work',
         description:
-          'Include the keyword "ultrathink" in your prompt for extended reasoning mode. Also enable thinking mode and Explanatory output style in /config for better decision visibility.',
+          'The snowflake scoring engine (scores.ts) has complex weighted calculations across 5 dimensions with threshold arrays. When modifying scoring logic or adding new dimensions, include "ultrathink" in your prompt to trigger extended reasoning. Also enable thinking mode in /config.',
         source: "Anthropic",
       },
       {
-        title: "Name and resume sessions",
+        title: "Name sessions for ongoing work",
         description:
-          "Use /rename to label important sessions (e.g., \"TODO - refactor scoring engine\") and /resume to pick them up later. Essential when running multiple instances.",
+          'Use /rename to label sessions: "wiring-screener-to-api", "entity-registry-buildout", "auth-js-integration." Use /resume to pick them up later. Essential when you\u2019re running parallel sessions for different Takovic features.',
         source: "Cat Wu",
       },
       {
-        title: "Rewind instead of correcting",
+        title: "Rewind bad directions immediately",
         description:
-          "Use Esc Esc or /rewind to undo off-track decisions. It\u2019s more effective than trying to correct course in the same context window.",
+          "If Claude starts hardcoding tickers in JSX (violating Rule 19) or creating one-off chart components per stock (violating Rule 33), use Esc Esc or /rewind immediately. It\u2019s faster than correcting in the same context.",
       },
     ],
   },
@@ -303,36 +304,36 @@ const sections: GuideSection[] = [
     id: "advanced",
     icon: Shield,
     title: "Advanced Workflows",
-    subtitle: "Power-user techniques for complex projects",
+    subtitle: "Power-user techniques for Takovic development",
     tips: [
       {
-        title: "Wildcard permissions",
+        title: "Wildcard permissions for safe automation",
         description:
-          'Use permission patterns like Bash(npm run *) and Edit(/docs/**) instead of dangerously-skip-permissions. Granular wildcards are safe and convenient.',
+          'Set permission patterns like Bash(npm run *), Edit(src/**), and Read(src/**) in .claude/settings.json instead of dangerously-skip-permissions. This lets Claude freely edit pages, components, and lib files while blocking access to .env (FMP_API_KEY, ANTHROPIC_API_KEY, database URL).',
         source: "Boris Cherny",
       },
       {
-        title: "Sandboxing reduces prompts by 84%",
+        title: "Sandboxing cuts permission prompts by 84%",
         description:
-          "Enable sandboxing for file and network isolation. It dramatically reduces permission prompts while maintaining security boundaries.",
+          "Enable sandboxing for file and network isolation. With 6 page files, 9 UI components, 3 API routes, and multiple lib files, you\u2019ll hit dozens of permission prompts per session without it. Sandboxing makes multi-file refactors (like consolidating duplicated helpers) seamless.",
         source: "Boris Cherny, Cat Wu",
       },
       {
-        title: "ASCII diagrams in CLAUDE.md",
+        title: "ASCII diagrams for architecture",
         description:
-          "Use ASCII art extensively for architecture understanding. Claude parses ASCII diagrams better than prose descriptions of system topology.",
+          "Our CLAUDE.md already has the directory tree structure. Add ASCII diagrams for data flow: FMP API \u2192 cache.ts \u2192 API routes \u2192 page components, or the entity registry flow: entities.ts \u2192 entity-context.ts \u2192 tab-registry.ts \u2192 data/{ticker}/index.ts. Claude parses these better than prose.",
         source: "Boris Cherny",
       },
       {
-        title: "Invest in verification skills",
+        title: "Build verification skills for Takovic",
         description:
-          "Spend a week perfecting verification skills (e.g., signup-flow-driver, checkout-verifier). The ROI is enormous \u2014 automated acceptance testing for every change.",
+          "Invest in skills like stock-page-verifier (checks all 4 registries exist, barrel exports are complete, shared components render, no hardcoded tickers) and data-freshness-checker (validates DataMetadata.lastUpdated across all entities). High ROI for every future stock entity.",
         source: "Thariq Shehzad",
       },
       {
-        title: "Scheduled and looping tasks",
+        title: "Schedule data freshness monitoring",
         description:
-          "Use /loop for local recurring monitoring (up to 3 days). Use /schedule for cloud-based tasks that run even when your machine is off.",
+          "Use /loop to monitor FMP API health and cache hit rates locally. Use /schedule for cloud-based tasks like checking if AI summary caches (7-day TTL) need regeneration after earnings releases, even when your machine is off.",
       },
     ],
   },
@@ -340,29 +341,29 @@ const sections: GuideSection[] = [
     id: "git",
     icon: GitBranch,
     title: "Git & PR Practices",
-    subtitle: "Keep your version control clean and reviewable",
+    subtitle: "Keep Takovic PRs small and reviewable",
     tips: [
       {
-        title: "PRs under 150 lines",
+        title: "One concern per PR, under 150 lines",
         description:
-          "Keep pull requests under 150 lines changed (median: 118 lines from 141 PRs). One feature per PR. Smaller PRs get reviewed faster and merge cleaner.",
+          'Don\u2019t mix "wire screener to API" with "consolidate sentimentBadgeVariant()." Each gets its own PR. Example good PRs: "Extract scoreColor() to utils.ts" (~40 lines), "Add /api/watchlist CRUD route" (~120 lines), "Wire portfolio page to Drizzle" (~100 lines).',
         source: "Boris Cherny",
       },
       {
-        title: "Squash merge always",
+        title: "Squash merge for clean history",
         description:
-          "Use squash merging for clean linear history. One commit per feature enables easy revert and bisect when issues arise.",
+          "Use squash merging so each feature is one commit. If the snowflake scoring engine breaks after a merge, you can revert exactly one commit. Linear history makes git bisect trivial across our 10-table schema changes.",
         source: "Boris Cherny",
       },
       {
-        title: "Commit at least hourly",
+        title: "Commit as each task completes",
         description:
-          "Commit as soon as a task completes. Frequent commits provide checkpoints and reduce the blast radius of mistakes.",
+          'Commit hourly at minimum. After wiring dashboard mock data \u2192 commit. After fixing sentimentLabel() duplication \u2192 commit. After adding a new shared component \u2192 commit. Each commit is a checkpoint you can rewind to with /rewind.',
       },
       {
-        title: "Multi-agent code review",
+        title: "Multi-agent code review on PRs",
         description:
-          "Use /code-review for parallel analysis catching bugs, security vulnerabilities, and regressions across different dimensions simultaneously.",
+          "Use /code-review before merging. It catches issues like: hardcoded tickers (Rule 19), missing barrel exports (Rule 9), duplicated helpers that should be in utils.ts, and components exceeding the 500-line cap (Rule 45).",
         source: "Boris Cherny",
       },
     ],
@@ -371,33 +372,33 @@ const sections: GuideSection[] = [
     id: "debugging",
     icon: Bug,
     title: "Debugging",
-    subtitle: "Diagnose and fix issues efficiently",
+    subtitle: "Diagnose Takovic issues efficiently",
     tips: [
       {
-        title: "Share screenshots habitually",
+        title: "Screenshot the broken UI",
         description:
-          "When stuck on UI issues, share screenshots with Claude. Visual context dramatically improves diagnosis speed and accuracy.",
+          "When snowflake scores render wrong, sentiment badges show incorrect colors, or the sidebar layout breaks, share a screenshot. Claude can visually compare against the design principles (oklch tokens, emerald/red for +/\u2212, tabular-nums on prices) and spot the issue immediately.",
       },
       {
-        title: "Use browser automation MCPs",
+        title: "Browser automation for client-side bugs",
         description:
-          "Claude in Chrome, Playwright MCP, or Chrome DevTools MCP give Claude console log visibility. Essential for debugging client-side issues.",
+          "Use Playwright MCP or Chrome DevTools MCP to debug client-side issues. Essential for the Cmd+K search functionality, market status indicator (useMarketStatus hook), sidebar collapse state (SidebarContext), and interactive chart components.",
       },
       {
-        title: "Cross-model QA",
+        title: "Cross-model review for API routes",
         description:
-          "Deploy a separate model (e.g., Codex) to review your plan and implementation. Different models catch different classes of issues.",
+          "Have a separate model review your /api/stocks/[ticker] or /api/analysis/[ticker] implementation. Different models catch different issues \u2014 one might spot a missing cache invalidation, another might flag that the FMP error handling silently swallows 429 rate limit responses.",
       },
       {
-        title: "Agentic search over RAG",
+        title: "Grep and Glob beat vector search",
         description:
-          "Glob and grep patterns outperform vector databases for code search. Code drifts invalidate embeddings, but file search is always current.",
+          'For finding where sentimentBadgeVariant() is duplicated, or which pages hardcode ticker symbols, use grep/glob patterns. They\u2019re always current and don\u2019t suffer from stale embeddings. Example: grep "sentimentBadgeVariant" across src/ instantly shows all 4+ copies.',
         source: "Boris Cherny",
       },
       {
-        title: "Use /doctor for diagnostics",
+        title: "Use /doctor when things break",
         description:
-          "Run /doctor to diagnose installation, authentication, and configuration problems. It checks everything systematically.",
+          "If FMP API calls fail, Claude AI analysis returns errors, or Redis cache isn\u2019t connecting, run /doctor first. It checks environment variables (FMP_API_KEY, ANTHROPIC_API_KEY), Neon database connectivity, and Upstash Redis health systematically.",
       },
     ],
   },
@@ -405,22 +406,22 @@ const sections: GuideSection[] = [
     id: "utilities",
     icon: Wrench,
     title: "Utilities & Environment",
-    subtitle: "Optimize your development environment",
+    subtitle: "Optimize your Takovic development setup",
     tips: [
       {
-        title: "Terminal over IDE",
+        title: "Terminal-first for Takovic development",
         description:
-          "Use iTerm, Ghostty, or tmux instead of VS Code or Cursor for the best Claude Code experience. Terminal-first gives more control and fewer conflicts.",
+          "Use iTerm, Ghostty, or tmux instead of VS Code/Cursor. With 6 dashboard pages, multiple lib files, and API routes to manage, terminal-first gives better control. Run tmux panes: one for Claude, one for next dev, one for git.",
       },
       {
-        title: "Voice input for 10x speed",
+        title: "Voice input for complex prompts",
         description:
-          "Deploy Wispr Flow or built-in /voice for speech-to-prompt input. Voice prompting is significantly faster than typing for complex instructions.",
+          'Use /voice or Wispr Flow when describing complex features. Saying "Wire the portfolio page to use real holdings data from the Drizzle portfolioHoldings table, calculating total value from shares times current price from the FMP quote endpoint, with a 60-second cache TTL" is 10x faster than typing.',
       },
       {
-        title: "Custom status line",
+        title: "Status line for session awareness",
         description:
-          "Configure a custom status line showing context usage, model, cost, and session info. Keeps you aware of resource consumption at a glance.",
+          "Configure a custom status line showing context usage %, active model (Opus vs Sonnet), and session cost. With Takovic\u2019s large CLAUDE.md eating context, knowing when you\u2019re at 50% (time to /compact) prevents the quality drop.",
         source: "Boris Cherny",
       },
     ],
@@ -429,17 +430,17 @@ const sections: GuideSection[] = [
     id: "daily",
     icon: Calendar,
     title: "Daily Practices",
-    subtitle: "Habits for staying current and effective",
+    subtitle: "Habits for effective Takovic development",
     tips: [
       {
         title: "Update Claude Code daily",
         description:
-          "Run updates daily and read the changelog. Claude Code ships improvements and new features rapidly \u2014 staying current gives you an edge.",
+          "Claude Code ships improvements rapidly. New features like improved Next.js 15 App Router support, better TypeScript inference, and Tailwind CSS 4 understanding directly impact Takovic development quality. Read the changelog after each update.",
       },
       {
-        title: "Follow key community voices",
+        title: "Keep CLAUDE.md current state updated",
         description:
-          "Monitor Boris Cherny (creator), Thariq Shehzad, Cat Wu, Lydia Hallie, and the official Claude accounts for tips, patterns, and announcements.",
+          'After shipping a feature (e.g., implementing chart components), move it from "What\u2019s NOT Built Yet" to "What\u2019s Built" in CLAUDE.md. Update Known Debt when you fix a duplication. Stale project state causes Claude to generate imports for nonexistent code.',
       },
     ],
   },
@@ -450,47 +451,47 @@ const topWorkflows = [
     name: "Superpowers",
     stars: "118k",
     approach: "TDD-first with Iron Laws and whole-plan review",
-    best_for: "Teams wanting test-driven rigor",
+    best_for: "Building Takovic\u2019s test suite and CI pipeline",
   },
   {
     name: "Spec Kit",
     stars: "83k",
     approach: "Spec-driven development with constitution pattern",
-    best_for: "Documentation-heavy projects",
+    best_for: "Entity registry system and data file specs",
   },
   {
     name: "Get Shit Done",
     stars: "43k",
     approach: "Fresh 200K contexts with wave execution",
-    best_for: "Fast-paced feature shipping",
+    best_for: "Wiring mock data to real API endpoints fast",
   },
   {
     name: "BMAD-METHOD",
     stars: "43k",
     approach: "Full SDLC with agent personas",
-    best_for: "Enterprise-scale projects",
+    best_for: "Full feature buildout (Auth, CRUD, charts)",
   },
   {
     name: "HumanLayer",
     stars: "10k",
     approach: "RPI pattern (Request-Plan-Implement)",
-    best_for: "Large codebases (300k+ LOC)",
+    best_for: "Scaling Takovic beyond 50+ stock entities",
   },
 ];
 
 const quickReference = [
-  { command: "/compact", description: "Compress context at 50% usage" },
-  { command: "/clear", description: "Fresh context for new tasks" },
-  { command: "/model", description: "Switch between Opus and Sonnet" },
-  { command: "/rewind", description: "Undo off-track decisions" },
-  { command: "/rename", description: "Label sessions for later /resume" },
-  { command: "/doctor", description: "Diagnose configuration issues" },
-  { command: "/code-review", description: "Multi-agent PR analysis" },
-  { command: "/voice", description: "Push-to-talk voice input" },
-  { command: "/loop", description: "Local recurring tasks (up to 3 days)" },
-  { command: "/schedule", description: "Cloud-based scheduled tasks" },
-  { command: "Esc Esc", description: "Rewind to last checkpoint" },
-  { command: "ultrathink", description: "Trigger extended reasoning" },
+  { command: "/compact", description: "Compress at 50% (our CLAUDE.md is large)" },
+  { command: "/clear", description: "Fresh context between features" },
+  { command: "/model", description: "Opus for planning, Sonnet for code" },
+  { command: "/rewind", description: "Undo when rules are violated" },
+  { command: "/rename", description: "Label: \u201Cwiring-screener\u201D, \u201Centity-registry\u201D" },
+  { command: "/doctor", description: "Check FMP/Anthropic/Neon/Redis keys" },
+  { command: "/code-review", description: "Catch Rule 9/19/45 violations" },
+  { command: "/voice", description: "Describe complex data flows verbally" },
+  { command: "/loop", description: "Monitor FMP API health locally" },
+  { command: "/schedule", description: "Refresh AI summary caches (7d TTL)" },
+  { command: "Esc Esc", description: "Rewind hardcoded tickers/bad patterns" },
+  { command: "ultrathink", description: "For scoring engine & schema work" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -506,8 +507,8 @@ export default function DevGuidePage() {
           Developer Guide
         </h1>
         <p className="text-sm text-muted-foreground">
-          Best practices for working with Claude Code &mdash; 86 tips from the
-          community
+          Claude Code best practices applied to Takovic &mdash; real examples
+          from our codebase
         </p>
       </div>
 
@@ -555,9 +556,10 @@ export default function DevGuidePage() {
                 <span className="font-medium text-foreground">
                   Research &rarr; Plan &rarr; Execute &rarr; Review &rarr; Ship
                 </span>{" "}
-                &mdash; Always plan before coding. Use Opus for architecture
-                decisions, Sonnet for implementation. Compact context at 50%.
-                Commit hourly. Keep PRs under 150 lines.
+                &mdash; Plan before coding (entity registry, Auth.js, CRUD
+                APIs). Use Opus for architecture, Sonnet for pages. Compact at
+                50% (our CLAUDE.md is ~296 lines). Follow the 50 entity rules.
+                Commit after each task. One feature per PR, under 150 lines.
               </p>
             </div>
           </div>
@@ -567,7 +569,7 @@ export default function DevGuidePage() {
       {/* Top community workflows */}
       <div>
         <h2 className="mb-3 text-sm font-medium text-foreground">
-          Top Community Workflows
+          Recommended Workflows for Takovic
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {topWorkflows.map((wf) => (
