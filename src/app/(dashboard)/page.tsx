@@ -62,6 +62,10 @@ export default async function DashboardPage() {
       "AMZN",
       "TSLA",
     ];
+  const watchlistForNews = watchlistTickers
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .join(",");
 
   // Market index proxies
   const indexTickers = [
@@ -79,7 +83,7 @@ export default async function DashboardPage() {
     const [indexQuotes, wlQuotes, newsData] = await Promise.all([
       Promise.all(indexTickers.map((idx) => getQuote(idx.ticker))),
       Promise.all(watchlistTickers.map((t) => getQuote(t.trim()))),
-      getMarketNews(5),
+      getMarketNews(5, watchlistForNews || undefined),
     ]);
 
     marketIndices = indexTickers.map((idx, i) => ({
@@ -304,7 +308,10 @@ export default async function DashboardPage() {
             <Card>
               <CardContent className="p-5">
                 <p className="text-sm text-muted-foreground">
-                  No news available. Check FMP_API_KEY configuration.
+                  No headlines returned for your watchlist symbols. If quotes load but this stays empty,
+                  try again later. After adding{" "}
+                  <span className="font-mono text-xs">FMP_API_KEY</span> in Vercel, redeploy so the
+                  server sees it.
                 </p>
               </CardContent>
             </Card>
