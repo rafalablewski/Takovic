@@ -16,7 +16,6 @@ export interface CoveragePromptContext {
   tickerTabs: string;
   tabHierarchyNotes: string;
   domainSections: string;
-  stockSpecificMetrics: string;
   /** Where to find coverage + entity modules for this ticker (paths only, no literals). */
   dataRootHint: string;
 }
@@ -31,9 +30,9 @@ DATA LOCATIONS (resolve paths using the ticker — do not assume a specific asse
 
 DATABASE SECTIONS (map each update to the correct coverage tab; follow the live tab list below):
 
-1. Overview — thesis, key metrics, case framing, high-level catalysts.
+1. Overview — thesis, key metrics, case framing, high-level catalysts. Numeric metrics live in source files under the paths above (e.g. OVERVIEW.metrics in the coverage module, entity barrel exports); verify there before proposing updates — no metric snapshot is inlined in this prompt.
 2. Business Operations — company-specific operational narrative when this tab exists. If the UI nests sub-views under it, name placement using the exact sub-tab labels from the product (see Tab hierarchy).
-3. Comps (Comparables tab) — peer competitive intelligence and structured competitor news when present. Current loaded peer / comps context (may be empty):
+3. Comps (Comparables tab) — peer competitive intelligence and structured competitor news when present. Below is a **compact snapshot** built from the coverage data module when this prompt was assembled (not hardcoded in the template). Edit the COMPARABLES export in that module to add, remove, or change peers — values refresh on the next build.
 {{COMPETITORS}}
 4. Model — valuation, scenarios, projections.
 5. Capital — share structure, dilution, financing programs.
@@ -53,9 +52,6 @@ Canonical top-level order when the full standard set exists: Overview → Busine
 
 Domain-specific areas (from coverage registry custom tabs):
 {{DOMAIN_SECTIONS}}
-
-Structured metrics snapshot (loaded from data modules — verify against source files before writing; may be empty):
-{{STOCK_SPECIFIC_METRICS}}
 
 Reverse-chronological order for time-series feeds.
 
@@ -231,7 +227,6 @@ const PLACEHOLDER_MAP: Record<string, keyof CoveragePromptContext> = {
   "{{TICKER_TABS}}": "tickerTabs",
   "{{TAB_HIERARCHY_NOTES}}": "tabHierarchyNotes",
   "{{DOMAIN_SECTIONS}}": "domainSections",
-  "{{STOCK_SPECIFIC_METRICS}}": "stockSpecificMetrics",
   "{{DATA_ROOT_HINT}}": "dataRootHint",
 };
 
