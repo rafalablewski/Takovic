@@ -5,6 +5,10 @@
  * NEXT UPDATE: After next 8-K filing or material event
  */
 
+import type { ComparableCompany } from "@/types/coverage";
+
+export type { ComparableCompany } from "@/types/coverage";
+
 // ---------------------------------------------------------------------------
 // Overview
 // ---------------------------------------------------------------------------
@@ -420,20 +424,6 @@ export const CAPITAL_STRUCTURE = {
 // ---------------------------------------------------------------------------
 // Comparable Analysis
 // ---------------------------------------------------------------------------
-
-export interface ComparableCompany {
-  ticker: string;
-  name: string;
-  asset: "ETH" | "BTC" | "Mixed";
-  holdings: string; // human-readable
-  holdingsValue: string;
-  navPremium: string;
-  stakingYield: string;
-  marketCap: string;
-  threatLevel: "high" | "medium" | "low";
-  competitiveFocus: string;
-  keyDifferentiator: string;
-}
 
 export const COMPARABLES: ComparableCompany[] = [
   {

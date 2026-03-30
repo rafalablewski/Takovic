@@ -32,7 +32,7 @@ DATABASE SECTIONS (map each update to the correct coverage tab; follow the live 
 
 1. Overview — thesis, key metrics, case framing, high-level catalysts. Numeric metrics live in source files under the paths above (e.g. OVERVIEW.metrics in the coverage module, entity barrel exports); verify there before proposing updates — no metric snapshot is inlined in this prompt.
 2. Business Operations — company-specific operational narrative when this tab exists. If the UI nests sub-views under it, name placement using the exact sub-tab labels from the product (see Tab hierarchy).
-3. Comps (Comparables tab) — peer competitive intelligence and structured competitor news when present. Below is a **compact snapshot** built from the coverage data module when this prompt was assembled (not hardcoded in the template). Edit the COMPARABLES export in that module to add, remove, or change peers — values refresh on the next build.
+3. Comps (Comps tab) — peer competitive intelligence and structured competitor news when present. The peer set is **not** listed in this prompt; it is whatever the product shows on the Comps tab, backed by the coverage module (see the Comps guidance block below).
 {{COMPETITORS}}
 4. Model — valuation, scenarios, projections.
 5. Capital — share structure, dilution, financing programs.

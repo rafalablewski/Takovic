@@ -1,8 +1,8 @@
 /**
- * Builds CoveragePromptContext from registry + optional coverage/entity modules.
+ * Builds CoveragePromptContext from registry + template placeholders.
  *
- * Peer comps: compact snapshot + file path from COMPARABLES at prompt-build time.
- * Metrics are not inlined — analysts verify numbers in source files (see template).
+ * Peer context: instructs analysts to use the product Comps tab and
+ * src/data/coverage/<ticker>.ts (COMPARABLES) — no inline peer enumeration.
  */
 
 import { getCoveredStock, getTabsForStock } from "@/data/coverage/registry";
@@ -13,85 +13,14 @@ import {
 
 export type { CoveragePromptContext };
 
-/** One-line summary per comparable row (shape matches coverage ComparableCompany). */
-function formatComparablesSnapshot(
-  rows: unknown[],
-  coverageFile: string,
-  insight?: string
-): string {
-  const lines = rows.map((row) => {
-    if (!row || typeof row !== "object") return null;
-    const r = row as Record<string, unknown>;
-    const ticker = r.ticker != null ? String(r.ticker) : "?";
-    const name = r.name != null ? String(r.name) : "";
-    const parts: string[] = [`**${ticker}** — ${name}`];
-    if (r.asset != null) parts.push(`asset: ${String(r.asset)}`);
-    if (r.threatLevel != null) parts.push(`threat: ${String(r.threatLevel)}`);
-    if (r.competitiveFocus != null) parts.push(String(r.competitiveFocus));
-    return `- ${parts.join(" | ")}`;
-  });
-
-  const body = lines.filter(Boolean).join("\n");
-  const tail = insight?.trim()
-    ? `\n\nAnalyst framing (from data module):\n${insight.trim()}`
-    : "";
-
-  return [
-    `Peer / comps set — snapshot generated when this prompt was built. Source of truth: \`${coverageFile}\` (\`COMPARABLES\`). Add, remove, or edit rows there; names, assets, and figures update on the next prompt build.`,
-    "",
-    body || "(empty COMPARABLES array — add peers in the file above.)",
-    tail,
-    "",
-    "For full field-level detail (holdings strings, NAV, differentiators), open the source file; do not assume this snapshot includes every column.",
-  ].join("\n");
-}
-
-async function loadOptionalCoverageModules(upperTicker: string): Promise<{
-  competitors: string;
-}> {
+function buildCompsGuidanceForPrompt(upperTicker: string): string {
   const lower = upperTicker.toLowerCase();
-  const coveragePath = `src/data/coverage/${lower}.ts`;
-  let competitors = "No peer / comps context loaded yet.";
-
-  try {
-    const cov = await import(`@/data/coverage/${lower}`);
-    if ("COMPARABLES" in cov && cov.COMPARABLES != null) {
-      const rows = cov.COMPARABLES as unknown;
-      const insight =
-        "COMPARABLES_INSIGHT" in cov && typeof cov.COMPARABLES_INSIGHT === "string"
-          ? cov.COMPARABLES_INSIGHT
-          : undefined;
-      if (Array.isArray(rows)) {
-        competitors = formatComparablesSnapshot(rows, coveragePath, insight);
-      } else {
-        competitors = String(rows);
-      }
-    } else if ("COMPETITORS" in cov && cov.COMPETITORS != null) {
-      const c = cov.COMPETITORS as unknown;
-      competitors =
-        typeof c === "string"
-          ? c
-          : `Peer / comps data (raw — define COMPARABLES[] in ${coveragePath} for a compact snapshot):\n${JSON.stringify(c, null, 2)}`;
-    }
-  } catch {
-    // coverage module missing or incomplete
-  }
-
-  try {
-    const ent = await import(`@/data/${upperTicker}/index`);
-    if (
-      competitors.startsWith("No peer") &&
-      "COMPETITORS" in ent &&
-      ent.COMPETITORS != null
-    ) {
-      const c = ent.COMPETITORS as unknown;
-      competitors = typeof c === "string" ? c : JSON.stringify(c, null, 2);
-    }
-  } catch {
-    // entity barrel optional
-  }
-
-  return { competitors };
+  return [
+    "Peer list policy: Do not rely on an inline peer list in this prompt.",
+    "The product Comps tab is the canonical comparables view for this ticker. It loads COMPARABLES and optional COMPARABLES_INSIGHT from the coverage data module at the path below.",
+    `Module: src/data/coverage/${lower}.ts — add, remove, or edit COMPARABLES[] there; the Comps tab and human review stay aligned.`,
+    "When classifying Comps news, threat levels, or competitive tables, use peers from that tab (or the same source file), not a snapshot.",
+  ].join("\n\n");
 }
 
 /**
@@ -119,7 +48,7 @@ export async function buildCoveragePromptForTicker(
           .join("\n")
       : "None defined in registry yet.";
 
-  const { competitors } = await loadOptionalCoverageModules(upperTicker);
+  const competitors = buildCompsGuidanceForPrompt(upperTicker);
 
   const lower = upperTicker.toLowerCase();
   const dataRootHint = [

@@ -18,8 +18,8 @@ export { buildCoveragePromptForTicker } from "@/lib/ai/coverage-prompts/build-co
 
 /**
  * Builds the fully resolved coverage analyst prompt for a covered ticker.
- * Company name, exchange, description, sector, tabs, and data snapshots are injected
- * at runtime — the template contains no hardcoded issuer or numeric facts.
+ * Company name, exchange, description, sector, tabs, and file-path guidance are injected
+ * at runtime — the template contains no hardcoded issuer, peer list, or numeric facts.
  */
 export async function buildCoverageContext(
   ticker: string
