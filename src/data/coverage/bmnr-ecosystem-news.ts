@@ -3,7 +3,8 @@
  * Institutional adoption, enterprise partnerships, protocol upgrades,
  * and regulatory developments driving the ETH treasury thesis.
  *
- * LAST UPDATED: 2026-03-27
+ * LAST UPDATED: 2026-03-30
+ * NEXT UPDATE: After next material ecosystem / institutional ETH headline
  * Entries are reverse chronological. Append new items at the top.
  */
 
@@ -21,6 +22,18 @@ export interface EcosystemNewsItem {
 }
 
 export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
+  {
+    id: "eco-news-ibkr-in-kind-2026-03-25",
+    date: "2026-03-25",
+    category: "institutional",
+    company: "Interactive Brokers (IBKR)",
+    title: "IBKR Enables In-Kind Crypto Portfolio Transfers for Lower-Cost Trading and Unified Global Markets Access",
+    sentiment: "bullish",
+    summary: "Interactive Brokers (Nasdaq: IBKR) announced that eligible clients can transfer existing holdings in supported cryptocurrencies into IBKR-linked crypto accounts (via Paxos or zerohash) without liquidating first — enabling low-cost crypto trading alongside stocks, options, futures, FX, bonds, and other products on one platform. CEO Milan Galik framed the move as letting crypto investors access competitive pricing and diversification without multiple accounts or forced sales. Supported assets include Bitcoin, Ethereum, Solana, and others; eligibility applies to Interactive Brokers LLC and Interactive Brokers (U.K.) Limited clients, subject to jurisdiction. IBKR cites crypto commissions of 0.12%–0.18% of trade value with a $1.75 minimum per order and no added spreads or markups, contrasting with many retail crypto venues charging up to ~2% or more.",
+    significance: "Major S&P 500 broker normalizing in-kind crypto custody and transfer into a unified brokerage book strengthens the bridge between traditional finance and digital assets. Ethereum is explicitly listed among transferable assets, reinforcing ETH as a standard held asset inside regulated broker workflows. Fee structure disclosure (sub-20 bps, fixed minimum) highlights competitive pressure on higher-fee crypto-only platforms and may pull sophisticated flow toward broker-integrated rails.",
+    bmnrImplication: "Ecosystem-positive for ETH treasury narratives: deeper liquidity and holder optionality when major brokers accept in-kind ETH without off-ramping first. Does not directly affect BMNR operations or NAV, but supports the thesis that ETH remains embedded in institutional and active-investor infrastructure. Relevant for Ethereum tab / ecosystem feed, not BMNR company-specific operations.",
+    source: "Business Wire / Interactive Brokers PR (2026-03-25)",
+  },
   {
     id: "eco-news-1",
     date: "2026-02-26",

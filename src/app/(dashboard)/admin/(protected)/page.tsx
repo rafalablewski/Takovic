@@ -172,8 +172,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <CardTitle className="text-base">Coverage analyst prompt (resolved)</CardTitle>
           <CardDescription>
             Output of <code className="text-xs">buildCoverageContext(&quot;{activeTicker || "—"}&quot;)</code>
-            . Template: <code className="text-xs">COVERAGE_ANALYST_PROMPT</code> in{" "}
-            <code className="text-xs">prompts.ts</code>.
+            . Dedicated ticker prompt (e.g. BMNR):{" "}
+            <code className="text-xs">BMNR_COVERAGE_ANALYST_PROMPT</code> in{" "}
+            <code className="text-xs">coverage-prompts/bmnr.ts</code>.
           </CardDescription>
         </CardHeader>
         <CardContent>
