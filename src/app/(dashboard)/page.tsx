@@ -62,10 +62,10 @@ export default async function DashboardPage() {
       "AMZN",
       "TSLA",
     ];
-  const watchlistForNews = watchlistTickers
+  const cleanedWatchlistTickers = watchlistTickers
     .map((t) => t.trim())
-    .filter(Boolean)
-    .join(",");
+    .filter(Boolean);
+  const watchlistForNews = cleanedWatchlistTickers.join(",");
 
   // Market index proxies
   const indexTickers = [
@@ -82,8 +82,8 @@ export default async function DashboardPage() {
   try {
     const [indexQuotes, wlQuotes, newsData] = await Promise.all([
       Promise.all(indexTickers.map((idx) => getQuote(idx.ticker))),
-      Promise.all(watchlistTickers.map((t) => getQuote(t.trim()))),
-      getMarketNews(5, watchlistForNews || undefined),
+      Promise.all(cleanedWatchlistTickers.map((t) => getQuote(t))),
+      getMarketNews(5, watchlistForNews),
     ]);
 
     marketIndices = indexTickers.map((idx, i) => ({
