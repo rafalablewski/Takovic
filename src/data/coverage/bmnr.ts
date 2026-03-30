@@ -511,37 +511,14 @@ export const QUARTERLY_FINANCIALS: QuarterlyFinancial[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Timeline
+// Timeline — full event list in bmnr-timeline.ts
 // ---------------------------------------------------------------------------
 
-export interface TimelineEvent {
-  date: string;
-  type: "filing" | "purchase" | "corporate" | "milestone" | "market";
-  title: string;
-  description: string;
-  source?: string; // "8-K", "PR", "10-Q", etc.
-}
-
-export const TIMELINE_DESCRIPTION =
-  "SEC filings, weekly holdings updates, corporate events, and key milestones. Chronological record tracking BMNR's evolution from mining company to ETH treasury.";
-
-export const TIMELINE_EVENTS: TimelineEvent[] = [
-  { date: "2025-06-15", type: "corporate", title: "Strategic pivot announced", description: "BMNR announces transition from crypto mining to ETH treasury strategy", source: "8-K" },
-  { date: "2025-07-01", type: "milestone", title: "Coverage initiated", description: "Takovic Research initiates coverage on BMNR" },
-  { date: "2025-07-07", type: "purchase", title: "First ETH purchase", description: "50 ETH acquired at $2,450 avg — inaugural treasury purchase", source: "8-K" },
-  { date: "2025-07-14", type: "filing", title: "ATM program filed", description: "At-the-market offering program registered with SEC", source: "S-3" },
-  { date: "2025-08-04", type: "purchase", title: "First registered direct", description: "70 ETH via registered direct offering — largest single purchase at the time", source: "8-K" },
-  { date: "2025-09-02", type: "purchase", title: "Record weekly purchase", description: "80 ETH acquired at $2,350 avg — record weekly purchase", source: "8-K" },
-  { date: "2025-09-30", type: "filing", title: "Q3 2025 10-Q filed", description: "First quarterly filing as ETH treasury company. 743 ETH on balance sheet.", source: "10-Q" },
-  { date: "2025-11-03", type: "milestone", title: "1,000 ETH milestone", description: "Treasury crosses 1,000 ETH — 1,033 ETH total after 18 purchases" },
-  { date: "2025-11-15", type: "corporate", title: "Staking program launched", description: "BMNR begins staking ~30% of ETH holdings via institutional validator", source: "8-K" },
-  { date: "2025-12-31", type: "filing", title: "Q4 2025 10-Q filed", description: "1,403 ETH on balance sheet. First quarter with positive net income from staking.", source: "10-Q" },
-  { date: "2026-01-06", type: "purchase", title: "Post-holiday accumulation", description: "75 ETH at $2,280 avg — largest post-holiday purchase", source: "8-K" },
-  { date: "2026-02-10", type: "market", title: "ETH drops below $2,200", description: "ETH price weakness; BMNR accelerates purchases at lower prices" },
-  { date: "2026-03-03", type: "purchase", title: "Accelerated accumulation", description: "85 ETH purchased — pace increasing as ETH trades near cycle lows", source: "8-K" },
-  { date: "2026-03-17", type: "milestone", title: "2,000 ETH milestone", description: "Treasury crosses 2,000 ETH with 163 ETH purchase — 2,141 total", source: "8-K" },
-  { date: "2026-03-27", type: "filing", title: "Q1 2026 10-Q expected", description: "Upcoming quarterly filing — 2,141+ ETH expected on balance sheet", source: "10-Q" },
-];
+export {
+  type TimelineEvent,
+  TIMELINE_DESCRIPTION,
+  TIMELINE_EVENTS,
+} from "./bmnr-timeline";
 
 // ---------------------------------------------------------------------------
 // Ethereum (stock-specific) — see bmnr-ethereum.ts for full intelligence
