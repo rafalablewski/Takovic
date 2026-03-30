@@ -163,6 +163,10 @@ export function QuoteStrip({
           [
             ["overview", "Overview"],
             ["financials", "Financials"],
+            ["analysts", "Analysts"],
+            ["ownership", "Ownership"],
+            ["dividends", "Dividends"],
+            ["options", "Options"],
             ["news", "News"],
             ["analysis", "Analysis"],
             ["filings", "Filings"],

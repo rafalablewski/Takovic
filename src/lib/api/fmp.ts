@@ -391,3 +391,238 @@ export interface FMPIntradayBar {
 export function fmpMoverSymbol(q: FMPMoverQuote): string {
   return (q.ticker ?? q.symbol ?? "").toUpperCase();
 }
+
+// ---------------------------------------------------------------------------
+// Analyst estimates & price targets
+// ---------------------------------------------------------------------------
+
+export async function getAnalystEstimates(ticker: string, period: "annual" | "quarter" = "annual", limit = 6) {
+  return fetchFMP<FMPAnalystEstimate[]>(`/analyst-estimates/${ticker}`, { period, limit: limit.toString() });
+}
+
+export async function getPriceTarget(ticker: string) {
+  return fetchFMP<FMPPriceTarget[]>(`/price-target/${ticker}`);
+}
+
+export async function getPriceTargetConsensus(ticker: string) {
+  const data = await fetchFMP<FMPPriceTargetConsensus[]>(`/price-target-consensus/${ticker}`);
+  return data[0] ?? null;
+}
+
+export async function getAnalystRecommendations(ticker: string) {
+  return fetchFMP<FMPAnalystRecommendation[]>(`/analyst-stock-recommendations/${ticker}`);
+}
+
+export async function getUpgradesDowngrades(ticker: string) {
+  return fetchFMP<FMPUpgradeDowngrade[]>(`/upgrades-downgrades/${ticker}`);
+}
+
+// ---------------------------------------------------------------------------
+// Insider & institutional ownership
+// ---------------------------------------------------------------------------
+
+export async function getInstitutionalHolders(ticker: string) {
+  return fetchFMP<FMPInstitutionalHolder[]>(`/institutional-holder/${ticker}`);
+}
+
+export async function getInsiderTrading(ticker: string, limit = 50) {
+  return fetchFMP<FMPInsiderTrade[]>(`/insider-trading`, { symbol: ticker, limit: limit.toString() });
+}
+
+// ---------------------------------------------------------------------------
+// Dividends
+// ---------------------------------------------------------------------------
+
+export async function getHistoricalDividends(ticker: string) {
+  const data = await fetchFMP<FMPHistoricalDividendResponse>(`/historical-price-full/stock_dividend/${ticker}`);
+  return data;
+}
+
+// ---------------------------------------------------------------------------
+// Economic calendar
+// ---------------------------------------------------------------------------
+
+export async function getEconomicCalendar(from: string, to: string) {
+  return fetchFMP<FMPEconomicEvent[]>("/economic_calendar", { from, to });
+}
+
+// ---------------------------------------------------------------------------
+// Sector performance
+// ---------------------------------------------------------------------------
+
+export async function getSectorPerformance() {
+  return fetchFMP<FMPSectorPerformance[]>("/sector-performance");
+}
+
+export async function getHistoricalSectorPerformance(limit = 5) {
+  return fetchFMP<FMPHistoricalSectorPerformance[]>("/historical-sectors-performance", { limit: limit.toString() });
+}
+
+// ---------------------------------------------------------------------------
+// ETF
+// ---------------------------------------------------------------------------
+
+export async function getETFHoldings(ticker: string) {
+  return fetchFMP<FMPETFHolding[]>(`/etf-holder/${ticker}`);
+}
+
+export async function getETFSectorWeightings(ticker: string) {
+  return fetchFMP<FMPETFSectorWeight[]>(`/etf-sector-weightings/${ticker}`);
+}
+
+export async function getETFCountryWeightings(ticker: string) {
+  return fetchFMP<FMPETFCountryWeight[]>(`/etf-country-weightings/${ticker}`);
+}
+
+// ---------------------------------------------------------------------------
+// New type definitions
+// ---------------------------------------------------------------------------
+
+export interface FMPAnalystEstimate {
+  symbol: string;
+  date: string;
+  estimatedRevenueLow: number;
+  estimatedRevenueHigh: number;
+  estimatedRevenueAvg: number;
+  estimatedEbitdaLow: number;
+  estimatedEbitdaHigh: number;
+  estimatedEbitdaAvg: number;
+  estimatedEpsLow: number;
+  estimatedEpsHigh: number;
+  estimatedEpsAvg: number;
+  estimatedNetIncomeLow: number;
+  estimatedNetIncomeHigh: number;
+  estimatedNetIncomeAvg: number;
+  numberAnalystEstimatedRevenue: number;
+  numberAnalystsEstimatedEps: number;
+}
+
+export interface FMPPriceTarget {
+  symbol: string;
+  publishedDate: string;
+  newsURL: string;
+  newsTitle: string;
+  analystName: string;
+  priceTarget: number;
+  adjPriceTarget: number;
+  priceWhenPosted: number;
+  newsPublisher: string;
+  analystCompany: string;
+}
+
+export interface FMPPriceTargetConsensus {
+  symbol: string;
+  targetHigh: number;
+  targetLow: number;
+  targetConsensus: number;
+  targetMedian: number;
+}
+
+export interface FMPAnalystRecommendation {
+  symbol: string;
+  date: string;
+  analystRatingsbuy: number;
+  analystRatingsHold: number;
+  analystRatingsSell: number;
+  analystRatingsStrongSell: number;
+  analystRatingsStrongBuy: number;
+}
+
+export interface FMPUpgradeDowngrade {
+  symbol: string;
+  publishedDate: string;
+  newsURL: string;
+  newsTitle: string;
+  newsBaseURL: string;
+  newsPublisher: string;
+  newGrade: string;
+  previousGrade: string;
+  gradingCompany: string;
+  action: string;
+  priceWhenPosted: number;
+}
+
+export interface FMPInstitutionalHolder {
+  holder: string;
+  shares: number;
+  dateReported: string;
+  change: number;
+  changePercentage: number;
+}
+
+export interface FMPInsiderTrade {
+  symbol: string;
+  filingDate: string;
+  transactionDate: string;
+  reportingName: string;
+  transactionType: string;
+  securitiesOwned: number;
+  securitiesTransacted: number;
+  price: number;
+  typeOfOwner: string;
+}
+
+export interface FMPHistoricalDividendResponse {
+  symbol: string;
+  historical: FMPDividendRecord[];
+}
+
+export interface FMPDividendRecord {
+  date: string;
+  label: string;
+  adjDividend: number;
+  dividend: number;
+  recordDate: string;
+  paymentDate: string;
+  declarationDate: string;
+}
+
+export interface FMPEconomicEvent {
+  event: string;
+  date: string;
+  country: string;
+  actual: number | null;
+  previous: number | null;
+  change: number | null;
+  changePercentage: number | null;
+  estimate: number | null;
+  impact: string;
+}
+
+export interface FMPSectorPerformance {
+  sector: string;
+  changesPercentage: string;
+}
+
+export interface FMPHistoricalSectorPerformance {
+  date: string;
+  utilitiesChangesPercentage: number;
+  basicMaterialsChangesPercentage: number;
+  communicationServicesChangesPercentage: number;
+  consumerCyclicalChangesPercentage: number;
+  consumerDefensiveChangesPercentage: number;
+  energyChangesPercentage: number;
+  financialServicesChangesPercentage: number;
+  healthcareChangesPercentage: number;
+  industrialsChangesPercentage: number;
+  realEstateChangesPercentage: number;
+  technologyChangesPercentage: number;
+}
+
+export interface FMPETFHolding {
+  asset: string;
+  name: string;
+  sharesNumber: number;
+  weightPercentage: number;
+  marketValue: number;
+}
+
+export interface FMPETFSectorWeight {
+  sector: string;
+  weightPercentage: string;
+}
+
+export interface FMPETFCountryWeight {
+  country: string;
+  weightPercentage: string;
+}

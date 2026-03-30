@@ -15,6 +15,13 @@ import {
   getIncomeStatement,
   getBalanceSheet,
   getStockNews,
+  getAnalystEstimates,
+  getPriceTargetConsensus,
+  getAnalystRecommendations,
+  getUpgradesDowngrades,
+  getInstitutionalHolders,
+  getInsiderTrading,
+  getHistoricalDividends,
 } from "@/lib/api/fmp";
 import { calculateSnowflakeScores } from "@/lib/analysis/scores";
 import { getServerBaseUrl } from "@/lib/server-base-url";
@@ -42,17 +49,44 @@ export default async function StockPage({
     metrics,
     incomeStatements,
     balanceSheets,
-    news;
+    news,
+    analystEstimates,
+    priceTargetConsensus,
+    analystRecommendations,
+    upgradesDowngrades,
+    institutionalHolders,
+    insiderTrades,
+    dividendData;
 
   try {
-    [quote, profile, metrics, incomeStatements, balanceSheets, news] =
-      await Promise.all([
+    [
+      quote,
+      profile,
+      metrics,
+      incomeStatements,
+      balanceSheets,
+      news,
+      analystEstimates,
+      priceTargetConsensus,
+      analystRecommendations,
+      upgradesDowngrades,
+      institutionalHolders,
+      insiderTrades,
+      dividendData,
+    ] = await Promise.all([
         getQuote(upperTicker),
         getProfile(upperTicker),
         getKeyMetrics(upperTicker, "annual", 1),
         getIncomeStatement(upperTicker, financialPeriod, 12),
         getBalanceSheet(upperTicker, "annual", 1),
         getStockNews(upperTicker, 20),
+        getAnalystEstimates(upperTicker).catch(() => []),
+        getPriceTargetConsensus(upperTicker).catch(() => null),
+        getAnalystRecommendations(upperTicker).catch(() => []),
+        getUpgradesDowngrades(upperTicker).catch(() => []),
+        getInstitutionalHolders(upperTicker).catch(() => []),
+        getInsiderTrading(upperTicker).catch(() => []),
+        getHistoricalDividends(upperTicker).catch(() => null),
       ]);
   } catch (error) {
     console.error(`Failed to fetch stock data for ${upperTicker}:`, error);
@@ -215,6 +249,15 @@ export default async function StockPage({
         news={news ?? []}
         snowflakeScores={snowflakeScores}
         aiAnalysis={aiAnalysis}
+        consensus={priceTargetConsensus}
+        recommendations={analystRecommendations ?? []}
+        estimates={analystEstimates ?? []}
+        upgrades={upgradesDowngrades ?? []}
+        institutionalHolders={institutionalHolders ?? []}
+        insiderTrades={insiderTrades ?? []}
+        dividendHistory={dividendData?.historical ?? []}
+        dividendYield={latestMetrics?.dividendYield ?? null}
+        latestEps={quote.eps ?? null}
       />
     </Suspense>
   );

@@ -6,13 +6,12 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatCurrency, formatNumber } from "@/lib/utils";
 import type { MarketEquityRow } from "@/lib/db/market-equities";
 import { searchMarketEquities } from "@/lib/db/market-equities";
-import { Download } from "lucide-react";
 import { ScreenerFilterForm } from "@/components/screener/filter-form";
 import { ScreenerPagination } from "@/components/screener/pagination";
+import { ScreenerExportButton } from "@/components/screener/export-button";
 
 /** Number of results per page */
 const PAGE_SIZE = 20;
@@ -127,10 +126,17 @@ export default async function ScreenerPage({
             and run <span className="font-mono text-xs">npm run db:seed:market-equities</span>.
           </p>
         </div>
-        <Button variant="outline" size="sm" className="gap-1.5">
-          <Download className="h-4 w-4" />
-          Export
-        </Button>
+        <ScreenerExportButton
+          stocks={paginatedStocks.map((s) => ({
+            symbol: s.symbol,
+            name: s.name ?? "",
+            sector: s.sector ?? "",
+            price: num(s.price),
+            marketCap: num(s.marketCap),
+            volume: num(s.volume),
+            change: num(s.changePct),
+          }))}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">

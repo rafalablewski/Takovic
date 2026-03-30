@@ -29,7 +29,9 @@ import {
   DollarSign,
   PieChart,
   BarChart3,
+  Download,
 } from "lucide-react";
+import { exportPortfolioCSV } from "@/lib/export";
 import { usePortfolio, type Holding } from "@/hooks/use-portfolio";
 import { formatCurrency, formatPercent, cn } from "@/lib/utils";
 import type { FMPQuote } from "@/lib/api/fmp";
@@ -690,12 +692,54 @@ export default function PortfolioPage() {
             Holdings, performance, and allocation
           </p>
         </div>
-        {quotesLoading && (
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Loader2 className="h-3 w-3 animate-spin" />
-            Updating prices...
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {quotesLoading && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Updating prices...
+            </div>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-xs"
+            onClick={() => {
+              if (!activePortfolio) return;
+              const totalMarketValue = activePortfolio.holdings.reduce(
+                (sum, h) => sum + h.shares * (quotes[h.ticker]?.price ?? 0),
+                0
+              );
+              exportPortfolioCSV(
+                activePortfolio.holdings.map((h) => {
+                  const price = quotes[h.ticker]?.price ?? 0;
+                  const marketValue = h.shares * price;
+                  const costBasis = h.shares * h.avgCostBasis;
+                  const gainLoss = marketValue - costBasis;
+                  const gainLossPercent =
+                    costBasis > 0 ? (gainLoss / costBasis) * 100 : 0;
+                  const weight =
+                    totalMarketValue > 0
+                      ? (marketValue / totalMarketValue) * 100
+                      : 0;
+                  return {
+                    ticker: h.ticker,
+                    shares: h.shares,
+                    avgCost: h.avgCostBasis,
+                    currentPrice: price,
+                    marketValue,
+                    gainLoss,
+                    gainLossPercent,
+                    weight,
+                  };
+                })
+              );
+            }}
+            disabled={!activePortfolio || activePortfolio.holdings.length === 0}
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export CSV
+          </Button>
+        </div>
       </div>
 
       {/* Portfolio Tabs */}
