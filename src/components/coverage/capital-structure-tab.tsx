@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatLargeNumber } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { CAPITAL_STRUCTURE } from "@/data/coverage/bmnr";
 import type { CapitalMetric } from "@/data/coverage/bmnr";
 import {
@@ -24,12 +25,10 @@ function fmtHeadline(m: CapitalMetric): string {
   if (typeof v === "string") return v;
   switch (m.format) {
     case "currency":
-      if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
-      if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
+      if (Math.abs(v) >= 1e6) return formatLargeNumber(v, { prefix: "$", decimals: Math.abs(v) >= 1e9 ? 2 : 1 });
       return `$${v.toLocaleString()}`;
     case "number":
-      if (Math.abs(v) >= 1e9) return `${(v / 1e9).toFixed(2)}B`;
-      if (Math.abs(v) >= 1e6) return `${(v / 1e6).toFixed(1)}M`;
+      if (Math.abs(v) >= 1e6) return formatLargeNumber(v, { decimals: Math.abs(v) >= 1e9 ? 2 : 1 });
       return v.toLocaleString();
     case "percent":
       return `${(v * 100).toFixed(1)}%`;
@@ -83,7 +82,7 @@ function Collapsible({
 // ---------------------------------------------------------------------------
 
 export function CapitalStructureTab({ ticker }: { ticker: string }) {
-  const data = ticker === "BMNR" ? CAPITAL_STRUCTURE : null;
+  const data = isEthTreasury(ticker) ? CAPITAL_STRUCTURE : null;
   if (!data) return <p className="text-sm text-muted-foreground">No capital structure data.</p>;
 
   return (
@@ -246,7 +245,6 @@ function MetricCell({ label, value, highlight }: { label: string; value: string;
 }
 
 function fmtNum(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e6) return formatLargeNumber(n, { decimals: n >= 1e9 ? 2 : 1 });
   return n.toLocaleString();
 }

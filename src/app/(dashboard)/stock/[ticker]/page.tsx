@@ -8,8 +8,24 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatCurrency, formatPercent } from "@/lib/utils";
+import {
+  formatCurrency,
+  formatPercent,
+  formatNumber,
+  sentimentBadgeVariant,
+  sentimentLabel,
+  timeAgo,
+} from "@/lib/utils";
 import { Intelligence } from "@/components/stock/intelligence";
+import {
+  getQuote,
+  getProfile,
+  getKeyMetrics,
+  getIncomeStatement,
+  getBalanceSheet,
+  getStockNews,
+} from "@/lib/api/fmp";
+import { calculateSnowflakeScores } from "@/lib/analysis/scores";
 import {
   Star,
   TrendingUp,
@@ -18,81 +34,123 @@ import {
   Sparkles,
   ChevronRight,
   ArrowUpRight,
+  ArrowDownRight,
+  AlertCircle,
 } from "lucide-react";
 
 interface StockPageProps {
   params: Promise<{ ticker: string }>;
 }
 
-const snowflakeScores = [
-  { label: "Value", score: 3.8, color: "bg-blue-500" },
-  { label: "Growth", score: 4.2, color: "bg-emerald-500" },
-  { label: "Profitability", score: 4.5, color: "bg-violet-500" },
-  { label: "Health", score: 3.9, color: "bg-amber-500" },
-  { label: "Dividend", score: 2.1, color: "bg-rose-500" },
-];
-
-const keyMetrics = [
-  { label: "P/E Ratio", value: "28.5" },
-  { label: "P/B Ratio", value: "45.2" },
-  { label: "ROE", value: "147.3%" },
-  { label: "D/E Ratio", value: "1.87" },
-  { label: "Div Yield", value: "0.55%" },
-  { label: "Rev Growth", value: "8.1%" },
-  { label: "Net Margin", value: "25.3%" },
-  { label: "FCF", value: "$99.6B" },
-  { label: "Market Cap", value: "$2.98T" },
-  { label: "EPS", value: "$6.73" },
-];
-
-const newsItems = [
-  {
-    title: "Company Reports Strong Q4 Earnings, Beating Analyst Expectations",
-    source: "Reuters",
-    time: "2h ago",
-    sentiment: "bullish" as const,
-  },
-  {
-    title: "Analysts Raise Price Targets Following Product Launch Event",
-    source: "Bloomberg",
-    time: "5h ago",
-    sentiment: "somewhat_bullish" as const,
-  },
-  {
-    title: "Regulatory Scrutiny Intensifies Amid Antitrust Investigation",
-    source: "Financial Times",
-    time: "1d ago",
-    sentiment: "somewhat_bearish" as const,
-  },
-];
-
 const timeframes = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
-
-function sentimentBadgeVariant(
-  sentiment: string
-): "success" | "danger" | "warning" | "secondary" {
-  switch (sentiment) {
-    case "bullish":
-    case "somewhat_bullish":
-      return "success";
-    case "bearish":
-    case "somewhat_bearish":
-      return "danger";
-    default:
-      return "secondary";
-  }
-}
-
-function sentimentLabel(sentiment: string): string {
-  return sentiment
-    .split("_")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
+const scoreColors = ["bg-blue-500", "bg-emerald-500", "bg-violet-500", "bg-amber-500", "bg-rose-500"];
+const scoreLabels = ["Value", "Growth", "Profitability", "Health", "Dividend"];
 
 export default async function StockPage({ params }: StockPageProps) {
   const { ticker } = await params;
   const upperTicker = ticker.toUpperCase();
+
+  let quote, profile, metrics, incomeStatements, balanceSheets, news;
+
+  try {
+    [quote, profile, metrics, incomeStatements, balanceSheets, news] = await Promise.all([
+      getQuote(upperTicker),
+      getProfile(upperTicker),
+      getKeyMetrics(upperTicker, "annual", 1),
+      getIncomeStatement(upperTicker, "annual", 5),
+      getBalanceSheet(upperTicker, "annual", 1),
+      getStockNews(upperTicker, 3),
+    ]);
+  } catch {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Card className="max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-500" />
+            <h2 className="text-lg font-semibold text-foreground">Error Loading Stock</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Failed to fetch data for {upperTicker}. Please check that FMP_API_KEY is configured.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!quote) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Card className="max-w-md w-full">
+          <CardContent className="p-8 text-center">
+            <AlertCircle className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+            <h2 className="text-lg font-semibold text-foreground">Stock Not Found</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              No data available for ticker &quot;{upperTicker}&quot;.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Calculate snowflake scores
+  const latestMetrics = metrics?.[0] ?? null;
+  const latestBalanceSheet = balanceSheets?.[0] ?? null;
+
+  let snowflakeScores = null;
+  if (latestMetrics && latestBalanceSheet && incomeStatements?.length) {
+    try {
+      snowflakeScores = calculateSnowflakeScores({
+        metrics: latestMetrics,
+        incomeStatements,
+        balanceSheet: latestBalanceSheet,
+      });
+    } catch {
+      // Scores unavailable
+    }
+  }
+
+  const positive = quote.changesPercentage >= 0;
+  const companyName = profile?.companyName ?? quote.name ?? upperTicker;
+  const exchange = profile?.exchange ?? "";
+
+  // Build key metrics dynamically
+  const keyMetricsDisplay = [
+    { label: "P/E Ratio", value: latestMetrics?.peRatio ? latestMetrics.peRatio.toFixed(1) : "—" },
+    { label: "P/B Ratio", value: latestMetrics?.pbRatio ? latestMetrics.pbRatio.toFixed(1) : "—" },
+    { label: "ROE", value: latestMetrics?.roe ? `${(latestMetrics.roe * 100).toFixed(1)}%` : "—" },
+    { label: "D/E Ratio", value: latestMetrics?.debtToEquity != null ? latestMetrics.debtToEquity.toFixed(2) : "—" },
+    { label: "Div Yield", value: latestMetrics?.dividendYield ? `${(latestMetrics.dividendYield * 100).toFixed(2)}%` : "—" },
+    { label: "Net Margin", value: latestMetrics?.netProfitMargin ? `${(latestMetrics.netProfitMargin * 100).toFixed(1)}%` : "—" },
+    { label: "Gross Margin", value: latestMetrics?.grossProfitMargin ? `${(latestMetrics.grossProfitMargin * 100).toFixed(1)}%` : "—" },
+    { label: "Market Cap", value: quote.marketCap ? formatCurrency(quote.marketCap, "USD", true) : "—" },
+    { label: "EPS", value: quote.eps ? `$${quote.eps.toFixed(2)}` : "—" },
+    { label: "Volume", value: quote.volume ? formatNumber(quote.volume, true) : "—" },
+  ];
+
+  // Build snowflake score items for display
+  const snowflakeItems = snowflakeScores
+    ? scoreLabels.map((label, i) => ({
+        label,
+        score: [snowflakeScores.value, snowflakeScores.growth, snowflakeScores.profitability, snowflakeScores.health, snowflakeScores.dividend][i],
+        color: scoreColors[i],
+      }))
+    : null;
+
+  // AI Analysis — try to call the analysis API route
+  let aiAnalysis: { summary: string; sentiment: string; strengths: string[]; weaknesses: string[] } | null = null;
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/analysis/${upperTicker}`, { next: { revalidate: 86400 } });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.summary) {
+        aiAnalysis = data;
+      }
+    }
+  } catch {
+    // AI analysis unavailable
+  }
 
   return (
     <div className="space-y-6">
@@ -103,28 +161,45 @@ export default async function StockPage({ params }: StockPageProps) {
             <h1 className="text-xl font-semibold text-foreground">
               {upperTicker}
             </h1>
-            <Badge variant="outline" className="text-[10px]">
-              NASDAQ
-            </Badge>
+            {exchange && (
+              <Badge variant="outline" className="text-[10px]">
+                {exchange}
+              </Badge>
+            )}
           </div>
-          <p className="mt-0.5 text-sm text-muted-foreground">Apple Inc.</p>
+          <p className="mt-0.5 text-sm text-muted-foreground">{companyName}</p>
 
           <div className="mt-3 flex items-baseline gap-3">
             <span className="text-3xl font-semibold tabular-nums text-foreground">
-              {formatCurrency(192.53)}
+              {formatCurrency(quote.price)}
             </span>
-            <span className="flex items-center gap-0.5 text-sm font-medium tabular-nums text-emerald-600 dark:text-emerald-400">
-              <ArrowUpRight className="h-3.5 w-3.5" />
-              {formatPercent(1.24)}
+            <span className={`flex items-center gap-0.5 text-sm font-medium tabular-nums ${
+              positive
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-red-600 dark:text-red-400"
+            }`}>
+              {positive ? (
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              ) : (
+                <ArrowDownRight className="h-3.5 w-3.5" />
+              )}
+              {formatPercent(quote.changesPercentage)}
             </span>
             <span className="text-xs text-muted-foreground">
-              (+$2.36 today)
+              ({positive ? "+" : ""}{formatCurrency(quote.change)} today)
             </span>
           </div>
 
           <p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
             <Clock className="h-3 w-3" />
-            Last updated Mar 27, 2026 4:00 PM EST
+            Last updated {new Date(quote.timestamp * 1000).toLocaleString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+              timeZoneName: "short",
+            })}
           </p>
         </div>
 
@@ -150,7 +225,9 @@ export default async function StockPage({ params }: StockPageProps) {
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium">Snowflake Analysis</CardTitle>
               <div className="text-right">
-                <span className="text-lg font-semibold tabular-nums text-foreground">3.7</span>
+                <span className="text-lg font-semibold tabular-nums text-foreground">
+                  {snowflakeScores ? snowflakeScores.overall.toFixed(1) : "—"}
+                </span>
                 <span className="text-xs text-muted-foreground"> / 5.0</span>
               </div>
             </div>
@@ -159,22 +236,28 @@ export default async function StockPage({ params }: StockPageProps) {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-5 pt-4 space-y-3.5">
-            {snowflakeScores.map((item) => (
-              <div key={item.label} className="space-y-1.5">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="tabular-nums font-medium text-foreground">
-                    {item.score.toFixed(1)}
-                  </span>
+            {snowflakeItems ? (
+              snowflakeItems.map((item) => (
+                <div key={item.label} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="tabular-nums font-medium text-foreground">
+                      {item.score.toFixed(1)}
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full rounded-full bg-secondary">
+                    <div
+                      className={`h-1.5 rounded-full ${item.color} transition-all`}
+                      style={{ width: `${(item.score / 5) * 100}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-secondary">
-                  <div
-                    className={`h-1.5 rounded-full ${item.color} transition-all`}
-                    style={{ width: `${(item.score / 5) * 100}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Insufficient data to calculate scores. Requires key metrics, income statements, and balance sheet data.
+              </p>
+            )}
           </CardContent>
         </Card>
 
@@ -190,69 +273,55 @@ export default async function StockPage({ params }: StockPageProps) {
             </div>
           </CardHeader>
           <CardContent className="p-5 pt-4 space-y-4">
-            <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-              <p>
-                This large-cap technology company demonstrates strong competitive
-                positioning within its core markets, supported by a robust
-                ecosystem of hardware, software, and services. Revenue
-                diversification into higher-margin segments has strengthened the
-                financial profile over recent quarters.
-              </p>
-              <p>
-                Exceptional profitability metrics with an ROE of 147.3% and net
-                margins of 25.3% reflect operational efficiency and strong pricing
-                power. However, the elevated P/E of 28.5x suggests the market has
-                priced in significant growth expectations.
-              </p>
-            </div>
+            {aiAnalysis ? (
+              <>
+                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                  <p>{aiAnalysis.summary}</p>
+                </div>
 
-            <Separator />
+                <Separator />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                  Strengths
-                </h4>
-                <ul className="space-y-1.5 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <TrendingUp className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                    Industry-leading profit margins
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <TrendingUp className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                    Strong ecosystem with 2B+ active devices
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <TrendingUp className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                    Accelerating services revenue
-                  </li>
-                </ul>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      Strengths
+                    </h4>
+                    <ul className="space-y-1.5 text-sm text-muted-foreground">
+                      {aiAnalysis.strengths.map((s, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <TrendingUp className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+                      Risks
+                    </h4>
+                    <ul className="space-y-1.5 text-sm text-muted-foreground">
+                      {aiAnalysis.weaknesses.map((w, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-600 dark:text-red-400" />
+                          {w}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="text-xs text-muted-foreground">Sentiment:</span>
+                  <Badge variant={sentimentBadgeVariant(aiAnalysis.sentiment)} className="text-[10px]">
+                    {sentimentLabel(aiAnalysis.sentiment)}
+                  </Badge>
+                </div>
+              </>
+            ) : (
+              <div className="text-sm text-muted-foreground">
+                <p>AI analysis unavailable — configure ANTHROPIC_API_KEY to enable.</p>
               </div>
-              <div>
-                <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
-                  Risks
-                </h4>
-                <ul className="space-y-1.5 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-600 dark:text-red-400" />
-                    Premium valuation with limited margin of safety
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-600 dark:text-red-400" />
-                    Geographic concentration risk
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-red-600 dark:text-red-400" />
-                    Regulatory headwinds
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 pt-1">
-              <span className="text-xs text-muted-foreground">Sentiment:</span>
-              <Badge variant="success" className="text-[10px]">Somewhat Bullish</Badge>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -264,7 +333,7 @@ export default async function StockPage({ params }: StockPageProps) {
         </CardHeader>
         <CardContent className="p-5 pt-4">
           <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-5">
-            {keyMetrics.map((metric) => (
+            {keyMetricsDisplay.map((metric) => (
               <div key={metric.label}>
                 <p className="text-xs text-muted-foreground">
                   {metric.label}
@@ -322,29 +391,32 @@ export default async function StockPage({ params }: StockPageProps) {
         </CardHeader>
         <CardContent className="p-5 pt-3">
           <div className="divide-y divide-border/50">
-            {newsItems.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-start justify-between gap-4 py-3.5 first:pt-0 last:pb-0"
-              >
-                <div className="min-w-0 flex-1 space-y-1">
-                  <h4 className="text-sm font-medium leading-snug text-foreground">
-                    {item.title}
-                  </h4>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>{item.source}</span>
-                    <span className="text-border">|</span>
-                    <span>{item.time}</span>
+            {news && news.length > 0 ? (
+              news.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start justify-between gap-4 py-3.5 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium leading-snug text-foreground hover:underline"
+                    >
+                      {item.title}
+                    </a>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{item.site}</span>
+                      <span className="text-border">|</span>
+                      <span>{timeAgo(new Date(item.publishedDate))}</span>
+                    </div>
                   </div>
                 </div>
-                <Badge
-                  variant={sentimentBadgeVariant(item.sentiment)}
-                  className="shrink-0 text-[10px]"
-                >
-                  {sentimentLabel(item.sentiment)}
-                </Badge>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="py-4 text-sm text-muted-foreground">No recent news available.</p>
+            )}
           </div>
         </CardContent>
       </Card>

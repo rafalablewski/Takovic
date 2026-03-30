@@ -4,22 +4,33 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatCurrency, formatPercent } from "@/lib/utils";
+import {
+  formatCurrency,
+  formatPercent,
+  formatNumber,
+  sentimentBadgeVariant,
+} from "@/lib/utils";
+import {
+  getQuote,
+  getProfile,
+  getKeyMetrics,
+} from "@/lib/api/fmp";
+import type { FMPQuote, FMPProfile, FMPKeyMetrics } from "@/lib/api/fmp";
 import {
   ArrowRightLeft,
   Sparkles,
   Plus,
   Search,
   Info,
+  AlertCircle,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// Mock comparison data — AAPL vs MSFT
+// Types
 // ---------------------------------------------------------------------------
 
 interface StockData {
@@ -39,44 +50,6 @@ interface StockData {
   sentiment: string;
 }
 
-const stockA: StockData = {
-  ticker: "AAPL",
-  name: "Apple Inc.",
-  sector: "Technology",
-  marketCap: "$2.98T",
-  price: 192.53,
-  peRatio: 28.5,
-  pbRatio: 45.2,
-  roe: 147.3,
-  debtEquity: 1.87,
-  revenueGrowth: 8.1,
-  netMargin: 25.3,
-  dividendYield: 0.55,
-  snowflakeScore: 3.7,
-  sentiment: "Somewhat Bullish",
-};
-
-const stockB: StockData = {
-  ticker: "MSFT",
-  name: "Microsoft Corp.",
-  sector: "Technology",
-  marketCap: "$3.12T",
-  price: 422.86,
-  peRatio: 35.2,
-  pbRatio: 12.8,
-  roe: 38.5,
-  debtEquity: 0.42,
-  revenueGrowth: 15.8,
-  netMargin: 34.2,
-  dividendYield: 0.74,
-  snowflakeScore: 4.1,
-  sentiment: "Bullish",
-};
-
-// ---------------------------------------------------------------------------
-// Comparison metrics definition
-// ---------------------------------------------------------------------------
-
 type CompareDirection = "higher" | "lower";
 
 interface CompareMetric {
@@ -95,19 +68,11 @@ const metrics: CompareMetric[] = [
   { label: "P/B Ratio", key: "pbRatio", format: (v) => (v as number).toFixed(1), better: "lower" },
   { label: "ROE", key: "roe", format: (v) => `${(v as number).toFixed(1)}%`, better: "higher" },
   { label: "Debt/Equity", key: "debtEquity", format: (v) => (v as number).toFixed(2), better: "lower" },
-  { label: "Revenue Growth", key: "revenueGrowth", format: (v) => `${(v as number).toFixed(1)}%`, better: "higher" },
   { label: "Net Margin", key: "netMargin", format: (v) => `${(v as number).toFixed(1)}%`, better: "higher" },
   { label: "Dividend Yield", key: "dividendYield", format: (v) => `${(v as number).toFixed(2)}%`, better: "higher" },
-  { label: "Snowflake Score", key: "snowflakeScore", format: (v) => `${(v as number).toFixed(1)} / 5.0`, better: "higher" },
-  { label: "AI Sentiment", key: "sentiment", format: (v) => String(v), better: "higher" },
 ];
 
-// Metrics where we skip winner highlighting (qualitative / always equal)
 const skipHighlight = new Set(["Company Name", "Sector"]);
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function getWinner(
   metric: CompareMetric,
@@ -123,26 +88,91 @@ function getWinner(
   return va < vb ? "a" : "b";
 }
 
-function sentimentBadgeVariant(
-  sentiment: string
-): "success" | "danger" | "warning" | "secondary" {
-  const lower = sentiment.toLowerCase();
-  if (lower.includes("bullish")) return "success";
-  if (lower.includes("bearish")) return "danger";
-  return "secondary";
+function buildStockData(
+  ticker: string,
+  quote: FMPQuote | null,
+  profile: FMPProfile | null,
+  keyMetrics: FMPKeyMetrics[] | null
+): StockData | null {
+  if (!quote) return null;
+  const km = keyMetrics?.[0];
+  return {
+    ticker,
+    name: profile?.companyName ?? quote.name ?? ticker,
+    sector: profile?.sector ?? "—",
+    marketCap: quote.marketCap
+      ? formatNumber(quote.marketCap, true)
+      : "—",
+    price: quote.price,
+    peRatio: km?.peRatio ?? quote.pe ?? 0,
+    pbRatio: km?.pbRatio ?? 0,
+    roe: km?.roe ? km.roe * 100 : 0,
+    debtEquity: km?.debtToEquity ?? 0,
+    revenueGrowth: 0, // Would need income statements for this
+    netMargin: km?.netProfitMargin ? km.netProfitMargin * 100 : 0,
+    dividendYield: km?.dividendYield ? km.dividendYield * 100 : 0,
+    snowflakeScore: 0,
+    sentiment: "—",
+  };
 }
-
-const insights = [
-  "MSFT leads on growth fundamentals with 15.8% revenue growth vs AAPL's 8.1%, reflecting strong cloud and AI tailwinds from Azure expansion.",
-  "AAPL boasts an exceptional ROE of 147.3% driven by aggressive buybacks and capital-light services revenue, though this also reflects higher leverage (D/E 1.87 vs MSFT's 0.42).",
-  "Both trade at premium valuations, but MSFT's higher P/E (35.2x vs 28.5x) is supported by superior top-line growth and margin expansion trajectory.",
-];
 
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
-export default function ComparePage() {
+interface ComparePageProps {
+  searchParams: Promise<{ a?: string; b?: string }>;
+}
+
+export default async function ComparePage({ searchParams }: ComparePageProps) {
+  const sp = await searchParams;
+  const tickerA = (sp.a ?? "AAPL").toUpperCase();
+  const tickerB = (sp.b ?? "MSFT").toUpperCase();
+
+  let stockA: StockData | null = null;
+  let stockB: StockData | null = null;
+
+  try {
+    const [quoteA, profileA, metricsA, quoteB, profileB, metricsB] =
+      await Promise.all([
+        getQuote(tickerA),
+        getProfile(tickerA),
+        getKeyMetrics(tickerA, "annual", 1),
+        getQuote(tickerB),
+        getProfile(tickerB),
+        getKeyMetrics(tickerB, "annual", 1),
+      ]);
+
+    stockA = buildStockData(tickerA, quoteA, profileA, metricsA);
+    stockB = buildStockData(tickerB, quoteB, profileB, metricsB);
+  } catch {
+    // Data unavailable
+  }
+
+  if (!stockA || !stockB) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-xl font-semibold text-foreground">
+            Compare Stocks
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Side-by-side fundamental comparison
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+            <AlertCircle className="mb-3 h-8 w-8 text-muted-foreground opacity-50" />
+            <p className="text-sm text-muted-foreground">
+              Unable to load comparison data for {tickerA} vs {tickerB}.
+              Check FMP_API_KEY configuration.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -161,7 +191,7 @@ export default function ComparePage() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
-            defaultValue="AAPL — Apple Inc."
+            defaultValue={`${stockA.ticker} — ${stockA.name}`}
             className="h-10 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
           />
         </div>
@@ -172,7 +202,7 @@ export default function ComparePage() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
-            defaultValue="MSFT — Microsoft Corp."
+            defaultValue={`${stockB.ticker} — ${stockB.name}`}
             className="h-10 w-full rounded-lg border border-border bg-background pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-colors"
           />
         </div>
@@ -215,8 +245,6 @@ export default function ComparePage() {
               const winnerClass = "text-emerald-600 dark:text-emerald-400 font-medium";
               const defaultClass = "text-foreground";
 
-              const isSentiment = metric.key === "sentiment";
-
               return (
                 <div
                   key={metric.label}
@@ -230,32 +258,14 @@ export default function ComparePage() {
                       winner === "a" ? winnerClass : defaultClass
                     }`}
                   >
-                    {isSentiment ? (
-                      <Badge
-                        variant={sentimentBadgeVariant(aVal)}
-                        className="text-[10px]"
-                      >
-                        {aVal}
-                      </Badge>
-                    ) : (
-                      aVal
-                    )}
+                    {aVal}
                   </span>
                   <span
                     className={`text-right text-sm tabular-nums ${
                       winner === "b" ? winnerClass : defaultClass
                     }`}
                   >
-                    {isSentiment ? (
-                      <Badge
-                        variant={sentimentBadgeVariant(bVal)}
-                        className="text-[10px]"
-                      >
-                        {bVal}
-                      </Badge>
-                    ) : (
-                      bVal
-                    )}
+                    {bVal}
                   </span>
                 </div>
               );
@@ -279,17 +289,11 @@ export default function ComparePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-5 pt-4">
-          <ul className="space-y-3">
-            {insights.map((insight, i) => (
-              <li
-                key={i}
-                className="flex gap-2.5 text-sm text-muted-foreground leading-relaxed"
-              >
-                <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary/60" />
-                <span>{insight}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
+            <Sparkles className="mb-3 h-6 w-6 opacity-30" />
+            <p className="text-sm">AI insights require ANTHROPIC_API_KEY</p>
+            <p className="mt-1 text-xs">Configure your API key to enable AI-powered comparison insights.</p>
+          </div>
         </CardContent>
       </Card>
 

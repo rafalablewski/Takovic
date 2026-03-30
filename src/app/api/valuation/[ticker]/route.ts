@@ -29,6 +29,19 @@ const SECTOR_MEDIANS: Record<
 
 const DEFAULT_MEDIANS = { pe: 20, pb: 3, ps: 2, evEbitda: 12 };
 
+// ---------------------------------------------------------------------------
+// Financial assumptions (configurable via env vars)
+// ---------------------------------------------------------------------------
+
+const RISK_FREE_RATE = Number(process.env.RISK_FREE_RATE) || 0.043;
+const EQUITY_RISK_PREMIUM = Number(process.env.EQUITY_RISK_PREMIUM) || 0.055;
+const DEFAULT_BETA = Number(process.env.DEFAULT_BETA) || 1.0;
+const COST_OF_DEBT = Number(process.env.COST_OF_DEBT) || 0.05;
+const CORPORATE_TAX_RATE = Number(process.env.CORPORATE_TAX_RATE) || 0.21;
+const DEFAULT_FCF_GROWTH_RATE = 0.08;
+const DEFAULT_REVENUE_GROWTH_RATE = 0.05;
+const DEFAULT_WACC_FALLBACK = 0.1;
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ ticker: string }> }
@@ -59,7 +72,7 @@ export async function GET(
     const latestCashFlow = cashFlowArr[0];
 
     // Calculate FCF growth rate (3-year CAGR from cash flow statements)
-    let fcfGrowthRate3yr = 0.08; // default
+    let fcfGrowthRate3yr = DEFAULT_FCF_GROWTH_RATE; // default
     if (cashFlowArr.length >= 3) {
       const oldest = cashFlowArr[cashFlowArr.length - 1];
       const newest = cashFlowArr[0];
@@ -71,7 +84,7 @@ export async function GET(
     }
 
     // Revenue growth rate from income statements
-    let revenueGrowthRate = 0.05;
+    let revenueGrowthRate = DEFAULT_REVENUE_GROWTH_RATE;
     if (incomeArr.length >= 2) {
       const oldest = incomeArr[incomeArr.length - 1];
       const newest = incomeArr[0];
@@ -116,18 +129,13 @@ export async function GET(
         : 0;
 
     // WACC estimate (simplified CAPM)
-    const riskFreeRate = 0.043; // ~10yr treasury
-    const equityRiskPremium = 0.055;
-    const beta = 1.0; // simplified; FMP premium has beta
-    const costOfEquity = riskFreeRate + beta * equityRiskPremium;
-    const costOfDebt = 0.05;
-    const taxRate = 0.21;
+    const costOfEquity = RISK_FREE_RATE + DEFAULT_BETA * EQUITY_RISK_PREMIUM;
     const totalCapital = quote.marketCap + totalDebt;
     const wacc =
       totalCapital > 0
         ? (quote.marketCap / totalCapital) * costOfEquity +
-          (totalDebt / totalCapital) * costOfDebt * (1 - taxRate)
-        : 0.1;
+          (totalDebt / totalCapital) * COST_OF_DEBT * (1 - CORPORATE_TAX_RATE)
+        : DEFAULT_WACC_FALLBACK;
 
     // Sector medians
     const sectorMedians =
@@ -176,7 +184,7 @@ export async function GET(
       industryEVEBITDA: sectorMedians.evEbitda,
       // Calculated
       wacc: Math.round(wacc * 1000) / 1000,
-      betaOrRisk: beta,
+      betaOrRisk: DEFAULT_BETA,
     };
 
     return NextResponse.json(result);

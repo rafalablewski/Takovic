@@ -4,6 +4,14 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 
+const VALID_SENTIMENTS = [
+  "bullish",
+  "somewhat_bullish",
+  "neutral",
+  "somewhat_bearish",
+  "bearish",
+] as const;
+
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
@@ -23,7 +31,7 @@ export async function generateStockSummary(
   }
 ): Promise<{ summary: string; sentiment: string; strengths: string[]; weaknesses: string[] }> {
   const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
+    model: process.env.CLAUDE_MODEL_SUMMARY || "claude-sonnet-4-6",
     max_tokens: 1024,
     messages: [
       {
@@ -63,7 +71,7 @@ export async function analyzeNewsSentiment(
   summary: string
 ): Promise<string> {
   const message = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
+    model: process.env.CLAUDE_MODEL_SENTIMENT || "claude-haiku-4-5-20251001",
     max_tokens: 50,
     messages: [
       {
@@ -78,12 +86,6 @@ Summary: ${summary}`,
 
   const text =
     message.content[0].type === "text" ? message.content[0].text.trim().toLowerCase() : "neutral";
-  const valid = [
-    "bullish",
-    "somewhat_bullish",
-    "neutral",
-    "somewhat_bearish",
-    "bearish",
-  ];
+  const valid: readonly string[] = VALID_SENTIMENTS;
   return valid.includes(text) ? text : "neutral";
 }

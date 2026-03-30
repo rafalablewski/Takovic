@@ -7,7 +7,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { formatCurrency, formatPercent } from "@/lib/utils";
+import { formatCurrency, formatPercent, formatNumber } from "@/lib/utils";
+import { getQuote, screenStocks } from "@/lib/api/fmp";
+import type { FMPQuote, FMPScreenerResult } from "@/lib/api/fmp";
 import {
   Search,
   ArrowUpRight,
@@ -15,54 +17,25 @@ import {
   TrendingUp,
   Clock,
   BarChart3,
-  Hash,
 } from "lucide-react";
 
-// ---------------------------------------------------------------------------
-// Mock data
-// ---------------------------------------------------------------------------
+const popularTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "JPM"];
 
-const popularStocks = [
-  { ticker: "AAPL", name: "Apple Inc.", price: 192.53, changePct: 1.24, score: 3.7 },
-  { ticker: "MSFT", name: "Microsoft Corp.", price: 422.86, changePct: 0.67, score: 4.1 },
-  { ticker: "GOOGL", name: "Alphabet Inc.", price: 155.72, changePct: 0.34, score: 3.9 },
-  { ticker: "AMZN", name: "Amazon.com Inc.", price: 186.13, changePct: 2.18, score: 3.5 },
-  { ticker: "NVDA", name: "NVIDIA Corp.", price: 924.79, changePct: -1.42, score: 4.4 },
-  { ticker: "TSLA", name: "Tesla Inc.", price: 171.05, changePct: -3.25, score: 2.8 },
-  { ticker: "META", name: "Meta Platforms Inc.", price: 503.28, changePct: 1.56, score: 3.6 },
-  { ticker: "JPM", name: "JPMorgan Chase & Co.", price: 198.47, changePct: 0.89, score: 3.8 },
-];
+export default async function LookupPage() {
+  let popularStocks: FMPQuote[] = [];
+  let trendingStocks: FMPScreenerResult[] = [];
 
-const recentSearches = [
-  { ticker: "NVDA", name: "NVIDIA Corp.", time: "2m ago" },
-  { ticker: "AAPL", name: "Apple Inc.", time: "15m ago" },
-  { ticker: "TSLA", name: "Tesla Inc.", time: "1h ago" },
-  { ticker: "AMD", name: "Advanced Micro Devices", time: "3h ago" },
-];
+  try {
+    const [quotes, trending] = await Promise.all([
+      Promise.all(popularTickers.map((t) => getQuote(t))),
+      screenStocks({ limit: "5" }),
+    ]);
+    popularStocks = quotes.filter((q): q is FMPQuote => q !== null);
+    trendingStocks = trending ?? [];
+  } catch {
+    // Data unavailable
+  }
 
-const trendingStocks = [
-  { rank: 1, ticker: "SMCI", name: "Super Micro Computer", volume: "42.3M", changePct: 8.74 },
-  { rank: 2, ticker: "NVDA", name: "NVIDIA Corp.", volume: "38.1M", changePct: -1.42 },
-  { rank: 3, ticker: "PLTR", name: "Palantir Technologies", volume: "31.7M", changePct: 4.52 },
-  { rank: 4, ticker: "SOFI", name: "SoFi Technologies", volume: "28.9M", changePct: -2.18 },
-  { rank: 5, ticker: "MARA", name: "Marathon Digital", volume: "25.4M", changePct: 6.33 },
-];
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function scoreColor(score: number): string {
-  if (score >= 4.0) return "text-emerald-600 dark:text-emerald-400";
-  if (score >= 3.0) return "text-amber-600 dark:text-amber-400";
-  return "text-red-600 dark:text-red-400";
-}
-
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
-
-export default function LookupPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -89,51 +62,58 @@ export default function LookupPage() {
           Popular Stocks
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {popularStocks.map((stock) => {
-            const positive = stock.changePct >= 0;
-            return (
-              <Link key={stock.ticker} href={`/stock/${stock.ticker.toLowerCase()}`}>
-                <Card className="transition-colors hover:bg-muted/30 cursor-pointer">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">
-                          {stock.ticker}
-                        </p>
-                        <p className="mt-0.5 text-xs text-muted-foreground truncate max-w-[140px]">
-                          {stock.name}
-                        </p>
+          {popularStocks.length > 0 ? (
+            popularStocks.map((stock) => {
+              const positive = stock.changesPercentage >= 0;
+              return (
+                <Link key={stock.symbol} href={`/stock/${stock.symbol.toLowerCase()}`}>
+                  <Card className="transition-colors hover:bg-muted/30 cursor-pointer">
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            {stock.symbol}
+                          </p>
+                          <p className="mt-0.5 text-xs text-muted-foreground truncate max-w-[140px]">
+                            {stock.name}
+                          </p>
+                        </div>
                       </div>
-                      <div className={`text-xs font-medium tabular-nums ${scoreColor(stock.score)}`}>
-                        {stock.score.toFixed(1)}/5
-                      </div>
-                    </div>
-                    <div className="mt-3 flex items-baseline justify-between">
-                      <span className="text-sm font-semibold tabular-nums text-foreground">
-                        {formatCurrency(stock.price)}
-                      </span>
-                      <span className="flex items-center gap-0.5">
-                        {positive ? (
-                          <ArrowUpRight className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
-                        ) : (
-                          <ArrowDownRight className="h-3 w-3 text-red-600 dark:text-red-400" />
-                        )}
-                        <span
-                          className={`text-xs font-medium tabular-nums ${
-                            positive
-                              ? "text-emerald-600 dark:text-emerald-400"
-                              : "text-red-600 dark:text-red-400"
-                          }`}
-                        >
-                          {formatPercent(stock.changePct)}
+                      <div className="mt-3 flex items-baseline justify-between">
+                        <span className="text-sm font-semibold tabular-nums text-foreground">
+                          {formatCurrency(stock.price)}
                         </span>
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
+                        <span className="flex items-center gap-0.5">
+                          {positive ? (
+                            <ArrowUpRight className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                          ) : (
+                            <ArrowDownRight className="h-3 w-3 text-red-600 dark:text-red-400" />
+                          )}
+                          <span
+                            className={`text-xs font-medium tabular-nums ${
+                              positive
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-red-600 dark:text-red-400"
+                            }`}
+                          >
+                            {formatPercent(stock.changesPercentage)}
+                          </span>
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })
+          ) : (
+            <Card className="col-span-full">
+              <CardContent className="p-5">
+                <p className="text-sm text-muted-foreground">
+                  Unable to load stock data. Check FMP_API_KEY configuration.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 
@@ -143,25 +123,14 @@ export default function LookupPage() {
           Recent Searches
         </h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {recentSearches.map((item) => (
-            <Link key={item.ticker} href={`/stock/${item.ticker.toLowerCase()}`}>
-              <Card className="transition-colors hover:bg-muted/30 cursor-pointer">
-                <CardContent className="flex items-center gap-3 p-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground">
-                      {item.ticker}
-                    </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {item.time}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          <Card className="col-span-full">
+            <CardContent className="flex items-center gap-3 p-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground">No recent searches</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -180,45 +149,42 @@ export default function LookupPage() {
             <div>Ticker</div>
             <div>Company</div>
             <div className="text-right">Volume</div>
-            <div className="text-right">Change</div>
+            <div className="text-right">Price</div>
           </div>
           <Separator />
           <div className="divide-y divide-border/50">
-            {trendingStocks.map((stock) => {
-              const positive = stock.changePct >= 0;
-              return (
+            {trendingStocks.length > 0 ? (
+              trendingStocks.map((stock, idx) => (
                 <Link
-                  key={stock.ticker}
-                  href={`/stock/${stock.ticker.toLowerCase()}`}
+                  key={stock.symbol}
+                  href={`/stock/${stock.symbol.toLowerCase()}`}
                   className="grid grid-cols-[2rem_4rem_1fr_5rem_5rem] items-center gap-2 py-3 transition-colors hover:bg-muted/50 rounded-md px-1 -mx-1"
                 >
                   <span className="text-xs font-medium text-muted-foreground tabular-nums">
-                    {stock.rank}
+                    {idx + 1}
                   </span>
                   <span className="text-sm font-semibold text-foreground">
-                    {stock.ticker}
+                    {stock.symbol}
                   </span>
                   <span className="text-sm text-muted-foreground truncate">
-                    {stock.name}
+                    {stock.companyName}
                   </span>
                   <span className="text-right text-xs tabular-nums text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
                       <BarChart3 className="h-3 w-3" />
-                      {stock.volume}
+                      {formatNumber(stock.volume, true)}
                     </span>
                   </span>
-                  <span
-                    className={`text-right text-sm tabular-nums font-medium ${
-                      positive
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    {formatPercent(stock.changePct)}
+                  <span className="text-right text-sm tabular-nums font-medium text-foreground">
+                    {formatCurrency(stock.price)}
                   </span>
                 </Link>
-              );
-            })}
+              ))
+            ) : (
+              <div className="py-4 text-center text-sm text-muted-foreground">
+                Trending data unavailable.
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

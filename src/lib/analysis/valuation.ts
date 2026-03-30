@@ -20,12 +20,61 @@ import type {
 } from "@/types/analysis";
 
 // ---------------------------------------------------------------------------
+// Valuation constants
+// ---------------------------------------------------------------------------
+
+/** Default WACC when capital structure data is unavailable */
+const DEFAULT_FALLBACK_WACC = 0.10;
+
+/** Graham Number constant: sqrt(22.5 * EPS * BVPS) where 22.5 = P/E 15 x P/B 1.5 */
+const GRAHAM_CONSTANT = 22.5;
+
+/** Default terminal growth rate for DCF models */
+const DEFAULT_TERMINAL_GROWTH_RATE = 0.025;
+
+/** Maximum dividend growth rate cap for DDM */
+const MAX_DIVIDEND_GROWTH_RATE = 0.08;
+
+/** Excess cash threshold as fraction of total debt */
+const EXCESS_CASH_DEBT_RATIO = 0.05;
+
+/** Model weights for composite valuation (higher = more influence) */
+const MODEL_WEIGHTS: Record<string, number> = {
+  "Multi-Stage DCF": 3,
+  "Comparable Multiples": 2,
+  "Earnings Power Value": 1.5,
+  "Graham Number": 1,
+  "Peter Lynch Fair Value": 1,
+  "Dividend Discount Model": 1,
+};
+
+/** Confidence multipliers by level */
+const CONFIDENCE_MULTIPLIERS: Record<string, number> = {
+  high: 1,
+  medium: 0.8,
+  low: 0.5,
+};
+
+/** Sensitivity matrix step sizes */
+const SENSITIVITY_GROWTH_STEP = 0.02;
+const SENSITIVITY_DISCOUNT_STEP = 0.01;
+const MIN_DISCOUNT_RATE = 0.01;
+
+/** Verdict thresholds (upside percent boundaries) */
+const VERDICT_THRESHOLDS = {
+  significantlyUndervalued: 30,
+  undervalued: 10,
+  fairlyValued: -10,
+  overvalued: -30,
+} as const;
+
+// ---------------------------------------------------------------------------
 // WACC
 // ---------------------------------------------------------------------------
 
 export function calculateWACC(inputs: WACCInputs): number {
   const totalCapital = inputs.marketCapEquity + inputs.totalDebt;
-  if (totalCapital <= 0) return 0.10; // default fallback
+  if (totalCapital <= 0) return DEFAULT_FALLBACK_WACC; // default fallback
 
   const equityWeight = inputs.marketCapEquity / totalCapital;
   const debtWeight = inputs.totalDebt / totalCapital;
@@ -113,7 +162,7 @@ export function calculateGrahamNumber(inputs: GrahamInputs): number {
   if (eps <= 0 || bookValuePerShare <= 0) return 0;
 
   // Graham's constants: P/E <= 15 and P/B <= 1.5 → 15 * 1.5 = 22.5
-  return Math.sqrt(22.5 * eps * bookValuePerShare);
+  return Math.sqrt(GRAHAM_CONSTANT * eps * bookValuePerShare);
 }
 
 // ---------------------------------------------------------------------------
@@ -217,10 +266,10 @@ export function generateSensitivityMatrix(
 function getVerdict(
   upsidePercent: number
 ): ValuationResult["verdict"] {
-  if (upsidePercent > 30) return "Significantly Undervalued";
-  if (upsidePercent > 10) return "Undervalued";
-  if (upsidePercent > -10) return "Fairly Valued";
-  if (upsidePercent > -30) return "Overvalued";
+  if (upsidePercent > VERDICT_THRESHOLDS.significantlyUndervalued) return "Significantly Undervalued";
+  if (upsidePercent > VERDICT_THRESHOLDS.undervalued) return "Undervalued";
+  if (upsidePercent > VERDICT_THRESHOLDS.fairlyValued) return "Fairly Valued";
+  if (upsidePercent > VERDICT_THRESHOLDS.overvalued) return "Overvalued";
   return "Significantly Overvalued";
 }
 
@@ -243,7 +292,7 @@ export function runAllModels(
   const wacc = overrides?.discountRate ?? params.wacc;
   const highGrowth =
     overrides?.dcfGrowthHigh ?? Math.max(params.fcfGrowthRate3yr, params.revenueGrowthRate);
-  const terminalGrowth = overrides?.terminalGrowth ?? 0.025;
+  const terminalGrowth = overrides?.terminalGrowth ?? DEFAULT_TERMINAL_GROWTH_RATE;
   const highGrowthYears = overrides?.highGrowthYears ?? 5;
   const fadeYears = overrides?.fadeYears ?? 5;
 
@@ -275,7 +324,7 @@ export function runAllModels(
   // 2. DDM
   const hasDividend = params.dividendPerShare > 0;
   const ddmGrowthRate = hasDividend
-    ? Math.min(params.revenueGrowthRate, 0.08)
+    ? Math.min(params.revenueGrowthRate, MAX_DIVIDEND_GROWTH_RATE)
     : 0;
   const ddmValue = hasDividend
     ? calculateDDM({
@@ -358,7 +407,7 @@ export function runAllModels(
     params.netMargin > 0
       ? (params.revenuePerShare * params.sharesOutstanding * params.netMargin)
       : 0;
-  const excessCash = Math.max(0, params.cashAndEquivalents - params.totalDebt * 0.05);
+  const excessCash = Math.max(0, params.cashAndEquivalents - params.totalDebt * EXCESS_CASH_DEBT_RATIO);
   const hasEPVData = normalizedEarnings > 0 && wacc > 0;
   const epvValue = hasEPVData
     ? calculateEPV({
@@ -381,21 +430,12 @@ export function runAllModels(
 
   // Composite: weighted average of applicable models
   const applicableModels = models.filter((m) => m.applicable && m.fairValue > 0);
-  const weights: Record<string, number> = {
-    "Multi-Stage DCF": 3,
-    "Comparable Multiples": 2,
-    "Earnings Power Value": 1.5,
-    "Graham Number": 1,
-    "Peter Lynch Fair Value": 1,
-    "Dividend Discount Model": 1,
-  };
 
   let weightedSum = 0;
   let totalWeight = 0;
   for (const m of applicableModels) {
-    const w = weights[m.name] ?? 1;
-    const confidenceMultiplier =
-      m.confidence === "high" ? 1 : m.confidence === "medium" ? 0.8 : 0.5;
+    const w = MODEL_WEIGHTS[m.name] ?? 1;
+    const confidenceMultiplier = CONFIDENCE_MULTIPLIERS[m.confidence] ?? CONFIDENCE_MULTIPLIERS.low;
     const effectiveWeight = w * confidenceMultiplier;
     weightedSum += m.fairValue * effectiveWeight;
     totalWeight += effectiveWeight;
@@ -410,22 +450,20 @@ export function runAllModels(
 
   // Sensitivity matrix for DCF
   const baseGrowth = highGrowth;
-  const growthStep = 0.02;
-  const discountStep = 0.01;
   const sensitivityGrowthRates = [
-    baseGrowth - growthStep * 2,
-    baseGrowth - growthStep,
+    baseGrowth - SENSITIVITY_GROWTH_STEP * 2,
+    baseGrowth - SENSITIVITY_GROWTH_STEP,
     baseGrowth,
-    baseGrowth + growthStep,
-    baseGrowth + growthStep * 2,
+    baseGrowth + SENSITIVITY_GROWTH_STEP,
+    baseGrowth + SENSITIVITY_GROWTH_STEP * 2,
   ].map((r) => Math.max(0, r));
   const sensitivityDiscountRates = [
-    wacc - discountStep * 2,
-    wacc - discountStep,
+    wacc - SENSITIVITY_DISCOUNT_STEP * 2,
+    wacc - SENSITIVITY_DISCOUNT_STEP,
     wacc,
-    wacc + discountStep,
-    wacc + discountStep * 2,
-  ].map((r) => Math.max(0.01, r));
+    wacc + SENSITIVITY_DISCOUNT_STEP,
+    wacc + SENSITIVITY_DISCOUNT_STEP * 2,
+  ].map((r) => Math.max(MIN_DISCOUNT_RATE, r));
 
   const dcfBaseInputs: DCFInputs = {
     currentFCF: params.freeCashFlow,

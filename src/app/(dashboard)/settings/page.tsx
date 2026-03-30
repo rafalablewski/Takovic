@@ -22,6 +22,7 @@ import {
   CreditCard,
   Check,
 } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth/user";
 
 // ---------------------------------------------------------------------------
 // Shared input class
@@ -89,7 +90,14 @@ const planFeatures = [
 // Page
 // ---------------------------------------------------------------------------
 
-export default function SettingsPage() {
+const planPricing: Record<string, string> = {
+  free: "Free",
+  professional: "$29/month",
+  enterprise: "$99/month",
+};
+
+export default async function SettingsPage() {
+  const user = await getCurrentUser();
   return (
     <div className="space-y-6">
       {/* Page header */}
@@ -133,15 +141,15 @@ export default function SettingsPage() {
               {/* Avatar + plan */}
               <div className="flex items-center gap-4">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary text-lg font-semibold">
-                  RA
+                  {user.initials}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-foreground">Rafal</p>
+                  <p className="text-sm font-medium text-foreground">{user.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    rafal@takovic.com
+                    {user.email}
                   </p>
                   <Badge variant="default" className="mt-1 text-[10px]">
-                    Professional
+                    {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}
                   </Badge>
                 </div>
               </div>
@@ -156,7 +164,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   className={inputClass}
-                  defaultValue="Rafal"
+                  defaultValue={user.name}
                 />
               </div>
 
@@ -168,7 +176,7 @@ export default function SettingsPage() {
                 <input
                   type="email"
                   className={inputClass}
-                  defaultValue="rafal@takovic.com"
+                  defaultValue={user.email}
                 />
               </div>
             </CardContent>
@@ -331,10 +339,10 @@ export default function SettingsPage() {
             <CardContent className="p-5 pt-4 space-y-4">
               <div>
                 <p className="text-lg font-semibold text-foreground">
-                  Professional
+                  {user.plan.charAt(0).toUpperCase() + user.plan.slice(1)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  $29/month
+                  {planPricing[user.plan] ?? "Free"}
                 </p>
               </div>
 
@@ -365,7 +373,7 @@ export default function SettingsPage() {
                     Payment Method
                   </p>
                   <p className="mt-0.5 text-sm font-medium text-foreground">
-                    Visa ending in 4242
+                    No payment method on file
                   </p>
                 </div>
                 <div>
@@ -373,7 +381,7 @@ export default function SettingsPage() {
                     Next Billing Date
                   </p>
                   <p className="mt-0.5 text-sm font-medium text-foreground">
-                    April 27, 2026
+                    &mdash;
                   </p>
                 </div>
               </div>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { formatCurrency, formatPercent, cn } from "@/lib/utils";
+import { formatCurrency, formatPercent, formatLargeNumber, cn } from "@/lib/utils";
 import { runCryptoTreasuryValuation } from "@/lib/analysis/crypto-treasury-valuation";
 import {
   getCryptoTreasuryProfile,
@@ -642,9 +642,7 @@ function formatSliderValue(value: number, suffix: string): string {
 }
 
 function fmtShares(n: number): string {
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`;
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
-  if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`;
+  if (n >= 1e3) return formatLargeNumber(n, { decimals: n >= 1e9 ? 2 : 1 });
   return n.toFixed(0);
 }
 

@@ -3,7 +3,8 @@
  * Docs: https://site.financialmodelingprep.com/developer/docs
  */
 
-const FMP_BASE_URL = "https://financialmodelingprep.com/api/v3";
+const FMP_BASE_URL = process.env.FMP_BASE_URL || "https://financialmodelingprep.com/api/v3";
+const FMP_CACHE_REVALIDATE = Number(process.env.FMP_CACHE_REVALIDATE) || 300;
 
 function buildUrl(endpoint: string, params?: Record<string, string>): string {
   const url = new URL(`${FMP_BASE_URL}${endpoint}`);
@@ -21,7 +22,7 @@ async function fetchFMP<T>(
   params?: Record<string, string>
 ): Promise<T> {
   const url = buildUrl(endpoint, params);
-  const response = await fetch(url, { next: { revalidate: 300 } }); // 5 min cache
+  const response = await fetch(url, { next: { revalidate: FMP_CACHE_REVALIDATE } }); // 5 min cache
 
   if (!response.ok) {
     throw new Error(`FMP API error: ${response.status} ${response.statusText}`);

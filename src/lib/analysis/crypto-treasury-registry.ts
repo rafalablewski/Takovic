@@ -61,6 +61,18 @@ export function getCryptoTreasuryProfile(
   return PROFILES[ticker.toUpperCase()] ?? null;
 }
 
+/** Check if a crypto treasury company holds ETH (has staking, ethereum ecosystem features) */
+export function isEthTreasury(ticker: string): boolean {
+  const profile = PROFILES[ticker.toUpperCase()];
+  return profile?.asset === "ETH";
+}
+
+/** Check if a crypto treasury company holds BTC */
+export function isBtcTreasury(ticker: string): boolean {
+  const profile = PROFILES[ticker.toUpperCase()];
+  return profile?.asset === "BTC";
+}
+
 // ---------------------------------------------------------------------------
 // Default inputs per asset type
 // ---------------------------------------------------------------------------

@@ -67,6 +67,28 @@ export function sentimentLabel(sentiment: string): string {
     .join(" ");
 }
 
+export function sentimentBadgeVariant(
+  sentiment: string
+): "success" | "danger" | "warning" | "secondary" {
+  switch (sentiment) {
+    case "bullish":
+    case "somewhat_bullish":
+      return "success";
+    case "bearish":
+    case "somewhat_bearish":
+      return "danger";
+    default:
+      return "secondary";
+  }
+}
+
+export function scoreColor(score: number): string {
+  if (score >= 4.0) return "text-emerald-600 dark:text-emerald-400";
+  if (score >= 3.5) return "text-blue-600 dark:text-blue-400";
+  if (score >= 3.0) return "text-amber-600 dark:text-amber-400";
+  return "text-red-600 dark:text-red-400";
+}
+
 export function timeAgo(date: Date): string {
   const seconds = Math.floor(
     (new Date().getTime() - new Date(date).getTime()) / 1000
@@ -77,4 +99,31 @@ export function timeAgo(date: Date): string {
   if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
   if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
   return new Date(date).toLocaleDateString();
+}
+
+/**
+ * Format a large number with appropriate suffix (T/B/M/K).
+ * Use for financial values that need compact display.
+ */
+export function formatLargeNumber(
+  value: number,
+  options?: { decimals?: number; prefix?: string; suffix?: string }
+): string {
+  const { decimals = 1, prefix = "", suffix = "" } = options ?? {};
+  const abs = Math.abs(value);
+  const sign = value < 0 ? "-" : "";
+  if (abs >= 1e12) return `${sign}${prefix}${(abs / 1e12).toFixed(decimals)}T${suffix}`;
+  if (abs >= 1e9) return `${sign}${prefix}${(abs / 1e9).toFixed(decimals)}B${suffix}`;
+  if (abs >= 1e6) return `${sign}${prefix}${(abs / 1e6).toFixed(decimals)}M${suffix}`;
+  if (abs >= 1e3) return `${sign}${prefix}${(abs / 1e3).toFixed(decimals)}K${suffix}`;
+  return `${sign}${prefix}${abs.toFixed(decimals)}${suffix}`;
+}
+
+/**
+ * Format bytes into human-readable file size.
+ */
+export function formatFileSize(bytes: number): string {
+  if (bytes >= 1e6) return `${(bytes / 1e6).toFixed(1)} MB`;
+  if (bytes >= 1e3) return `${(bytes / 1e3).toFixed(1)} KB`;
+  return `${bytes} B`;
 }

@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { getQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/fmp";
 import { Plus, Trash2 } from "lucide-react";
 
 interface WatchlistStock {
@@ -16,66 +18,34 @@ interface WatchlistStock {
   price: number;
   change: number;
   range52w: string;
-  score: number;
-  sentiment: string;
 }
 
-const myStocks: WatchlistStock[] = [
-  { ticker: "AAPL", name: "Apple Inc.", price: 192.53, change: 1.24, range52w: "$142.00 - $199.62", score: 4.2, sentiment: "bullish" },
-  { ticker: "MSFT", name: "Microsoft Corp.", price: 417.88, change: 0.89, range52w: "$309.45 - $430.82", score: 4.5, sentiment: "bullish" },
-  { ticker: "GOOGL", name: "Alphabet Inc.", price: 155.72, change: -0.34, range52w: "$120.21 - $160.45", score: 4.0, sentiment: "somewhat_bullish" },
-  { ticker: "AMZN", name: "Amazon.com Inc.", price: 185.60, change: 1.67, range52w: "$118.35 - $191.70", score: 4.3, sentiment: "bullish" },
-  { ticker: "TSLA", name: "Tesla Inc.", price: 248.42, change: -2.15, range52w: "$138.80 - $299.29", score: 3.2, sentiment: "neutral" },
-  { ticker: "META", name: "Meta Platforms", price: 505.75, change: 0.52, range52w: "$280.50 - $531.49", score: 4.1, sentiment: "somewhat_bullish" },
-];
-
-const techGiants: WatchlistStock[] = [
-  { ticker: "NVDA", name: "NVIDIA Corp.", price: 875.30, change: 2.45, range52w: "$373.56 - $974.00", score: 4.7, sentiment: "bullish" },
-  { ticker: "AVGO", name: "Broadcom Inc.", price: 1342.50, change: 1.08, range52w: "$795.00 - $1410.00", score: 4.4, sentiment: "bullish" },
-  { ticker: "CRM", name: "Salesforce Inc.", price: 272.35, change: -0.62, range52w: "$195.00 - $295.50", score: 3.8, sentiment: "somewhat_bullish" },
-  { ticker: "ADBE", name: "Adobe Inc.", price: 485.90, change: 0.28, range52w: "$420.00 - $620.00", score: 3.9, sentiment: "neutral" },
-  { ticker: "ORCL", name: "Oracle Corp.", price: 125.80, change: 0.95, range52w: "$99.00 - $132.77", score: 3.7, sentiment: "somewhat_bullish" },
-];
-
-const dividendKings: WatchlistStock[] = [
-  { ticker: "JNJ", name: "Johnson & Johnson", price: 156.42, change: -0.32, range52w: "$144.00 - $175.50", score: 3.8, sentiment: "neutral" },
-  { ticker: "PG", name: "Procter & Gamble", price: 162.88, change: 0.15, range52w: "$141.00 - $170.95", score: 3.6, sentiment: "neutral" },
-  { ticker: "KO", name: "Coca-Cola Co.", price: 61.25, change: 0.08, range52w: "$52.00 - $64.99", score: 3.4, sentiment: "neutral" },
-  { ticker: "PEP", name: "PepsiCo Inc.", price: 172.40, change: -0.21, range52w: "$155.00 - $192.00", score: 3.5, sentiment: "somewhat_bearish" },
-  { ticker: "MMM", name: "3M Company", price: 104.55, change: 1.32, range52w: "$85.00 - $115.00", score: 3.1, sentiment: "neutral" },
-  { ticker: "ABT", name: "Abbott Labs", price: 112.80, change: 0.45, range52w: "$95.00 - $120.00", score: 3.9, sentiment: "somewhat_bullish" },
-];
-
-function sentimentBadgeVariant(
-  sentiment: string
-): "success" | "danger" | "warning" | "secondary" {
-  switch (sentiment) {
-    case "bullish":
-    case "somewhat_bullish":
-      return "success";
-    case "bearish":
-    case "somewhat_bearish":
-      return "danger";
-    default:
-      return "secondary";
+async function fetchWatchlistGroup(tickers: string[]): Promise<WatchlistStock[]> {
+  try {
+    const quotes = await Promise.all(tickers.map((t) => getQuote(t)));
+    return quotes
+      .filter((q): q is FMPQuote => q !== null)
+      .map((q) => ({
+        ticker: q.symbol,
+        name: q.name,
+        price: q.price,
+        change: q.changesPercentage,
+        range52w: `$${q.yearLow.toFixed(2)} - $${q.yearHigh.toFixed(2)}`,
+      }));
+  } catch {
+    return [];
   }
 }
 
-function sentimentLabel(sentiment: string): string {
-  return sentiment
-    .split("_")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
-
-function scoreColor(score: number): string {
-  if (score >= 4.0) return "text-emerald-600 dark:text-emerald-400";
-  if (score >= 3.5) return "text-blue-600 dark:text-blue-400";
-  if (score >= 3.0) return "text-amber-600 dark:text-amber-400";
-  return "text-red-600 dark:text-red-400";
-}
-
 function WatchlistTable({ stocks }: { stocks: WatchlistStock[] }) {
+  if (stocks.length === 0) {
+    return (
+      <div className="px-5 py-8 text-center text-sm text-muted-foreground">
+        Unable to load stock data. Check FMP_API_KEY configuration.
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -128,15 +98,12 @@ function WatchlistTable({ stocks }: { stocks: WatchlistStock[] }) {
               <td className="hidden px-5 py-3 text-xs tabular-nums text-muted-foreground md:table-cell">
                 {stock.range52w}
               </td>
-              <td className={`px-5 py-3 text-right tabular-nums font-semibold ${scoreColor(stock.score)}`}>
-                {stock.score.toFixed(1)}
+              <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
+                —
               </td>
               <td className="hidden px-5 py-3 text-right lg:table-cell">
-                <Badge
-                  variant={sentimentBadgeVariant(stock.sentiment)}
-                  className="text-[10px]"
-                >
-                  {sentimentLabel(stock.sentiment)}
+                <Badge variant="secondary" className="text-[10px]">
+                  —
                 </Badge>
               </td>
               <td className="px-5 py-3 text-center">
@@ -156,7 +123,25 @@ function WatchlistTable({ stocks }: { stocks: WatchlistStock[] }) {
   );
 }
 
-export default function WatchlistPage() {
+export default async function WatchlistPage() {
+  const myStockTickers =
+    process.env.DEFAULT_WATCHLIST_TICKERS?.split(",").map((t) => t.trim()) || [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN",
+      "TSLA",
+      "META",
+    ];
+  const techGiantTickers = ["NVDA", "AVGO", "CRM", "ADBE", "ORCL"];
+  const dividendKingTickers = ["JNJ", "PG", "KO", "PEP", "MMM", "ABT"];
+
+  const [myStocks, techGiants, dividendKings] = await Promise.all([
+    fetchWatchlistGroup(myStockTickers),
+    fetchWatchlistGroup(techGiantTickers),
+    fetchWatchlistGroup(dividendKingTickers),
+  ]);
+
   return (
     <div className="space-y-6">
       {/* Page Header */}

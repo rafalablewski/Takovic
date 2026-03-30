@@ -1,10 +1,11 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { WALL_STREET, WALL_STREET_NOTE } from "@/data/coverage/bmnr";
 import { Building2, Info } from "lucide-react";
 
 export function WallStreetTab({ ticker }: { ticker: string }) {
-  const analysts = ticker === "BMNR" ? WALL_STREET : [];
-  const note = ticker === "BMNR" ? WALL_STREET_NOTE : null;
+  const analysts = isEthTreasury(ticker) ? WALL_STREET : [];
+  const note = isEthTreasury(ticker) ? WALL_STREET_NOTE : null;
 
   return (
     <div className="space-y-6">

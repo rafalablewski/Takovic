@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, formatLargeNumber } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { OVERVIEW } from "@/data/coverage/bmnr";
 import type { OverviewMetric, CasePoint } from "@/data/coverage/bmnr";
 import {
@@ -24,21 +25,16 @@ function formatMetricValue(metric: OverviewMetric): string {
 
   switch (metric.format) {
     case "currency":
-      if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
-      if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
-      if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(1)}K`;
       if (Math.abs(v) < 1) return `$${v.toFixed(4)}`;
+      if (Math.abs(v) >= 1e3) return formatLargeNumber(v, { prefix: "$", decimals: Math.abs(v) >= 1e9 ? 2 : 1 });
       return formatCurrency(v);
     case "percent":
       return `${(v * 100).toFixed(v >= 0 ? 2 : 1)}%`;
     case "number":
-      if (Math.abs(v) >= 1e9) return `${(v / 1e9).toFixed(2)}B`;
-      if (Math.abs(v) >= 1e6) return `${(v / 1e6).toFixed(0)}M`;
-      if (Math.abs(v) >= 1e3) return `${(v / 1e3).toFixed(0)}K`;
+      if (Math.abs(v) >= 1e3) return formatLargeNumber(v, { decimals: Math.abs(v) >= 1e9 ? 2 : 0 });
       return v.toLocaleString();
     case "eth":
-      if (v >= 1e6) return `${(v / 1e6).toFixed(2)}M`;
-      if (v >= 1e3) return `${(v / 1e3).toFixed(0)}K`;
+      if (v >= 1e3) return formatLargeNumber(v, { decimals: v >= 1e6 ? 2 : 0 });
       return v.toLocaleString();
     case "multiplier":
       return `${v.toFixed(2)}x`;
@@ -92,7 +88,7 @@ function CollapsibleSection({
 // ---------------------------------------------------------------------------
 
 export function OverviewTab({ ticker }: { ticker: string }) {
-  const data = ticker === "BMNR" ? OVERVIEW : null;
+  const data = isEthTreasury(ticker) ? OVERVIEW : null;
   if (!data) return <p className="text-sm text-muted-foreground">No overview data.</p>;
 
   return (

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { ETHEREUM_INTELLIGENCE } from "@/data/coverage/bmnr";
 import type { ValueAccrualStep, RoadmapMilestone } from "@/data/coverage/bmnr";
 import { EcosystemNewsFeed } from "@/components/coverage/ecosystem-news-feed";
@@ -71,7 +72,7 @@ const roadmapStatus: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 export function EthereumTab({ ticker }: { ticker: string }) {
-  if (ticker !== "BMNR") return <p className="text-sm text-muted-foreground">No Ethereum data for this stock.</p>;
+  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No Ethereum data for this stock.</p>;
 
   const data = ETHEREUM_INTELLIGENCE;
 

@@ -11,11 +11,17 @@
  * SEC rate limit: 10 requests/second. We use Next.js revalidation caching.
  */
 
-const EDGAR_BASE = "https://data.sec.gov";
-const EFTS_BASE = "https://efts.sec.gov/LATEST";
+const EDGAR_BASE = process.env.EDGAR_BASE_URL || "https://data.sec.gov";
+const EFTS_BASE = process.env.EDGAR_EFTS_BASE_URL || "https://efts.sec.gov/LATEST";
 
 // SEC requires: "Sample Company Name AdminContact@<sample company domain>.com"
-const USER_AGENT = "Takovic admin@takovic.com";
+const USER_AGENT = process.env.EDGAR_USER_AGENT || "Takovic admin@takovic.com";
+
+/** Request timeout for EDGAR API calls (ms) */
+const EDGAR_TIMEOUT_MS = Number(process.env.EDGAR_TIMEOUT_MS) || 15_000;
+
+/** Cache revalidation interval (seconds) */
+const EDGAR_CACHE_REVALIDATE = Number(process.env.EDGAR_CACHE_REVALIDATE) || 3600;
 
 // ---------------------------------------------------------------------------
 // Known CIK mappings — avoids the 4MB company_tickers.json download
@@ -61,7 +67,7 @@ const TICKER_TO_CIK: Record<string, string> = {
 
 async function fetchEdgar<T>(url: string): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000); // 15s timeout
+  const timeout = setTimeout(() => controller.abort(), EDGAR_TIMEOUT_MS); // 15s timeout
 
   try {
     const response = await fetch(url, {
@@ -71,7 +77,7 @@ async function fetchEdgar<T>(url: string): Promise<T> {
         Accept: "application/json",
       },
       signal: controller.signal,
-      next: { revalidate: 3600 }, // 1hr cache
+      next: { revalidate: EDGAR_CACHE_REVALIDATE }, // 1hr cache
     });
 
     if (!response.ok) {

@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { TIMELINE_EVENTS, TIMELINE_DESCRIPTION } from "@/data/coverage/bmnr";
 import type { TimelineEvent } from "@/data/coverage/bmnr";
 import {
@@ -40,7 +41,7 @@ export function TimelineTab({ ticker }: { ticker: string }) {
   const [filterType, setFilterType] = useState("all");
   const [showAll, setShowAll] = useState(false);
 
-  if (ticker !== "BMNR") return <p className="text-sm text-muted-foreground">No timeline data.</p>;
+  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No timeline data.</p>;
 
   // Reverse chronological
   const sorted = [...TIMELINE_EVENTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

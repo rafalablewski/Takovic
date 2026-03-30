@@ -3,13 +3,14 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, cn } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { ETH_PURCHASES, ETH_PURCHASE_SUMMARY } from "@/data/coverage/bmnr";
 import { ShoppingCart, TrendingUp, ChevronDown, ChevronUp, DollarSign, Coins, Hash } from "lucide-react";
 
 export function ETHPurchasesTab({ ticker }: { ticker: string }) {
   const [showAll, setShowAll] = useState(false);
 
-  if (ticker !== "BMNR") return <p className="text-sm text-muted-foreground">No ETH purchase data.</p>;
+  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No ETH purchase data.</p>;
 
   const summary = ETH_PURCHASE_SUMMARY;
   const purchases = ETH_PURCHASES;

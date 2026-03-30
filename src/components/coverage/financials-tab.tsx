@@ -1,10 +1,11 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, formatLargeNumber } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { QUARTERLY_FINANCIALS, FINANCIALS_DESCRIPTION } from "@/data/coverage/bmnr";
 import { DollarSign, TrendingUp, TrendingDown } from "lucide-react";
 
 export function FinancialsTab({ ticker }: { ticker: string }) {
-  if (ticker !== "BMNR") return <p className="text-sm text-muted-foreground">No financial data.</p>;
+  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No financial data.</p>;
 
   const quarters = QUARTERLY_FINANCIALS;
   const latest = quarters[quarters.length - 1];
@@ -233,9 +234,9 @@ function FinRow({
 
 function fmtCurrency(v: number): string {
   const abs = Math.abs(v);
+  if (abs >= 1e9) return formatLargeNumber(v, { prefix: "$", decimals: 2 });
+  if (abs >= 1e6) return formatLargeNumber(v, { prefix: "$", decimals: 1 });
+  if (abs >= 1e3) return formatLargeNumber(v, { prefix: "$", decimals: 0 });
   const sign = v < 0 ? "-" : "";
-  if (abs >= 1e9) return `${sign}$${(abs / 1e9).toFixed(2)}B`;
-  if (abs >= 1e6) return `${sign}$${(abs / 1e6).toFixed(1)}M`;
-  if (abs >= 1e3) return `${sign}$${(abs / 1e3).toFixed(0)}K`;
   return `${sign}$${abs.toLocaleString()}`;
 }

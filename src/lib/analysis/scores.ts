@@ -13,6 +13,64 @@ interface ScoreInput {
   balanceSheet: FMPBalanceSheet;
 }
 
+// ---------------------------------------------------------------------------
+// Scoring thresholds (higher index = higher score)
+// ---------------------------------------------------------------------------
+
+/** P/E ratio thresholds — lower P/E is better (score is inverted) */
+const PE_THRESHOLDS: [number, number, number, number, number] = [10, 15, 20, 30, 50];
+
+/** P/B ratio thresholds — lower P/B is better (score is inverted) */
+const PB_THRESHOLDS: [number, number, number, number, number] = [1, 2, 3, 5, 10];
+
+/** Free cash flow yield thresholds (%) — higher is better */
+const FCF_YIELD_THRESHOLDS: [number, number, number, number, number] = [1, 3, 5, 7, 10];
+
+/** Revenue CAGR thresholds (%) */
+const REVENUE_CAGR_THRESHOLDS: [number, number, number, number, number] = [0, 5, 10, 20, 30];
+
+/** EPS growth thresholds (%) */
+const EPS_GROWTH_THRESHOLDS: [number, number, number, number, number] = [0, 5, 10, 20, 30];
+
+/** Return on Equity thresholds (%) */
+const ROE_THRESHOLDS: [number, number, number, number, number] = [0, 5, 10, 15, 25];
+
+/** Return on Assets thresholds (%) */
+const ROA_THRESHOLDS: [number, number, number, number, number] = [0, 2, 5, 8, 15];
+
+/** Net profit margin thresholds (%) */
+const NET_MARGIN_THRESHOLDS: [number, number, number, number, number] = [0, 5, 10, 15, 25];
+
+/** Gross profit margin thresholds (%) */
+const GROSS_MARGIN_THRESHOLDS: [number, number, number, number, number] = [20, 30, 40, 50, 60];
+
+/** Debt/Equity ratio thresholds — lower is better (score inverted) */
+const DEBT_TO_EQUITY_THRESHOLDS: [number, number, number, number, number] = [0.3, 0.5, 1, 2, 3];
+
+/** Current ratio thresholds — higher is better */
+const CURRENT_RATIO_THRESHOLDS: [number, number, number, number, number] = [0.5, 1, 1.5, 2, 3];
+
+/** Cash-to-assets ratio thresholds (%) */
+const CASH_RATIO_THRESHOLDS: [number, number, number, number, number] = [2, 5, 10, 15, 25];
+
+/** Dividend yield thresholds (%) */
+const DIVIDEND_YIELD_THRESHOLDS: [number, number, number, number, number] = [0.5, 1, 2, 3, 5];
+
+/** Default score when insufficient data is available */
+const DEFAULT_SCORE = 2.5;
+
+// ---------------------------------------------------------------------------
+// Snowflake dimension weights (must sum to 1.0)
+// ---------------------------------------------------------------------------
+
+const SCORE_WEIGHTS = {
+  value: 0.20,
+  growth: 0.25,
+  profitability: 0.25,
+  health: 0.20,
+  dividend: 0.10,
+} as const;
+
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
@@ -37,18 +95,18 @@ function calculateValueScore(metrics: FMPKeyMetrics): number {
 
   if (metrics.peRatio > 0) {
     // Lower P/E is better: <10 = 5, 10-15 = 4, 15-20 = 3, 20-30 = 2, 30-50 = 1, >50 = 0
-    scores.push(5 - scoreRange(metrics.peRatio, [10, 15, 20, 30, 50]));
+    scores.push(5 - scoreRange(metrics.peRatio, PE_THRESHOLDS));
   }
 
   if (metrics.pbRatio > 0) {
-    scores.push(5 - scoreRange(metrics.pbRatio, [1, 2, 3, 5, 10]));
+    scores.push(5 - scoreRange(metrics.pbRatio, PB_THRESHOLDS));
   }
 
   if (metrics.freeCashFlowYield) {
-    scores.push(scoreRange(metrics.freeCashFlowYield * 100, [1, 3, 5, 7, 10]));
+    scores.push(scoreRange(metrics.freeCashFlowYield * 100, FCF_YIELD_THRESHOLDS));
   }
 
-  if (scores.length === 0) return 2.5;
+  if (scores.length === 0) return DEFAULT_SCORE;
   return clamp(scores.reduce((a, b) => a + b, 0) / scores.length, 0, 5);
 }
 
@@ -57,7 +115,7 @@ function calculateValueScore(metrics: FMPKeyMetrics): number {
  * Based on: Revenue growth trend, EPS growth trend
  */
 function calculateGrowthScore(incomeStatements: FMPIncomeStatement[]): number {
-  if (incomeStatements.length < 2) return 2.5;
+  if (incomeStatements.length < 2) return DEFAULT_SCORE;
 
   const sorted = [...incomeStatements].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -68,7 +126,7 @@ function calculateGrowthScore(incomeStatements: FMPIncomeStatement[]): number {
   const lastRevenue = sorted[sorted.length - 1].revenue;
   const years = sorted.length - 1;
 
-  if (firstRevenue <= 0 || lastRevenue <= 0) return 2.5;
+  if (firstRevenue <= 0 || lastRevenue <= 0) return DEFAULT_SCORE;
 
   const revenueCagr = (Math.pow(lastRevenue / firstRevenue, 1 / years) - 1) * 100;
 
@@ -77,8 +135,8 @@ function calculateGrowthScore(incomeStatements: FMPIncomeStatement[]): number {
   const lastEps = sorted[sorted.length - 1].epsdiluted;
   const epsGrowth = firstEps > 0 ? ((lastEps - firstEps) / firstEps) * 100 / years : 0;
 
-  const revenueScore = scoreRange(revenueCagr, [0, 5, 10, 20, 30]);
-  const epsScore = scoreRange(epsGrowth, [0, 5, 10, 20, 30]);
+  const revenueScore = scoreRange(revenueCagr, REVENUE_CAGR_THRESHOLDS);
+  const epsScore = scoreRange(epsGrowth, EPS_GROWTH_THRESHOLDS);
 
   return clamp((revenueScore + epsScore) / 2, 0, 5);
 }
@@ -91,19 +149,19 @@ function calculateProfitabilityScore(metrics: FMPKeyMetrics): number {
   const scores: number[] = [];
 
   if (metrics.roe) {
-    scores.push(scoreRange(metrics.roe * 100, [0, 5, 10, 15, 25]));
+    scores.push(scoreRange(metrics.roe * 100, ROE_THRESHOLDS));
   }
   if (metrics.roa) {
-    scores.push(scoreRange(metrics.roa * 100, [0, 2, 5, 8, 15]));
+    scores.push(scoreRange(metrics.roa * 100, ROA_THRESHOLDS));
   }
   if (metrics.netProfitMargin) {
-    scores.push(scoreRange(metrics.netProfitMargin * 100, [0, 5, 10, 15, 25]));
+    scores.push(scoreRange(metrics.netProfitMargin * 100, NET_MARGIN_THRESHOLDS));
   }
   if (metrics.grossProfitMargin) {
-    scores.push(scoreRange(metrics.grossProfitMargin * 100, [20, 30, 40, 50, 60]));
+    scores.push(scoreRange(metrics.grossProfitMargin * 100, GROSS_MARGIN_THRESHOLDS));
   }
 
-  if (scores.length === 0) return 2.5;
+  if (scores.length === 0) return DEFAULT_SCORE;
   return clamp(scores.reduce((a, b) => a + b, 0) / scores.length, 0, 5);
 }
 
@@ -119,18 +177,18 @@ function calculateHealthScore(
 
   if (metrics.debtToEquity >= 0) {
     // Lower D/E is healthier
-    scores.push(5 - scoreRange(metrics.debtToEquity, [0.3, 0.5, 1, 2, 3]));
+    scores.push(5 - scoreRange(metrics.debtToEquity, DEBT_TO_EQUITY_THRESHOLDS));
   }
   if (metrics.currentRatio > 0) {
-    scores.push(scoreRange(metrics.currentRatio, [0.5, 1, 1.5, 2, 3]));
+    scores.push(scoreRange(metrics.currentRatio, CURRENT_RATIO_THRESHOLDS));
   }
   if (balanceSheet.totalAssets > 0) {
     const cashRatio =
       balanceSheet.cashAndCashEquivalents / balanceSheet.totalAssets;
-    scores.push(scoreRange(cashRatio * 100, [2, 5, 10, 15, 25]));
+    scores.push(scoreRange(cashRatio * 100, CASH_RATIO_THRESHOLDS));
   }
 
-  if (scores.length === 0) return 2.5;
+  if (scores.length === 0) return DEFAULT_SCORE;
   return clamp(scores.reduce((a, b) => a + b, 0) / scores.length, 0, 5);
 }
 
@@ -141,7 +199,7 @@ function calculateHealthScore(
 function calculateDividendScore(metrics: FMPKeyMetrics): number {
   if (!metrics.dividendYield || metrics.dividendYield === 0) return 0;
 
-  return scoreRange(metrics.dividendYield * 100, [0.5, 1, 2, 3, 5]);
+  return scoreRange(metrics.dividendYield * 100, DIVIDEND_YIELD_THRESHOLDS);
 }
 
 /**
@@ -156,12 +214,11 @@ export function calculateSnowflakeScores(input: ScoreInput): SnowflakeScores {
 
   // Weighted average: growth and profitability weighted more
   const overall =
-    (value * 0.2 +
-      growth * 0.25 +
-      profitability * 0.25 +
-      health * 0.2 +
-      dividend * 0.1) /
-    1;
+    value * SCORE_WEIGHTS.value +
+    growth * SCORE_WEIGHTS.growth +
+    profitability * SCORE_WEIGHTS.profitability +
+    health * SCORE_WEIGHTS.health +
+    dividend * SCORE_WEIGHTS.dividend;
 
   return {
     value: Math.round(value * 10) / 10,

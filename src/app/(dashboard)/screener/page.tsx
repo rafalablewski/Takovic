@@ -2,13 +2,14 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { formatCurrency, formatPercent } from "@/lib/utils";
+import { formatCurrency, formatPercent, formatNumber } from "@/lib/utils";
+import { screenStocks } from "@/lib/api/fmp";
+import type { FMPScreenerResult } from "@/lib/api/fmp";
 import {
   Filter,
   Download,
@@ -16,55 +17,21 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-const mockStocks = [
-  { rank: 1, ticker: "AAPL", name: "Apple Inc.", sector: "Technology", price: 192.53, change: 1.24, pe: 28.5, score: 4.2, sentiment: "bullish" },
-  { rank: 2, ticker: "MSFT", name: "Microsoft Corp.", sector: "Technology", price: 417.88, change: 0.89, pe: 35.2, score: 4.5, sentiment: "bullish" },
-  { rank: 3, ticker: "NVDA", name: "NVIDIA Corp.", sector: "Technology", price: 875.30, change: 2.45, pe: 62.1, score: 4.7, sentiment: "bullish" },
-  { rank: 4, ticker: "JNJ", name: "Johnson & Johnson", sector: "Healthcare", price: 156.42, change: -0.32, pe: 15.8, score: 3.8, sentiment: "neutral" },
-  { rank: 5, ticker: "JPM", name: "JPMorgan Chase", sector: "Finance", price: 198.75, change: 0.56, pe: 11.9, score: 4.0, sentiment: "somewhat_bullish" },
-  { rank: 6, ticker: "XOM", name: "Exxon Mobil Corp.", sector: "Energy", price: 105.23, change: -0.78, pe: 13.2, score: 3.5, sentiment: "neutral" },
-  { rank: 7, ticker: "UNH", name: "UnitedHealth Group", sector: "Healthcare", price: 527.90, change: 1.12, pe: 22.4, score: 4.1, sentiment: "somewhat_bullish" },
-  { rank: 8, ticker: "PG", name: "Procter & Gamble", sector: "Consumer", price: 162.88, change: 0.15, pe: 25.7, score: 3.6, sentiment: "neutral" },
-  { rank: 9, ticker: "V", name: "Visa Inc.", sector: "Finance", price: 281.45, change: 0.67, pe: 30.8, score: 4.3, sentiment: "bullish" },
-  { rank: 10, ticker: "ABBV", name: "AbbVie Inc.", sector: "Healthcare", price: 171.32, change: -0.45, pe: 18.9, score: 3.9, sentiment: "somewhat_bullish" },
-];
-
-function sentimentBadgeVariant(
-  sentiment: string
-): "success" | "danger" | "warning" | "secondary" {
-  switch (sentiment) {
-    case "bullish":
-    case "somewhat_bullish":
-      return "success";
-    case "bearish":
-    case "somewhat_bearish":
-      return "danger";
-    default:
-      return "secondary";
-  }
-}
-
-function sentimentLabel(sentiment: string): string {
-  return sentiment
-    .split("_")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
-
-function scoreColor(score: number): string {
-  if (score >= 4.0) return "text-emerald-600 dark:text-emerald-400";
-  if (score >= 3.5) return "text-blue-600 dark:text-blue-400";
-  if (score >= 3.0) return "text-amber-600 dark:text-amber-400";
-  return "text-red-600 dark:text-red-400";
-}
-
 const selectClass =
   "h-9 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring";
 
 const inputClass =
   "h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring";
 
-export default function ScreenerPage() {
+export default async function ScreenerPage() {
+  let stocks: FMPScreenerResult[] = [];
+
+  try {
+    stocks = await screenStocks({ limit: "50" });
+  } catch {
+    // Screener data unavailable
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -208,7 +175,7 @@ export default function ScreenerPage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium">Results</CardTitle>
                 <span className="text-xs text-muted-foreground tabular-nums">
-                  247 stocks
+                  {stocks.length} stocks
                 </span>
               </div>
             </CardHeader>
@@ -230,10 +197,10 @@ export default function ScreenerPage() {
                         Price
                       </th>
                       <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                        Change
+                        Mkt Cap
                       </th>
                       <th className="hidden px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground md:table-cell">
-                        P/E
+                        Volume
                       </th>
                       <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         Score
@@ -244,67 +211,68 @@ export default function ScreenerPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mockStocks.map((stock) => (
-                      <tr
-                        key={stock.ticker}
-                        className="border-b border-border/50 transition-colors hover:bg-muted/50"
-                      >
-                        <td className="px-5 py-3 text-xs tabular-nums text-muted-foreground">
-                          {stock.rank}
-                        </td>
-                        <td className="px-5 py-3">
-                          <span className="font-medium text-foreground">{stock.ticker}</span>
-                          <p className="text-xs text-muted-foreground">{stock.name}</p>
-                        </td>
-                        <td className="hidden px-5 py-3 text-xs text-muted-foreground sm:table-cell">
-                          {stock.sector}
-                        </td>
-                        <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
-                          {formatCurrency(stock.price)}
-                        </td>
-                        <td
-                          className={`px-5 py-3 text-right tabular-nums font-medium ${
-                            stock.change >= 0
-                              ? "text-emerald-600 dark:text-emerald-400"
-                              : "text-red-600 dark:text-red-400"
-                          }`}
+                    {stocks.length > 0 ? (
+                      stocks.map((stock, idx) => (
+                        <tr
+                          key={stock.symbol}
+                          className="border-b border-border/50 transition-colors hover:bg-muted/50"
                         >
-                          {formatPercent(stock.change)}
-                        </td>
-                        <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
-                          {stock.pe.toFixed(1)}
-                        </td>
-                        <td className={`px-5 py-3 text-right tabular-nums font-semibold ${scoreColor(stock.score)}`}>
-                          {stock.score.toFixed(1)}
-                        </td>
-                        <td className="hidden px-5 py-3 text-right lg:table-cell">
-                          <Badge
-                            variant={sentimentBadgeVariant(stock.sentiment)}
-                            className="text-[10px]"
-                          >
-                            {sentimentLabel(stock.sentiment)}
-                          </Badge>
+                          <td className="px-5 py-3 text-xs tabular-nums text-muted-foreground">
+                            {idx + 1}
+                          </td>
+                          <td className="px-5 py-3">
+                            <span className="font-medium text-foreground">{stock.symbol}</span>
+                            <p className="text-xs text-muted-foreground">{stock.companyName}</p>
+                          </td>
+                          <td className="hidden px-5 py-3 text-xs text-muted-foreground sm:table-cell">
+                            {stock.sector}
+                          </td>
+                          <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
+                            {formatCurrency(stock.price)}
+                          </td>
+                          <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
+                            {formatNumber(stock.marketCap, true)}
+                          </td>
+                          <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
+                            {formatNumber(stock.volume, true)}
+                          </td>
+                          <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
+                            —
+                          </td>
+                          <td className="hidden px-5 py-3 text-right lg:table-cell">
+                            <Badge variant="secondary" className="text-[10px]">
+                              —
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={8} className="px-5 py-8 text-center text-sm text-muted-foreground">
+                          No results available. Check FMP_API_KEY configuration.
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>
 
               {/* Pagination */}
-              <div className="flex items-center justify-between border-t border-border px-5 py-3">
-                <p className="text-xs text-muted-foreground tabular-nums">
-                  Page 1 of 25
-                </p>
-                <div className="flex gap-1">
-                  <Button variant="outline" size="sm" className="h-7 text-xs" disabled>
-                    Previous
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-7 text-xs">
-                    Next
-                  </Button>
+              {stocks.length > 0 && (
+                <div className="flex items-center justify-between border-t border-border px-5 py-3">
+                  <p className="text-xs text-muted-foreground tabular-nums">
+                    Showing {stocks.length} results
+                  </p>
+                  <div className="flex gap-1">
+                    <Button variant="outline" size="sm" className="h-7 text-xs" disabled>
+                      Previous
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-7 text-xs">
+                      Next
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>

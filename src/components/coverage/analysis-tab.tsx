@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import {
   ECOSYSTEM_HEALTH,
   SCORECARD,
@@ -113,7 +114,7 @@ function CollapsibleCard({
 // ---------------------------------------------------------------------------
 
 export function AnalysisTab({ ticker }: { ticker: string }) {
-  if (ticker !== "BMNR") return <p className="text-sm text-muted-foreground">No analysis data.</p>;
+  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No analysis data.</p>;
 
   const overallGrade = SCORECARD.reduce(
     (acc, s) => {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/components/layout/sidebar-context";
+import type { UserSession } from "@/lib/auth/user";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
@@ -27,7 +28,6 @@ import {
   ChevronRight,
   TrendingUp,
   Shield,
-  BookOpen,
 } from "lucide-react";
 
 const mainNavigation = [
@@ -52,7 +52,7 @@ const secondaryLinks = [
   { name: "Help", href: "/help", icon: HelpCircle },
 ];
 
-export function Sidebar() {
+export function Sidebar({ user }: { user?: UserSession }) {
   const pathname = usePathname();
   const { collapsed, toggle } = useSidebar();
 
@@ -145,16 +145,16 @@ export function Sidebar() {
             )}
           >
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background">
-              RA
+              {user?.initials ?? "??"}
             </div>
             {!collapsed && (
               <div className="flex flex-1 items-center justify-between overflow-hidden">
                 <div className="flex flex-col">
                   <span className="truncate text-[13px] font-medium leading-tight text-foreground">
-                    Rafal
+                    {user?.name ?? "User"}
                   </span>
                   <span className="text-[10px] font-medium leading-tight text-muted-foreground">
-                    Professional
+                    {user?.plan ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1) : "Free"}
                   </span>
                 </div>
               </div>

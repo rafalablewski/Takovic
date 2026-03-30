@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { COMPARABLES, COMPARABLES_INSIGHT } from "@/data/coverage/bmnr";
 import type { ComparableCompany } from "@/data/coverage/bmnr";
 import { GitCompareArrows, AlertTriangle, Shield, Info } from "lucide-react";
@@ -18,7 +19,7 @@ const assetColors: Record<string, string> = {
 };
 
 export function ComparablesTab({ ticker }: { ticker: string }) {
-  if (ticker !== "BMNR") return <p className="text-sm text-muted-foreground">No comparable data.</p>;
+  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No comparable data.</p>;
 
   return (
     <div className="space-y-4">

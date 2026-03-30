@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { MARKET_OPEN_MINUTES, MARKET_CLOSE_MINUTES } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -24,6 +25,7 @@ import {
   CreditCard,
   HelpCircle,
 } from "lucide-react";
+import type { UserSession } from "@/lib/auth/user";
 
 /** Map pathnames to page titles */
 const titleMap: Record<string, string> = {
@@ -65,7 +67,7 @@ function useMarketStatus() {
       const h = et.getHours();
       const m = et.getMinutes();
       const mins = h * 60 + m;
-      setOpen(day >= 1 && day <= 5 && mins >= 570 && mins < 960);
+      setOpen(day >= 1 && day <= 5 && mins >= MARKET_OPEN_MINUTES && mins < MARKET_CLOSE_MINUTES);
     }
     check();
     const id = setInterval(check, 60_000);
@@ -75,7 +77,7 @@ function useMarketStatus() {
   return open;
 }
 
-export function Header() {
+export function Header({ user }: { user?: UserSession }) {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
   const marketOpen = useMarketStatus();
@@ -151,15 +153,15 @@ export function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background outline-none ring-offset-background transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-              RA
+              {user?.initials ?? "??"}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-52" align="end" sideOffset={8}>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Rafal</p>
+                <p className="text-sm font-medium leading-none">{user?.name ?? "User"}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  rafal@takovic.com
+                  {user?.email ?? ""}
                 </p>
               </div>
             </DropdownMenuLabel>
