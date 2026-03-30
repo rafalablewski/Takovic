@@ -14,7 +14,7 @@ export function MetricCard({
   return (
     <div
       className={cn(
-        "research-card flex flex-col gap-1 p-3",
+        "surface-panel flex flex-col gap-1 p-3 sm:p-4",
         className
       )}
     >

@@ -25,6 +25,7 @@ import { StockRow } from "@/components/research/stock-row";
 import { MiniSparkline } from "@/components/research/mini-sparkline";
 import { NewsCard } from "@/components/research/news-card";
 import { Sparkles, ChevronRight } from "lucide-react";
+import { Section } from "@/components/layout/section";
 
 function ymd(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -146,31 +147,29 @@ export default async function DashboardPage() {
     earningsForList.length > 0 ? earningsForList : earningsFallback;
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-end justify-between gap-2">
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight text-foreground">
             {getGreeting()}, {displayName}
           </h1>
-          <p className="text-xs text-muted-foreground">{today}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{today}</p>
         </div>
-        <Badge variant="secondary" className="text-[10px]">
+        <Badge variant="secondary" className="text-[10px] tracking-wide">
           Market briefing
         </Badge>
       </div>
 
       {/* Indices strip */}
-      <section className="research-card p-3">
-        <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-          Indices
-        </h2>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="surface-panel p-4 sm:p-5">
+        <h2 className="label-caps mb-3">Indices</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {marketIndices.map((idx) => {
             if (!idx.quote) {
               return (
                 <div
                   key={idx.name}
-                  className="rounded-md border border-border/60 px-3 py-2"
+                  className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3"
                 >
                   <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     {idx.name}
@@ -185,7 +184,7 @@ export default async function DashboardPage() {
               <Link
                 key={idx.name}
                 href={`/stock/${q.symbol}`}
-                className="rounded-md border border-border/60 px-3 py-2 transition-colors hover:bg-muted/40"
+                className="min-h-11 rounded-lg border border-white/[0.06] bg-transparent px-3 py-3 transition-colors hover:bg-white/[0.03] sm:min-h-0 sm:py-2.5"
               >
                 <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                   {idx.name}
@@ -210,12 +209,10 @@ export default async function DashboardPage() {
       </section>
 
       {/* Movers */}
-      <section className="grid gap-3 lg:grid-cols-2">
-        <div className="research-card p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              Top gainers
-            </h2>
+      <section className="grid gap-4 lg:grid-cols-2">
+        <div className="surface-panel p-4 sm:p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="label-caps">Top gainers</h2>
             <Button variant="ghost" size="sm" className="h-7 text-[10px]" asChild>
               <Link href="/screener">Screener</Link>
             </Button>
@@ -240,10 +237,8 @@ export default async function DashboardPage() {
             )}
           </div>
         </div>
-        <div className="research-card p-3">
-          <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            Top losers
-          </h2>
+        <div className="surface-panel p-4 sm:p-5">
+          <h2 className="label-caps mb-3">Top losers</h2>
           <div className="space-y-0.5">
             {losers.map((m, i) => {
               const sym = fmpMoverSymbol(m);
@@ -266,20 +261,18 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <div className="grid gap-3 lg:grid-cols-12">
-        <div className="space-y-3 lg:col-span-7">
-          <div className="research-card p-3">
-            <div className="mb-2 flex items-center justify-between">
-              <h2 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                Watchlist
-              </h2>
+      <div className="grid gap-6 lg:grid-cols-12">
+        <div className="space-y-6 lg:col-span-7">
+          <div className="surface-panel p-4 sm:p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="label-caps">Watchlist</h2>
               <Button variant="ghost" size="sm" className="h-7 gap-0.5 text-[10px]" asChild>
                 <Link href="/watchlist">
                   All <ChevronRight className="h-3 w-3" />
                 </Link>
               </Button>
             </div>
-            <div className="divide-y divide-border/50">
+            <div className="divide-y divide-white/[0.06]">
               {watchlistQuotes.length > 0 ? (
                 watchlistQuotes.map((stock) => {
                   const sym = stock.symbol.toUpperCase();
@@ -315,16 +308,14 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <aside className="space-y-3 lg:col-span-5">
-          <div className="research-card p-3">
-            <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              Earnings (10d)
-            </h2>
+        <aside className="space-y-6 lg:col-span-5">
+          <div className="surface-panel p-4 sm:p-5">
+            <h2 className="label-caps mb-3">Earnings (10d)</h2>
             <ul className="space-y-2 text-xs">
               {earningsDisplay.map((e, i) => (
                 <li
                   key={`${e.symbol}-${e.date}-${i}`}
-                  className="flex items-center justify-between gap-2 border-b border-border/40 pb-2 last:border-0 last:pb-0"
+                  className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-2 last:border-0 last:pb-0"
                 >
                   <Link
                     href={`/stock/${e.symbol}`}
@@ -343,10 +334,8 @@ export default async function DashboardPage() {
             </ul>
           </div>
 
-          <div className="research-card p-3">
-            <h2 className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              Trending (volume)
-            </h2>
+          <div className="surface-panel p-4 sm:p-5">
+            <h2 className="label-caps mb-3">Trending (volume)</h2>
             <div className="space-y-0.5">
               {actives.map((m, i) => {
                 const sym = fmpMoverSymbol(m);
@@ -368,27 +357,29 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <Card className="border-border/80 shadow-sm">
-            <CardHeader className="space-y-0 p-3 pb-0">
-              <CardTitle className="text-xs font-medium">Portfolio</CardTitle>
+          <Card>
+            <CardHeader className="space-y-0 p-4 pb-0">
+              <CardTitle className="text-xs font-medium tracking-wide">Portfolio</CardTitle>
             </CardHeader>
-            <CardContent className="p-3 pt-2">
+            <CardContent className="p-4 pt-2">
               <PortfolioSummary />
             </CardContent>
           </Card>
 
-          <Card className="border-primary/20 shadow-sm">
-            <CardHeader className="space-y-0 p-3 pb-0">
+          <Card>
+            <CardHeader className="space-y-0 p-4 pb-0">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xs font-medium">AI Market Digest</CardTitle>
-                <Badge variant="secondary" className="text-[9px]">
+                <CardTitle className="text-xs font-medium tracking-wide">
+                  AI Market Digest
+                </CardTitle>
+                <Badge variant="secondary" className="text-[9px] tracking-wide">
                   {today}
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-3 pt-2">
+            <CardContent className="p-4 pt-2">
               <div className="flex flex-col items-center justify-center py-4 text-center text-muted-foreground">
-                <Sparkles className="mb-2 h-5 w-5 opacity-30" />
+                <Sparkles className="mb-2 h-5 w-5 stroke-[1.25] opacity-35" />
                 <p className="text-xs">AI digest requires ANTHROPIC_API_KEY</p>
               </div>
             </CardContent>
@@ -396,11 +387,8 @@ export default async function DashboardPage() {
         </aside>
       </div>
 
-      <section className="space-y-2">
-        <h2 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-          News & wires
-        </h2>
-        <div className="grid gap-2 lg:grid-cols-2">
+      <Section title="News & wires" className="space-y-4">
+        <div className="grid gap-3 lg:grid-cols-2">
           {latestNews.length > 0 ? (
             latestNews.slice(0, 8).map((item, idx) => (
               <NewsCard
@@ -412,8 +400,8 @@ export default async function DashboardPage() {
               />
             ))
           ) : (
-            <div className="research-card p-4">
-              <p className="text-sm text-muted-foreground">
+            <div className="surface-panel p-4 sm:p-5">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 No headlines returned for your watchlist symbols. If quotes load
                 but this stays empty, try again later. After adding{" "}
                 <span className="font-mono text-xs">FMP_API_KEY</span> in Vercel,
@@ -422,7 +410,7 @@ export default async function DashboardPage() {
             </div>
           )}
         </div>
-      </section>
+      </Section>
     </div>
   );
 }

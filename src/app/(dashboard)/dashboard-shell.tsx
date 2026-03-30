@@ -2,6 +2,7 @@
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { PageContainer } from "@/components/layout/page-container";
 import { SidebarProvider, useSidebar } from "@/components/layout/sidebar-context";
 import { cn } from "@/lib/utils";
 import type { UserSession } from "@/lib/auth/user";
@@ -25,7 +26,9 @@ function ShellInner({
         )}
       >
         <Header user={user} />
-        <main className="research-main dashboard-page-enter flex-1">{children}</main>
+        <main className="research-main dashboard-page-enter flex-1">
+          <PageContainer>{children}</PageContainer>
+        </main>
       </div>
     </div>
   );

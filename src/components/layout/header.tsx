@@ -118,7 +118,7 @@ export function Header({ user }: { user?: UserSession }) {
               "glass-input h-9 w-full pl-9 pr-16",
             )}
           />
-          <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 select-none items-center gap-0.5 rounded-lg border border-white/10 bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground backdrop-blur-sm sm:inline-flex">
+          <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 select-none items-center gap-0.5 rounded-md border border-white/[0.08] bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground sm:inline-flex">
             <span className="text-[10px]">&#8984;</span>K
           </kbd>
         </div>
@@ -129,12 +129,12 @@ export function Header({ user }: { user?: UserSession }) {
         {/* Market status */}
         <Badge
           variant={marketOpen ? "success" : "secondary"}
-          className="hidden gap-1.5 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 text-[11px] font-medium tracking-wide backdrop-blur-sm sm:inline-flex"
+          className="hidden gap-1.5 whitespace-nowrap rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-0.5 text-[11px] font-medium tracking-[0.06em] sm:inline-flex"
         >
           <span
             className={cn(
               "h-1.5 w-1.5 rounded-full",
-              marketOpen ? "bg-green-500" : "bg-muted-foreground/50"
+              marketOpen ? "bg-up" : "bg-muted-foreground/45"
             )}
           />
           {marketOpen ? "Open" : "Closed"}
@@ -151,7 +151,7 @@ export function Header({ user }: { user?: UserSession }) {
         {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-foreground/95 text-[11px] font-medium text-background shadow-[0_0_24px_-6px_oklch(0.68_0.16_259/0.35)] outline-none transition-premium hover:scale-[1.03] hover:opacity-95 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <button className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.1] bg-foreground/92 text-[11px] font-medium text-background outline-none transition-premium hover:bg-foreground/88 focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               {user?.initials ?? "??"}
             </button>
           </DropdownMenuTrigger>

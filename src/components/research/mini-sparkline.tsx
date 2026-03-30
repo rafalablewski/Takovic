@@ -40,7 +40,7 @@ export function MiniSparkline({
 
   const stroke =
     positive === undefined
-      ? "var(--chart-1)"
+      ? "var(--chart-line)"
       : positive
         ? "var(--up)"
         : "var(--down)";
@@ -56,7 +56,7 @@ export function MiniSparkline({
         d={d}
         fill="none"
         stroke={stroke}
-        strokeWidth={1.25}
+        strokeWidth={1}
         vectorEffect="non-scaling-stroke"
       />
     </svg>

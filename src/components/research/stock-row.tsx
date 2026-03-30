@@ -26,7 +26,7 @@ export function StockRow({
     <Link
       href={href}
       className={cn(
-        "group flex items-center gap-3 rounded-xl border border-transparent px-2 py-2.5 transition-premium hover:border-white/[0.06] hover:bg-white/[0.04]",
+        "group flex min-h-11 items-center gap-3 rounded-lg border border-transparent px-2 py-2.5 transition-premium hover:bg-white/[0.03] sm:min-h-0",
         className
       )}
     >

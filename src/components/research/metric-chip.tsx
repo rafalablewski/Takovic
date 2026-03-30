@@ -20,7 +20,7 @@ export function MetricChip({
   const inner = (
     <div
       className={cn(
-        "flex shrink-0 flex-col rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 shadow-[inset_0_1px_0_oklch(1_0_0/0.05)] backdrop-blur-md transition-premium hover:bg-white/[0.08]",
+        "flex shrink-0 flex-col rounded-lg border border-white/[0.08] bg-white/[0.025] px-3 py-2.5 transition-premium hover:border-white/[0.1] hover:bg-white/[0.04]",
         className
       )}
     >
@@ -39,7 +39,7 @@ export function MetricChip({
         <TooltipTrigger asChild>{inner}</TooltipTrigger>
         <TooltipContent
           side="bottom"
-          className="max-w-xs rounded-lg border border-white/10 bg-popover/90 text-xs backdrop-blur-xl"
+          className="max-w-xs rounded-lg border border-white/[0.1] bg-popover text-xs"
         >
           {hint}
         </TooltipContent>

@@ -28,6 +28,8 @@ import { NewsCard } from "@/components/research/news-card";
 import { DataTable, type DataTableColumn } from "@/components/research/data-table";
 import { FinancialsGrowthChart } from "@/components/research/financials-growth-chart";
 import { FilingsPanel } from "@/components/stock/filings-panel";
+import { DataBlock } from "@/components/layout/data-block";
+import { Section } from "@/components/layout/section";
 import {
   TrendingUp,
   Sparkles,
@@ -42,13 +44,8 @@ const VALID_TABS = new Set([
   "filings",
 ]);
 
-const scoreColors = [
-  "bg-blue-500",
-  "bg-emerald-500",
-  "bg-violet-500",
-  "bg-amber-500",
-  "bg-rose-500",
-];
+/** Single neutral fill — length encodes score; avoids rainbow UI */
+const SCORE_BAR_CLASS = "bg-foreground/24";
 const scoreLabels = ["Value", "Growth", "Profitability", "Health", "Dividend"];
 
 export type AiAnalysisPayload = {
@@ -123,7 +120,7 @@ export function StockDetailClient({
           snowflakeScores.health,
           snowflakeScores.dividend,
         ][i],
-        color: scoreColors[i],
+        colorClass: SCORE_BAR_CLASS,
       }))
     : null;
 
@@ -198,7 +195,7 @@ export function StockDetailClient({
       : description;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-6 sm:space-y-8">
       <QuoteStrip
         ticker={ticker}
         companyName={companyName}
@@ -208,14 +205,14 @@ export function StockDetailClient({
       />
 
       {tab === "overview" && (
-        <div className="space-y-3 pt-1">
+        <Section className="space-y-5 pt-1">
           <ChartContainer ticker={ticker} />
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {overviewMetrics.map((m) => (
               <MetricCard key={m.label} label={m.label} value={m.value} />
             ))}
           </div>
-          <div className="research-card space-y-2 p-3">
+          <DataBlock title="Company">
             <div className="flex flex-wrap items-center gap-2">
               {profile?.sector && <Tag>{profile.sector}</Tag>}
               {profile?.industry && (
@@ -223,31 +220,31 @@ export function StockDetailClient({
               )}
             </div>
             {shortDesc ? (
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {shortDesc}
               </p>
             ) : (
-              <p className="text-sm text-muted-foreground">
+              <p className="mt-3 text-sm text-muted-foreground">
                 No company description available.
               </p>
             )}
-          </div>
-        </div>
+          </DataBlock>
+        </Section>
       )}
 
       {tab === "financials" && (
-        <div className="space-y-3 pt-1">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Income statement ({financialPeriod})
+        <div className="space-y-5 pt-1">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="label-caps">
+              Income statement · {financialPeriod}
             </h2>
-            <div className="flex gap-1 rounded-lg border border-border p-0.5">
+            <div className="flex gap-0.5 rounded-lg border border-white/[0.08] p-0.5">
               <Link
                 href={periodHref("annual")}
                 className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+                  "min-h-9 rounded-md px-3 py-2 text-xs font-medium transition-colors sm:min-h-0 sm:py-1.5",
                   financialPeriod === "annual"
-                    ? "bg-secondary text-secondary-foreground"
+                    ? "bg-white/[0.08] text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 )}
                 scroll={false}
@@ -257,9 +254,9 @@ export function StockDetailClient({
               <Link
                 href={periodHref("quarter")}
                 className={cn(
-                  "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+                  "min-h-9 rounded-md px-3 py-2 text-xs font-medium transition-colors sm:min-h-0 sm:py-1.5",
                   financialPeriod === "quarter"
-                    ? "bg-secondary text-secondary-foreground"
+                    ? "bg-white/[0.08] text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 )}
                 scroll={false}
@@ -268,7 +265,7 @@ export function StockDetailClient({
               </Link>
             </div>
           </div>
-          <div className="research-card overflow-hidden p-0">
+          <div className="surface-panel overflow-hidden rounded-xl p-0">
             <DataTable<FMPIncomeStatement>
               columns={incomeColumns}
               data={incomeStatements}
@@ -278,17 +275,14 @@ export function StockDetailClient({
               caption="USD · source FMP"
             />
           </div>
-          <div className="research-card p-3">
-            <h3 className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              YoY revenue growth
-            </h3>
+          <DataBlock title="YoY revenue growth">
             <FinancialsGrowthChart data={growthRows} />
-          </div>
+          </DataBlock>
         </div>
       )}
 
       {tab === "news" && (
-        <div className="space-y-2 pt-1">
+        <div className="space-y-3 pt-1">
           {news.length > 0 ? (
             news.map((item, idx) => (
               <NewsCard
@@ -308,8 +302,8 @@ export function StockDetailClient({
       )}
 
       {tab === "analysis" && (
-        <div className="grid gap-3 pt-1 lg:grid-cols-2">
-          <Card className="border-border/80 shadow-sm">
+        <div className="grid gap-4 pt-1 lg:grid-cols-2">
+          <Card>
             <CardHeader className="space-y-1 p-4 pb-0">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium">
@@ -336,9 +330,12 @@ export function StockDetailClient({
                         {item.score.toFixed(1)}
                       </span>
                     </div>
-                    <div className="h-1.5 w-full rounded-full bg-secondary">
+                    <div className="h-1 w-full rounded-full bg-white/[0.06]">
                       <div
-                        className={`h-1.5 rounded-full ${item.color} transition-all`}
+                        className={cn(
+                          "h-1 rounded-full transition-[width] duration-150 ease-out",
+                          item.colorClass
+                        )}
                         style={{ width: `${(item.score / 5) * 100}%` }}
                       />
                     </div>
@@ -352,12 +349,12 @@ export function StockDetailClient({
             </CardContent>
           </Card>
 
-          <Card className="border-primary/25 shadow-sm">
+          <Card>
             <CardHeader className="space-y-1 p-4 pb-0">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium">AI Analysis</CardTitle>
                 <Badge variant="secondary" className="gap-1 text-[10px]">
-                  <Sparkles className="h-3 w-3" />
+                  <Sparkles className="h-3 w-3 stroke-[1.5]" />
                   Claude
                 </Badge>
               </div>

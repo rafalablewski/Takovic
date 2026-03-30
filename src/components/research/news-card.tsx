@@ -23,9 +23,9 @@ function CredibilityDot({ site }: { site: string }) {
       title={label}
       className={cn(
         "inline-block h-1.5 w-1.5 shrink-0 rounded-full",
-        tier === "wire" && "bg-emerald-500",
-        tier === "major" && "bg-blue-500",
-        tier === "other" && "bg-muted-foreground/50"
+        tier === "wire" && "bg-up/80",
+        tier === "major" && "bg-foreground/35",
+        tier === "other" && "bg-muted-foreground/45"
       )}
     />
   );
@@ -49,7 +49,7 @@ export function NewsCard({
   return (
     <article
       className={cn(
-        "research-card border-border/70 p-3 transition-colors hover:border-border",
+        "surface-panel surface-panel-hover p-3 transition-premium",
         className
       )}
     >

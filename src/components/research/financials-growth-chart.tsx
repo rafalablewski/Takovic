@@ -30,7 +30,11 @@ export function FinancialsGrowthChart({
     <div className="h-48 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" className="stroke-border/40" />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="oklch(1 0 0 / 0.06)"
+            vertical={false}
+          />
           <XAxis
             dataKey="period"
             tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
@@ -60,9 +64,9 @@ export function FinancialsGrowthChart({
           <ReferenceLine y={0} stroke="var(--border)" />
           <Bar
             dataKey="yoyRevenuePct"
-            fill="var(--chart-1)"
-            radius={[4, 4, 0, 0]}
-            maxBarSize={40}
+            fill="oklch(1 0 0 / 0.22)"
+            radius={[2, 2, 0, 0]}
+            maxBarSize={36}
           />
         </BarChart>
       </ResponsiveContainer>

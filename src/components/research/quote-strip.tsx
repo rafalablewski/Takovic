@@ -69,10 +69,10 @@ export function QuoteStrip({
 
   return (
     <div
-      className="glass-panel sticky z-40 border-b border-white/10 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.5)]"
+      className="glass-panel sticky z-40 border-b border-white/[0.07]"
       style={{ top: HEADER_OFFSET }}
     >
-      <div className="flex flex-wrap items-end justify-between gap-4 px-2 py-3 sm:px-4">
+      <div className="flex flex-wrap items-end justify-between gap-4 py-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2 gap-y-1">
             <span className="font-mono text-lg font-medium tracking-tight text-foreground">
@@ -87,7 +87,7 @@ export function QuoteStrip({
             <PriceFlash
               value={quote.price}
               formatted={formatCurrency(quote.price)}
-              className="tabular-hero text-2xl font-medium tracking-tight text-foreground"
+              className="tabular-hero text-3xl font-medium tracking-tight text-foreground sm:text-[1.75rem]"
             />
             <span
               className={cn(
@@ -129,33 +129,33 @@ export function QuoteStrip({
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
-          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" asChild>
+          <Button variant="outline" size="sm" className="min-h-9 gap-1.5 text-xs" asChild>
             <Link href="/watchlist">
-              <Star className="h-3.5 w-3.5" />
+              <Star className="h-3.5 w-3.5 stroke-[1.5]" />
               Watchlist
             </Link>
           </Button>
-          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs" type="button" disabled>
-            <Share2 className="h-3.5 w-3.5" />
+          <Button variant="outline" size="sm" className="min-h-9 gap-1.5 text-xs" type="button" disabled>
+            <Share2 className="h-3.5 w-3.5 stroke-[1.5]" />
             Share
           </Button>
-          <Button size="sm" className="h-8 gap-1.5 text-xs" asChild>
+          <Button size="sm" className="min-h-9 gap-1.5 text-xs" asChild>
             <Link href={tabHref("analysis")}>
-              <BarChart3 className="h-3.5 w-3.5" />
+              <BarChart3 className="h-3.5 w-3.5 stroke-[1.5]" />
               Analysis
             </Link>
           </Button>
         </div>
       </div>
 
-      <div className="scrollbar-none flex gap-2 overflow-x-auto border-t border-white/[0.06] px-2 py-2 sm:px-4">
+      <div className="scrollbar-none flex gap-2 overflow-x-auto border-t border-white/[0.06] py-2.5">
         {metricChips.map((m) => (
           <MetricChip key={m.label} {...m} />
         ))}
       </div>
 
       <nav
-        className="flex gap-0 border-t border-white/[0.06] px-2 sm:px-4"
+        className="flex gap-0 border-t border-white/[0.06]"
         aria-label="Stock sections"
         role="tablist"
       >
@@ -177,7 +177,7 @@ export function QuoteStrip({
               role="tab"
               aria-selected={active}
               className={cn(
-                "border-b-2 px-3 py-2.5 text-xs font-medium transition-colors",
+                "min-h-11 border-b-2 px-3 py-3 text-xs font-medium tracking-wide transition-colors sm:py-2.5",
                 active
                   ? "border-primary text-foreground"
                   : "border-transparent text-muted-foreground hover:text-foreground"

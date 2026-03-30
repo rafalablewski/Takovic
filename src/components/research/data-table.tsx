@@ -87,7 +87,7 @@ export function DataTable<T>({
       <TableHeader
         className={cn(
           stickyHeader &&
-            "sticky top-0 z-10 border-b border-white/[0.06] bg-background/65 shadow-none backdrop-blur-xl supports-[backdrop-filter]:bg-background/45"
+            "sticky top-0 z-10 border-b border-white/[0.06] bg-[var(--background)] shadow-none"
         )}
       >
         <TableRow className="hover:bg-transparent">
@@ -125,7 +125,7 @@ export function DataTable<T>({
               <TableCell
                 key={col.id}
                 className={cn(
-                  dense && "py-1.5 text-xs",
+                  dense && "py-2 text-xs",
                   col.numeric && "text-right tabular-nums",
                   col.className
                 )}

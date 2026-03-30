@@ -43,7 +43,7 @@ export function ChartContainer({
 
     const textColor = readCssVar("--muted-foreground", "#888");
     const gridColor = readCssVar("--chart-grid", "rgba(255,255,255,0.06)");
-    const lineColor = readCssVar("--chart-1", "#3b82f6");
+    const lineColor = readCssVar("--chart-line", "#b8bcc4");
 
     const chart = createChart(el, {
       layout: {
@@ -53,14 +53,20 @@ export function ChartContainer({
         textColor,
       },
       grid: {
-        vertLines: { color: gridColor, visible: true, style: 1 },
-        horzLines: { color: gridColor, visible: true, style: 1 },
+        vertLines: { color: gridColor, visible: true, style: 0 },
+        horzLines: { color: gridColor, visible: true, style: 0 },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, fixLeftEdge: true, fixRightEdge: true },
       crosshair: {
-        vertLine: { labelBackgroundColor: lineColor },
-        horzLine: { labelBackgroundColor: lineColor },
+        vertLine: {
+          color: gridColor,
+          labelBackgroundColor: readCssVar("--muted-foreground", "#888"),
+        },
+        horzLine: {
+          color: gridColor,
+          labelBackgroundColor: readCssVar("--muted-foreground", "#888"),
+        },
       },
       width: el.clientWidth,
       height: el.clientHeight,
@@ -68,7 +74,7 @@ export function ChartContainer({
 
     const series = chart.addSeries(LineSeries, {
       color: lineColor,
-      lineWidth: 2,
+      lineWidth: 1,
       crosshairMarkerVisible: true,
       lastValueVisible: true,
       priceLineVisible: true,
@@ -134,7 +140,7 @@ export function ChartContainer({
   }, [ticker, range]);
 
   return (
-    <div className={cn("research-card flex flex-col gap-2 p-3", className)}>
+    <div className={cn("surface-panel flex flex-col gap-3 p-4 sm:p-5", className)}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
