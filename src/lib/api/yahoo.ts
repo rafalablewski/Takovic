@@ -12,6 +12,12 @@ import YahooFinance from "yahoo-finance2";
 
 const yf = new YahooFinance();
 
+/** yahoo-finance2 sometimes returns {} instead of a number — coerce safely. */
+function num(v: unknown): number {
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  return 0;
+}
+
 // ---------------------------------------------------------------------------
 // Stock quote
 // ---------------------------------------------------------------------------
@@ -203,20 +209,20 @@ export async function getKeyMetrics(
       date: new Date().toISOString().slice(0, 10),
       period: period === "quarter" ? "Q" : "FY",
       peRatio: ks?.trailingEps && fd?.currentPrice
-        ? fd.currentPrice / ks.trailingEps
-        : ks?.forwardPE ?? 0,
-      pbRatio: ks?.priceToBook ?? 0,
-      psRatio: ks?.priceToSalesTrailing12Months ?? 0,
-      roe: fd?.returnOnEquity ?? 0,
-      roa: fd?.returnOnAssets ?? 0,
-      debtToEquity: fd?.debtToEquity ? fd.debtToEquity / 100 : 0,
-      currentRatio: fd?.currentRatio ?? 0,
-      revenuePerShare: fd?.revenuePerShare ?? 0,
-      dividendYield: ks?.dividendYield ?? 0,
+        ? num(fd.currentPrice) / num(ks.trailingEps)
+        : num(ks?.forwardPE),
+      pbRatio: num(ks?.priceToBook),
+      psRatio: num(ks?.priceToSalesTrailing12Months),
+      roe: num(fd?.returnOnEquity),
+      roa: num(fd?.returnOnAssets),
+      debtToEquity: num(fd?.debtToEquity) ? num(fd?.debtToEquity) / 100 : 0,
+      currentRatio: num(fd?.currentRatio),
+      revenuePerShare: num(fd?.revenuePerShare),
+      dividendYield: num(ks?.dividendYield),
       freeCashFlowYield: 0,
-      grossProfitMargin: fd?.grossMargins ?? 0,
-      operatingProfitMargin: fd?.operatingMargins ?? 0,
-      netProfitMargin: fd?.profitMargins ?? 0,
+      grossProfitMargin: num(fd?.grossMargins),
+      operatingProfitMargin: num(fd?.operatingMargins),
+      netProfitMargin: num(fd?.profitMargins),
     };
     return Array(limit).fill(null).map(() => ({ ...m })).slice(0, 1);
   } catch (err) {
