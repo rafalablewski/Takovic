@@ -1,24 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { formatCurrency, cn } from "@/lib/utils";
 import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
+import { CoverageSectionCollapsible } from "@/components/coverage/coverage-section-collapsible";
 import {
   ETH_PURCHASES,
   ETH_PURCHASE_SUMMARY,
-  ETH_PURCHASE_HISTORY_TITLE,
   ETH_PURCHASE_HISTORY_DESCRIPTION,
-  ETH_ACCUMULATION_SUMMARY_HEADING,
   ETH_PURCHASE_OVERVIEW_HEADING,
   ETH_PURCHASE_OVERVIEW_SOURCE_LINE,
-  ETH_PURCHASE_LOG_HEADING,
   ETH_PURCHASE_LOG_SUBHEADING,
   ETH_PURCHASE_TABLE_HEADERS,
   ETH_MNAV_METHODOLOGY,
 } from "@/data/coverage/bmnr";
-import { ShoppingCart, ChevronDown, ChevronUp, Coins, BookOpen } from "lucide-react";
+import { ShoppingCart, BarChart3, Table2, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 
 export function ETHPurchasesTab({ ticker }: { ticker: string }) {
   const [showAll, setShowAll] = useState(false);
@@ -30,103 +28,114 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
   const visible = showAll ? purchases : purchases.slice(0, 12);
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader className="p-5 pb-2">
-          <div className="flex items-center gap-2">
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-base font-semibold tracking-tight">{ETH_PURCHASE_HISTORY_TITLE}</CardTitle>
-          </div>
-          <CardDescription className="whitespace-pre-line text-sm leading-relaxed">
-            {ETH_PURCHASE_HISTORY_DESCRIPTION}
-          </CardDescription>
-        </CardHeader>
-      </Card>
+    <div className="space-y-4">
+      <CoverageSectionCollapsible
+        title="Purchase history"
+        icon={<ShoppingCart className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        defaultOpen
+      >
+        <p className="whitespace-pre-line text-sm text-muted-foreground leading-relaxed">
+          {ETH_PURCHASE_HISTORY_DESCRIPTION}
+        </p>
+      </CoverageSectionCollapsible>
 
-      <div className="space-y-3">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground">{ETH_ACCUMULATION_SUMMARY_HEADING}</h3>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-foreground">{ETH_PURCHASE_OVERVIEW_HEADING}</p>
-          <p className="text-xs text-muted-foreground">{ETH_PURCHASE_OVERVIEW_SOURCE_LINE}</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <OverviewStat label="LAST REPORTED ETH" value={summary.lastReportedEthDisplay} />
-          <OverviewStat label="TOTAL DEPLOYED" value={summary.totalCapitalDeployedDisplay} />
-          <OverviewStat label="AVG ETH PRICE" value={summary.averagePriceDisplay} />
-          <OverviewStat label="CURRENT MNAV" value={summary.currentMnavDisplay} />
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <OverviewStat label="Current ETH Price" value={summary.currentEthPriceDisplay} />
-          <OverviewStat
-            label="Unrealized P/L"
-            value={summary.unrealizedPLDisplay}
-            valueClassName="text-red-600 dark:text-red-400"
-          />
-          <OverviewStat label="Unrealized P/L %" value={summary.unrealizedPLPercentDisplay} />
-          <OverviewStat label="NAV/Share" value={summary.navPerShareDisplay} />
-          <OverviewStat label="Stock Price" value={summary.stockPriceDisplay} />
-          <OverviewStat label="Purchase Events" value={String(summary.totalPurchases)} />
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader className="p-5 pb-0">
-          <div className="flex items-center gap-2">
-            <Coins className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-sm font-semibold uppercase tracking-wide text-foreground">
-              {ETH_PURCHASE_LOG_HEADING}
-            </CardTitle>
+      <CoverageSectionCollapsible
+        title="Accumulation summary"
+        icon={<BarChart3 className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        defaultOpen
+      >
+        <div className="space-y-4">
+          <div className="rounded-md bg-muted/40 p-3">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              {ETH_PURCHASE_OVERVIEW_HEADING}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{ETH_PURCHASE_OVERVIEW_SOURCE_LINE}</p>
           </div>
-          <CardDescription className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            {ETH_PURCHASE_LOG_SUBHEADING}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-5 pt-4">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-sm">
+
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <MetricCell label="LAST REPORTED ETH" value={summary.lastReportedEthDisplay} />
+            <MetricCell label="TOTAL DEPLOYED" value={summary.totalCapitalDeployedDisplay} />
+            <MetricCell label="AVG ETH PRICE" value={summary.averagePriceDisplay} />
+            <MetricCell label="CURRENT MNAV" value={summary.currentMnavDisplay} />
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <MetricCell label="Current ETH Price" value={summary.currentEthPriceDisplay} />
+            <MetricCell
+              label="Unrealized P/L"
+              value={summary.unrealizedPLDisplay}
+              valueClassName="text-red-600 dark:text-red-400"
+            />
+            <MetricCell label="Unrealized P/L %" value={summary.unrealizedPLPercentDisplay} />
+            <MetricCell label="NAV/Share" value={summary.navPerShareDisplay} />
+            <MetricCell label="Stock Price" value={summary.stockPriceDisplay} />
+            <MetricCell label="Purchase Events" value={String(summary.totalPurchases)} />
+          </div>
+        </div>
+      </CoverageSectionCollapsible>
+
+      <CoverageSectionCollapsible
+        title="Purchase log"
+        icon={<Table2 className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        badge={<Badge variant="secondary" className="text-[10px] tabular-nums">{summary.totalPurchases} events</Badge>}
+        defaultOpen
+      >
+        <div className="space-y-3">
+          <p className="text-xs text-muted-foreground">{ETH_PURCHASE_LOG_SUBHEADING}</p>
+          <div className="overflow-x-auto -mx-1 px-1">
+            <table className="w-full min-w-[960px] text-sm">
               <thead>
                 <tr>
                   {ETH_PURCHASE_TABLE_HEADERS.map((h) => (
                     <th
                       key={h}
-                      className="border-b border-border pb-2 pr-3 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground"
+                      className="pb-2 pr-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
                     >
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/60">
+              <tbody className="divide-y divide-border/50">
                 {visible.map((p) => (
-                  <tr key={p.date} className="align-top transition-colors hover:bg-muted/40">
+                  <tr key={p.date} className="hover:bg-muted/50">
                     <td className="py-2 pr-3 text-xs tabular-nums text-muted-foreground whitespace-nowrap">{p.date}</td>
-                    <td className="py-2 pr-3 text-xs tabular-nums font-medium">{p.ethAcquired.toLocaleString()}</td>
-                    <td className="py-2 pr-3 text-xs tabular-nums">{formatUsd(p.ethPriceUsd)}</td>
-                    <td className="py-2 pr-3 text-xs tabular-nums">{formatCurrency(p.usdDeployed, "USD", true)}</td>
-                    <td className="py-2 pr-3 text-xs tabular-nums">{formatUsd(p.stockPrevCloseUsd)}</td>
+                    <td className="py-2 pr-3 text-xs font-medium tabular-nums text-foreground">
+                      {p.ethAcquired.toLocaleString()}
+                    </td>
+                    <td className="py-2 pr-3 text-xs tabular-nums text-foreground">{formatUsd(p.ethPriceUsd)}</td>
+                    <td className="py-2 pr-3 text-xs tabular-nums text-muted-foreground">
+                      {formatCurrency(p.usdDeployed, "USD", true)}
+                    </td>
+                    <td className="py-2 pr-3 text-xs tabular-nums text-foreground">{formatUsd(p.stockPrevCloseUsd)}</td>
                     <td className="py-2 pr-3 text-xs text-muted-foreground whitespace-nowrap">{p.periodRange}</td>
-                    <td className="py-2 pr-3 text-xs tabular-nums">{formatCurrency(p.marketCapUsd, "USD", true)}</td>
+                    <td className="py-2 pr-3 text-xs tabular-nums text-muted-foreground">
+                      {formatCurrency(p.marketCapUsd, "USD", true)}
+                    </td>
                     <td className="py-2 pr-3 text-xs tabular-nums">
                       <span className={mnavClass(p.mnav)}>{p.mnav.toFixed(2)}x</span>
                     </td>
                     <td className="py-2 pr-3 text-xs text-muted-foreground whitespace-nowrap">{p.mnavRange}</td>
-                    <td className="py-2 pr-3 text-xs tabular-nums font-medium">{p.totalEthAfterDisplay}</td>
-                    <td className="py-2 text-xs leading-relaxed text-muted-foreground max-w-[280px]">{p.notes}</td>
+                    <td className="py-2 pr-3 text-xs font-medium tabular-nums text-foreground">{p.totalEthAfterDisplay}</td>
+                    <td className="py-2 text-xs text-muted-foreground leading-relaxed max-w-[min(280px,40vw)]">
+                      {p.notes}
+                    </td>
                   </tr>
                 ))}
-                <tr className="border-t-2 border-border bg-muted/30 font-medium">
-                  <td className="py-2 pr-3 text-xs">Total</td>
-                  <td className="py-2 pr-3 text-xs tabular-nums">{summary.totalEthAcquiredFromLog.toLocaleString()}</td>
-                  <td className="py-2 pr-3 text-xs tabular-nums">avg {summary.averagePriceDisplay}</td>
-                  <td className="py-2 pr-3 text-xs tabular-nums">{summary.totalCapitalDeployedDisplay}</td>
-                  <td className="py-2 pr-3 text-xs" colSpan={7} />
+                <tr className="border-t border-border bg-muted/30">
+                  <td className="py-2 pr-3 text-xs font-medium text-foreground">Total</td>
+                  <td className="py-2 pr-3 text-xs font-medium tabular-nums text-foreground">
+                    {summary.totalEthAcquiredFromLog.toLocaleString()}
+                  </td>
+                  <td className="py-2 pr-3 text-xs tabular-nums text-foreground">avg {summary.averagePriceDisplay}</td>
+                  <td className="py-2 pr-3 text-xs tabular-nums text-foreground">{summary.totalCapitalDeployedDisplay}</td>
+                  <td className="py-2 pr-3" colSpan={7} />
                 </tr>
               </tbody>
             </table>
           </div>
 
           {purchases.length > 12 && (
-            <div className="flex justify-center pt-3">
+            <div className="flex justify-center pt-1">
               <Button
                 variant="ghost"
                 size="sm"
@@ -138,62 +147,86 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
               </Button>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </CoverageSectionCollapsible>
 
-      <Card>
-        <CardHeader className="p-5 pb-2">
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <div>
-              <CardTitle className="text-sm font-semibold uppercase tracking-wide">{ETH_MNAV_METHODOLOGY.title}</CardTitle>
-              <CardDescription className="text-xs">{ETH_MNAV_METHODOLOGY.subtitle}</CardDescription>
+      <CoverageSectionCollapsible
+        title="mNAV methodology"
+        icon={<BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        defaultOpen
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground leading-relaxed">{ETH_MNAV_METHODOLOGY.intro}</p>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {ETH_MNAV_METHODOLOGY.steps.map((s) => (
+              <div key={s.label} className="rounded-lg border border-border p-4 space-y-2">
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{s.label}</p>
+                <p className="text-sm font-medium text-foreground">{s.title}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{s.formulaLabel}</p>
+                <div className="rounded-md bg-muted/30 px-3 py-2">
+                  <code className="text-[10px] font-mono text-muted-foreground leading-relaxed">{s.formula}</code>
+                </div>
+                <p className="text-xs text-muted-foreground">{s.example}</p>
+                <div className="rounded-md bg-muted/30 px-3 py-2">
+                  <code className="text-[10px] font-mono text-muted-foreground leading-relaxed">{s.exampleCalc}</code>
+                </div>
+                <p className="text-sm font-semibold tabular-nums text-foreground">{s.result}</p>
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+              {ETH_MNAV_METHODOLOGY.interpretationHeading}
+            </p>
+            <ul className="space-y-1.5">
+              {ETH_MNAV_METHODOLOGY.interpretation.map((line, i) => (
+                <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/40" />
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+              {ETH_MNAV_METHODOLOGY.dataSourcesHeading}
+            </p>
+            <div className="rounded-md bg-muted/40 p-3 text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {ETH_MNAV_METHODOLOGY.dataSources}
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4 p-5 pt-0 text-xs leading-relaxed text-muted-foreground">
-            <p>{ETH_MNAV_METHODOLOGY.intro}</p>
-            <div className="grid gap-4 md:grid-cols-2">
-              {ETH_MNAV_METHODOLOGY.steps.map((s) => (
-                <div key={s.label} className="space-y-2 rounded-lg border border-border bg-muted/20 p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-foreground">{s.label}</p>
-                  <p className="font-medium text-foreground">{s.title}</p>
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-foreground">{s.formulaLabel}</p>
-                  <p className="font-mono text-[11px] text-foreground/90">{s.formula}</p>
-                  <p className="text-[11px]">{s.example}</p>
-                  <p className="font-mono text-[11px]">{s.exampleCalc}</p>
-                  <p className="text-sm font-semibold tabular-nums text-foreground">{s.result}</p>
-                </div>
-              ))}
+
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+              {ETH_MNAV_METHODOLOGY.accuracyByPeriodHeading}
+            </p>
+            <div className="rounded-md bg-muted/40 p-3 text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {ETH_MNAV_METHODOLOGY.accuracyByPeriod}
             </div>
-            <div>
-              <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
-                {ETH_MNAV_METHODOLOGY.interpretationHeading}
-              </p>
-              <ul className="list-inside list-disc space-y-1">
-                {ETH_MNAV_METHODOLOGY.interpretation.map((line, i) => (
-                  <li key={i}>{line}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-foreground">
-                {ETH_MNAV_METHODOLOGY.dataSourcesHeading}
-              </p>
-              <div className="whitespace-pre-wrap rounded-md border border-border bg-background p-4 font-mono text-[11px]">
-                {ETH_MNAV_METHODOLOGY.dataSources}
-              </div>
-            </div>
-            <div>
-              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-foreground">
-                {ETH_MNAV_METHODOLOGY.accuracyByPeriodHeading}
-              </p>
-              <div className="whitespace-pre-wrap rounded-md border border-border bg-background p-4 font-mono text-[11px]">
-                {ETH_MNAV_METHODOLOGY.accuracyByPeriod}
-              </div>
-            </div>
-          </CardContent>
-      </Card>
+          </div>
+        </div>
+      </CoverageSectionCollapsible>
+    </div>
+  );
+}
+
+/** Same rhythm as Ethereum tab → BMNR ↔ ETH Correlation metric cells */
+function MetricCell({
+  label,
+  value,
+  valueClassName,
+}: {
+  label: string;
+  value: string;
+  valueClassName?: string;
+}) {
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+      <p className={cn("mt-0.5 text-sm font-semibold tabular-nums text-foreground", valueClassName)}>{value}</p>
     </div>
   );
 }
@@ -212,23 +245,4 @@ function mnavClass(mnav: number) {
   if (mnav <= 1.35) return "text-foreground";
   if (mnav <= 2) return "text-amber-600 dark:text-amber-400";
   return "text-red-600 dark:text-red-400";
-}
-
-function OverviewStat({
-  label,
-  value,
-  valueClassName,
-}: {
-  label: string;
-  value: string;
-  valueClassName?: string;
-}) {
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <p className="text-[10px] font-medium tracking-wide text-muted-foreground">{label}</p>
-        <p className={cn("mt-1 text-lg font-semibold tabular-nums tracking-tight text-foreground", valueClassName)}>{value}</p>
-      </CardContent>
-    </Card>
-  );
 }
