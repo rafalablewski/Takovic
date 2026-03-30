@@ -44,8 +44,10 @@ const titleMap: Record<string, string> = {
 
 function getPageTitle(pathname: string): string {
   if (titleMap[pathname]) return titleMap[pathname];
-  // Try to match a parent path
   const segments = pathname.split("/").filter(Boolean);
+  if (segments[0] === "stock" && segments[1]) {
+    return segments[1].toUpperCase();
+  }
   if (segments.length > 0) {
     const parent = "/" + segments[0];
     if (titleMap[parent]) return titleMap[parent];
@@ -97,7 +99,7 @@ export function Header({ user }: { user?: UserSession }) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border bg-background px-4 sm:px-6">
+    <header className="sticky top-0 z-50 flex h-14 shrink-0 items-center border-b border-border/80 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-6">
       {/* Left: Page title */}
       <h1 className="text-lg font-semibold text-foreground">
         {pageTitle}

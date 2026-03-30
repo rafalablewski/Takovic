@@ -16,7 +16,7 @@ function ShellInner({
   const { collapsed } = useSidebar();
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-surface-0">
       <Sidebar user={user} />
       <div
         className={cn(
@@ -25,7 +25,7 @@ function ShellInner({
         )}
       >
         <Header user={user} />
-        <main className="flex-1 bg-muted/30 p-6">{children}</main>
+        <main className="research-main flex-1">{children}</main>
       </div>
     </div>
   );
