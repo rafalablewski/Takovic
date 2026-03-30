@@ -59,7 +59,12 @@ export function DataTable<T>({
       if (typeof va === "number" && typeof vb === "number") {
         return (va - vb) * mul;
       }
-      return String(va).localeCompare(String(vb)) * mul;
+      return (
+        String(va).localeCompare(String(vb), undefined, {
+          numeric: true,
+          sensitivity: "base",
+        }) * mul
+      );
     });
   }, [data, sortId, sortDir, columns]);
 

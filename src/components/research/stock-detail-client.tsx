@@ -85,6 +85,15 @@ function buildGrowthRows(statements: FMPIncomeStatement[]) {
   });
 }
 
+function truncateAtWordBoundary(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const slice = text.slice(0, maxLen);
+  const lastSpace = slice.lastIndexOf(" ");
+  const end =
+    lastSpace > maxLen * 0.55 ? slice.slice(0, lastSpace) : slice.trimEnd();
+  return `${end.trim()}…`;
+}
+
 export function StockDetailClient({
   ticker,
   companyName,
@@ -189,10 +198,9 @@ export function StockDetailClient({
   ];
 
   const description = profile?.description?.trim();
-  const shortDesc =
-    description && description.length > 420
-      ? `${description.slice(0, 420).trim()}…`
-      : description;
+  const shortDesc = description
+    ? truncateAtWordBoundary(description, 420)
+    : undefined;
 
   return (
     <div className="space-y-6 sm:space-y-8">

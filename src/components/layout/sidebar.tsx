@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ import {
   TrendingUp,
   Shield,
   LayoutGrid,
+  X,
 } from "lucide-react";
 
 const showAdminNav = process.env.NEXT_PUBLIC_SHOW_ADMIN === "true";
@@ -57,22 +59,104 @@ const secondaryLinks = [
 
 export function Sidebar({ user }: { user?: UserSession }) {
   const pathname = usePathname();
-  const { collapsed, toggle } = useSidebar();
+  const { collapsed, toggle, mobileOpen, setMobileOpen } = useSidebar();
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
   }
 
+  const closeMobile = React.useCallback(() => setMobileOpen(false), [setMobileOpen]);
+
+  React.useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [mobileOpen, setMobileOpen]);
+
   return (
     <TooltipProvider delayDuration={0}>
+      {/* Mobile drawer */}
+      {mobileOpen ? (
+        <div
+          className="fixed inset-0 z-[100] lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+            aria-label="Close menu"
+            onClick={closeMobile}
+          />
+          <aside className="glass-panel absolute inset-y-0 left-0 flex w-[min(100vw-2.5rem,18rem)] max-w-[280px] flex-col border-r border-white/[0.07] shadow-2xl">
+            <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/[0.07] px-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-foreground/95">
+                  <TrendingUp className="h-3.5 w-3.5 text-background" strokeWidth={1.75} />
+                </div>
+                <span className="truncate text-[15px] font-medium tracking-tight text-foreground">
+                  Takovic
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={closeMobile}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-premium hover:bg-white/[0.06] hover:text-foreground"
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5 stroke-[1.5]" />
+              </button>
+            </div>
+            <ScrollArea className="flex-1 px-2">
+              <SidebarNavBody
+                collapsed={false}
+                pathname={pathname}
+                isActive={isActive}
+                onAfterNavigate={closeMobile}
+              />
+            </ScrollArea>
+            <div className="mt-auto border-t border-white/[0.07] px-2 py-3">
+              <Link
+                href="/settings"
+                onClick={closeMobile}
+                className="flex items-center gap-2.5 rounded-xl px-2 py-2 transition-premium hover:bg-white/[0.06]"
+              >
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background">
+                  {user?.initials ?? "??"}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate text-[13px] font-medium leading-tight text-foreground">
+                    {user?.name ?? "User"}
+                  </span>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    {user?.plan
+                      ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1)
+                      : "Free"}
+                  </span>
+                </div>
+              </Link>
+            </div>
+          </aside>
+        </div>
+      ) : null}
+
+      {/* Desktop sidebar */}
       <aside
         className={cn(
           "glass-panel hidden border-r transition-all duration-300 ease-out lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
           collapsed ? "lg:w-[52px]" : "lg:w-[240px]"
         )}
       >
-        {/* Logo */}
         <div
           className={cn(
             "flex h-14 shrink-0 items-center gap-2.5 px-3",
@@ -89,74 +173,16 @@ export function Sidebar({ user }: { user?: UserSession }) {
           )}
         </div>
 
-        {/* Navigation */}
         <ScrollArea className="flex-1 px-2">
-          <div className="flex flex-col gap-6 py-2">
-            {/* Main */}
-            <NavSection label="Navigation" collapsed={collapsed}>
-              {mainNavigation.map((item) => (
-                <NavItem
-                  key={item.href}
-                  href={item.href}
-                  icon={item.icon}
-                  label={item.name}
-                  active={isActive(item.href)}
-                  collapsed={collapsed}
-                />
-              ))}
-            </NavSection>
-
-            {/* Analysis */}
-            <NavSection label="Analysis" collapsed={collapsed}>
-              {analysisTools.map((item) => (
-                <NavItem
-                  key={item.href}
-                  href={item.href}
-                  icon={item.icon}
-                  label={item.name}
-                  active={isActive(item.href)}
-                  collapsed={collapsed}
-                />
-              ))}
-            </NavSection>
-
-            {/* Admin (optional) */}
-            {showAdminNav && (
-              <NavSection label="System" collapsed={collapsed}>
-                <NavItem
-                  href="/admin"
-                  icon={LayoutGrid}
-                  label="Admin"
-                  active={
-                    pathname === "/admin" ||
-                    (pathname.startsWith("/admin/") &&
-                      !pathname.startsWith("/admin/login"))
-                  }
-                  collapsed={collapsed}
-                />
-              </NavSection>
-            )}
-
-            {/* Secondary */}
-            <NavSection label="Account" collapsed={collapsed}>
-              {secondaryLinks.map((item) => (
-                <NavItem
-                  key={item.href}
-                  href={item.href}
-                  icon={item.icon}
-                  label={item.name}
-                  active={isActive(item.href)}
-                  collapsed={collapsed}
-                />
-              ))}
-            </NavSection>
-          </div>
+          <SidebarNavBody
+            collapsed={collapsed}
+            pathname={pathname}
+            isActive={isActive}
+          />
         </ScrollArea>
 
-        {/* Bottom: profile + collapse */}
         <div className="mt-auto px-2 py-4">
           <div className="soft-divider mb-4" aria-hidden />
-          {/* Profile */}
           <Link
             href="/settings"
             className={cn(
@@ -174,17 +200,19 @@ export function Sidebar({ user }: { user?: UserSession }) {
                     {user?.name ?? "User"}
                   </span>
                   <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                    {user?.plan ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1) : "Free"}
+                    {user?.plan
+                      ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1)
+                      : "Free"}
                   </span>
                 </div>
               </div>
             )}
           </Link>
 
-          {/* Collapse toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                type="button"
                 onClick={toggle}
                 className={cn(
                   "mt-2 flex h-8 w-full items-center justify-center rounded-xl text-muted-foreground transition-premium hover:bg-white/[0.06] hover:text-foreground",
@@ -208,9 +236,79 @@ export function Sidebar({ user }: { user?: UserSession }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  NavSection                                                         */
-/* ------------------------------------------------------------------ */
+function SidebarNavBody({
+  collapsed,
+  pathname,
+  isActive,
+  onAfterNavigate,
+}: {
+  collapsed: boolean;
+  pathname: string;
+  isActive: (href: string) => boolean;
+  onAfterNavigate?: () => void;
+}) {
+  return (
+    <div className="flex flex-col gap-6 py-2">
+      <NavSection label="Navigation" collapsed={collapsed}>
+        {mainNavigation.map((item) => (
+          <NavItem
+            key={item.href}
+            href={item.href}
+            icon={item.icon}
+            label={item.name}
+            active={isActive(item.href)}
+            collapsed={collapsed}
+            onAfterNavigate={onAfterNavigate}
+          />
+        ))}
+      </NavSection>
+
+      <NavSection label="Analysis" collapsed={collapsed}>
+        {analysisTools.map((item) => (
+          <NavItem
+            key={item.href}
+            href={item.href}
+            icon={item.icon}
+            label={item.name}
+            active={isActive(item.href)}
+            collapsed={collapsed}
+            onAfterNavigate={onAfterNavigate}
+          />
+        ))}
+      </NavSection>
+
+      {showAdminNav && (
+        <NavSection label="System" collapsed={collapsed}>
+          <NavItem
+            href="/admin"
+            icon={LayoutGrid}
+            label="Admin"
+            active={
+              pathname === "/admin" ||
+              (pathname.startsWith("/admin/") && !pathname.startsWith("/admin/login"))
+            }
+            collapsed={collapsed}
+            onAfterNavigate={onAfterNavigate}
+          />
+        </NavSection>
+      )}
+
+      <NavSection label="Account" collapsed={collapsed}>
+        {secondaryLinks.map((item) => (
+          <NavItem
+            key={item.href}
+            href={item.href}
+            icon={item.icon}
+            label={item.name}
+            active={isActive(item.href)}
+            collapsed={collapsed}
+            onAfterNavigate={onAfterNavigate}
+          />
+        ))}
+      </NavSection>
+    </div>
+  );
+}
 
 function NavSection({
   label,
@@ -224,18 +322,12 @@ function NavSection({
   return (
     <div className="flex flex-col gap-0.5">
       {!collapsed && (
-        <span className="label-caps mb-2 px-2 opacity-80">
-          {label}
-        </span>
+        <span className="label-caps mb-2 px-2 opacity-80">{label}</span>
       )}
       {children}
     </div>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  NavItem                                                            */
-/* ------------------------------------------------------------------ */
 
 function NavItem({
   href,
@@ -243,18 +335,21 @@ function NavItem({
   label,
   active,
   collapsed,
+  onAfterNavigate,
 }: {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   active: boolean;
   collapsed: boolean;
+  onAfterNavigate?: () => void;
 }) {
   const content = (
     <Link
       href={href}
+      onClick={() => onAfterNavigate?.()}
       className={cn(
-        "group flex items-center gap-2.5 rounded-xl px-2 py-2 text-[13px] font-medium transition-premium",
+        "group flex min-h-10 items-center gap-2.5 rounded-xl px-2 py-2 text-[13px] font-medium transition-premium",
         collapsed && "justify-center px-0 py-2",
         active
           ? "bg-white/[0.1] text-foreground shadow-[inset_0_1px_0_oklch(1_0_0/0.06)]"
@@ -269,7 +364,7 @@ function NavItem({
             : "text-muted-foreground group-hover:text-foreground"
         )}
       />
-      {!collapsed && <span>{label}</span>}
+      {!collapsed && <span className="truncate">{label}</span>}
     </Link>
   );
 

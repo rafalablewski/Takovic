@@ -22,18 +22,28 @@ function barsToPoints(bars: FMPHistoricalBar[]): { time: number; value: number }
   }));
 }
 
+/** FMP intraday: usually "YYYY-MM-DD HH:mm:ss" or ISO with T; normalize without relying on a single space. */
+function parseIntradayBarMs(dateStr: string): number {
+  const trimmed = dateStr.trim();
+  const normalized = trimmed.includes("T")
+    ? trimmed
+    : trimmed.replace(/^(\d{4}-\d{2}-\d{2})\s+(\S+)/, "$1T$2");
+  const withZone = normalized.endsWith("Z") ? normalized : `${normalized}Z`;
+  return Date.parse(withZone);
+}
+
 function intradayToPoints(bars: FMPIntradayBar[]): { time: number; value: number }[] {
   const sorted = [...bars].sort((a, b) => a.date.localeCompare(b.date));
-  return sorted.map((b) => {
-    const normalized = b.date.includes("T")
-      ? b.date
-      : b.date.replace(" ", "T");
-    const ms = Date.parse(normalized.endsWith("Z") ? normalized : `${normalized}Z`);
-    return {
-      time: Math.floor(ms / 1000),
-      value: b.close,
-    };
-  });
+  return sorted
+    .map((b) => {
+      const ms = parseIntradayBarMs(b.date);
+      if (!Number.isFinite(ms)) return null;
+      return {
+        time: Math.floor(ms / 1000),
+        value: b.close,
+      };
+    })
+    .filter((p): p is { time: number; value: number } => p != null);
 }
 
 export async function GET(
@@ -51,7 +61,8 @@ export async function GET(
   try {
     if (range === "1D") {
       const from = new Date(to);
-      from.setDate(from.getDate() - 10);
+      /* ~78 five-minute bars per US session; 400 bars ≈ 5 sessions — 8d covers weekends + holidays */
+      from.setDate(from.getDate() - 8);
       const fromStr = ymd(from);
       const raw = await getHistoricalChart5Min(upper, fromStr, toStr);
       let points = intradayToPoints(Array.isArray(raw) ? raw : []);

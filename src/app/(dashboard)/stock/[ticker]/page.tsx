@@ -17,6 +17,7 @@ import {
   getStockNews,
 } from "@/lib/api/fmp";
 import { calculateSnowflakeScores } from "@/lib/analysis/scores";
+import { getServerBaseUrl } from "@/lib/server-base-url";
 import { StockDetailClient } from "@/components/research/stock-detail-client";
 import type { FMPKeyMetrics } from "@/lib/api/fmp";
 
@@ -182,11 +183,7 @@ export default async function StockPage({
     weaknesses: string[];
   } | null = null;
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_APP_URL ||
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
-      "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/analysis/${upperTicker}`, {
+    const res = await fetch(`${getServerBaseUrl()}/api/analysis/${upperTicker}`, {
       next: { revalidate: 86400 },
     });
     if (res.ok) {

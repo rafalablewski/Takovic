@@ -12,7 +12,7 @@ export function PageContainer({
   return (
     <div
       className={cn(
-        "relative z-10 mx-auto w-full max-w-[1360px] px-6 lg:px-8",
+        "relative z-10 mx-auto w-full min-w-0 max-w-[1360px] px-4 sm:px-6 lg:px-8",
         className
       )}
     >

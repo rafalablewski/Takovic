@@ -188,7 +188,7 @@ export function CompanyInfoBar({ company }: { company: EdgarCompanyInfo }) {
               <p className="font-medium">
                 <a
                   href={
-                    company.website.startsWith("http")
+                    /^https?:\/\//i.test(company.website)
                       ? company.website
                       : `https://${company.website}`
                   }

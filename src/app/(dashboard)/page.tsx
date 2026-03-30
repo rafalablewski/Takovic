@@ -34,7 +34,8 @@ function ymd(d: Date): string {
 async function sparklineCloses(ticker: string): Promise<number[]> {
   const to = new Date();
   const from = new Date(to);
-  from.setDate(from.getDate() - 50);
+  /* slice(-40) needs 40 trading closes; ~35 sessions fit in 50 calendar days — use 60d so FMP daily rows reliably reach 40 */
+  from.setDate(from.getDate() - 60);
   try {
     const full = await getHistoricalPriceFull(ticker.trim().toUpperCase(), {
       from: ymd(from),

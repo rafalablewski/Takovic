@@ -127,8 +127,15 @@ export function ChartContainer({
         if (points.length === 0) {
           setError("No price data for this range.");
         }
-      } catch {
-        if (!cancelled) setError("Could not load chart.");
+      } catch (e) {
+        if (!cancelled) {
+          const detail = e instanceof Error ? e.message : String(e);
+          setError(
+            process.env.NODE_ENV === "development"
+              ? `Could not load chart: ${detail}`
+              : "Could not load chart."
+          );
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }

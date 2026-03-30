@@ -17,16 +17,16 @@ function ShellInner({
   const { collapsed } = useSidebar();
 
   return (
-    <div className="relative z-10 flex min-h-screen bg-transparent">
+    <div className="relative z-10 flex min-h-screen min-w-0 bg-transparent">
       <Sidebar user={user} />
       <div
         className={cn(
-          "flex flex-1 flex-col transition-all duration-300 ease-in-out",
+          "flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden transition-all duration-300 ease-in-out",
           collapsed ? "lg:pl-[52px]" : "lg:pl-[240px]"
         )}
       >
         <Header user={user} />
-        <main className="research-main dashboard-page-enter flex-1">
+        <main className="research-main dashboard-page-enter min-w-0 flex-1">
           <PageContainer>{children}</PageContainer>
         </main>
       </div>
