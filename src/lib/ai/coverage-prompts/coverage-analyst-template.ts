@@ -15,6 +15,8 @@ export interface CoveragePromptContext {
   competitors: string;
   tickerTabs: string;
   tabHierarchyNotes: string;
+  /** Optional ticker-specific instructions (empty string when none). */
+  additionalAnalystInstructionsBlock: string;
   domainSections: string;
   /** Where to find coverage + entity modules for this ticker (paths only, no literals). */
   dataRootHint: string;
@@ -47,6 +49,8 @@ Available tabs (this ticker, top-level): {{TICKER_TABS}}
 
 Tab hierarchy and nested UI:
 {{TAB_HIERARCHY_NOTES}}
+
+{{ADDITIONAL_ANALYST_INSTRUCTIONS_BLOCK}}
 
 Canonical top-level order when the full standard set exists: Overview → Business Operations → Model → Comps → Capital → Financials → Timeline → Investment → Wall Street. Trust the "Available tabs" line above for this ticker.
 
@@ -230,6 +234,7 @@ const PLACEHOLDER_MAP: Record<string, keyof CoveragePromptContext> = {
   "{{COMPETITORS}}": "competitors",
   "{{TICKER_TABS}}": "tickerTabs",
   "{{TAB_HIERARCHY_NOTES}}": "tabHierarchyNotes",
+  "{{ADDITIONAL_ANALYST_INSTRUCTIONS_BLOCK}}": "additionalAnalystInstructionsBlock",
   "{{DOMAIN_SECTIONS}}": "domainSections",
   "{{DATA_ROOT_HINT}}": "dataRootHint",
 };

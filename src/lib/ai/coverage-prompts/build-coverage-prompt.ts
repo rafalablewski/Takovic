@@ -23,6 +23,23 @@ function buildCompsGuidanceForPrompt(upperTicker: string): string {
   ].join("\n\n");
 }
 
+/** BMNR: tie analyst reasoning to the ETH purchase log + mNAV framing. Other tickers: empty. */
+function buildAdditionalAnalystInstructionsBlock(upperTicker: string, companyName: string): string {
+  if (upperTicker !== "BMNR") return "";
+
+  const lower = upperTicker.toLowerCase();
+  return [
+    "════════════════════════════════════════",
+    `TICKER-SPECIFIC ANALYSIS CONTEXT (${upperTicker})`,
+    "════════════════════════════════════════",
+    "",
+    `ETH purchases context: When you analyze pasted text about ${companyName} (${upperTicker}), **interpret material facts in the context of the ETH purchase program** wherever applicable—not only as generic treasury or “crypto” news. Explicitly weigh: weekly vs. historical accumulation pace; USD deployed and implied ETH pricing vs. the structured purchase log; mNAV (and ranges) vs. \`ETH_PURCHASE_SUMMARY\` / methodology; shares outstanding and dilution vs. per-share ETH; and whether disclosures confirm, extend, or contradict existing rows.`,
+    "",
+    `**UI:** Business Operations → ETH Purchases. **Data:** src/data/coverage/${lower}-eth-purchases.ts (\`ETH_PURCHASES\`, \`ETH_PURCHASE_SUMMARY\`, \`ETH_MNAV_METHODOLOGY\`). For weekly PR/8-K ETH totals, propose **concrete** updates to that module (new or revised purchase rows, summary fields) plus date-anchored Timeline entries when appropriate—do not stop at high-level Overview bullets if the content is purchase-specific.`,
+    "",
+  ].join("\n");
+}
+
 /**
  * Returns the fully resolved coverage analyst prompt for a covered ticker.
  */
@@ -66,6 +83,7 @@ export async function buildCoveragePromptForTicker(
     competitors,
     tickerTabs,
     tabHierarchyNotes,
+    additionalAnalystInstructionsBlock: buildAdditionalAnalystInstructionsBlock(upperTicker, stock.name),
     domainSections,
     dataRootHint,
   };
