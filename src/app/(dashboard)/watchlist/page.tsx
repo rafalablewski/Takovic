@@ -308,16 +308,25 @@ export default function WatchlistPage() {
   }, [isLoaded, watchlists]);
 
   function getStocksForWatchlist(wl: WatchlistGroup): WatchlistStock[] {
-    return wl.tickers
-      .map((t) => quotesMap[t])
-      .filter((s): s is WatchlistStock => s !== undefined);
+    return wl.tickers.map(
+      (t) =>
+        quotesMap[t] ?? {
+          ticker: t,
+          name: "—",
+          price: 0,
+          change: 0,
+          range52w: "—",
+        }
+    );
   }
 
   const activeWatchlist = watchlists.find((wl) => wl.id === activeTab);
 
   function handleAddStock(ticker: string) {
-    if (activeWatchlist) {
-      addStock(activeWatchlist.id, ticker);
+    // Use active watchlist, or fall back to first watchlist
+    const target = activeWatchlist ?? watchlists[0];
+    if (target) {
+      addStock(target.id, ticker);
     }
   }
 

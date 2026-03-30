@@ -9,22 +9,30 @@ export async function GET(request: NextRequest) {
     return NextResponse.json([]);
   }
 
+  // Try cache first, but don't let cache failure block the request
   try {
     const cached = await getCached(cacheKey.search(query));
     if (cached) {
       return NextResponse.json(cached);
     }
+  } catch (cacheError) {
+    console.warn("Cache read failed, falling through to FMP:", cacheError);
+  }
 
+  // Fetch from FMP
+  try {
     const results = await searchStocks(query, 10);
 
-    await setCache(cacheKey.search(query), results, CACHE_TTL.SEARCH);
+    // Best-effort cache write — don't let it fail the response
+    setCache(cacheKey.search(query), results, CACHE_TTL.SEARCH).catch(
+      (err) => console.warn("Cache write failed:", err)
+    );
 
     return NextResponse.json(results);
   } catch (error) {
     console.error("Search error:", error);
-    return NextResponse.json(
-      { error: "Search failed" },
-      { status: 500 }
-    );
+    // Return empty array instead of 500 so the UI can still show
+    // the "press Enter to add directly" fallback
+    return NextResponse.json([]);
   }
 }
