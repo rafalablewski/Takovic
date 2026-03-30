@@ -57,7 +57,7 @@ export function EcosystemNewsFeed() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [companyFilter, setCompanyFilter] = useState<string | null>(null);
   const [showCount, setShowCount] = useState(10);
-  const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // Derive company list with counts
   const companyCounts = useMemo(() => {
@@ -150,13 +150,13 @@ export function EcosystemNewsFeed() {
 
         {/* News items */}
         <div className="space-y-3">
-          {visible.map((item, idx) => {
-            const isExpanded = expandedIdx === idx;
+          {visible.map((item) => {
+            const isExpanded = expandedId === item.id;
             const sent = sentimentConfig[item.sentiment];
 
             return (
               <div
-                key={`${item.date}-${idx}`}
+                key={item.id}
                 className="rounded-lg border border-border p-4 transition-colors hover:bg-muted/20"
               >
                 <div className="space-y-2">
@@ -197,7 +197,7 @@ export function EcosystemNewsFeed() {
 
                   {/* Expand toggle */}
                   <button
-                    onClick={() => setExpandedIdx(isExpanded ? null : idx)}
+                    onClick={() => setExpandedId(isExpanded ? null : item.id)}
                     className="text-xs font-medium text-primary hover:underline"
                   >
                     {isExpanded ? "Collapse" : "Expand"}

@@ -8,6 +8,7 @@
  */
 
 export interface EcosystemNewsItem {
+  id: string;
   date: string;
   category: "enterprise" | "institutional" | "defi" | "l2" | "protocol" | "regulatory" | "product" | "ecosystem";
   company: string;
@@ -21,6 +22,7 @@ export interface EcosystemNewsItem {
 
 export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
   {
+    id: "eco-news-1",
     date: "2026-02-26",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -32,6 +34,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Ethereum Foundation / strawmap.org",
   },
   {
+    id: "eco-news-2",
     date: "2026-02-25",
     category: "enterprise",
     company: "Tether / Whop",
@@ -43,6 +46,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PRNewswire / Whop",
   },
   {
+    id: "eco-news-3",
     date: "2026-02-25",
     category: "institutional",
     company: "UK Financial Conduct Authority",
@@ -54,6 +58,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "FCA Press Release",
   },
   {
+    id: "eco-news-4",
     date: "2026-02-24",
     category: "enterprise",
     company: "Oobit",
@@ -65,6 +70,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Oobit Blog",
   },
   {
+    id: "eco-news-5",
     date: "2026-02-20",
     category: "enterprise",
     company: "BNP Paribas",
@@ -76,6 +82,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "BNP Paribas Press Release",
   },
   {
+    id: "eco-news-6",
     date: "2026-02-17",
     category: "enterprise",
     company: "Northstake / P2P.org",
@@ -87,6 +94,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-7",
     date: "2026-02-11",
     category: "institutional",
     company: "Uniswap Labs / Securitize / BlackRock",
@@ -98,6 +106,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-8",
     date: "2026-02-11",
     category: "institutional",
     company: "ICE / CoinDesk",
@@ -109,6 +118,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-9",
     date: "2026-02-11",
     category: "institutional",
     company: "Polygon Labs / EEA",
@@ -120,6 +130,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-10",
     date: "2026-02-06",
     category: "institutional",
     company: "NEOS Investments",
@@ -131,6 +142,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-11",
     date: "2026-02-12",
     category: "enterprise",
     company: "Sei / Toku",
@@ -142,6 +154,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-12",
     date: "2026-02-09",
     category: "enterprise",
     company: "HTX / Ethena Labs",
@@ -153,6 +166,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-13",
     date: "2026-02-09",
     category: "enterprise",
     company: "Arowana / Hancom Group",
@@ -164,6 +178,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-14",
     date: "2026-02-09",
     category: "enterprise",
     company: "Sushi",
@@ -175,6 +190,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-15",
     date: "2026-02-06",
     category: "protocol",
     company: "ENS (Ethereum Name Service)",
@@ -186,6 +202,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ENS Blog",
   },
   {
+    id: "eco-news-16",
     date: "2026-02-05",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -197,6 +214,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Vitalik.eth Blog",
   },
   {
+    id: "eco-news-17",
     date: "2026-02-05",
     category: "enterprise",
     company: "ADI Foundation / H2O Hospitality",
@@ -208,6 +226,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-18",
     date: "2026-02-05",
     category: "enterprise",
     company: "Bitpanda / Global Dollar Network",
@@ -219,6 +238,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-19",
     date: "2026-02-04",
     category: "institutional",
     company: "Fidelity",
@@ -230,6 +250,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Bitcoin.com / CoinGecko",
   },
   {
+    id: "eco-news-20",
     date: "2026-02-04",
     category: "enterprise",
     company: "Figment",
@@ -241,6 +262,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-21",
     date: "2026-01-30",
     category: "institutional",
     company: "Naviator Global",
@@ -252,6 +274,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ACCESS Newswire",
   },
   {
+    id: "eco-news-22",
     date: "2026-01-29",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -263,6 +286,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ERC-8004.org / Ethereum Foundation",
   },
   {
+    id: "eco-news-23",
     date: "2026-01-29",
     category: "enterprise",
     company: "Chronicle",
@@ -274,6 +298,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-24",
     date: "2026-01-28",
     category: "enterprise",
     company: "Fidelity",
@@ -285,6 +310,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "The Block",
   },
   {
+    id: "eco-news-25",
     date: "2026-01-28",
     category: "enterprise",
     company: "Oobit",
@@ -296,6 +322,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Oobit Blog",
   },
   {
+    id: "eco-news-26",
     date: "2026-01-27",
     category: "enterprise",
     company: "Oobit / Tether America",
@@ -307,6 +334,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Oobit Blog",
   },
   {
+    id: "eco-news-27",
     date: "2026-01-15",
     category: "enterprise",
     company: "State Street",
@@ -318,6 +346,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "State Street Press Release",
   },
   {
+    id: "eco-news-28",
     date: "2026-01-14",
     category: "enterprise",
     company: "Oobit / Phantom",
@@ -329,6 +358,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Oobit Blog",
   },
   {
+    id: "eco-news-29",
     date: "2026-01-13",
     category: "regulatory",
     company: "US Senate Banking Committee",
@@ -340,6 +370,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "US Senate Banking Committee",
   },
   {
+    id: "eco-news-30",
     date: "2026-01-13",
     category: "institutional",
     company: "Franklin Templeton",
@@ -351,6 +382,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-31",
     date: "2026-01-09",
     category: "institutional",
     company: "BitGo",
@@ -362,6 +394,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-32",
     date: "2026-01-08",
     category: "institutional",
     company: "Coincheck Group / 3iQ",
@@ -373,6 +406,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-33",
     date: "2026-01-07",
     category: "enterprise",
     company: "World Liberty Financial",
@@ -384,6 +418,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-34",
     date: "2026-01-07",
     category: "enterprise",
     company: "CoinFlip",
@@ -395,6 +430,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-35",
     date: "2025-12-26",
     category: "enterprise",
     company: "Telcoin",
@@ -406,6 +442,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-36",
     date: "2025-12-24",
     category: "enterprise",
     company: "ADI Foundation",
@@ -417,6 +454,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Semafor Africa",
   },
   {
+    id: "eco-news-37",
     date: "2025-12-24",
     category: "enterprise",
     company: "Fasset",
@@ -428,6 +466,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Fasset / ADI Foundation Press Release",
   },
   {
+    id: "eco-news-38",
     date: "2025-12-22",
     category: "enterprise",
     company: "Shift4",
@@ -439,6 +478,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Shift4 Press Release",
   },
   {
+    id: "eco-news-39",
     date: "2025-12-18",
     category: "enterprise",
     company: "BlackRock",
@@ -450,6 +490,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Bloomberg",
   },
   {
+    id: "eco-news-40",
     date: "2025-12-16",
     category: "enterprise",
     company: "Mastercard",
@@ -461,6 +502,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Mastercard Press Release",
   },
   {
+    id: "eco-news-41",
     date: "2025-12-15",
     category: "enterprise",
     company: "JPMorgan",
@@ -472,6 +514,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "JPMorgan Press Release",
   },
   {
+    id: "eco-news-42",
     date: "2025-12-16",
     category: "enterprise",
     company: "Sentient Jet",
@@ -483,6 +526,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Sentient Jet Press Release",
   },
   {
+    id: "eco-news-43",
     date: "2025-12-15",
     category: "l2",
     company: "Coinbase",
@@ -494,6 +538,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Dune Analytics",
   },
   {
+    id: "eco-news-44",
     date: "2025-12-12",
     category: "institutional",
     company: "BlackRock",
@@ -505,6 +550,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Abu Dhabi Finance Week / Gulf Today",
   },
   {
+    id: "eco-news-45",
     date: "2025-12-10",
     category: "enterprise",
     company: "HSBC",
@@ -516,6 +562,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "HSBC / Ant International / Swift Press Release",
   },
   {
+    id: "eco-news-46",
     date: "2025-12-09",
     category: "l2",
     company: "ADI Foundation",
@@ -527,6 +574,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ADI Foundation Press Release",
   },
   {
+    id: "eco-news-47",
     date: "2025-12-09",
     category: "institutional",
     company: "Franklin Templeton",
@@ -538,6 +586,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Franklin Templeton / Finstreet / ADI Foundation Press Release",
   },
   {
+    id: "eco-news-48",
     date: "2025-12-08",
     category: "institutional",
     company: "BlackRock",
@@ -549,6 +598,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CoinDesk",
   },
   {
+    id: "eco-news-49",
     date: "2025-12-06",
     category: "enterprise",
     company: "ADI Foundation",
@@ -560,6 +610,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ADI Foundation / CoinDesk",
   },
   {
+    id: "eco-news-50",
     date: "2025-12-04",
     category: "institutional",
     company: "WisdomTree",
@@ -571,6 +622,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "WisdomTree Press Release",
   },
   {
+    id: "eco-news-51",
     date: "2025-12-04",
     category: "l2",
     company: "Base",
@@ -582,6 +634,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Base Blog",
   },
   {
+    id: "eco-news-52",
     date: "2025-12-03",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -593,6 +646,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Ethereum Blog / Protocol Coordination Team",
   },
   {
+    id: "eco-news-53",
     date: "2025-12-03",
     category: "institutional",
     company: "Franklin Templeton",
@@ -604,6 +658,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Franklin Templeton Press Release",
   },
   {
+    id: "eco-news-54",
     date: "2025-12-03",
     category: "defi",
     company: "Ostium",
@@ -615,6 +670,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Ostium Press Release",
   },
   {
+    id: "eco-news-55",
     date: "2025-12-01",
     category: "enterprise",
     company: "Sony",
@@ -626,6 +682,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Sony Press Release",
   },
   {
+    id: "eco-news-56",
     date: "2025-11-28",
     category: "institutional",
     company: "BlackRock",
@@ -637,6 +694,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CoinShares",
   },
   {
+    id: "eco-news-57",
     date: "2025-11-27",
     category: "enterprise",
     company: "Mantle / Bybit / Tether",
@@ -648,6 +706,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-58",
     date: "2025-11-20",
     category: "regulatory",
     company: "Coinbase",
@@ -659,6 +718,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-59",
     date: "2025-11-20",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -670,6 +730,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Ethereum Foundation",
   },
   {
+    id: "eco-news-60",
     date: "2025-11-19",
     category: "product",
     company: "Coinbase",
@@ -681,6 +742,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-61",
     date: "2025-11-15",
     category: "enterprise",
     company: "Visa",
@@ -692,6 +754,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Blog",
   },
   {
+    id: "eco-news-62",
     date: "2025-11-13",
     category: "institutional",
     company: "Coinbase",
@@ -703,6 +766,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-63",
     date: "2025-11-13",
     category: "enterprise",
     company: "A+ Protocol",
@@ -714,6 +778,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "A+ Protocol Press Release",
   },
   {
+    id: "eco-news-64",
     date: "2025-11-12",
     category: "enterprise",
     company: "JPMorgan",
@@ -725,6 +790,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "JPMorgan Kinexys Press Release",
   },
   {
+    id: "eco-news-65",
     date: "2025-11-12",
     category: "enterprise",
     company: "Coinbase",
@@ -736,6 +802,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-66",
     date: "2025-11-11",
     category: "product",
     company: "Coinbase",
@@ -747,6 +814,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-67",
     date: "2025-11-11",
     category: "enterprise",
     company: "SoFi",
@@ -758,6 +826,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "SoFi Technologies Press Release",
   },
   {
+    id: "eco-news-68",
     date: "2025-11-08",
     category: "defi",
     company: "Uniswap",
@@ -769,6 +838,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Uniswap Labs",
   },
   {
+    id: "eco-news-69",
     date: "2025-11-04",
     category: "enterprise",
     company: "UBS",
@@ -780,6 +850,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "UBS / Chainlink Press Release",
   },
   {
+    id: "eco-news-70",
     date: "2025-11-04",
     category: "enterprise",
     company: "Amundi",
@@ -791,6 +862,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Amundi",
   },
   {
+    id: "eco-news-71",
     date: "2025-10-31",
     category: "enterprise",
     company: "HKMA",
@@ -802,6 +874,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "HKMA e-HKD Pilot Programme Phase 2 Report",
   },
   {
+    id: "eco-news-72",
     date: "2025-10-30",
     category: "regulatory",
     company: "ESMA",
@@ -813,6 +886,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ESMA",
   },
   {
+    id: "eco-news-73",
     date: "2025-10-29",
     category: "enterprise",
     company: "Securitize",
@@ -824,6 +898,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Securitize / BNY Press Release; Business Wire (Chronicle update 2026-02-05)",
   },
   {
+    id: "eco-news-74",
     date: "2025-10-28",
     category: "enterprise",
     company: "Oracle",
@@ -835,6 +910,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Oracle Press Release",
   },
   {
+    id: "eco-news-75",
     date: "2025-10-27",
     category: "enterprise",
     company: "JPYC",
@@ -846,6 +922,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Reuters",
   },
   {
+    id: "eco-news-76",
     date: "2025-10-22",
     category: "enterprise",
     company: "JPMorgan",
@@ -857,6 +934,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "JPMorgan",
   },
   {
+    id: "eco-news-77",
     date: "2025-10-22",
     category: "enterprise",
     company: "Goldfish",
@@ -868,6 +946,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Goldfish / I-ON Digital Press Release",
   },
   {
+    id: "eco-news-78",
     date: "2025-10-15",
     category: "l2",
     company: "Arbitrum",
@@ -879,6 +958,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Offchain Labs",
   },
   {
+    id: "eco-news-79",
     date: "2025-10-14",
     category: "enterprise",
     company: "Stripe",
@@ -890,6 +970,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Stripe Blog",
   },
   {
+    id: "eco-news-80",
     date: "2025-10-14",
     category: "enterprise",
     company: "Citi",
@@ -901,6 +982,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CoinDesk / Citi Q3 2025 Earnings Call",
   },
   {
+    id: "eco-news-81",
     date: "2025-10-07",
     category: "institutional",
     company: "CoinShares",
@@ -912,6 +994,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CoinShares Press Release",
   },
   {
+    id: "eco-news-82",
     date: "2025-10-02",
     category: "enterprise",
     company: "FG Nexus",
@@ -923,6 +1006,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "FG Nexus / Securitize Press Release",
   },
   {
+    id: "eco-news-83",
     date: "2025-10-01",
     category: "institutional",
     company: "Fidelity",
@@ -934,6 +1018,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Fidelity",
   },
   {
+    id: "eco-news-84",
     date: "2025-10-01",
     category: "l2",
     company: "ADI Foundation",
@@ -945,6 +1030,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ZKsync / crypto.news",
   },
   {
+    id: "eco-news-85",
     date: "2025-09-30",
     category: "institutional",
     company: "Bit Digital",
@@ -956,6 +1042,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Bit Digital / Figment Press Release",
   },
   {
+    id: "eco-news-86",
     date: "2025-09-29",
     category: "enterprise",
     company: "Swift",
@@ -967,6 +1054,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Swift Press Release / Sibos 2025",
   },
   {
+    id: "eco-news-87",
     date: "2025-09-25",
     category: "enterprise",
     company: "Centrifuge",
@@ -978,6 +1066,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Centrifuge / Janus Henderson Press Release",
   },
   {
+    id: "eco-news-88",
     date: "2025-09-25",
     category: "enterprise",
     company: "Toyota",
@@ -989,6 +1078,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Toyota Woven City / Toyota Blockchain Lab",
   },
   {
+    id: "eco-news-89",
     date: "2025-09-23",
     category: "enterprise",
     company: "Coinbase",
@@ -1000,6 +1090,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-90",
     date: "2025-09-22",
     category: "defi",
     company: "WSPN",
@@ -1011,6 +1102,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "WSPN / Stargate Finance",
   },
   {
+    id: "eco-news-91",
     date: "2025-09-17",
     category: "enterprise",
     company: "Google",
@@ -1022,6 +1114,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Google Cloud Blog",
   },
   {
+    id: "eco-news-92",
     date: "2025-09-16",
     category: "enterprise",
     company: "Openbank",
@@ -1033,6 +1126,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Openbank Press Release",
   },
   {
+    id: "eco-news-93",
     date: "2025-09-15",
     category: "enterprise",
     company: "PayPal",
@@ -1044,6 +1138,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PayPal Newsroom",
   },
   {
+    id: "eco-news-94",
     date: "2025-09-15",
     category: "enterprise",
     company: "American Express",
@@ -1055,6 +1150,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "American Express / CoinDesk",
   },
   {
+    id: "eco-news-95",
     date: "2025-09-15",
     category: "l2",
     company: "Base",
@@ -1066,6 +1162,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Decrypt",
   },
   {
+    id: "eco-news-96",
     date: "2025-09-09",
     category: "institutional",
     company: "Fidelity",
@@ -1077,6 +1174,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CoinDesk / Etherscan",
   },
   {
+    id: "eco-news-97",
     date: "2025-09-09",
     category: "product",
     company: "Coinbase",
@@ -1088,6 +1186,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-98",
     date: "2025-09-03",
     category: "enterprise",
     company: "Ondo Finance",
@@ -1099,6 +1198,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire / Ondo Finance",
   },
   {
+    id: "eco-news-99",
     date: "2025-09-02",
     category: "enterprise",
     company: "Kraken",
@@ -1110,6 +1210,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Kraken Blog",
   },
   {
+    id: "eco-news-100",
     date: "2025-08-21",
     category: "enterprise",
     company: "DBS",
@@ -1121,6 +1222,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "DBS Press Release / CoinDesk",
   },
   {
+    id: "eco-news-101",
     date: "2025-08-24",
     category: "l2",
     company: "ADI Foundation",
@@ -1132,6 +1234,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ADI Foundation / The National (Abu Dhabi)",
   },
   {
+    id: "eco-news-102",
     date: "2025-08-19",
     category: "institutional",
     company: "AMTD Digital",
@@ -1143,6 +1246,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "AMTD Digital Press Release",
   },
   {
+    id: "eco-news-103",
     date: "2025-08-13",
     category: "enterprise",
     company: "BitPay",
@@ -1154,6 +1258,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "BitPay Press Release",
   },
   {
+    id: "eco-news-104",
     date: "2025-08-05",
     category: "product",
     company: "Coinbase",
@@ -1165,6 +1270,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-105",
     date: "2025-08-01",
     category: "regulatory",
     company: "US Congress",
@@ -1176,6 +1282,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-106",
     date: "2025-08-01",
     category: "institutional",
     company: "Mastercard",
@@ -1187,6 +1294,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Mastercard Research",
   },
   {
+    id: "eco-news-107",
     date: "2025-07-23",
     category: "institutional",
     company: "Goldman Sachs",
@@ -1198,6 +1306,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "The Block / Bitwise",
   },
   {
+    id: "eco-news-108",
     date: "2025-07-16",
     category: "l2",
     company: "Coinbase",
@@ -1209,6 +1318,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Base Blog",
   },
   {
+    id: "eco-news-109",
     date: "2025-07-15",
     category: "enterprise",
     company: "Standard Chartered",
@@ -1220,6 +1330,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Standard Chartered Press Release",
   },
   {
+    id: "eco-news-110",
     date: "2025-07-15",
     category: "l2",
     company: "Ant Digital Technologies",
@@ -1231,6 +1342,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PRNewswire / Ant Digital Technologies",
   },
   {
+    id: "eco-news-111",
     date: "2025-07-09",
     category: "enterprise",
     company: "HSBC",
@@ -1242,6 +1354,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "HSBC Press Release / Ledger Insights",
   },
   {
+    id: "eco-news-112",
     date: "2025-06-23",
     category: "enterprise",
     company: "Coinbase",
@@ -1253,6 +1366,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-113",
     date: "2025-06-18",
     category: "institutional",
     company: "Coinbase",
@@ -1264,6 +1378,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-114",
     date: "2025-06-17",
     category: "enterprise",
     company: "Deutsche Bank",
@@ -1275,6 +1390,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Deutsche Bank / Axelar / Memento Press Release",
   },
   {
+    id: "eco-news-115",
     date: "2025-06-12",
     category: "product",
     company: "Coinbase",
@@ -1286,6 +1402,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-116",
     date: "2024-11-01",
     category: "institutional",
     company: "UBS",
@@ -1297,6 +1414,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "UBS Asset Management Press Release",
   },
   {
+    id: "eco-news-117",
     date: "2024-11-18",
     category: "enterprise",
     company: "Goldman Sachs",
@@ -1308,6 +1426,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Goldman Sachs Press Release",
   },
   {
+    id: "eco-news-118",
     date: "2024-10-03",
     category: "enterprise",
     company: "Visa",
@@ -1319,6 +1438,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Press Release",
   },
   {
+    id: "eco-news-119",
     date: "2024-07-23",
     category: "institutional",
     company: "Franklin Templeton",
@@ -1330,6 +1450,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Franklin Templeton",
   },
   {
+    id: "eco-news-120",
     date: "2024-03-20",
     category: "enterprise",
     company: "BlackRock",
@@ -1341,6 +1462,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "BlackRock Press Release",
   },
   {
+    id: "eco-news-121",
     date: "2022-09-15",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -1352,6 +1474,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-122",
     date: "2021-08-05",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -1363,6 +1486,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-123",
     date: "2020-12-01",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -1374,6 +1498,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-124",
     date: "2019-09-12",
     category: "enterprise",
     company: "Santander",
@@ -1385,6 +1510,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Santander Press Release",
   },
   {
+    id: "eco-news-125",
     date: "2015-07-30",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -1396,6 +1522,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-126",
     date: "2024-12-01",
     category: "enterprise",
     company: "JPMorgan",
@@ -1407,6 +1534,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "JPMorgan / MIT DCI Research Paper",
   },
   {
+    id: "eco-news-127",
     date: "2024-09-26",
     category: "enterprise",
     company: "Guggenheim",
@@ -1418,6 +1546,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Zeconomy / Guggenheim Press Release",
   },
   {
+    id: "eco-news-128",
     date: "2024-08-14",
     category: "enterprise",
     company: "Mastercard",
@@ -1429,6 +1558,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Mastercard / MetaMask / Baanx Press Release",
   },
   {
+    id: "eco-news-129",
     date: "2024-09-12",
     category: "l2",
     company: "Coinbase",
@@ -1440,6 +1570,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-130",
     date: "2023-09-05",
     category: "institutional",
     company: "Visa",
@@ -1451,6 +1582,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-131",
     date: "2024-12-13",
     category: "enterprise",
     company: "Societe Generale",
@@ -1462,6 +1594,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Societe Generale Press Release",
   },
   {
+    id: "eco-news-132",
     date: "2023-11-15",
     category: "enterprise",
     company: "UBS",
@@ -1473,6 +1606,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "UBS Press Release",
   },
   {
+    id: "eco-news-133",
     date: "2023-08-01",
     category: "institutional",
     company: "Fidelity",
@@ -1484,6 +1618,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Fidelity Digital Assets Research",
   },
   {
+    id: "eco-news-134",
     date: "2023-04-12",
     category: "protocol",
     company: "Ethereum Foundation",
@@ -1495,6 +1630,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-135",
     date: "2022-06-13",
     category: "institutional",
     company: "Goldman Sachs",
@@ -1506,6 +1642,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CoinDesk / Bloomberg",
   },
   {
+    id: "eco-news-136",
     date: "2025-12-10",
     category: "defi",
     company: "Aave",
@@ -1517,6 +1654,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Aave Governance",
   },
   {
+    id: "eco-news-137",
     date: "2025-12-15",
     category: "enterprise",
     company: "Oobit / Plasma",
@@ -1528,6 +1666,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Oobit Blog",
   },
   {
+    id: "eco-news-138",
     date: "2025-12-16",
     category: "enterprise",
     company: "Tetra Digital",
@@ -1539,6 +1678,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Tetra Digital Press Release",
   },
   {
+    id: "eco-news-139",
     date: "2025-12-04",
     category: "enterprise",
     company: "WSPN",
@@ -1550,6 +1690,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "PR Newswire",
   },
   {
+    id: "eco-news-140",
     date: "2025-12-01",
     category: "enterprise",
     company: "Sony Bank",
@@ -1561,6 +1702,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Nikkei / Coinspeaker",
   },
   {
+    id: "eco-news-141",
     date: "2025-12-25",
     category: "institutional",
     company: "iPower",
@@ -1572,6 +1714,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-142",
     date: "2025-06-30",
     category: "product",
     company: "Coinbase",
@@ -1583,6 +1726,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-143",
     date: "2025-06-25",
     category: "l2",
     company: "Coinbase",
@@ -1594,6 +1738,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CryptoSlate",
   },
   {
+    id: "eco-news-144",
     date: "2025-06-23",
     category: "enterprise",
     company: "Coinbase",
@@ -1605,6 +1750,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-145",
     date: "2021-05-06",
     category: "institutional",
     company: "Goldman Sachs",
@@ -1616,6 +1762,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "CNBC / Goldman Internal Memo",
   },
   {
+    id: "eco-news-146",
     date: "2025-04-28",
     category: "ecosystem",
     company: "Coinbase",
@@ -1627,6 +1774,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-147",
     date: "2025-04-03",
     category: "institutional",
     company: "WisdomTree",
@@ -1638,6 +1786,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Business Wire",
   },
   {
+    id: "eco-news-148",
     date: "2025-03-26",
     category: "institutional",
     company: "Interactive Brokers",
@@ -1649,6 +1798,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Interactive Brokers Press Release",
   },
   {
+    id: "eco-news-149",
     date: "2025-03-11",
     category: "product",
     company: "Coinbase",
@@ -1660,6 +1810,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-150",
     date: "2025-02-03",
     category: "product",
     company: "Coinbase",
@@ -1671,6 +1822,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-151",
     date: "2025-01-28",
     category: "product",
     company: "Coinbase",
@@ -1682,6 +1834,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Coinbase Blog",
   },
   {
+    id: "eco-news-152",
     date: "2024-09-19",
     category: "enterprise",
     company: "HSBC",
@@ -1693,6 +1846,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "HSBC Press Release",
   },
   {
+    id: "eco-news-153",
     date: "2024-07-25",
     category: "enterprise",
     company: "Toyota",
@@ -1704,6 +1858,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Toyota Blockchain Lab Technical Paper",
   },
   {
+    id: "eco-news-154",
     date: "2024-07-25",
     category: "enterprise",
     company: "Paysafe",
@@ -1715,6 +1870,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Paysafe Press Release",
   },
   {
+    id: "eco-news-155",
     date: "2024-05-29",
     category: "enterprise",
     company: "Mastercard",
@@ -1726,6 +1882,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Mastercard Press Release",
   },
   {
+    id: "eco-news-156",
     date: "2024-05-14",
     category: "enterprise",
     company: "Mastercard",
@@ -1737,6 +1894,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Mastercard Press Release",
   },
   {
+    id: "eco-news-157",
     date: "2024-05-01",
     category: "institutional",
     company: "Securitize",
@@ -1748,6 +1906,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Securitize Press Release",
   },
   {
+    id: "eco-news-158",
     date: "2024-04-17",
     category: "enterprise",
     company: "EY",
@@ -1759,6 +1918,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "EY Press Release",
   },
   {
+    id: "eco-news-159",
     date: "2025-04-03",
     category: "enterprise",
     company: "EY",
@@ -1770,6 +1930,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "EY Press Release",
   },
   {
+    id: "eco-news-160",
     date: "2024-08-07",
     category: "regulatory",
     company: "Societe Generale",
@@ -1781,6 +1942,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Societe Generale-FORGE",
   },
   {
+    id: "eco-news-161",
     date: "2023-04-20",
     category: "enterprise",
     company: "Societe Generale",
@@ -1792,6 +1954,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Societe Generale-FORGE Press Release",
   },
   {
+    id: "eco-news-162",
     date: "2023-04-26",
     category: "institutional",
     company: "Franklin Templeton",
@@ -1803,6 +1966,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Franklin Templeton",
   },
   {
+    id: "eco-news-163",
     date: "2024-09-04",
     category: "enterprise",
     company: "Siemens",
@@ -1814,6 +1978,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Siemens Press Release",
   },
   {
+    id: "eco-news-164",
     date: "2023-02-14",
     category: "enterprise",
     company: "Siemens",
@@ -1825,6 +1990,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Siemens Press Release",
   },
   {
+    id: "eco-news-165",
     date: "2023-10-15",
     category: "enterprise",
     company: "HKMA",
@@ -1836,6 +2002,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "HKMA e-HKD Pilot Programme Phase 1 Report",
   },
   {
+    id: "eco-news-166",
     date: "2023-10-02",
     category: "institutional",
     company: "UBS",
@@ -1847,6 +2014,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "UBS Asset Management Press Release",
   },
   {
+    id: "eco-news-167",
     date: "2023-09-18",
     category: "enterprise",
     company: "Citi",
@@ -1858,6 +2026,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Citi Press Release",
   },
   {
+    id: "eco-news-168",
     date: "2023-09-20",
     category: "enterprise",
     company: "Standard Chartered",
@@ -1869,6 +2038,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Zodia Custody",
   },
   {
+    id: "eco-news-169",
     date: "2023-11-14",
     category: "enterprise",
     company: "Standard Chartered",
@@ -1880,6 +2050,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "SC Ventures / Libeara Press Release",
   },
   {
+    id: "eco-news-170",
     date: "2022-03-24",
     category: "enterprise",
     company: "ANZ",
@@ -1891,6 +2062,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ANZ Press Release",
   },
   {
+    id: "eco-news-171",
     date: "2022-04-26",
     category: "enterprise",
     company: "DAMAC Properties",
@@ -1902,6 +2074,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "DAMAC Properties",
   },
   {
+    id: "eco-news-172",
     date: "2022-03-09",
     category: "institutional",
     company: "State Street",
@@ -1913,6 +2086,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "State Street Press Release",
   },
   {
+    id: "eco-news-173",
     date: "2023-11-27",
     category: "institutional",
     company: "Interactive Brokers",
@@ -1924,6 +2098,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Interactive Brokers Press Release",
   },
   {
+    id: "eco-news-174",
     date: "2024-05-15",
     category: "institutional",
     company: "Interactive Brokers",
@@ -1935,6 +2110,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Interactive Brokers Press Release",
   },
   {
+    id: "eco-news-175",
     date: "2023-07-12",
     category: "institutional",
     company: "WisdomTree",
@@ -1946,6 +2122,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "WisdomTree Press Release",
   },
   {
+    id: "eco-news-176",
     date: "2023-06-09",
     category: "enterprise",
     company: "UBS",
@@ -1957,6 +2134,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "UBS / BOCI Press Release",
   },
   {
+    id: "eco-news-177",
     date: "2024-02-07",
     category: "enterprise",
     company: "UBS",
@@ -1968,6 +2146,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "UBS Press Release",
   },
   {
+    id: "eco-news-178",
     date: "2023-01-31",
     category: "enterprise",
     company: "EIB",
@@ -1979,6 +2158,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "EIB Press Release",
   },
   {
+    id: "eco-news-179",
     date: "2023-09-12",
     category: "enterprise",
     company: "ABN AMRO",
@@ -1990,6 +2170,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "ABN AMRO Press Release",
   },
   {
+    id: "eco-news-180",
     date: "2023-07-15",
     category: "enterprise",
     company: "Mastercard",
@@ -2001,6 +2182,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Mastercard Whitepaper",
   },
   {
+    id: "eco-news-181",
     date: "2023-05-15",
     category: "institutional",
     company: "Visa",
@@ -2012,6 +2194,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Visa Crypto Research",
   },
   {
+    id: "eco-news-182",
     date: "2025-11-14",
     category: "enterprise",
     company: "Citi",
@@ -2023,6 +2206,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Citi / Swift Press Release",
   },
   {
+    id: "eco-news-183",
     date: "2022-09-29",
     category: "enterprise",
     company: "Deutsche Telekom",
@@ -2034,6 +2218,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Deutsche Telekom Media",
   },
   {
+    id: "eco-news-184",
     date: "2023-06-15",
     category: "enterprise",
     company: "SAP",
@@ -2045,6 +2230,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "SAP Community Blog",
   },
   {
+    id: "eco-news-185",
     date: "2021-04-20",
     category: "enterprise",
     company: "Aura Blockchain Consortium",
@@ -2056,6 +2242,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Aura Blockchain Consortium Press Release",
   },
   {
+    id: "eco-news-186",
     date: "2022-07-21",
     category: "enterprise",
     company: "Aura Blockchain Consortium",
@@ -2067,6 +2254,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Aura Blockchain Consortium Press Release",
   },
   {
+    id: "eco-news-187",
     date: "2022-01-20",
     category: "enterprise",
     company: "Aura Blockchain Consortium",
@@ -2078,6 +2266,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Aura Blockchain Consortium Press Release",
   },
   {
+    id: "eco-news-188",
     date: "2022-01-13",
     category: "enterprise",
     company: "Aura Blockchain Consortium",
@@ -2089,6 +2278,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Aura Blockchain Consortium Press Release",
   },
   {
+    id: "eco-news-189",
     date: "2021-07-29",
     category: "enterprise",
     company: "Standard Chartered",
@@ -2100,6 +2290,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Standard Chartered / Northern Trust Press Release",
   },
   {
+    id: "eco-news-190",
     date: "2020-12-09",
     category: "enterprise",
     company: "Standard Chartered",
@@ -2111,6 +2302,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Standard Chartered / Northern Trust Press Release",
   },
   {
+    id: "eco-news-191",
     date: "2024-10-02",
     category: "enterprise",
     company: "Automobili Lamborghini",
@@ -2122,6 +2314,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Automobili Lamborghini Press Release",
   },
   {
+    id: "eco-news-192",
     date: "2025-11-04",
     category: "enterprise",
     company: "Citi",
@@ -2133,6 +2326,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Citi / Swift Press Release",
   },
   {
+    id: "eco-news-193",
     date: "2025-12-26",
     category: "enterprise",
     company: "Telcoin",
@@ -2144,6 +2338,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Telcoin Press Release",
   },
   {
+    id: "eco-news-194",
     date: "2025-10-14",
     category: "enterprise",
     company: "Stripe",
@@ -2155,6 +2350,7 @@ export const ECOSYSTEM_NEWS: EcosystemNewsItem[] = [
     source: "Stripe Blog",
   },
   {
+    id: "eco-news-195",
     date: "2017-12-11",
     category: "enterprise",
     company: "UBS",
