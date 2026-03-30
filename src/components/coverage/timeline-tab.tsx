@@ -151,6 +151,7 @@ function TopicPill({
 }
 
 function TimelineEventRow({ event }: { event: TimelineEvent }) {
+  const [open, setOpen] = useState(false);
   const config = TYPE_CONFIG[event.type] ?? TYPE_CONFIG.market;
   const Icon = config.icon;
 
@@ -160,62 +161,78 @@ function TimelineEventRow({ event }: { event: TimelineEvent }) {
         <Icon className={cn("h-3.5 w-3.5", config.color)} />
       </div>
 
-      <div className="min-w-0 flex-1 space-y-3 pt-0.5">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs tabular-nums text-muted-foreground">{formatDate(event.date)}</span>
-          <Badge variant="outline" className="text-[10px] font-normal">
-            {event.topic}
-          </Badge>
-          <Badge className={cn("text-[10px] font-normal", config.bg, config.color)}>{config.label}</Badge>
-          <span
-            className={cn(
-              "rounded-md px-2 py-0.5 text-[10px] font-medium tabular-nums",
-              SENTIMENT_BADGE[event.sentiment]
-            )}
-          >
-            {event.sentimentLabel}
-          </span>
-          {event.source && (
-            <Badge variant="secondary" className="text-[9px]">
-              {event.source}
+      <div className="min-w-0 flex-1 pt-0.5">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="group flex w-full cursor-pointer flex-col gap-2 text-left"
+        >
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs tabular-nums text-muted-foreground">{formatDate(event.date)}</span>
+            <Badge variant="outline" className="text-[10px] font-normal">
+              {event.topic}
             </Badge>
-          )}
-        </div>
+            <Badge className={cn("text-[10px] font-normal", config.bg, config.color)}>{config.label}</Badge>
+            <span
+              className={cn(
+                "rounded-md px-2 py-0.5 text-[10px] font-medium tabular-nums",
+                SENTIMENT_BADGE[event.sentiment]
+              )}
+            >
+              {event.sentimentLabel}
+            </span>
+            {event.source && (
+              <Badge variant="secondary" className="text-[9px]">
+                {event.source}
+              </Badge>
+            )}
+            <ChevronDown
+              className={cn(
+                "ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground/50 transition-transform duration-200 group-hover:text-muted-foreground",
+                open && "rotate-180"
+              )}
+            />
+          </div>
 
-        <p className="text-sm font-medium text-foreground leading-snug">{event.title}</p>
+          <p className="text-sm font-medium text-foreground leading-snug">{event.title}</p>
+        </button>
 
-        {event.keyChanges.length > 0 && (
-          <div className="space-y-1.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Key changes</p>
-            <div className="overflow-x-auto rounded-md border border-border">
-              <table className="w-full min-w-[520px] border-collapse text-left text-xs">
-                <thead>
-                  <tr className="border-b border-border bg-muted/40">
-                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Metric</th>
-                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Previous</th>
-                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">New</th>
-                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Change</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {event.keyChanges.map((row, idx) => (
-                    <tr key={`${event.id}-kc-${idx}`} className="border-b border-border/80 last:border-0 hover:bg-muted/30">
-                      <td className="px-2 py-1.5 align-top font-medium text-foreground">{row.metric}</td>
-                      <td className="px-2 py-1.5 align-top tabular-nums text-muted-foreground">{row.previous}</td>
-                      <td className="px-2 py-1.5 align-top tabular-nums text-foreground">{row.newValue}</td>
-                      <td className="px-2 py-1.5 align-top text-muted-foreground">{row.change}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        {open && (
+          <div className="mt-3 space-y-3">
+            {event.keyChanges.length > 0 && (
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Key changes</p>
+                <div className="overflow-x-auto rounded-md border border-border">
+                  <table className="w-full min-w-[520px] border-collapse text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/40">
+                        <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Metric</th>
+                        <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Previous</th>
+                        <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">New</th>
+                        <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {event.keyChanges.map((row, idx) => (
+                        <tr key={`${event.id}-kc-${idx}`} className="border-b border-border/80 last:border-0 hover:bg-muted/30">
+                          <td className="px-2 py-1.5 align-top font-medium text-foreground">{row.metric}</td>
+                          <td className="px-2 py-1.5 align-top tabular-nums text-muted-foreground">{row.previous}</td>
+                          <td className="px-2 py-1.5 align-top tabular-nums text-foreground">{row.newValue}</td>
+                          <td className="px-2 py-1.5 align-top text-muted-foreground">{row.change}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-1">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Notes</p>
+              <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">{event.notes}</p>
             </div>
           </div>
         )}
-
-        <div className="space-y-1">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Notes</p>
-          <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">{event.notes}</p>
-        </div>
       </div>
     </div>
   );
