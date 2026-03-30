@@ -150,6 +150,56 @@ export async function screenStocks(params: Record<string, string>) {
   return fetchFMP<FMPScreenerResult[]>("/stock-screener", params);
 }
 
+/** Daily OHLCV — `from` / `to` as YYYY-MM-DD (optional). */
+export async function getHistoricalPriceFull(
+  ticker: string,
+  options?: { from?: string; to?: string }
+) {
+  const params: Record<string, string> = {};
+  if (options?.from) params.from = options.from;
+  if (options?.to) params.to = options.to;
+  const data = await fetchFMP<FMPHistoricalPriceFullResponse>(
+    `/historical-price-full/${ticker}`,
+    params
+  );
+  return data;
+}
+
+/** Earnings announcements in a date range (YYYY-MM-DD). */
+export async function getEarningsCalendar(from: string, to: string) {
+  return fetchFMP<FMPEarningsCalendarItem[]>("/earning_calendar", {
+    from,
+    to,
+  });
+}
+
+/** Top gaining stocks (session snapshot). */
+export async function getStockMarketGainers() {
+  return fetchFMP<FMPMoverQuote[]>("/stock_market/gainers");
+}
+
+/** Top losing stocks (session snapshot). */
+export async function getStockMarketLosers() {
+  return fetchFMP<FMPMoverQuote[]>("/stock_market/losers");
+}
+
+/** Most active by volume (session snapshot). */
+export async function getStockMarketActives() {
+  return fetchFMP<FMPMoverQuote[]>("/stock_market/actives");
+}
+
+/** Intraday bars (5-minute). `from` / `to` as YYYY-MM-DD. */
+export async function getHistoricalChart5Min(
+  ticker: string,
+  from: string,
+  to: string
+) {
+  return fetchFMP<FMPIntradayBar[]>(`/historical-chart/5min/${ticker}`, {
+    from,
+    to,
+  });
+}
+
 // Types for FMP API responses
 export interface FMPQuote {
   symbol: string;
@@ -284,4 +334,60 @@ export interface FMPScreenerResult {
   volume: number;
   exchange: string;
   country: string;
+}
+
+export interface FMPHistoricalBar {
+  date: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  adjClose?: number;
+  volume: number;
+  unadjustedVolume?: number;
+  change?: number;
+  changePercent?: number;
+  vwap?: number;
+  label?: string;
+  changeOverTime?: number;
+}
+
+export interface FMPHistoricalPriceFullResponse {
+  symbol: string;
+  historical: FMPHistoricalBar[];
+}
+
+export interface FMPEarningsCalendarItem {
+  date: string;
+  symbol: string;
+  eps: number | null;
+  epsEstimated: number | null;
+  time?: string;
+  revenue: number | null;
+  revenueEstimated: number | null;
+  fiscalDateEnding?: string;
+  updatedFromDate?: string;
+}
+
+/** Gainers / losers / actives endpoints return quote-like rows. */
+export interface FMPMoverQuote {
+  ticker?: string;
+  symbol?: string;
+  changes: number;
+  price: number;
+  changesPercentage: number;
+  companyName: string;
+}
+
+export interface FMPIntradayBar {
+  date: string;
+  open: number;
+  low: number;
+  high: number;
+  close: number;
+  volume: number;
+}
+
+export function fmpMoverSymbol(q: FMPMoverQuote): string {
+  return (q.ticker ?? q.symbol ?? "").toUpperCase();
 }
