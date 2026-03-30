@@ -537,64 +537,20 @@ export {
 } from "./bmnr-ethereum";
 
 // ---------------------------------------------------------------------------
-// ETH Purchases — from 8-K/PR filings
+// ETH Purchases — weekly 8-K/PR log (see bmnr-eth-purchases.ts)
 // ---------------------------------------------------------------------------
 
-export interface ETHPurchase {
-  date: string;
-  ethAcquired: number;
-  avgPrice: number; // per ETH
-  totalCost: number;
-  cumulativeETH: number;
-  mnavAtPurchase: number; // market NAV multiple at time
-  source: "8-K" | "PR" | "10-Q";
-  note: string;
-}
-
-export const ETH_PURCHASES: ETHPurchase[] = [
-  { date: "2025-07-07", ethAcquired: 50, avgPrice: 2450, totalCost: 122500, cumulativeETH: 50, mnavAtPurchase: 8.2, source: "8-K", note: "Initial ETH purchase" },
-  { date: "2025-07-14", ethAcquired: 45, avgPrice: 2380, totalCost: 107100, cumulativeETH: 95, mnavAtPurchase: 8.5, source: "8-K", note: "" },
-  { date: "2025-07-21", ethAcquired: 60, avgPrice: 2510, totalCost: 150600, cumulativeETH: 155, mnavAtPurchase: 8.8, source: "8-K", note: "" },
-  { date: "2025-07-28", ethAcquired: 55, avgPrice: 2420, totalCost: 133100, cumulativeETH: 210, mnavAtPurchase: 9.0, source: "8-K", note: "" },
-  { date: "2025-08-04", ethAcquired: 70, avgPrice: 2390, totalCost: 167300, cumulativeETH: 280, mnavAtPurchase: 9.1, source: "8-K", note: "Registered direct raise" },
-  { date: "2025-08-11", ethAcquired: 48, avgPrice: 2550, totalCost: 122400, cumulativeETH: 328, mnavAtPurchase: 9.3, source: "8-K", note: "" },
-  { date: "2025-08-18", ethAcquired: 65, avgPrice: 2480, totalCost: 161200, cumulativeETH: 393, mnavAtPurchase: 9.5, source: "8-K", note: "" },
-  { date: "2025-08-25", ethAcquired: 52, avgPrice: 2600, totalCost: 135200, cumulativeETH: 445, mnavAtPurchase: 9.2, source: "8-K", note: "" },
-  { date: "2025-09-02", ethAcquired: 80, avgPrice: 2350, totalCost: 188000, cumulativeETH: 525, mnavAtPurchase: 9.8, source: "8-K", note: "Largest single purchase" },
-  { date: "2025-09-08", ethAcquired: 55, avgPrice: 2410, totalCost: 132550, cumulativeETH: 580, mnavAtPurchase: 9.6, source: "8-K", note: "" },
-  { date: "2025-09-15", ethAcquired: 42, avgPrice: 2520, totalCost: 105840, cumulativeETH: 622, mnavAtPurchase: 9.4, source: "8-K", note: "" },
-  { date: "2025-09-22", ethAcquired: 58, avgPrice: 2460, totalCost: 142680, cumulativeETH: 680, mnavAtPurchase: 9.7, source: "8-K", note: "" },
-  { date: "2025-09-29", ethAcquired: 63, avgPrice: 2380, totalCost: 149940, cumulativeETH: 743, mnavAtPurchase: 9.5, source: "8-K", note: "" },
-  { date: "2025-10-06", ethAcquired: 70, avgPrice: 2290, totalCost: 160300, cumulativeETH: 813, mnavAtPurchase: 10.0, source: "8-K", note: "" },
-  { date: "2025-10-13", ethAcquired: 45, avgPrice: 2340, totalCost: 105300, cumulativeETH: 858, mnavAtPurchase: 10.1, source: "8-K", note: "" },
-  { date: "2025-10-20", ethAcquired: 55, avgPrice: 2270, totalCost: 124850, cumulativeETH: 913, mnavAtPurchase: 10.3, source: "8-K", note: "" },
-  { date: "2025-10-27", ethAcquired: 48, avgPrice: 2410, totalCost: 115680, cumulativeETH: 961, mnavAtPurchase: 9.9, source: "8-K", note: "" },
-  { date: "2025-11-03", ethAcquired: 72, avgPrice: 2350, totalCost: 169200, cumulativeETH: 1033, mnavAtPurchase: 10.2, source: "8-K", note: "Passed 1,000 ETH milestone" },
-  { date: "2025-11-10", ethAcquired: 50, avgPrice: 2480, totalCost: 124000, cumulativeETH: 1083, mnavAtPurchase: 10.0, source: "8-K", note: "" },
-  { date: "2025-11-17", ethAcquired: 55, avgPrice: 2390, totalCost: 131450, cumulativeETH: 1138, mnavAtPurchase: 10.1, source: "8-K", note: "" },
-  { date: "2025-11-24", ethAcquired: 40, avgPrice: 2550, totalCost: 102000, cumulativeETH: 1178, mnavAtPurchase: 9.8, source: "8-K", note: "" },
-  { date: "2025-12-01", ethAcquired: 68, avgPrice: 2420, totalCost: 164560, cumulativeETH: 1246, mnavAtPurchase: 10.0, source: "8-K", note: "" },
-  { date: "2025-12-08", ethAcquired: 52, avgPrice: 2510, totalCost: 130520, cumulativeETH: 1298, mnavAtPurchase: 9.9, source: "8-K", note: "" },
-  { date: "2025-12-15", ethAcquired: 60, avgPrice: 2380, totalCost: 142800, cumulativeETH: 1358, mnavAtPurchase: 10.1, source: "8-K", note: "" },
-  { date: "2025-12-22", ethAcquired: 45, avgPrice: 2450, totalCost: 110250, cumulativeETH: 1403, mnavAtPurchase: 10.0, source: "8-K", note: "" },
-  { date: "2026-01-06", ethAcquired: 75, avgPrice: 2280, totalCost: 171000, cumulativeETH: 1478, mnavAtPurchase: 10.5, source: "8-K", note: "Post-holiday large raise" },
-  { date: "2026-01-13", ethAcquired: 50, avgPrice: 2350, totalCost: 117500, cumulativeETH: 1528, mnavAtPurchase: 10.3, source: "8-K", note: "" },
-  { date: "2026-01-20", ethAcquired: 58, avgPrice: 2290, totalCost: 132820, cumulativeETH: 1586, mnavAtPurchase: 10.4, source: "8-K", note: "" },
-  { date: "2026-01-27", ethAcquired: 62, avgPrice: 2310, totalCost: 143220, cumulativeETH: 1648, mnavAtPurchase: 10.2, source: "8-K", note: "" },
-  { date: "2026-02-03", ethAcquired: 55, avgPrice: 2180, totalCost: 119900, cumulativeETH: 1703, mnavAtPurchase: 10.6, source: "8-K", note: "" },
-  { date: "2026-02-10", ethAcquired: 68, avgPrice: 2150, totalCost: 146200, cumulativeETH: 1771, mnavAtPurchase: 10.8, source: "8-K", note: "" },
-  { date: "2026-02-17", ethAcquired: 50, avgPrice: 2200, totalCost: 110000, cumulativeETH: 1821, mnavAtPurchase: 10.5, source: "8-K", note: "" },
-  { date: "2026-02-24", ethAcquired: 72, avgPrice: 2170, totalCost: 156240, cumulativeETH: 1893, mnavAtPurchase: 10.7, source: "8-K", note: "" },
-  { date: "2026-03-03", ethAcquired: 85, avgPrice: 2190, totalCost: 186150, cumulativeETH: 1978, mnavAtPurchase: 10.4, source: "8-K", note: "Accelerated accumulation" },
-  { date: "2026-03-17", ethAcquired: 163, avgPrice: 2185, totalCost: 356155, cumulativeETH: 2141, mnavAtPurchase: 9.9, source: "8-K", note: "Passed 2,000 ETH milestone" },
-];
-
-export const ETH_PURCHASE_SUMMARY = {
-  totalPurchases: 35,
-  totalETHAcquired: 2141,
-  totalCapitalDeployed: 4_986_405,
-  averagePricePerETH: 2330,
-  firstPurchase: "2025-07-07",
-  lastPurchase: "2026-03-17",
-  averageMNAV: 9.9,
-};
+export {
+  type ETHPurchase,
+  ETH_PURCHASES,
+  ETH_PURCHASE_SUMMARY,
+  ETH_PURCHASE_HISTORY_TITLE,
+  ETH_PURCHASE_HISTORY_DESCRIPTION,
+  ETH_ACCUMULATION_SUMMARY_HEADING,
+  ETH_PURCHASE_OVERVIEW_HEADING,
+  ETH_PURCHASE_OVERVIEW_SOURCE_LINE,
+  ETH_PURCHASE_LOG_HEADING,
+  ETH_PURCHASE_LOG_SUBHEADING,
+  ETH_PURCHASE_TABLE_HEADERS,
+  ETH_MNAV_METHODOLOGY,
+} from "./bmnr-eth-purchases";
