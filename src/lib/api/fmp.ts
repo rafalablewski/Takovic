@@ -7,10 +7,10 @@ const FMP_BASE_URL = process.env.FMP_BASE_URL || "https://financialmodelingprep.
 const FMP_CACHE_REVALIDATE = Number(process.env.FMP_CACHE_REVALIDATE) || 300;
 
 function getFmpApiKey(): string {
-  const key = process.env.FMP_API_KEY;
+  const key = process.env.YAHOO_FINANCE;
   if (!key) {
     throw new Error(
-      "FMP_API_KEY is not set. Add it to .env.local — get a key at https://site.financialmodelingprep.com/"
+      "YAHOO_FINANCE is not set. Add it to .env.local — get a key at https://site.financialmodelingprep.com/"
     );
   }
   return key;

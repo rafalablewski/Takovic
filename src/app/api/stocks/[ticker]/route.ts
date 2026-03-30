@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getQuote, getProfile, getKeyMetrics } from "@/lib/api/fmp";
+import { getQuote, getProfile, getKeyMetrics } from "@/lib/api/yahoo";
 import { getCached, setCache, cacheKey, CACHE_TTL } from "@/lib/cache";
 
 export async function GET(

@@ -4,7 +4,7 @@ import {
   getHistoricalPriceFull,
   type FMPHistoricalBar,
   type FMPIntradayBar,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 
 export const dynamic = "force-dynamic";
 

@@ -14,7 +14,7 @@ import type {
   FMPAnalystRecommendation,
   FMPAnalystEstimate,
   FMPUpgradeDowngrade,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 
 export type AnalystsTabProps = {
   ticker: string;

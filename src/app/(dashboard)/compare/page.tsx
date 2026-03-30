@@ -18,8 +18,8 @@ import {
   getQuote,
   getProfile,
   getKeyMetrics,
-} from "@/lib/api/fmp";
-import type { FMPQuote, FMPProfile, FMPKeyMetrics } from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
+import type { FMPQuote, FMPProfile, FMPKeyMetrics } from "@/lib/api/yahoo";
 import {
   ArrowRightLeft,
   Sparkles,
@@ -166,7 +166,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
             <AlertCircle className="mb-3 h-8 w-8 text-muted-foreground opacity-50" />
             <p className="text-sm text-muted-foreground">
               Unable to load comparison data for {tickerA} vs {tickerB}.
-              Check FMP_API_KEY configuration.
+              Check YAHOO_FINANCE configuration.
             </p>
           </CardContent>
         </Card>

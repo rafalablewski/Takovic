@@ -18,7 +18,7 @@ import {
   getETFHoldings,
   getETFSectorWeightings,
   getETFCountryWeightings,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import { formatCurrency, formatNumber, cn } from "@/lib/utils";
 
 interface ETFPageProps {
@@ -50,8 +50,7 @@ export default async function ETFPage({ params }: ETFPageProps) {
               Error Loading ETF
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Failed to fetch data for {upperTicker}. Check that FMP_API_KEY is
-              configured.
+              Failed to fetch data for {upperTicker}. Please try again later.
             </p>
           </CardContent>
         </Card>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { EdgarCompanyInfo } from "@/lib/api/edgar";
-import type { FMPPressRelease } from "@/lib/api/fmp";
+import type { FMPPressRelease } from "@/lib/api/yahoo";
 import type { IntelligenceFiling } from "@/app/api/intelligence/[ticker]/route";
 
 export interface IntelligenceData {

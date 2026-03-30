@@ -17,8 +17,8 @@ import {
   getStockMarketLosers,
   getStockMarketActives,
   fmpMoverSymbol,
-} from "@/lib/api/fmp";
-import type { FMPQuote, FMPNews, FMPEarningsCalendarItem, FMPMoverQuote } from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
+import type { FMPQuote, FMPNews, FMPEarningsCalendarItem, FMPMoverQuote } from "@/lib/api/yahoo";
 import { PortfolioSummary } from "@/components/shared/portfolio-summary";
 import { getCurrentUser } from "@/lib/auth/user";
 import { StockRow } from "@/components/research/stock-row";
@@ -34,7 +34,7 @@ function ymd(d: Date): string {
 async function sparklineCloses(ticker: string): Promise<number[]> {
   const to = new Date();
   const from = new Date(to);
-  /* slice(-40) needs 40 trading closes; ~35 sessions fit in 50 calendar days — use 60d so FMP daily rows reliably reach 40 */
+  /* slice(-40) needs 40 trading closes; ~35 sessions fit in 50 calendar days — use 60d so daily rows reliably reach 40 */
   from.setDate(from.getDate() - 60);
   try {
     const full = await getHistoricalPriceFull(ticker.trim().toUpperCase(), {
@@ -302,7 +302,7 @@ export default async function DashboardPage() {
                 })
               ) : (
                 <p className="py-4 text-xs text-muted-foreground">
-                  No watchlist data. Check FMP_API_KEY.
+                  No watchlist data available.
                 </p>
               )}
             </div>
@@ -405,7 +405,7 @@ export default async function DashboardPage() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 No headlines returned for your watchlist symbols. If quotes load
                 but this stays empty, try again later. After adding{" "}
-                <span className="font-mono text-xs">FMP_API_KEY</span> in Vercel,
+                Yahoo Finance data source in your environment,
                 redeploy so the server sees it.
               </p>
             </div>

@@ -16,7 +16,7 @@ import {
   AddStockDialog,
   CreateWatchlistDialog,
 } from "@/components/shared/watchlist-dialogs";
-import type { FMPQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/yahoo";
 import {
   Plus,
   Trash2,

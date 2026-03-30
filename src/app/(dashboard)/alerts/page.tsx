@@ -19,7 +19,7 @@ import {
   Percent,
 } from "lucide-react";
 import { useAlerts, type AlertType } from "@/hooks/use-alerts";
-import type { FMPQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/yahoo";
 import { formatCurrency } from "@/lib/utils";
 
 const ALERT_TYPE_OPTIONS: { value: AlertType; label: string }[] = [

@@ -10,7 +10,7 @@ import {
   formatPercent,
   cn,
 } from "@/lib/utils";
-import type { FMPQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/yahoo";
 import { Tag } from "@/components/research/tag";
 import { MetricChip } from "@/components/research/metric-chip";
 import { PriceFlash, ChangePill } from "@/components/research/price-flash";

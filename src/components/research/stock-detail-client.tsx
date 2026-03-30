@@ -29,7 +29,7 @@ import type {
   FMPUpgradeDowngrade,
   FMPInstitutionalHolder,
   FMPInsiderTrade,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import type { SnowflakeScores } from "@/types/analysis";
 import { QuoteStrip } from "@/components/research/quote-strip";
 import { ChartContainer } from "@/components/research/chart-container";
@@ -94,7 +94,7 @@ export type StockDetailClientProps = {
   upgrades: FMPUpgradeDowngrade[];
   institutionalHolders: FMPInstitutionalHolder[];
   insiderTrades: FMPInsiderTrade[];
-  dividendHistory: import("@/lib/api/fmp").FMPDividendRecord[];
+  dividendHistory: import("@/lib/api/yahoo").FMPDividendRecord[];
   dividendYield: number | null;
   latestEps: number | null;
 };

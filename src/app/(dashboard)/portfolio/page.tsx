@@ -34,7 +34,7 @@ import {
 import { exportPortfolioCSV } from "@/lib/export";
 import { usePortfolio, type Holding } from "@/hooks/use-portfolio";
 import { formatCurrency, formatPercent, cn } from "@/lib/utils";
-import type { FMPQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/yahoo";
 
 // ---------------------------------------------------------------------------
 // Types

@@ -22,7 +22,7 @@ import {
   type FMPSectorPerformance,
   type FMPMoverQuote,
   type FMPQuote,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 
 interface IndexQuote {

@@ -12,7 +12,7 @@ import {
   getEconomicCalendar,
   type FMPEarningsCalendarItem,
   type FMPEconomicEvent,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import { formatCurrency, formatNumber } from "@/lib/utils";
 
 function ymd(d: Date): string {

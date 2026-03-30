@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getQuote } from "@/lib/api/fmp";
-import type { FMPQuote } from "@/lib/api/fmp";
+import { getQuote } from "@/lib/api/yahoo";
+import type { FMPQuote } from "@/lib/api/yahoo";
 
 /** Maximum tickers allowed per batch request */
 const MAX_TICKERS = 20;

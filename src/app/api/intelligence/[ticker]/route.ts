@@ -6,8 +6,8 @@ import {
   buildFilingIndexUrl,
 } from "@/lib/api/edgar";
 import type { EdgarCompanyInfo, EdgarFiling } from "@/lib/api/edgar";
-import { getSECFilings, getPressReleases } from "@/lib/api/fmp";
-import type { FMPPressRelease } from "@/lib/api/fmp";
+import { getSECFilings, getPressReleases } from "@/lib/api/yahoo";
+import type { FMPPressRelease } from "@/lib/api/yahoo";
 
 /** Serialized filing for the client */
 export interface IntelligenceFiling {

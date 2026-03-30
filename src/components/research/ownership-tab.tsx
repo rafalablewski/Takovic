@@ -12,7 +12,7 @@ import { formatNumber, formatCurrency, cn } from "@/lib/utils";
 import type {
   FMPInstitutionalHolder,
   FMPInsiderTrade,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 
 export type OwnershipTabProps = {
   ticker: string;

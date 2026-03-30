@@ -5,7 +5,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
-import type { FMPDividendRecord } from "@/lib/api/fmp";
+import type { FMPDividendRecord } from "@/lib/api/yahoo";
 
 // ---------------------------------------------------------------------------
 // Types

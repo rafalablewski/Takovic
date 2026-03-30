@@ -8,8 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { timeAgo, formatPercent } from "@/lib/utils";
-import { getQuote } from "@/lib/api/fmp";
-import type { FMPQuote } from "@/lib/api/fmp";
+import { getQuote } from "@/lib/api/yahoo";
+import type { FMPQuote } from "@/lib/api/yahoo";
 import { getGoogleNews } from "@/lib/api/google-news";
 import type { GoogleNewsArticle } from "@/lib/api/google-news";
 import { Sparkles } from "lucide-react";
@@ -129,7 +129,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             </>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Market data unavailable. Check FMP_API_KEY configuration.
+              Market data unavailable. Check YAHOO_FINANCE configuration.
             </p>
           )}
         </CardContent>

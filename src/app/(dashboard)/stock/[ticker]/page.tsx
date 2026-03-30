@@ -22,11 +22,11 @@ import {
   getInstitutionalHolders,
   getInsiderTrading,
   getHistoricalDividends,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import { calculateSnowflakeScores } from "@/lib/analysis/scores";
 import { getServerBaseUrl } from "@/lib/server-base-url";
 import { StockDetailClient } from "@/components/research/stock-detail-client";
-import type { FMPKeyMetrics } from "@/lib/api/fmp";
+import type { FMPKeyMetrics } from "@/lib/api/yahoo";
 
 interface StockPageProps {
   params: Promise<{ ticker: string }>;
@@ -99,8 +99,7 @@ export default async function StockPage({
               Error Loading Stock
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Failed to fetch data for {upperTicker}. Check that FMP_API_KEY is
-              configured.
+              Failed to fetch data for {upperTicker}. Please try again later.
             </p>
           </CardContent>
         </Card>
