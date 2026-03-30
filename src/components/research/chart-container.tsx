@@ -206,7 +206,6 @@ export function ChartContainer({
 
       chart.priceScale("volume").applyOptions({
         scaleMargins: { top: 0.8, bottom: 0 },
-        drawTicks: false,
         borderVisible: false,
       });
 
