@@ -1,35 +1,53 @@
+import Link from "next/link";
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { formatPercent } from "@/lib/utils";
 import {
-  formatCurrency,
-  formatPercent,
-  sentimentBadgeVariant,
-  sentimentLabel,
-  timeAgo,
-} from "@/lib/utils";
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  Sparkles,
-  ChevronRight,
-  AlertCircle,
-} from "lucide-react";
-import { getQuote, getMarketNews } from "@/lib/api/fmp";
-import type { FMPQuote, FMPNews } from "@/lib/api/fmp";
+  getQuote,
+  getMarketNews,
+  getHistoricalPriceFull,
+  getEarningsCalendar,
+  getStockMarketGainers,
+  getStockMarketLosers,
+  getStockMarketActives,
+  fmpMoverSymbol,
+} from "@/lib/api/fmp";
+import type { FMPQuote, FMPNews, FMPEarningsCalendarItem, FMPMoverQuote } from "@/lib/api/fmp";
 import { PortfolioSummary } from "@/components/shared/portfolio-summary";
 import { getCurrentUser } from "@/lib/auth/user";
+import { StockRow } from "@/components/research/stock-row";
+import { MiniSparkline } from "@/components/research/mini-sparkline";
+import { NewsCard } from "@/components/research/news-card";
+import { Sparkles, ChevronRight } from "lucide-react";
+import { Section } from "@/components/layout/section";
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+function ymd(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+async function sparklineCloses(ticker: string): Promise<number[]> {
+  const to = new Date();
+  const from = new Date(to);
+  /* slice(-40) needs 40 trading closes; ~35 sessions fit in 50 calendar days — use 60d so FMP daily rows reliably reach 40 */
+  from.setDate(from.getDate() - 60);
+  try {
+    const full = await getHistoricalPriceFull(ticker.trim().toUpperCase(), {
+      from: ymd(from),
+      to: ymd(to),
+    });
+    const h = full?.historical ?? [];
+    const asc = [...h].sort((a, b) => a.date.localeCompare(b.date));
+    return asc.map((b) => b.close).slice(-40);
+  } catch {
+    return [];
+  }
+}
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -38,21 +56,16 @@ function getGreeting(): string {
   return "Good evening";
 }
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
-
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const displayName = user.name?.trim() || "there";
 
   const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
+    weekday: "short",
+    month: "short",
     day: "numeric",
   });
 
-  // Configurable default watchlist tickers
   const watchlistTickers =
     process.env.DEFAULT_WATCHLIST_TICKERS?.split(",") || [
       "AAPL",
@@ -67,24 +80,37 @@ export default async function DashboardPage() {
     .filter(Boolean);
   const watchlistForNews = cleanedWatchlistTickers.join(",");
 
-  // Market index proxies
   const indexTickers = [
     { ticker: "SPY", name: "S&P 500" },
-    { ticker: "QQQ", name: "NASDAQ" },
-    { ticker: "DIA", name: "DOW Jones" },
+    { ticker: "QQQ", name: "NASDAQ 100" },
+    { ticker: "DIA", name: "Dow" },
     { ticker: "IWM", name: "Russell 2000" },
   ];
+
+  const fromE = new Date();
+  const toE = new Date();
+  toE.setDate(toE.getDate() + 10);
 
   let marketIndices: { name: string; quote: FMPQuote | null }[] = [];
   let watchlistQuotes: FMPQuote[] = [];
   let latestNews: FMPNews[] = [];
+  let earnings: FMPEarningsCalendarItem[] = [];
+  let gainers: FMPMoverQuote[] = [];
+  let losers: FMPMoverQuote[] = [];
+  let actives: FMPMoverQuote[] = [];
+  const sparklines: Record<string, number[]> = {};
 
   try {
-    const [indexQuotes, wlQuotes, newsData] = await Promise.all([
-      Promise.all(indexTickers.map((idx) => getQuote(idx.ticker))),
-      Promise.all(cleanedWatchlistTickers.map((t) => getQuote(t))),
-      getMarketNews(5, watchlistForNews),
-    ]);
+    const [indexQuotes, wlQuotes, newsData, earnRaw, g, l, a] =
+      await Promise.all([
+        Promise.all(indexTickers.map((idx) => getQuote(idx.ticker))),
+        Promise.all(cleanedWatchlistTickers.map((t) => getQuote(t))),
+        getMarketNews(24, watchlistForNews),
+        getEarningsCalendar(ymd(fromE), ymd(toE)),
+        getStockMarketGainers(),
+        getStockMarketLosers(),
+        getStockMarketActives(),
+      ]);
 
     marketIndices = indexTickers.map((idx, i) => ({
       name: idx.name,
@@ -92,232 +118,300 @@ export default async function DashboardPage() {
     }));
     watchlistQuotes = wlQuotes.filter(Boolean) as FMPQuote[];
     latestNews = newsData ?? [];
+    earnings = Array.isArray(earnRaw) ? earnRaw : [];
+    gainers = Array.isArray(g) ? g.slice(0, 5) : [];
+    losers = Array.isArray(l) ? l.slice(0, 5) : [];
+    actives = Array.isArray(a) ? a.slice(0, 6) : [];
+
+    await Promise.all(
+      cleanedWatchlistTickers.map(async (t) => {
+        const sym = t.toUpperCase();
+        sparklines[sym] = await sparklineCloses(sym);
+      })
+    );
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error);
-    // Partial failure is fine — sections will show empty states
   }
 
+  const watchSet = new Set(
+    cleanedWatchlistTickers.map((t) => t.toUpperCase())
+  );
+  const earningsForList = [...earnings]
+    .filter((e) => e.symbol && watchSet.has(e.symbol.toUpperCase()))
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 8);
+  const earningsFallback = [...earnings]
+    .filter((e) => e.symbol)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, 8);
+  const earningsDisplay =
+    earningsForList.length > 0 ? earningsForList : earningsFallback;
+
   return (
-    <div className="space-y-6">
-      {/* Greeting */}
-      <div>
-        <h1 className="text-xl font-semibold text-foreground">
-          {getGreeting()}, {displayName}
-        </h1>
-        <p className="text-sm text-muted-foreground">{today}</p>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-semibold tracking-tight text-foreground">
+            {getGreeting()}, {displayName}
+          </h1>
+          <p className="mt-0.5 text-xs text-muted-foreground">{today}</p>
+        </div>
+        <Badge variant="secondary" className="text-[10px] tracking-wide">
+          Market briefing
+        </Badge>
       </div>
 
-      {/* Market Index Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {marketIndices.map((idx) => {
-          if (!idx.quote) {
-            return (
-              <Card key={idx.name}>
-                <CardContent className="p-5">
-                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+      {/* Indices strip */}
+      <section className="surface-panel p-4 sm:p-5">
+        <h2 className="label-caps mb-3">Indices</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {marketIndices.map((idx) => {
+            if (!idx.quote) {
+              return (
+                <div
+                  key={idx.name}
+                  className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-3"
+                >
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     {idx.name}
                   </p>
-                  <p className="mt-2 text-sm text-muted-foreground">Unavailable</p>
-                </CardContent>
-              </Card>
-            );
-          }
-          const positive = idx.quote.change >= 0;
-          return (
-            <Card key={idx.name}>
-              <CardContent className="p-5">
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  <p className="mt-1 text-xs text-muted-foreground">Unavailable</p>
+                </div>
+              );
+            }
+            const q = idx.quote;
+            const up = q.changesPercentage >= 0;
+            return (
+              <Link
+                key={idx.name}
+                href={`/stock/${q.symbol}`}
+                className="min-h-11 rounded-lg border border-white/[0.06] bg-transparent px-3 py-3 transition-colors hover:bg-white/[0.03] sm:min-h-0 sm:py-2.5"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                   {idx.name}
                 </p>
-                <p className="mt-2 text-lg font-semibold tabular-nums text-foreground">
-                  {idx.quote.price.toLocaleString("en-US", {
+                <p className="mt-1 font-mono text-sm font-semibold tabular-nums text-foreground">
+                  {q.price.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
                   })}
                 </p>
-                <div className="mt-1 flex items-center gap-1">
-                  {positive ? (
-                    <ArrowUpRight className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                  ) : (
-                    <ArrowDownRight className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
-                  )}
-                  <span
-                    className={`text-sm tabular-nums font-medium ${
-                      positive
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    {positive ? "+" : ""}
-                    {idx.quote.change.toFixed(2)} ({formatPercent(idx.quote.changesPercentage)})
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                <p
+                  className={`text-xs font-medium tabular-nums ${
+                    up ? "text-up" : "text-down"
+                  }`}
+                >
+                  {formatPercent(q.changesPercentage)}
+                </p>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
-      {/* Portfolio Summary + AI Digest */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Portfolio Summary */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="p-5 pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium">Portfolio Summary</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-5 pt-4">
-            <PortfolioSummary />
-          </CardContent>
-        </Card>
-
-        {/* AI Market Digest */}
-        <Card className="border-primary/20">
-          <CardHeader className="p-5 pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium">AI Market Digest</CardTitle>
-              <Badge variant="secondary" className="text-[10px]">
-                {today}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="p-5 pt-4">
-            <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
-              <Sparkles className="mb-3 h-6 w-6 opacity-30" />
-              <p className="text-sm">AI digest requires ANTHROPIC_API_KEY</p>
-              <p className="mt-1 text-xs">Configure your API key to enable AI-powered market summaries.</p>
-            </div>
-          </CardContent>
-          <CardFooter className="p-5 pt-0">
-            <Button variant="outline" className="w-full" size="sm" disabled>
-              Generate Full Report
+      {/* Movers */}
+      <section className="grid gap-4 lg:grid-cols-2">
+        <div className="surface-panel p-4 sm:p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="label-caps">Top gainers</h2>
+            <Button variant="ghost" size="sm" className="h-7 text-[10px]" asChild>
+              <Link href="/screener">Screener</Link>
             </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          </div>
+          <div className="space-y-0.5">
+            {gainers.map((m, i) => {
+              const sym = fmpMoverSymbol(m);
+              if (!sym) return null;
+              return (
+                <StockRow
+                  key={`${sym}-${i}`}
+                  ticker={sym}
+                  name={m.companyName}
+                  price={m.price}
+                  changesPercentage={m.changesPercentage}
+                  href={`/stock/${sym}`}
+                />
+              );
+            })}
+            {gainers.length === 0 && (
+              <p className="py-4 text-xs text-muted-foreground">No data</p>
+            )}
+          </div>
+        </div>
+        <div className="surface-panel p-4 sm:p-5">
+          <h2 className="label-caps mb-3">Top losers</h2>
+          <div className="space-y-0.5">
+            {losers.map((m, i) => {
+              const sym = fmpMoverSymbol(m);
+              if (!sym) return null;
+              return (
+                <StockRow
+                  key={`${sym}-${i}`}
+                  ticker={sym}
+                  name={m.companyName}
+                  price={m.price}
+                  changesPercentage={m.changesPercentage}
+                  href={`/stock/${sym}`}
+                />
+              );
+            })}
+            {losers.length === 0 && (
+              <p className="py-4 text-xs text-muted-foreground">No data</p>
+            )}
+          </div>
+        </div>
+      </section>
 
-      {/* Watchlist + Recent Analysis */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Watchlist */}
-        <Card>
-          <CardHeader className="p-5 pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium">Watchlist</CardTitle>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
-                View All <ChevronRight className="ml-0.5 h-3 w-3" />
+      <div className="grid gap-6 lg:grid-cols-12">
+        <div className="space-y-6 lg:col-span-7">
+          <div className="surface-panel p-4 sm:p-5">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="label-caps">Watchlist</h2>
+              <Button variant="ghost" size="sm" className="h-7 gap-0.5 text-[10px]" asChild>
+                <Link href="/watchlist">
+                  All <ChevronRight className="h-3 w-3" />
+                </Link>
               </Button>
             </div>
-          </CardHeader>
-          <CardContent className="p-5 pt-3">
-            {/* Header */}
-            <div className="grid grid-cols-3 gap-2 pb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              <div>Ticker</div>
-              <div className="text-right">Price</div>
-              <div className="text-right">Change</div>
-            </div>
-            <Separator />
-            <div className="divide-y divide-border/50">
+            <div className="divide-y divide-white/[0.06]">
               {watchlistQuotes.length > 0 ? (
                 watchlistQuotes.map((stock) => {
-                  const positive = stock.changesPercentage >= 0;
+                  const sym = stock.symbol.toUpperCase();
+                  const vals = sparklines[sym] ?? [];
                   return (
-                    <div
+                    <StockRow
                       key={stock.symbol}
-                      className="grid grid-cols-3 items-center gap-2 py-2.5 transition-colors hover:bg-muted/50 rounded-md px-1 -mx-1"
-                    >
-                      <span className="text-sm font-medium text-foreground">
-                        {stock.symbol}
-                      </span>
-                      <span className="text-right text-sm tabular-nums text-foreground">
-                        {formatCurrency(stock.price)}
-                      </span>
-                      <span
-                        className={`text-right text-sm tabular-nums font-medium ${
-                          positive
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-red-600 dark:text-red-400"
-                        }`}
-                      >
-                        {formatPercent(stock.changesPercentage)}
-                      </span>
-                    </div>
+                      ticker={sym}
+                      name={stock.name}
+                      price={stock.price}
+                      changesPercentage={stock.changesPercentage}
+                      href={`/stock/${sym}`}
+                      volumeLabel={
+                        stock.volume
+                          ? (stock.volume / 1e6).toFixed(2) + "M"
+                          : undefined
+                      }
+                      sparkline={
+                        <MiniSparkline
+                          values={vals}
+                          positive={stock.changesPercentage >= 0}
+                        />
+                      }
+                    />
                   );
                 })
               ) : (
-                <p className="py-4 text-sm text-muted-foreground">
-                  No watchlist data available. Check FMP_API_KEY configuration.
+                <p className="py-4 text-xs text-muted-foreground">
+                  No watchlist data. Check FMP_API_KEY.
                 </p>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Recent Analysis */}
-        <Card>
-          <CardHeader className="p-5 pb-0">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium">Recent Analysis</CardTitle>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
-                View All <ChevronRight className="ml-0.5 h-3 w-3" />
-              </Button>
+        <aside className="space-y-6 lg:col-span-5">
+          <div className="surface-panel p-4 sm:p-5">
+            <h2 className="label-caps mb-3">Earnings (10d)</h2>
+            <ul className="space-y-2 text-xs">
+              {earningsDisplay.map((e, i) => (
+                <li
+                  key={`${e.symbol}-${e.date}-${i}`}
+                  className="flex items-center justify-between gap-2 border-b border-white/[0.06] pb-2 last:border-0 last:pb-0"
+                >
+                  <Link
+                    href={`/stock/${e.symbol}`}
+                    className="font-mono font-semibold text-foreground hover:text-primary"
+                  >
+                    {e.symbol}
+                  </Link>
+                  <span className="shrink-0 tabular-nums text-muted-foreground">
+                    {e.date}
+                  </span>
+                </li>
+              ))}
+              {earningsDisplay.length === 0 && (
+                <li className="text-muted-foreground">No upcoming earnings.</li>
+              )}
+            </ul>
+          </div>
+
+          <div className="surface-panel p-4 sm:p-5">
+            <h2 className="label-caps mb-3">Trending (volume)</h2>
+            <div className="space-y-0.5">
+              {actives.map((m, i) => {
+                const sym = fmpMoverSymbol(m);
+                if (!sym) return null;
+                return (
+                  <StockRow
+                    key={`a-${sym}-${i}`}
+                    ticker={sym}
+                    name={m.companyName}
+                    price={m.price}
+                    changesPercentage={m.changesPercentage}
+                    href={`/stock/${sym}`}
+                  />
+                );
+              })}
+              {actives.length === 0 && (
+                <p className="py-2 text-xs text-muted-foreground">No data</p>
+              )}
             </div>
-          </CardHeader>
-          <CardContent className="p-5 pt-3">
-            <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-              <AlertCircle className="mb-3 h-8 w-8 opacity-30" />
-              <p className="text-sm font-medium">Run analysis on a stock to see results</p>
-              <p className="mt-1 text-xs">
-                Visit a stock page and run AI analysis to populate this section.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          <Card>
+            <CardHeader className="space-y-0 p-4 pb-0">
+              <CardTitle className="text-xs font-medium tracking-wide">Portfolio</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-2">
+              <PortfolioSummary />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="space-y-0 p-4 pb-0">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xs font-medium tracking-wide">
+                  AI Market Digest
+                </CardTitle>
+                <Badge variant="secondary" className="text-[9px] tracking-wide">
+                  {today}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 pt-2">
+              <div className="flex flex-col items-center justify-center py-4 text-center text-muted-foreground">
+                <Sparkles className="mb-2 h-5 w-5 stroke-[1.25] opacity-35" />
+                <p className="text-xs">AI digest requires ANTHROPIC_API_KEY</p>
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
       </div>
 
-      {/* Latest News */}
-      <div>
-        <h2 className="mb-4 text-sm font-medium text-foreground">Latest News</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Section title="News & wires" className="space-y-4">
+        <div className="grid gap-3 lg:grid-cols-2">
           {latestNews.length > 0 ? (
-            latestNews.slice(0, 3).map((news, i) => (
-              <a
-                key={i}
-                href={news.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Card className="transition-colors hover:bg-muted/30">
-                  <CardContent className="p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="secondary" className="text-[10px]">
-                        {news.symbol || "Market"}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {timeAgo(new Date(news.publishedDate))}
-                      </span>
-                    </div>
-                    <p className="text-sm font-medium leading-snug text-foreground line-clamp-2">
-                      {news.title}
-                    </p>
-                    <p className="mt-2 text-xs text-muted-foreground">{news.site}</p>
-                  </CardContent>
-                </Card>
-              </a>
+            latestNews.slice(0, 8).map((item, idx) => (
+              <NewsCard
+                key={`${item.url}-${idx}`}
+                title={item.title}
+                site={item.site}
+                publishedAt={new Date(item.publishedDate)}
+                url={item.url}
+              />
             ))
           ) : (
-            <Card>
-              <CardContent className="p-5">
-                <p className="text-sm text-muted-foreground">
-                  No headlines returned for your watchlist symbols. If quotes load but this stays empty,
-                  try again later. After adding{" "}
-                  <span className="font-mono text-xs">FMP_API_KEY</span> in Vercel, redeploy so the
-                  server sees it.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="surface-panel p-4 sm:p-5">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                No headlines returned for your watchlist symbols. If quotes load
+                but this stays empty, try again later. After adding{" "}
+                <span className="font-mono text-xs">FMP_API_KEY</span> in Vercel,
+                redeploy so the server sees it.
+              </p>
+            </div>
           )}
         </div>
-      </div>
+      </Section>
     </div>
   );
 }

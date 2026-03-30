@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { MARKET_OPEN_MINUTES, MARKET_CLOSE_MINUTES } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,8 +23,10 @@ import {
   User,
   CreditCard,
   HelpCircle,
+  Menu,
 } from "lucide-react";
 import type { UserSession } from "@/lib/auth/user";
+import { useSidebar } from "@/components/layout/sidebar-context";
 
 /** Map pathnames to page titles */
 const titleMap: Record<string, string> = {
@@ -44,8 +45,10 @@ const titleMap: Record<string, string> = {
 
 function getPageTitle(pathname: string): string {
   if (titleMap[pathname]) return titleMap[pathname];
-  // Try to match a parent path
   const segments = pathname.split("/").filter(Boolean);
+  if (segments[0] === "stock" && segments[1]) {
+    return segments[1].toUpperCase();
+  }
   if (segments.length > 0) {
     const parent = "/" + segments[0];
     if (titleMap[parent]) return titleMap[parent];
@@ -82,6 +85,7 @@ export function Header({ user }: { user?: UserSession }) {
   const pageTitle = getPageTitle(pathname);
   const marketOpen = useMarketStatus();
   const router = useRouter();
+  const { setMobileOpen } = useSidebar();
   const [searchQuery, setSearchQuery] = useState("");
   const notificationCount = 3;
 
@@ -97,45 +101,100 @@ export function Header({ user }: { user?: UserSession }) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border bg-background px-4 sm:px-6">
-      {/* Left: Page title */}
-      <h1 className="text-lg font-semibold text-foreground">
-        {pageTitle}
-      </h1>
+    <header className="glass-panel sticky top-0 z-50 flex min-w-0 shrink-0 flex-col gap-2 border-b border-white/10 px-3 py-2 sm:flex-row sm:items-center sm:gap-0 sm:px-4 sm:py-0 sm:h-14 lg:px-6">
+      <div className="flex min-w-0 items-center gap-2 sm:contents">
+        <button
+          type="button"
+          onClick={() => setMobileOpen(true)}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-premium hover:bg-white/[0.06] hover:text-foreground lg:hidden"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="h-5 w-5 stroke-[1.5]" />
+        </button>
+        <h1 className="text-display tabular-hero min-w-0 max-w-[min(52vw,11rem)] flex-1 truncate sm:max-w-[10.5rem] md:max-w-[13rem] lg:max-w-none lg:flex-initial">
+          {pageTitle}
+        </h1>
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:hidden">
+          <Button variant="ghost" size="icon" className="relative h-9 w-9">
+            <Bell className="h-4 w-4 text-muted-foreground" />
+            {notificationCount > 0 && (
+              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-destructive" />
+            )}
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/[0.1] bg-foreground/92 text-[11px] font-medium text-background outline-none transition-premium hover:bg-foreground/88 focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {user?.initials ?? "??"}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-52" align="end" sideOffset={8}>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">{user?.name ?? "User"}</p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user?.email ?? ""}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <User className="mr-2 h-3.5 w-3.5" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <CreditCard className="mr-2 h-3.5 w-3.5" />
+                  Billing
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <Settings className="mr-2 h-3.5 w-3.5" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/help")}>
+                  <HelpCircle className="mr-2 h-3.5 w-3.5" />
+                  Help
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive focus:text-destructive">
+                <LogOut className="mr-2 h-3.5 w-3.5" />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
-      {/* Center: push search to center with flex */}
-      <div className="flex flex-1 items-center justify-center px-4">
-        <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+      <div className="flex w-full min-w-0 flex-1 sm:w-auto sm:justify-center sm:px-3 lg:px-4">
+        <div className="relative w-full max-w-md min-w-0">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search stocks, news, analysis..."
+            placeholder="Search stocks, news…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={cn(
-              "h-8 w-full rounded-lg border border-border bg-background pl-9 pr-16 text-[13px] outline-none transition-colors",
-              "placeholder:text-muted-foreground/60",
-              "focus:border-ring focus:ring-1 focus:ring-ring"
-            )}
+            className={cn("glass-input h-9 w-full min-w-0 pl-9 pr-3 sm:pr-16")}
           />
-          <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-flex">
+          <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 select-none items-center gap-0.5 rounded-md border border-white/[0.08] bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground sm:inline-flex">
             <span className="text-[10px]">&#8984;</span>K
           </kbd>
         </div>
       </div>
 
-      {/* Right: status + notifications + avatar */}
-      <div className="flex items-center gap-2">
+      <div className="hidden shrink-0 items-center gap-2 sm:flex">
         {/* Market status */}
         <Badge
           variant={marketOpen ? "success" : "secondary"}
-          className="hidden gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] font-medium sm:inline-flex"
+          className="hidden gap-1.5 whitespace-nowrap rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-0.5 text-[11px] font-medium tracking-[0.06em] sm:inline-flex"
         >
           <span
             className={cn(
               "h-1.5 w-1.5 rounded-full",
-              marketOpen ? "bg-green-500" : "bg-muted-foreground/50"
+              marketOpen ? "bg-up" : "bg-muted-foreground/45"
             )}
           />
           {marketOpen ? "Open" : "Closed"}
@@ -152,7 +211,7 @@ export function Header({ user }: { user?: UserSession }) {
         {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background outline-none ring-offset-background transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+            <button className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.1] bg-foreground/92 text-[11px] font-medium text-background outline-none transition-premium hover:bg-foreground/88 focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               {user?.initials ?? "??"}
             </button>
           </DropdownMenuTrigger>
@@ -195,3 +254,4 @@ export function Header({ user }: { user?: UserSession }) {
     </header>
   );
 }
+
