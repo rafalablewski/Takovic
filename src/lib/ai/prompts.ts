@@ -306,18 +306,7 @@ export async function buildCoverageContext(
     // Entity data files not yet scaffolded — use registry defaults
   }
 
-  // Determine exchange — default to "NASDAQ" when not available from
-  // external-ids or other sources. Will be enriched once entity data
-  // files and external ID mappings are built out.
-  let exchange = "NASDAQ";
-  try {
-    const externalIds = await import("@/lib/external-ids");
-    if (externalIds.getExchange) {
-      exchange = externalIds.getExchange(upperTicker) ?? exchange;
-    }
-  } catch {
-    // external-ids module not yet built — use default
-  }
+  const exchange = stock.exchange ?? "NASDAQ";
 
   const context: CoveragePromptContext = {
     ticker: upperTicker,
