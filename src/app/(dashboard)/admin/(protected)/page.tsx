@@ -11,6 +11,7 @@ import { AI_WORKFLOWS } from "@/lib/admin/ai-workflows";
 import { getAllCoveredStocks } from "@/data/coverage/registry";
 import { buildCoverageContext } from "@/lib/ai/prompts";
 import { AdminLogoutButton } from "./admin-logout-button";
+import { CopyCoveragePromptButton } from "./copy-coverage-prompt-button";
 
 interface AdminPageProps {
   searchParams: Promise<{ ticker?: string }>;
@@ -168,15 +169,25 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Coverage analyst prompt (resolved)</CardTitle>
-          <CardDescription>
-            Output of <code className="text-xs">buildCoverageContext(&quot;{activeTicker || "—"}&quot;)</code>
-            . Stock-agnostic template:{" "}
-            <code className="text-xs">COVERAGE_ANALYST_PROMPT</code> in{" "}
-            <code className="text-xs">coverage-prompts/coverage-analyst-template.ts</code>{" "}
-            (filled via registry + data modules).
-          </CardDescription>
+        <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 space-y-1.5">
+            <CardTitle className="text-base">Coverage analyst prompt (resolved)</CardTitle>
+            <CardDescription>
+              Output of{" "}
+              <code className="text-xs">
+                buildCoverageContext(&quot;{activeTicker || "—"}&quot;)
+              </code>
+              . Stock-agnostic template:{" "}
+              <code className="text-xs">COVERAGE_ANALYST_PROMPT</code> in{" "}
+              <code className="text-xs">
+                coverage-prompts/coverage-analyst-template.ts
+              </code>{" "}
+              (filled via registry + data modules).
+            </CardDescription>
+          </div>
+          {resolvedPrompt ? (
+            <CopyCoveragePromptButton text={resolvedPrompt} />
+          ) : null}
         </CardHeader>
         <CardContent>
           {!activeTicker && (
