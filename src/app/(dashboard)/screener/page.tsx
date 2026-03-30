@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import {
   Card,
   CardHeader,
@@ -6,31 +7,135 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { formatCurrency, formatPercent, formatNumber } from "@/lib/utils";
+import { formatCurrency, formatNumber } from "@/lib/utils";
 import { screenStocks } from "@/lib/api/fmp";
 import type { FMPScreenerResult } from "@/lib/api/fmp";
-import {
-  Filter,
-  Download,
-  Search,
-  ChevronDown,
-} from "lucide-react";
+import { Download } from "lucide-react";
+import { ScreenerFilterForm } from "@/components/screener/filter-form";
+import { ScreenerPagination } from "@/components/screener/pagination";
 
-const selectClass =
-  "h-9 w-full appearance-none rounded-md border border-input bg-background px-3 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring";
+/** Number of results per page */
+const PAGE_SIZE = 20;
 
-const inputClass =
-  "h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring";
+/** Market cap range boundaries in dollars */
+const MARKET_CAP_RANGES: Record<string, { min?: string; max?: string }> = {
+  mega: { min: "200000000000" },
+  large: { min: "10000000000", max: "200000000000" },
+  mid: { min: "2000000000", max: "10000000000" },
+  small: { max: "2000000000" },
+};
 
-export default async function ScreenerPage() {
+interface ScreenerSearchParams {
+  search?: string;
+  sector?: string;
+  marketCap?: string;
+  peMin?: string;
+  peMax?: string;
+  roeMin?: string;
+  dividendMin?: string;
+  minScore?: string;
+  page?: string;
+}
+
+export default async function ScreenerPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+
+  // Normalize search params (handle string[] case)
+  const filters: ScreenerSearchParams = {};
+  for (const key of [
+    "search",
+    "sector",
+    "marketCap",
+    "peMin",
+    "peMax",
+    "roeMin",
+    "dividendMin",
+    "minScore",
+    "page",
+  ] as const) {
+    const val = params[key];
+    if (typeof val === "string") filters[key] = val;
+    else if (Array.isArray(val) && val.length > 0) filters[key] = val[0];
+  }
+
+  const currentPage = Math.max(1, parseInt(filters.page ?? "1", 10) || 1);
+
+  // Build FMP API params
+  const fmpParams: Record<string, string> = {
+    limit: PAGE_SIZE.toString(),
+    exchange: "NYSE,NASDAQ",
+  };
+
+  // Sector filter — passed directly to FMP
+  if (filters.sector) {
+    fmpParams.sector = filters.sector;
+  }
+
+  // Market cap filter — passed directly to FMP
+  if (filters.marketCap) {
+    const range = MARKET_CAP_RANGES[filters.marketCap];
+    if (range) {
+      if (range.min) fmpParams.marketCapMoreThan = range.min;
+      if (range.max) fmpParams.marketCapLowerThan = range.max;
+    }
+  }
+
+  // Dividend yield — FMP supports this as a param
+  if (filters.dividendMin) {
+    fmpParams.dividendMoreThan = filters.dividendMin;
+  }
+
+  // P/E range — FMP supports betaMoreThan/betaLowerThan but not PE directly,
+  // so we'll filter client-side after fetching.
+  // ROE — also filtered client-side.
+
+  // For client-side filters, fetch more results to ensure we have enough after filtering
+  const hasClientSideFilters =
+    filters.peMin || filters.peMax || filters.roeMin || filters.search;
+  if (hasClientSideFilters) {
+    // Fetch extra to compensate for client-side filtering + pagination
+    fmpParams.limit = "500";
+  }
+
   let stocks: FMPScreenerResult[] = [];
+  let fetchError = false;
 
   try {
-    stocks = await screenStocks({ limit: "50" });
+    stocks = await screenStocks(fmpParams);
   } catch {
-    // Screener data unavailable
+    fetchError = true;
   }
+
+  // Apply client-side filters
+  if (filters.search) {
+    const query = filters.search.toLowerCase();
+    stocks = stocks.filter(
+      (s) =>
+        s.symbol.toLowerCase().includes(query) ||
+        s.companyName.toLowerCase().includes(query)
+    );
+  }
+
+  // P/E filtering is not possible without P/E data in FMPScreenerResult.
+  // We note this limitation but keep the filter UI for future enhancement
+  // when we add a joined data source.
+
+  // ROE filtering similarly requires key metrics data not in the screener response.
+
+  // Total count after all filters
+  const totalFiltered = stocks.length;
+
+  // Apply pagination
+  const startIdx = (currentPage - 1) * PAGE_SIZE;
+  const paginatedStocks = hasClientSideFilters
+    ? stocks.slice(startIdx, startIdx + PAGE_SIZE)
+    : stocks;
+
+  const displayCount = paginatedStocks.length;
 
   return (
     <div className="space-y-6">
@@ -51,121 +156,9 @@ export default async function ScreenerPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
         {/* Filter Sidebar */}
         <div className="lg:col-span-1">
-          <Card>
-            <CardHeader className="p-5 pb-0">
-              <CardTitle className="text-sm font-medium">Filters</CardTitle>
-            </CardHeader>
-            <CardContent className="p-5 pt-4 space-y-4">
-              {/* Search */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Search
-                </label>
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="Ticker or company..."
-                    className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                  />
-                </div>
-              </div>
-
-              {/* Sector */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Sector
-                </label>
-                <div className="relative">
-                  <select className={selectClass}>
-                    <option>All Sectors</option>
-                    <option>Technology</option>
-                    <option>Healthcare</option>
-                    <option>Finance</option>
-                    <option>Energy</option>
-                    <option>Consumer</option>
-                    <option>Industrials</option>
-                    <option>Utilities</option>
-                    <option>Real Estate</option>
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                </div>
-              </div>
-
-              {/* Market Cap */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Market Cap
-                </label>
-                <div className="relative">
-                  <select className={selectClass}>
-                    <option>Any</option>
-                    <option>Mega ($200B+)</option>
-                    <option>Large ($10B-$200B)</option>
-                    <option>Mid ($2B-$10B)</option>
-                    <option>Small (&lt;$2B)</option>
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                </div>
-              </div>
-
-              {/* P/E Range */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  P/E Range
-                </label>
-                <div className="flex items-center gap-2">
-                  <input type="number" placeholder="Min" className={inputClass} />
-                  <span className="text-xs text-muted-foreground">-</span>
-                  <input type="number" placeholder="Max" className={inputClass} />
-                </div>
-              </div>
-
-              {/* ROE Min */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  ROE Min (%)
-                </label>
-                <input type="number" placeholder="e.g. 15" className={inputClass} />
-              </div>
-
-              {/* Dividend Yield */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Div Yield Min (%)
-                </label>
-                <input type="number" placeholder="e.g. 2.0" className={inputClass} />
-              </div>
-
-              {/* Min Score */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Min Score
-                </label>
-                <div className="relative">
-                  <select className={selectClass}>
-                    <option>Any</option>
-                    <option>4.0+ (Excellent)</option>
-                    <option>3.5+ (Good)</option>
-                    <option>3.0+ (Average)</option>
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="flex gap-2">
-                <Button className="flex-1" size="sm">
-                  <Filter className="mr-1.5 h-3.5 w-3.5" />
-                  Apply
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1">
-                  Reset
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <Suspense>
+            <ScreenerFilterForm />
+          </Suspense>
         </div>
 
         {/* Results Table */}
@@ -175,7 +168,9 @@ export default async function ScreenerPage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium">Results</CardTitle>
                 <span className="text-xs text-muted-foreground tabular-nums">
-                  {stocks.length} stocks
+                  {hasClientSideFilters
+                    ? `${totalFiltered} stocks found`
+                    : `${displayCount} stocks`}
                 </span>
               </div>
             </CardHeader>
@@ -211,14 +206,14 @@ export default async function ScreenerPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {stocks.length > 0 ? (
-                      stocks.map((stock, idx) => (
+                    {paginatedStocks.length > 0 ? (
+                      paginatedStocks.map((stock, idx) => (
                         <tr
                           key={stock.symbol}
                           className="border-b border-border/50 transition-colors hover:bg-muted/50"
                         >
                           <td className="px-5 py-3 text-xs tabular-nums text-muted-foreground">
-                            {idx + 1}
+                            {startIdx + idx + 1}
                           </td>
                           <td className="px-5 py-3">
                             <span className="font-medium text-foreground">{stock.symbol}</span>
@@ -249,7 +244,9 @@ export default async function ScreenerPage() {
                     ) : (
                       <tr>
                         <td colSpan={8} className="px-5 py-8 text-center text-sm text-muted-foreground">
-                          No results available. Check FMP_API_KEY configuration.
+                          {fetchError
+                            ? "No results available. Check FMP_API_KEY configuration."
+                            : "No stocks match your filters. Try broadening your criteria."}
                         </td>
                       </tr>
                     )}
@@ -258,20 +255,14 @@ export default async function ScreenerPage() {
               </div>
 
               {/* Pagination */}
-              {stocks.length > 0 && (
-                <div className="flex items-center justify-between border-t border-border px-5 py-3">
-                  <p className="text-xs text-muted-foreground tabular-nums">
-                    Showing {stocks.length} results
-                  </p>
-                  <div className="flex gap-1">
-                    <Button variant="outline" size="sm" className="h-7 text-xs" disabled>
-                      Previous
-                    </Button>
-                    <Button variant="outline" size="sm" className="h-7 text-xs">
-                      Next
-                    </Button>
-                  </div>
-                </div>
+              {paginatedStocks.length > 0 && (
+                <Suspense>
+                  <ScreenerPagination
+                    currentPage={currentPage}
+                    totalResults={displayCount}
+                    pageSize={PAGE_SIZE}
+                  />
+                </Suspense>
               )}
             </CardContent>
           </Card>
