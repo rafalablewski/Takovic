@@ -42,7 +42,7 @@ export function ChartContainer({
     if (!el) return;
 
     const textColor = readCssVar("--muted-foreground", "#888");
-    const gridColor = readCssVar("--border", "rgba(128,128,128,0.2)");
+    const gridColor = readCssVar("--chart-grid", "rgba(255,255,255,0.06)");
     const lineColor = readCssVar("--chart-1", "#3b82f6");
 
     const chart = createChart(el, {
@@ -53,8 +53,8 @@ export function ChartContainer({
         textColor,
       },
       grid: {
-        vertLines: { color: gridColor, visible: true },
-        horzLines: { color: gridColor, visible: true },
+        vertLines: { color: gridColor, visible: true, style: 1 },
+        horzLines: { color: gridColor, visible: true, style: 1 },
       },
       rightPriceScale: { borderVisible: false },
       timeScale: { borderVisible: false, fixLeftEdge: true, fixRightEdge: true },
@@ -70,6 +70,8 @@ export function ChartContainer({
       color: lineColor,
       lineWidth: 2,
       crosshairMarkerVisible: true,
+      lastValueVisible: true,
+      priceLineVisible: true,
     });
 
     chartRef.current = chart;

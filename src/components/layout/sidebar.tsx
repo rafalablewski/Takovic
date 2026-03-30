@@ -68,8 +68,7 @@ export function Sidebar({ user }: { user?: UserSession }) {
     <TooltipProvider delayDuration={0}>
       <aside
         className={cn(
-          "hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
-          "border-r border-border bg-background transition-all duration-200 ease-in-out",
+          "glass-panel hidden border-r transition-all duration-300 ease-out lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col",
           collapsed ? "lg:w-[52px]" : "lg:w-[240px]"
         )}
       >
@@ -80,11 +79,11 @@ export function Sidebar({ user }: { user?: UserSession }) {
             collapsed && "justify-center px-0"
           )}
         >
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground">
-            <TrendingUp className="h-3.5 w-3.5 text-background" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-foreground/95 shadow-[0_0_20px_-4px_oklch(0.68_0.16_259/0.35)]">
+            <TrendingUp className="h-3.5 w-3.5 text-background" strokeWidth={1.75} />
           </div>
           {!collapsed && (
-            <span className="text-[15px] font-semibold tracking-tight text-foreground">
+            <span className="text-[15px] font-medium tracking-tight text-foreground">
               Takovic
             </span>
           )}
@@ -155,12 +154,13 @@ export function Sidebar({ user }: { user?: UserSession }) {
         </ScrollArea>
 
         {/* Bottom: profile + collapse */}
-        <div className="mt-auto border-t border-border px-2 py-3">
+        <div className="mt-auto px-2 py-4">
+          <div className="soft-divider mb-4" aria-hidden />
           {/* Profile */}
           <Link
             href="/settings"
             className={cn(
-              "flex items-center gap-2.5 rounded-md px-2 py-1.5 transition-colors hover:bg-accent",
+              "flex items-center gap-2.5 rounded-xl px-2 py-2 transition-premium hover:bg-white/[0.06]",
               collapsed && "justify-center px-0"
             )}
           >
@@ -170,10 +170,10 @@ export function Sidebar({ user }: { user?: UserSession }) {
             {!collapsed && (
               <div className="flex flex-1 items-center justify-between overflow-hidden">
                 <div className="flex flex-col">
-                  <span className="truncate text-[13px] font-medium leading-tight text-foreground">
+                  <span className="truncate text-[13px] font-medium leading-tight tracking-tight text-foreground">
                     {user?.name ?? "User"}
                   </span>
-                  <span className="text-[10px] font-medium leading-tight text-muted-foreground">
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     {user?.plan ? user.plan.charAt(0).toUpperCase() + user.plan.slice(1) : "Free"}
                   </span>
                 </div>
@@ -187,7 +187,7 @@ export function Sidebar({ user }: { user?: UserSession }) {
               <button
                 onClick={toggle}
                 className={cn(
-                  "mt-1.5 flex h-7 w-full items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+                  "mt-2 flex h-8 w-full items-center justify-center rounded-xl text-muted-foreground transition-premium hover:bg-white/[0.06] hover:text-foreground",
                   collapsed && "w-full"
                 )}
               >
@@ -224,7 +224,7 @@ function NavSection({
   return (
     <div className="flex flex-col gap-0.5">
       {!collapsed && (
-        <span className="mb-1 px-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground/70">
+        <span className="label-caps mb-2 px-2 opacity-80">
           {label}
         </span>
       )}
@@ -254,16 +254,16 @@ function NavItem({
     <Link
       href={href}
       className={cn(
-        "group flex items-center gap-2.5 rounded-md px-2 py-[7px] text-[13px] font-medium transition-colors duration-100",
+        "group flex items-center gap-2.5 rounded-xl px-2 py-2 text-[13px] font-medium transition-premium",
         collapsed && "justify-center px-0 py-2",
         active
-          ? "bg-accent text-foreground"
-          : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+          ? "bg-white/[0.1] text-foreground shadow-[inset_0_1px_0_oklch(1_0_0/0.06)]"
+          : "text-muted-foreground hover:bg-white/[0.05] hover:text-foreground"
       )}
     >
       <Icon
         className={cn(
-          "h-[14px] w-[14px] shrink-0",
+          "h-[15px] w-[15px] shrink-0 stroke-[1.5]",
           active
             ? "text-foreground"
             : "text-muted-foreground group-hover:text-foreground"

@@ -26,13 +26,13 @@ export function StockRow({
     <Link
       href={href}
       className={cn(
-        "group flex items-center gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-border hover:bg-muted/40",
+        "group flex items-center gap-3 rounded-xl border border-transparent px-2 py-2.5 transition-premium hover:border-white/[0.06] hover:bg-white/[0.04]",
         className
       )}
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline gap-2">
-          <span className="font-mono text-sm font-semibold tracking-tight text-foreground">
+          <span className="font-mono text-sm font-medium tracking-tight text-foreground">
             {ticker}
           </span>
           {name && (
@@ -51,7 +51,7 @@ export function StockRow({
         <div className="hidden h-8 w-20 shrink-0 sm:block">{sparkline}</div>
       )}
       <div className="shrink-0 text-right">
-        <p className="font-mono text-sm font-semibold tabular-nums text-foreground">
+        <p className="font-mono text-sm font-medium tabular-nums tracking-tight text-foreground">
           {price.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,

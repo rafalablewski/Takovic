@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { MARKET_OPEN_MINUTES, MARKET_CLOSE_MINUTES } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -99,9 +98,9 @@ export function Header({ user }: { user?: UserSession }) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 flex h-14 shrink-0 items-center border-b border-border/80 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-6">
+    <header className="glass-panel sticky top-0 z-50 flex h-14 shrink-0 items-center border-b border-white/10 px-4 sm:px-6">
       {/* Left: Page title */}
-      <h1 className="text-lg font-semibold text-foreground">
+      <h1 className="text-display tabular-hero max-w-[40%] truncate sm:max-w-none">
         {pageTitle}
       </h1>
 
@@ -116,12 +115,10 @@ export function Header({ user }: { user?: UserSession }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
-              "h-8 w-full rounded-lg border border-border bg-background pl-9 pr-16 text-[13px] outline-none transition-colors",
-              "placeholder:text-muted-foreground/60",
-              "focus:border-ring focus:ring-1 focus:ring-ring"
+              "glass-input h-9 w-full pl-9 pr-16",
             )}
           />
-          <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline-flex">
+          <kbd className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 select-none items-center gap-0.5 rounded-lg border border-white/10 bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground backdrop-blur-sm sm:inline-flex">
             <span className="text-[10px]">&#8984;</span>K
           </kbd>
         </div>
@@ -132,7 +129,7 @@ export function Header({ user }: { user?: UserSession }) {
         {/* Market status */}
         <Badge
           variant={marketOpen ? "success" : "secondary"}
-          className="hidden gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] font-medium sm:inline-flex"
+          className="hidden gap-1.5 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 text-[11px] font-medium tracking-wide backdrop-blur-sm sm:inline-flex"
         >
           <span
             className={cn(
@@ -154,7 +151,7 @@ export function Header({ user }: { user?: UserSession }) {
         {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-[11px] font-semibold text-background outline-none ring-offset-background transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+            <button className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-foreground/95 text-[11px] font-medium text-background shadow-[0_0_24px_-6px_oklch(0.68_0.16_259/0.35)] outline-none transition-premium hover:scale-[1.03] hover:opacity-95 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               {user?.initials ?? "??"}
             </button>
           </DropdownMenuTrigger>

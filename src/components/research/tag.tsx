@@ -12,7 +12,7 @@ export function Tag({
     <Badge
       variant="outline"
       className={cn(
-        "rounded border-border/80 px-1.5 py-0 font-mono text-[10px] font-medium uppercase tracking-wide text-muted-foreground",
+        "rounded-lg border-white/15 bg-white/[0.04] px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground backdrop-blur-sm",
         className
       )}
     >

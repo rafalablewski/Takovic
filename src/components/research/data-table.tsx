@@ -85,7 +85,10 @@ export function DataTable<T>({
     <Table>
       {caption && <TableCaption>{caption}</TableCaption>}
       <TableHeader
-        className={cn(stickyHeader && "sticky top-0 z-10 bg-card shadow-sm")}
+        className={cn(
+          stickyHeader &&
+            "sticky top-0 z-10 border-b border-white/[0.06] bg-background/65 shadow-none backdrop-blur-xl supports-[backdrop-filter]:bg-background/45"
+        )}
       >
         <TableRow className="hover:bg-transparent">
           {columns.map((col) => {

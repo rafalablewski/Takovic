@@ -69,13 +69,13 @@ export function QuoteStrip({
 
   return (
     <div
-      className="sticky z-40 border-b border-border/80 bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85"
+      className="glass-panel sticky z-40 border-b border-white/10 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.5)]"
       style={{ top: HEADER_OFFSET }}
     >
-      <div className="flex flex-wrap items-end justify-between gap-3 px-1 py-2 sm:px-2">
+      <div className="flex flex-wrap items-end justify-between gap-4 px-2 py-3 sm:px-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2 gap-y-1">
-            <span className="font-mono text-lg font-semibold tracking-tight text-foreground">
+            <span className="font-mono text-lg font-medium tracking-tight text-foreground">
               {ticker}
             </span>
             {exchange ? <Tag>{exchange}</Tag> : null}
@@ -87,7 +87,7 @@ export function QuoteStrip({
             <PriceFlash
               value={quote.price}
               formatted={formatCurrency(quote.price)}
-              className="text-2xl font-semibold tabular-nums text-foreground"
+              className="tabular-hero text-2xl font-medium tracking-tight text-foreground"
             />
             <span
               className={cn(
@@ -148,14 +148,14 @@ export function QuoteStrip({
         </div>
       </div>
 
-      <div className="scrollbar-none flex gap-1 overflow-x-auto border-t border-border/50 px-1 py-1.5 sm:px-2">
+      <div className="scrollbar-none flex gap-2 overflow-x-auto border-t border-white/[0.06] px-2 py-2 sm:px-4">
         {metricChips.map((m) => (
           <MetricChip key={m.label} {...m} />
         ))}
       </div>
 
       <nav
-        className="flex gap-0 border-t border-border/50 px-1 sm:px-2"
+        className="flex gap-0 border-t border-white/[0.06] px-2 sm:px-4"
         aria-label="Stock sections"
         role="tablist"
       >
