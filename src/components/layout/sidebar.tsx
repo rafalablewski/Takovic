@@ -28,7 +28,10 @@ import {
   ChevronRight,
   TrendingUp,
   Shield,
+  LayoutGrid,
 } from "lucide-react";
+
+const showAdminNav = process.env.NEXT_PUBLIC_SHOW_ADMIN === "true";
 
 const mainNavigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -117,6 +120,23 @@ export function Sidebar({ user }: { user?: UserSession }) {
                 />
               ))}
             </NavSection>
+
+            {/* Admin (optional) */}
+            {showAdminNav && (
+              <NavSection label="System" collapsed={collapsed}>
+                <NavItem
+                  href="/admin"
+                  icon={LayoutGrid}
+                  label="Admin"
+                  active={
+                    pathname === "/admin" ||
+                    (pathname.startsWith("/admin/") &&
+                      !pathname.startsWith("/admin/login"))
+                  }
+                  collapsed={collapsed}
+                />
+              </NavSection>
+            )}
 
             {/* Secondary */}
             <NavSection label="Account" collapsed={collapsed}>
