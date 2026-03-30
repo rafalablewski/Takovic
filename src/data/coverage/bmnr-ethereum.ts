@@ -51,6 +51,7 @@ export interface RoadmapMilestone {
 }
 
 export interface EcosystemNewsItem {
+  id: string;
   date: string;
   category: "enterprise" | "institutional" | "defi" | "l2" | "protocol" | "regulatory";
   company: string;

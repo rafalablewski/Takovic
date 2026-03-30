@@ -8,26 +8,37 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { timeAgo, formatPercent } from "@/lib/utils";
-import { getMarketNews, getQuote } from "@/lib/api/fmp";
-import type { FMPNews, FMPQuote } from "@/lib/api/fmp";
+import { getQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/fmp";
+import { getGoogleNews } from "@/lib/api/google-news";
+import type { GoogleNewsArticle } from "@/lib/api/google-news";
 import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
-const filterPills = [
-  { label: "All", active: true },
-  { label: "Watchlist", active: false },
-  { label: "Tech", active: false },
-  { label: "Finance", active: false },
-  { label: "Energy", active: false },
-  { label: "Healthcare", active: false },
-];
+const FILTER_OPTIONS = [
+  { label: "All", query: "stock market financial news" },
+  { label: "Stocks", query: "stock market equities trading" },
+  { label: "Crypto", query: "cryptocurrency bitcoin ethereum" },
+  { label: "Economy", query: "economy inflation interest rates GDP" },
+  { label: "Earnings", query: "earnings report quarterly results revenue" },
+] as const;
 
-export default async function NewsPage() {
-  let newsItems: FMPNews[] = [];
+interface NewsPageProps {
+  searchParams: Promise<{ filter?: string }>;
+}
+
+export default async function NewsPage({ searchParams }: NewsPageProps) {
+  const params = await searchParams;
+  const activeFilter = params.filter ?? "All";
+  const filterConfig =
+    FILTER_OPTIONS.find((f) => f.label === activeFilter) ?? FILTER_OPTIONS[0];
+
+  let newsItems: GoogleNewsArticle[] = [];
   let indexQuotes: { name: string; quote: FMPQuote | null }[] = [];
 
   try {
     const [news, spy, qqq, dia] = await Promise.all([
-      getMarketNews(20),
+      getGoogleNews(filterConfig.query, 20),
       getQuote("SPY"),
       getQuote("QQQ"),
       getQuote("DIA"),
@@ -48,21 +59,29 @@ export default async function NewsPage() {
       <div>
         <h1 className="text-xl font-semibold text-foreground">Market News</h1>
         <p className="text-sm text-muted-foreground">
-          Latest financial news from market sources
+          Latest financial news from Google News
         </p>
       </div>
 
       {/* Filter Pills */}
       <div className="flex flex-wrap gap-2">
-        {filterPills.map((pill) => (
-          <Button
+        {FILTER_OPTIONS.map((pill) => (
+          <Link
             key={pill.label}
-            variant={pill.active ? "default" : "outline"}
-            size="sm"
-            className="h-7 rounded-full px-3.5 text-xs"
+            href={
+              pill.label === "All"
+                ? "/news"
+                : `/news?filter=${encodeURIComponent(pill.label)}`
+            }
           >
-            {pill.label}
-          </Button>
+            <Button
+              variant={pill.label === activeFilter ? "default" : "outline"}
+              size="sm"
+              className="h-7 rounded-full px-3.5 text-xs"
+            >
+              {pill.label}
+            </Button>
+          </Link>
         ))}
       </div>
 
@@ -132,21 +151,15 @@ export default async function NewsPage() {
                       <h3 className="text-sm font-medium leading-snug text-foreground">
                         {item.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {item.text}
-                      </p>
+                      {item.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-0.5 text-xs text-muted-foreground">
-                        <span className="font-medium">{item.site}</span>
+                        <span className="font-medium">{item.source}</span>
                         <span className="text-border">|</span>
                         <span>{timeAgo(new Date(item.publishedDate))}</span>
-                        {item.symbol && (
-                          <>
-                            <span className="text-border">|</span>
-                            <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">
-                              ${item.symbol}
-                            </Badge>
-                          </>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -158,7 +171,7 @@ export default async function NewsPage() {
           <Card>
             <CardContent className="p-5">
               <p className="text-sm text-muted-foreground">
-                No news available. Check FMP_API_KEY configuration.
+                No news available. Try a different filter or check your connection.
               </p>
             </CardContent>
           </Card>
