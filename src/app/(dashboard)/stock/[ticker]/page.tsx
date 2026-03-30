@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent } from "@/lib/utils";
+import { Intelligence } from "@/components/stock/intelligence";
 import {
   Star,
   TrendingUp,
@@ -305,6 +306,9 @@ export default async function StockPage({ params }: StockPageProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Intelligence — SEC Filings + Press Wire */}
+      <Intelligence ticker={upperTicker} />
 
       {/* Recent News */}
       <Card>

@@ -66,6 +66,18 @@ export async function getBalanceSheet(
   );
 }
 
+// Cash flow statement
+export async function getCashFlowStatement(
+  ticker: string,
+  period: "annual" | "quarter" = "annual",
+  limit = 5
+) {
+  return fetchFMP<FMPCashFlowStatement[]>(
+    `/cash-flow-statement/${ticker}`,
+    { period, limit: limit.toString() }
+  );
+}
+
 // Key metrics
 export async function getKeyMetrics(
   ticker: string,
@@ -97,6 +109,20 @@ export async function getStockNews(ticker: string, limit = 20) {
 // General market news
 export async function getMarketNews(limit = 30) {
   return fetchFMP<FMPNews[]>("/stock_news", {
+    limit: limit.toString(),
+  });
+}
+
+// SEC filings
+export async function getSECFilings(ticker: string, type?: string, limit = 50) {
+  const params: Record<string, string> = { limit: limit.toString() };
+  if (type) params.type = type;
+  return fetchFMP<FMPSECFiling[]>(`/sec_filings/${ticker}`, params);
+}
+
+// Press releases
+export async function getPressReleases(ticker: string, limit = 30) {
+  return fetchFMP<FMPPressRelease[]>(`/press-releases/${ticker}`, {
     limit: limit.toString(),
   });
 }
@@ -183,6 +209,18 @@ export interface FMPKeyMetrics {
   netProfitMargin: number;
 }
 
+export interface FMPCashFlowStatement {
+  date: string;
+  period: string;
+  freeCashFlow: number;
+  operatingCashFlow: number;
+  capitalExpenditure: number;
+  dividendsPaid: number;
+  netCashUsedForInvestingActivites: number;
+  debtRepayment: number;
+  commonStockRepurchased: number;
+}
+
 export interface FMPSearchResult {
   symbol: string;
   name: string;
@@ -199,6 +237,23 @@ export interface FMPNews {
   site: string;
   url: string;
   image: string;
+}
+
+export interface FMPSECFiling {
+  symbol: string;
+  cik: string;
+  type: string; // 10-K, 10-Q, 8-K, S-1, DEF 14A, etc.
+  link: string;
+  finalLink: string;
+  acceptedDate: string;
+  fillingDate: string;
+}
+
+export interface FMPPressRelease {
+  symbol: string;
+  date: string;
+  title: string;
+  text: string;
 }
 
 export interface FMPScreenerResult {

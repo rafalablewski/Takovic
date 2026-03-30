@@ -26,6 +26,8 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
+  Shield,
+  BookOpen,
 } from "lucide-react";
 
 const mainNavigation = [
@@ -40,6 +42,8 @@ const analysisTools = [
   { name: "Stock Lookup", href: "/lookup", icon: Search },
   { name: "Compare Stocks", href: "/compare", icon: GitCompareArrows },
   { name: "Valuation", href: "/valuation", icon: Calculator },
+  { name: "Intelligence", href: "/intelligence", icon: Shield },
+  { name: "Coverage", href: "/coverage", icon: BookOpen },
 ];
 
 const secondaryLinks = [
