@@ -201,6 +201,47 @@ export const userPreferences = pgTable("user_preferences", {
     .default(true),
 });
 
+/**
+ * CSV-seeded market data for screener / lookup (US, Canada, Europe).
+ * Unique per (symbol, exchange). Update via `npm run db:seed:market-equities`.
+ */
+export const marketEquities = pgTable(
+  "market_equities",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    symbol: varchar("symbol", { length: 32 }).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    exchange: varchar("exchange", { length: 64 }).notNull(),
+    country: varchar("country", { length: 2 }).notNull(),
+    /** US | CA | EU — used for regional filters */
+    region: varchar("region", { length: 8 }).notNull(),
+    currency: varchar("currency", { length: 8 }).notNull().default("USD"),
+    sector: varchar("sector", { length: 100 }),
+    industry: varchar("industry", { length: 100 }),
+    price: numeric("price").notNull(),
+    changePct: numeric("change_pct"),
+    volume: numeric("volume"),
+    marketCap: numeric("market_cap"),
+    peRatio: numeric("pe_ratio"),
+    /** ROE as percentage points, e.g. 18.5 = 18.5% */
+    roe: numeric("roe"),
+    /** Dividend yield as percentage points, e.g. 2.5 = 2.5% */
+    dividendYield: numeric("dividend_yield"),
+    /** Optional 0–5 score for Min Score filter */
+    compositeScore: numeric("composite_score"),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("market_equities_symbol_exchange_idx").on(
+      table.symbol,
+      table.exchange
+    ),
+    index("market_equities_region_idx").on(table.region),
+    index("market_equities_sector_idx").on(table.sector),
+    index("market_equities_market_cap_idx").on(table.marketCap),
+  ]
+);
+
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
   watchlists: many(watchlists),

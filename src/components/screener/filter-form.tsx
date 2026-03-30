@@ -27,6 +27,7 @@ export function ScreenerFilterForm() {
       const params = new URLSearchParams();
 
       const search = (formData.get("search") as string)?.trim();
+      const region = formData.get("region") as string;
       const sector = formData.get("sector") as string;
       const marketCap = formData.get("marketCap") as string;
       const peMin = (formData.get("peMin") as string)?.trim();
@@ -36,6 +37,7 @@ export function ScreenerFilterForm() {
       const minScore = formData.get("minScore") as string;
 
       if (search) params.set("search", search);
+      if (region && region !== "all") params.set("region", region);
       if (sector && sector !== "All Sectors") params.set("sector", sector);
       if (marketCap && marketCap !== "Any") params.set("marketCap", marketCap);
       if (peMin) params.set("peMin", peMin);
@@ -77,6 +79,26 @@ export function ScreenerFilterForm() {
                   placeholder="Ticker or company..."
                   className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                 />
+              </div>
+            </div>
+
+            {/* Region */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground">
+                Region
+              </label>
+              <div className="relative">
+                <select
+                  name="region"
+                  defaultValue={searchParams.get("region") ?? "all"}
+                  className={selectClass}
+                >
+                  <option value="all">All regions</option>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                  <option value="EU">Europe</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               </div>
             </div>
 

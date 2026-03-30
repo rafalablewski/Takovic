@@ -8,8 +8,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatNumber } from "@/lib/utils";
-import { screenStocks } from "@/lib/api/fmp";
-import type { FMPScreenerResult } from "@/lib/api/fmp";
+import type { MarketEquityRow } from "@/lib/db/market-equities";
+import { searchMarketEquities } from "@/lib/db/market-equities";
 import { Download } from "lucide-react";
 import { ScreenerFilterForm } from "@/components/screener/filter-form";
 import { ScreenerPagination } from "@/components/screener/pagination";
@@ -27,6 +27,7 @@ const MARKET_CAP_RANGES: Record<string, { min?: string; max?: string }> = {
 
 interface ScreenerSearchParams {
   search?: string;
+  region?: string;
   sector?: string;
   marketCap?: string;
   peMin?: string;
@@ -37,6 +38,19 @@ interface ScreenerSearchParams {
   page?: string;
 }
 
+function num(v: string | null): number {
+  if (v === null || v === "") return 0;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function scoreLabel(row: MarketEquityRow): string {
+  const s = row.compositeScore;
+  if (s === null || s === "") return "—";
+  const n = Number(s);
+  return Number.isFinite(n) ? n.toFixed(1) : "—";
+}
+
 export default async function ScreenerPage({
   searchParams,
 }: {
@@ -44,10 +58,10 @@ export default async function ScreenerPage({
 }) {
   const params = await searchParams;
 
-  // Normalize search params (handle string[] case)
   const filters: ScreenerSearchParams = {};
   for (const key of [
     "search",
+    "region",
     "sector",
     "marketCap",
     "peMin",
@@ -64,88 +78,53 @@ export default async function ScreenerPage({
 
   const currentPage = Math.max(1, parseInt(filters.page ?? "1", 10) || 1);
 
-  // Build FMP API params
-  const fmpParams: Record<string, string> = {
-    limit: PAGE_SIZE.toString(),
-    exchange: "NYSE,NASDAQ",
+  const queryFilters: Parameters<typeof searchMarketEquities>[0] = {
+    search: filters.search,
+    sector: filters.sector,
+    region: filters.region,
+    peMin: filters.peMin,
+    peMax: filters.peMax,
+    roeMin: filters.roeMin,
+    dividendMin: filters.dividendMin,
+    minScore: filters.minScore,
   };
 
-  // Sector filter — passed directly to FMP
-  if (filters.sector) {
-    fmpParams.sector = filters.sector;
-  }
-
-  // Market cap filter — passed directly to FMP
   if (filters.marketCap) {
     const range = MARKET_CAP_RANGES[filters.marketCap];
     if (range) {
-      if (range.min) fmpParams.marketCapMoreThan = range.min;
-      if (range.max) fmpParams.marketCapLowerThan = range.max;
+      queryFilters.marketCapMin = range.min;
+      queryFilters.marketCapMax = range.max;
     }
   }
 
-  // Dividend yield — FMP supports this as a param
-  if (filters.dividendMin) {
-    fmpParams.dividendMoreThan = filters.dividendMin;
-  }
-
-  // P/E range — FMP supports betaMoreThan/betaLowerThan but not PE directly,
-  // so we'll filter client-side after fetching.
-  // ROE — also filtered client-side.
-
-  // For client-side filters, fetch more results to ensure we have enough after filtering
-  const hasClientSideFilters =
-    filters.peMin || filters.peMax || filters.roeMin || filters.search;
-  if (hasClientSideFilters) {
-    // Fetch extra to compensate for client-side filtering + pagination
-    fmpParams.limit = "500";
-  }
-
-  let stocks: FMPScreenerResult[] = [];
+  let paginatedStocks: MarketEquityRow[] = [];
+  let totalMatching = 0;
   let fetchError = false;
 
   try {
-    stocks = await screenStocks(fmpParams);
+    const { rows, total } = await searchMarketEquities(
+      queryFilters,
+      currentPage,
+      PAGE_SIZE
+    );
+    paginatedStocks = rows;
+    totalMatching = total;
   } catch (error) {
     console.error("Failed to fetch screener data:", error);
     fetchError = true;
   }
 
-  // Apply client-side filters
-  if (filters.search) {
-    const query = filters.search.toLowerCase();
-    stocks = stocks.filter(
-      (s) =>
-        s.symbol.toLowerCase().includes(query) ||
-        s.companyName.toLowerCase().includes(query)
-    );
-  }
-
-  // P/E filtering is not possible without P/E data in FMPScreenerResult.
-  // We note this limitation but keep the filter UI for future enhancement
-  // when we add a joined data source.
-
-  // ROE filtering similarly requires key metrics data not in the screener response.
-
-  // Total count after all filters
-  const totalFiltered = stocks.length;
-
-  // Apply pagination
   const startIdx = (currentPage - 1) * PAGE_SIZE;
-  const paginatedStocks = hasClientSideFilters
-    ? stocks.slice(startIdx, startIdx + PAGE_SIZE)
-    : stocks;
-
-  const displayCount = paginatedStocks.length;
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-xl font-semibold text-foreground">Stock Screener</h1>
           <p className="text-sm text-muted-foreground">
-            Filter and discover stocks matching your criteria
+            Filter CSV-seeded listings (US, Canada, Europe). Update data in{" "}
+            <span className="font-mono text-xs">data/market-equities/universe.csv</span>{" "}
+            and run <span className="font-mono text-xs">npm run db:seed:market-equities</span>.
           </p>
         </div>
         <Button variant="outline" size="sm" className="gap-1.5">
@@ -155,23 +134,19 @@ export default async function ScreenerPage({
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-        {/* Filter Sidebar */}
         <div className="lg:col-span-1">
           <Suspense>
             <ScreenerFilterForm />
           </Suspense>
         </div>
 
-        {/* Results Table */}
         <div className="lg:col-span-3">
           <Card>
             <CardHeader className="p-5 pb-0">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium">Results</CardTitle>
                 <span className="text-xs text-muted-foreground tabular-nums">
-                  {hasClientSideFilters
-                    ? `${totalFiltered} stocks found`
-                    : `${displayCount} stocks`}
+                  {totalMatching} stocks match
                 </span>
               </div>
             </CardHeader>
@@ -188,6 +163,9 @@ export default async function ScreenerPage({
                       </th>
                       <th className="hidden px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground sm:table-cell">
                         Sector
+                      </th>
+                      <th className="hidden px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground md:table-cell">
+                        Exch
                       </th>
                       <th className="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">
                         Price
@@ -208,46 +186,67 @@ export default async function ScreenerPage({
                   </thead>
                   <tbody>
                     {paginatedStocks.length > 0 ? (
-                      paginatedStocks.map((stock, idx) => (
-                        <tr
-                          key={stock.symbol}
-                          className="border-b border-border/50 transition-colors hover:bg-muted/50"
-                        >
-                          <td className="px-5 py-3 text-xs tabular-nums text-muted-foreground">
-                            {startIdx + idx + 1}
-                          </td>
-                          <td className="px-5 py-3">
-                            <span className="font-medium text-foreground">{stock.symbol}</span>
-                            <p className="text-xs text-muted-foreground">{stock.companyName}</p>
-                          </td>
-                          <td className="hidden px-5 py-3 text-xs text-muted-foreground sm:table-cell">
-                            {stock.sector}
-                          </td>
-                          <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
-                            {formatCurrency(stock.price)}
-                          </td>
-                          <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
-                            {formatNumber(stock.marketCap, true)}
-                          </td>
-                          <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
-                            {formatNumber(stock.volume, true)}
-                          </td>
-                          <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
-                            —
-                          </td>
-                          <td className="hidden px-5 py-3 text-right lg:table-cell">
-                            <Badge variant="secondary" className="text-[10px]">
-                              —
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))
+                      paginatedStocks.map((stock, idx) => {
+                        const change = num(stock.changePct);
+                        const positive = change >= 0;
+                        return (
+                          <tr
+                            key={`${stock.symbol}-${stock.exchange}`}
+                            className="border-b border-border/50 transition-colors hover:bg-muted/50"
+                          >
+                            <td className="px-5 py-3 text-xs tabular-nums text-muted-foreground">
+                              {startIdx + idx + 1}
+                            </td>
+                            <td className="px-5 py-3">
+                              <span className="font-medium text-foreground">
+                                {stock.symbol}
+                              </span>
+                              <p className="text-xs text-muted-foreground">{stock.name}</p>
+                              <p className="mt-0.5 text-[10px] text-muted-foreground">
+                                {stock.region} · {stock.country}
+                              </p>
+                            </td>
+                            <td className="hidden px-5 py-3 text-xs text-muted-foreground sm:table-cell">
+                              {stock.sector ?? "—"}
+                            </td>
+                            <td className="hidden px-5 py-3 text-xs text-muted-foreground md:table-cell">
+                              {stock.exchange}
+                            </td>
+                            <td className="px-5 py-3 text-right tabular-nums font-medium text-foreground">
+                              {formatCurrency(num(stock.price), stock.currency)}
+                            </td>
+                            <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
+                              {formatNumber(num(stock.marketCap), true)}
+                            </td>
+                            <td className="hidden px-5 py-3 text-right tabular-nums text-muted-foreground md:table-cell">
+                              {formatNumber(num(stock.volume), true)}
+                            </td>
+                            <td className="px-5 py-3 text-right tabular-nums text-muted-foreground">
+                              {scoreLabel(stock)}
+                            </td>
+                            <td className="hidden px-5 py-3 text-right lg:table-cell">
+                              <Badge variant="secondary" className="text-[10px]">
+                                {stock.changePct === null || stock.changePct === ""
+                                  ? "—"
+                                  : positive
+                                    ? "Up"
+                                    : "Down"}
+                              </Badge>
+                            </td>
+                          </tr>
+                        );
+                      })
                     ) : (
                       <tr>
-                        <td colSpan={8} className="px-5 py-8 text-center text-sm text-muted-foreground">
+                        <td
+                          colSpan={9}
+                          className="px-5 py-8 text-center text-sm text-muted-foreground"
+                        >
                           {fetchError
-                            ? "No results available. Check FMP_API_KEY configuration."
-                            : "No stocks match your filters. Try broadening your criteria."}
+                            ? "Could not load screener data. Check DATABASE_URL and that migration 0001_market_equities.sql has been applied."
+                            : totalMatching === 0
+                              ? "No rows in market_equities yet. Run npm run db:seed:market-equities (see data/market-equities/README.md)."
+                              : "No stocks match your filters. Try broadening your criteria."}
                         </td>
                       </tr>
                     )}
@@ -255,13 +254,13 @@ export default async function ScreenerPage({
                 </table>
               </div>
 
-              {/* Pagination */}
               {paginatedStocks.length > 0 && (
                 <Suspense>
                   <ScreenerPagination
                     currentPage={currentPage}
-                    totalResults={displayCount}
+                    pageRowCount={paginatedStocks.length}
                     pageSize={PAGE_SIZE}
+                    totalMatching={totalMatching}
                   />
                 </Suspense>
               )}

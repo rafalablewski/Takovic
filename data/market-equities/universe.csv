@@ -1,0 +1,34 @@
+symbol,name,exchange,country,region,currency,sector,industry,price,change_pct,volume,market_cap,pe_ratio,roe,dividend_yield,composite_score
+AAPL,Apple Inc,NASDAQ,US,US,USD,Technology,Consumer Electronics,238.50,0.85,52000000,3800000000000,32.5,147,0.45,4.2
+MSFT,Microsoft Corporation,NASDAQ,US,US,USD,Technology,Software,415.20,-0.32,22000000,3100000000000,35.1,38,0.72,4.4
+GOOGL,Alphabet Inc Class A,NASDAQ,US,US,USD,Communication Services,Internet Content,175.40,1.12,28000000,2200000000000,24.8,29,0.00,4.0
+AMZN,Amazon.com Inc,NASDAQ,US,US,USD,Consumer Cyclical,Internet Retail,198.60,0.55,45000000,2100000000000,42.3,21,0.00,3.8
+NVDA,NVIDIA Corporation,NASDAQ,US,US,USD,Technology,Semiconductors,128.90,2.10,380000000,3200000000000,48.2,52,0.03,4.6
+META,Meta Platforms Inc,NASDAQ,US,US,USD,Communication Services,Social Media,585.00,-0.18,15000000,1500000000000,26.4,33,0.35,4.1
+TSLA,Tesla Inc,NASDAQ,US,US,USD,Consumer Cyclical,Auto Manufacturers,248.30,-1.25,95000000,790000000000,62.1,18,0.00,3.2
+JPM,JPMorgan Chase & Co,NYSE,US,US,USD,Financial Services,Banks,245.80,0.42,12000000,710000000000,12.5,14,2.10,3.9
+V,Visa Inc,NYSE,US,US,USD,Financial Services,Credit Services,315.40,0.28,8000000,650000000000,28.3,45,0.75,4.0
+JNJ,Johnson & Johnson,NYSE,US,US,USD,Healthcare,Drug Manufacturers,158.20,-0.15,9000000,380000000000,15.2,22,3.05,3.7
+XOM,Exxon Mobil Corporation,NYSE,US,US,USD,Energy,Oil & Gas Integrated,112.50,0.88,18000000,480000000000,13.8,16,3.40,3.5
+WMT,Walmart Inc,NYSE,US,US,USD,Consumer Defensive,Discount Stores,92.40,0.62,11000000,740000000000,35.6,19,1.15,3.6
+PG,Procter & Gamble Co,NYSE,US,US,USD,Consumer Defensive,Household Products,168.90,-0.08,7000000,400000000000,24.1,31,2.55,3.8
+UNH,UnitedHealth Group Inc,NYSE,US,US,USD,Healthcare,Healthcare Plans,520.10,0.55,4000000,480000000000,22.4,26,1.45,3.9
+HD,Home Depot Inc,NYSE,US,US,USD,Consumer Cyclical,Home Improvement,385.00,-0.42,5000000,380000000000,23.8,125,2.65,3.7
+MA,Mastercard Inc,NYSE,US,US,USD,Financial Services,Credit Services,495.60,0.33,3500000,460000000000,32.7,168,0.55,4.2
+DIS,Walt Disney Co,NYSE,US,US,USD,Communication Services,Entertainment,112.30,1.05,14000000,205000000000,42.1,5,0.00,3.1
+NFLX,Netflix Inc,NASDAQ,US,US,USD,Communication Services,Entertainment,890.50,0.72,3200000,385000000000,38.9,28,0.00,3.9
+AMD,Advanced Micro Devices,NASDAQ,US,US,USD,Technology,Semiconductors,122.40,1.88,95000000,198000000000,45.2,8,0.00,3.4
+INTC,Intel Corporation,NASDAQ,US,US,USD,Technology,Semiconductors,43.20,-0.95,85000000,185000000000,0,2,1.85,2.8
+SHOP,Shopify Inc,TSX,CA,CA,CAD,Technology,Software,165.40,0.55,2100000,210000000000,78.2,12,0.00,3.5
+RY,Royal Bank of Canada,TSX,CA,CA,CAD,Financial Services,Banks,142.80,0.22,3200000,210000000000,13.1,13,3.95,3.8
+TD,Toronto-Dominion Bank,TSX,CA,CA,CAD,Financial Services,Banks,78.60,-0.18,4500000,145000000000,11.8,11,4.85,3.6
+ENB,Enbridge Inc,TSX,CA,CA,CAD,Energy,Oil & Gas Midstream,58.20,0.44,8900000,125000000000,21.5,9,6.20,3.4
+CNR,Canadian National Railway,TSX,CA,CA,CAD,Industrials,Railroads,95.30,0.12,1800000,62000000000,19.8,22,2.10,3.7
+ASML,ASML Holding NV,XAMS,NL,EU,EUR,Technology,Semiconductor Equipment,678.20,0.88,1200000,265000000000,36.4,52,0.85,4.3
+SAP,SAP SE,XETR,DE,EU,EUR,Technology,Software,218.40,-0.25,2100000,255000000000,22.1,11,1.65,3.9
+NOVN,Nestle SA,SIX,CH,EU,CHF,Consumer Defensive,Packaged Foods,78.90,0.15,5600000,225000000000,24.6,28,2.95,3.8
+SHEL,Shell PLC,LSE,GB,EU,GBP,Energy,Oil & Gas Integrated,26.45,0.62,18500000,175000000000,12.2,9,3.80,3.6
+HSBA,HSBC Holdings PLC,LSE,GB,EU,GBP,Financial Services,Banks,8.42,-0.33,42000000,165000000000,10.5,8,5.10,3.5
+SAN,Banco Santander SA,BME,ES,EU,EUR,Financial Services,Banks,5.88,0.44,125000000,95000000000,8.2,10,6.50,3.2
+MC,LVMH Moet Hennessy,EURONEXT,FR,EU,EUR,Consumer Cyclical,Luxury Goods,612.00,0.55,890000,385000000000,28.9,24,1.95,4.0
+AIR,Airbus SE,XPAR,FR,EU,EUR,Industrials,Aerospace,158.30,-0.12,2100000,125000000000,25.6,35,1.25,3.8
