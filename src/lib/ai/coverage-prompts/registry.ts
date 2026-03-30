@@ -1,19 +1,6 @@
 /**
- * Maps ticker → dedicated coverage analyst prompt builder.
- * Register new tickers here when you add src/lib/ai/coverage-prompts/<ticker>.ts
+ * Re-exports for callers that imported registry-style APIs.
+ * All covered tickers share one agnostic template; context comes from the registry + data modules.
  */
 
-import type { CoveragePromptBuilder } from "./types";
-import { buildBmnrCoveragePrompt } from "./bmnr";
-
-export const COVERAGE_PROMPT_BUILDERS: Partial<
-  Record<string, CoveragePromptBuilder>
-> = {
-  BMNR: buildBmnrCoveragePrompt,
-};
-
-export function getCoveragePromptBuilder(
-  ticker: string
-): CoveragePromptBuilder | undefined {
-  return COVERAGE_PROMPT_BUILDERS[ticker.toUpperCase()];
-}
+export { buildCoveragePromptForTicker } from "./build-coverage-prompt";
