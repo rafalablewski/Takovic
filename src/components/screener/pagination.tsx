@@ -6,19 +6,23 @@ import { Button } from "@/components/ui/button";
 
 interface ScreenerPaginationProps {
   currentPage: number;
-  totalResults: number;
+  /** Rows on this page */
+  pageRowCount: number;
   pageSize: number;
+  /** Total rows matching filters (all pages) */
+  totalMatching: number;
 }
 
 export function ScreenerPagination({
   currentPage,
-  totalResults,
+  pageRowCount,
   pageSize,
+  totalMatching,
 }: ScreenerPaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const hasNextPage = totalResults === pageSize;
+  const hasNextPage = currentPage * pageSize < totalMatching;
   const hasPrevPage = currentPage > 1;
 
   const goToPage = useCallback(
@@ -36,12 +40,14 @@ export function ScreenerPagination({
   );
 
   const start = (currentPage - 1) * pageSize + 1;
-  const end = start + totalResults - 1;
+  const end = pageRowCount > 0 ? start + pageRowCount - 1 : 0;
 
   return (
     <div className="flex items-center justify-between border-t border-border px-5 py-3">
       <p className="text-xs text-muted-foreground tabular-nums">
-        Showing {totalResults > 0 ? `${start}–${end}` : "0"} results
+        {pageRowCount > 0
+          ? `Showing ${start}–${end} of ${totalMatching}`
+          : `0 of ${totalMatching} results`}
       </p>
       <div className="flex gap-1">
         <Button

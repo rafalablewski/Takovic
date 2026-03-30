@@ -14,17 +14,24 @@
 | DB Instance | `src/lib/db/index.ts` exports `db` |
 
 ```ts
-// src/lib/db/index.ts
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
-import * as schema from "./schema";
-
-const sql = neon(process.env.DATABASE_URL!);
+// src/lib/db/index.ts (simplified)
+const connectionString =
+  process.env.DATABASE_URL ?? "postgresql://build:build@127.0.0.1:5432/build";
+const sql = neon(connectionString);
 export const db = drizzle(sql, { schema });
-export type Database = typeof db;
 ```
 
-The `db` instance is imported throughout the app for all database operations. The Neon HTTP driver is used (not WebSocket), making it suitable for serverless environments like Vercel.
+The `db` instance is imported throughout the app for all database operations. The Neon HTTP driver is used (not WebSocket), making it suitable for serverless environments like Vercel. **`DATABASE_URL` must be set in production** (the fallback exists so `next build` can run when the env var is absent).
+
+### `market_equities` (CSV-seeded screener)
+
+| Column | Purpose |
+|--------|---------|
+| `symbol`, `exchange` | Composite unique key |
+| `country`, `region` | ISO country + `US` / `CA` / `EU` filters |
+| `price`, `volume`, `market_cap`, … | Screener columns and lookup “trending” |
+
+Populate with `npm run db:seed:market-equities` after applying migration `0001_market_equities.sql`. See `data/market-equities/README.md`.
 
 ---
 

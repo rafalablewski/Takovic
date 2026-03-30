@@ -8,8 +8,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent, formatNumber } from "@/lib/utils";
-import { getQuote, screenStocks } from "@/lib/api/fmp";
-import type { FMPQuote, FMPScreenerResult } from "@/lib/api/fmp";
+import {
+  getMarketEquitiesBySymbols,
+  getTrendingMarketEquities,
+} from "@/lib/db/market-equities";
 import {
   Search,
   ArrowUpRight,
@@ -19,35 +21,51 @@ import {
   BarChart3,
 } from "lucide-react";
 
-const popularTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "JPM"];
+const popularTickers = [
+  "AAPL",
+  "MSFT",
+  "GOOGL",
+  "AMZN",
+  "NVDA",
+  "TSLA",
+  "META",
+  "JPM",
+];
+
+function num(v: string | null): number {
+  if (v === null || v === "") return 0;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
 
 export default async function LookupPage() {
-  let popularStocks: FMPQuote[] = [];
-  let trendingStocks: FMPScreenerResult[] = [];
+  let loadError = false;
+  let popularStocks: Awaited<ReturnType<typeof getMarketEquitiesBySymbols>> =
+    [];
+  let trendingStocks: Awaited<ReturnType<typeof getTrendingMarketEquities>> =
+    [];
 
   try {
-    const [quotes, trending] = await Promise.all([
-      Promise.all(popularTickers.map((t) => getQuote(t))),
-      screenStocks({ limit: "5" }),
+    const [popular, trending] = await Promise.all([
+      getMarketEquitiesBySymbols(popularTickers),
+      getTrendingMarketEquities(5),
     ]);
-    popularStocks = quotes.filter((q): q is FMPQuote => q !== null);
-    trendingStocks = trending ?? [];
+    popularStocks = popular;
+    trendingStocks = trending;
   } catch (error) {
     console.error("Failed to fetch lookup page data:", error);
-    // Data unavailable
+    loadError = true;
   }
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
       <div>
         <h1 className="text-xl font-semibold text-foreground">Stock Lookup</h1>
         <p className="text-sm text-muted-foreground">
-          Search any stock for instant analysis
+          Search any stock for instant analysis · Popular list uses CSV-backed market data
         </p>
       </div>
 
-      {/* Search Bar */}
       <div className="relative">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
         <input
@@ -57,7 +75,6 @@ export default async function LookupPage() {
         />
       </div>
 
-      {/* Popular Stocks */}
       <div>
         <h2 className="mb-4 text-sm font-medium text-foreground">
           Popular Stocks
@@ -65,40 +82,50 @@ export default async function LookupPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {popularStocks.length > 0 ? (
             popularStocks.map((stock) => {
-              const positive = stock.changesPercentage >= 0;
+              const change = num(stock.changePct);
+              const positive = change >= 0;
               return (
-                <Link key={stock.symbol} href={`/stock/${stock.symbol.toLowerCase()}`}>
+                <Link key={`${stock.symbol}-${stock.exchange}`} href={`/stock/${stock.symbol.toLowerCase()}`}>
                   <Card className="transition-colors hover:bg-muted/30 cursor-pointer">
                     <CardContent className="p-5">
-                      <div className="flex items-start justify-between">
-                        <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
                           <p className="text-sm font-semibold text-foreground">
                             {stock.symbol}
                           </p>
-                          <p className="mt-0.5 text-xs text-muted-foreground truncate max-w-[140px]">
+                          <p className="mt-0.5 text-xs text-muted-foreground truncate max-w-[160px]">
                             {stock.name}
                           </p>
+                          <Badge variant="outline" className="mt-1 text-[10px]">
+                            {stock.exchange}
+                          </Badge>
                         </div>
                       </div>
                       <div className="mt-3 flex items-baseline justify-between">
                         <span className="text-sm font-semibold tabular-nums text-foreground">
-                          {formatCurrency(stock.price)}
+                          {formatCurrency(num(stock.price), stock.currency)}
                         </span>
                         <span className="flex items-center gap-0.5">
-                          {positive ? (
-                            <ArrowUpRight className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                          {stock.changePct === null || stock.changePct === "" ? (
+                            <span className="text-xs text-muted-foreground">—</span>
                           ) : (
-                            <ArrowDownRight className="h-3 w-3 text-red-600 dark:text-red-400" />
+                            <>
+                              {positive ? (
+                                <ArrowUpRight className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+                              ) : (
+                                <ArrowDownRight className="h-3 w-3 text-red-600 dark:text-red-400" />
+                              )}
+                              <span
+                                className={`text-xs font-medium tabular-nums ${
+                                  positive
+                                    ? "text-emerald-600 dark:text-emerald-400"
+                                    : "text-red-600 dark:text-red-400"
+                                }`}
+                              >
+                                {formatPercent(change)}
+                              </span>
+                            </>
                           )}
-                          <span
-                            className={`text-xs font-medium tabular-nums ${
-                              positive
-                                ? "text-emerald-600 dark:text-emerald-400"
-                                : "text-red-600 dark:text-red-400"
-                            }`}
-                          >
-                            {formatPercent(stock.changesPercentage)}
-                          </span>
                         </span>
                       </div>
                     </CardContent>
@@ -110,7 +137,9 @@ export default async function LookupPage() {
             <Card className="col-span-full">
               <CardContent className="p-5">
                 <p className="text-sm text-muted-foreground">
-                  Unable to load stock data. Check FMP_API_KEY configuration.
+                  {loadError
+                    ? "Unable to load market data. Check DATABASE_URL and migrations."
+                    : "No seed data for popular tickers. Run npm run db:seed:market-equities."}
                 </p>
               </CardContent>
             </Card>
@@ -118,7 +147,6 @@ export default async function LookupPage() {
         </div>
       </div>
 
-      {/* Recent Searches */}
       <div>
         <h2 className="mb-4 text-sm font-medium text-foreground">
           Recent Searches
@@ -135,16 +163,17 @@ export default async function LookupPage() {
         </div>
       </div>
 
-      {/* Trending Today */}
       <Card>
         <CardHeader className="p-5 pb-0">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-primary" />
             <CardTitle className="text-sm font-medium">Trending Today</CardTitle>
           </div>
+          <p className="text-xs text-muted-foreground pt-1">
+            By volume in your seeded universe (not live exchange feed)
+          </p>
         </CardHeader>
         <CardContent className="p-5 pt-3">
-          {/* Header */}
           <div className="grid grid-cols-[2rem_4rem_1fr_5rem_5rem] gap-2 pb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <div>#</div>
             <div>Ticker</div>
@@ -157,7 +186,7 @@ export default async function LookupPage() {
             {trendingStocks.length > 0 ? (
               trendingStocks.map((stock, idx) => (
                 <Link
-                  key={stock.symbol}
+                  key={`${stock.symbol}-${stock.exchange}`}
                   href={`/stock/${stock.symbol.toLowerCase()}`}
                   className="grid grid-cols-[2rem_4rem_1fr_5rem_5rem] items-center gap-2 py-3 transition-colors hover:bg-muted/50 rounded-md px-1 -mx-1"
                 >
@@ -168,22 +197,24 @@ export default async function LookupPage() {
                     {stock.symbol}
                   </span>
                   <span className="text-sm text-muted-foreground truncate">
-                    {stock.companyName}
+                    {stock.name}
                   </span>
                   <span className="text-right text-xs tabular-nums text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
                       <BarChart3 className="h-3 w-3" />
-                      {formatNumber(stock.volume, true)}
+                      {formatNumber(num(stock.volume), true)}
                     </span>
                   </span>
                   <span className="text-right text-sm tabular-nums font-medium text-foreground">
-                    {formatCurrency(stock.price)}
+                    {formatCurrency(num(stock.price), stock.currency)}
                   </span>
                 </Link>
               ))
             ) : (
               <div className="py-4 text-center text-sm text-muted-foreground">
-                Trending data unavailable.
+                {loadError
+                  ? "Data unavailable."
+                  : "Seed market_equities to see trending by volume."}
               </div>
             )}
           </div>

@@ -239,7 +239,8 @@ These endpoints are not yet implemented but are anticipated based on the databas
 | `/search` | `searchStocks(query, limit?)` | `FMPSearchResult[]` |
 | `/stock_news` | `getStockNews(ticker, limit?)` | `FMPNews[]` |
 | `/stock_news` (requires `tickers`) | `getMarketNews(limit?, tickers?)` — defaults to a broad symbol list if `tickers` omitted | `FMPNews[]` |
-| `/stock-screener` | `screenStocks(params)` | `FMPScreenerResult[]` |
+| `/stock-screener` (legacy) | `screenStocks(params)` in `fmp.ts` — unused by UI if you use CSV screener | `FMPScreenerResult[]` |
+| — | Stock screener + lookup trending read **`market_equities`** in Neon (`searchMarketEquities`, etc.) | app-owned |
 
 **Rate Limits:** Depends on FMP plan. Free tier allows 250 requests/day. All FMP fetches include `next: { revalidate: 300 }` (5-minute Next.js fetch cache).
 
