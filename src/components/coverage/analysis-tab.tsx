@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
@@ -55,7 +55,7 @@ import {
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
-// Grade colors (incl. A+, B+)
+// Grade / status colors (aligned with comparables-tab / coverage cards)
 // ---------------------------------------------------------------------------
 
 const gradeColors: Record<string, string> = {
@@ -108,7 +108,7 @@ function likelihoodLabel(l: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Collapsible section (remount on layoutKey to honor Expand/Collapse All)
+// Collapsible — same shell as capital-structure-tab / overview CollapsibleSection
 // ---------------------------------------------------------------------------
 
 function CollapsibleCardRemount({
@@ -175,74 +175,82 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
   );
 
   const scoreOverall = INVESTMENT_CURRENT_ASSESSMENT.scorecardOverallGrade;
+  const nArchive = ANALYSIS_ARCHIVE.length;
 
   return (
     <div className="space-y-4">
-      {/* DUE DILIGENCE */}
-      <div className="space-y-2">
-        <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">
-          {INVESTMENT_DUE_DILIGENCE.sectionLabel}
-        </p>
-        <h2 className="text-lg font-semibold text-foreground">{INVESTMENT_DUE_DILIGENCE.title}</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">{INVESTMENT_DUE_DILIGENCE.description}</p>
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={expandAll}
-            className="text-[10px] font-medium uppercase tracking-wide text-primary hover:underline"
-          >
-            Expand All
-          </button>
-          <span className="text-muted-foreground">·</span>
-          <button
-            type="button"
-            onClick={collapseAll}
-            className="text-[10px] font-medium uppercase tracking-wide text-primary hover:underline"
-          >
-            Collapse All
-          </button>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">Data as of:</span> {INVESTMENT_DUE_DILIGENCE.dataAsOf}
-          <span className="mx-2 text-muted-foreground/50">•</span>
-          <span className="font-medium text-foreground">Source:</span> {INVESTMENT_DUE_DILIGENCE.sourceLine}
-        </p>
-      </div>
-
-      {/* CURRENT ASSESSMENT */}
-      <Card className="border-primary/20 bg-muted/20">
-        <CardContent className="space-y-4 p-5">
-          <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60">CURRENT ASSESSMENT</p>
-          <div className="flex flex-wrap items-center gap-3">
-            <Badge className="bg-amber-500/90 text-white hover:bg-amber-500 text-xs font-bold px-2 py-0.5">
-              {INVESTMENT_CURRENT_ASSESSMENT.verdict}
-            </Badge>
-            <span className="text-sm font-semibold text-foreground">{INVESTMENT_CURRENT_ASSESSMENT.ticker}</span>
+      {/* Due diligence — same pattern as Operations / Capital intro Card */}
+      <Card>
+        <CardHeader className="p-5 pb-0">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              {INVESTMENT_DUE_DILIGENCE.sectionLabel}
+            </span>
+            <CardTitle className="text-sm font-medium text-foreground">{INVESTMENT_DUE_DILIGENCE.title}</CardTitle>
           </div>
-          <p className="text-base font-medium text-foreground">{INVESTMENT_CURRENT_ASSESSMENT.tagline}</p>
-          <p className="text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">Last Updated:</span> {INVESTMENT_CURRENT_ASSESSMENT.lastUpdated}
-            <span className="mx-1.5">•</span>
-            <span className="font-medium text-foreground">Trigger:</span> {INVESTMENT_CURRENT_ASSESSMENT.trigger}
+        </CardHeader>
+        <CardContent className="space-y-3 p-5 pt-3">
+          <p className="text-sm text-muted-foreground leading-relaxed">{INVESTMENT_DUE_DILIGENCE.description}</p>
+          <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
+            <button
+              type="button"
+              onClick={expandAll}
+              className="text-xs font-medium text-primary hover:underline"
+            >
+              Expand all
+            </button>
+            <span className="text-muted-foreground">·</span>
+            <button
+              type="button"
+              onClick={collapseAll}
+              className="text-xs font-medium text-primary hover:underline"
+            >
+              Collapse all
+            </button>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            <span className="font-medium text-foreground">Data as of:</span> {INVESTMENT_DUE_DILIGENCE.dataAsOf}
+            <span className="mx-2 text-muted-foreground/50">·</span>
+            <span className="font-medium text-foreground">Source:</span> {INVESTMENT_DUE_DILIGENCE.sourceLine}
           </p>
-          <div className="grid gap-3 sm:grid-cols-3">
+        </CardContent>
+      </Card>
+
+      {/* Current assessment — Key Metrics–style density (overview / capital) */}
+      <Card>
+        <CardHeader className="p-5 pb-0">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Current assessment</span>
+            <div className="flex flex-wrap items-center gap-2 pt-0.5">
+              <Badge className="bg-amber-500/90 text-white hover:bg-amber-500 text-[10px] font-semibold">
+                {INVESTMENT_CURRENT_ASSESSMENT.verdict}
+              </Badge>
+              <span className="text-sm font-medium text-foreground">{INVESTMENT_CURRENT_ASSESSMENT.ticker}</span>
+            </div>
+            <p className="text-sm font-medium text-foreground pt-1">{INVESTMENT_CURRENT_ASSESSMENT.tagline}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              <span className="font-medium text-foreground">Last updated:</span> {INVESTMENT_CURRENT_ASSESSMENT.lastUpdated}
+              <span className="mx-1.5">·</span>
+              <span className="font-medium text-foreground">Trigger:</span> {INVESTMENT_CURRENT_ASSESSMENT.trigger}
+            </p>
+          </div>
+        </CardHeader>
+        <CardContent className="p-5 pt-4">
+          <div className="grid gap-4 sm:grid-cols-3">
             {INVESTMENT_CURRENT_ASSESSMENT.headlineMetrics.map((m) => (
-              <div key={m.label} className="rounded-lg border border-border bg-background/80 p-3">
+              <div key={m.label}>
                 <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{m.label}</p>
-                <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">{m.value}</p>
-                {m.sub ? <p className="mt-0.5 text-xs text-muted-foreground">{m.sub}</p> : null}
+                <p className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{m.value}</p>
+                {m.sub ? <p className="mt-0.5 text-[10px] text-muted-foreground/80">{m.sub}</p> : null}
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* RATINGS & SCORING */}
-      <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60 pt-2">RATINGS & SCORING</p>
-
       {cc(
         "scorecard",
-        "INVESTMENT SCORECARD",
+        "Investment scorecard",
         <BarChart3 className="h-4 w-4 text-muted-foreground" />,
         <Badge className={cn("text-[10px] font-bold", gradeColors[scoreOverall])}>Overall: {scoreOverall}</Badge>,
         <div className="space-y-4">
@@ -252,12 +260,12 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
                 <span className="text-sm font-medium text-foreground">{item.category}</span>
                 <Badge className={cn("text-[10px] font-bold w-9 justify-center", gradeColors[item.grade])}>{item.grade}</Badge>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">{item.assessment}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{item.assessment}</p>
               {item.details.length > 0 ? (
-                <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+                <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                   {item.details.map((d, i) => (
-                    <li key={i} className="flex items-start gap-1.5 text-xs text-muted-foreground/80">
-                      <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/40" />
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/40" />
                       {d}
                     </li>
                   ))}
@@ -276,40 +284,37 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
           {ECOSYSTEM_HEALTH.overallGrade}
         </Badge>,
         <div className="space-y-4">
-          <p className="text-xs text-muted-foreground">{ECOSYSTEM_HEALTH.description}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{ECOSYSTEM_HEALTH.description}</p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {ECOSYSTEM_HEALTH.metrics.map((m) => (
               <div key={m.label} className="rounded-lg border border-border p-3">
-                <p className="text-[10px] text-muted-foreground">{m.label}</p>
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{m.label}</p>
                 <p className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{m.value}</p>
                 <div className="mt-1 flex items-center gap-1">
                   <CheckCircle2 className={cn("h-3 w-3", statusColors[m.status])} />
-                  <span className={cn("text-[10px] font-medium", statusColors[m.status])}>{m.statusLabel}</span>
+                  <span className={cn("text-xs font-medium", statusColors[m.status])}>{m.statusLabel}</span>
                 </div>
               </div>
             ))}
           </div>
           <div className="rounded-md bg-muted/40 p-3">
-            <p className="text-xs text-muted-foreground leading-relaxed">{ECOSYSTEM_HEALTH.commentary}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{ECOSYSTEM_HEALTH.commentary}</p>
           </div>
         </div>
       )}
 
-      {/* INVESTMENT THESIS */}
-      <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60 pt-4">INVESTMENT THESIS</p>
-
       {cc(
         "summary",
-        "INVESTMENT SUMMARY",
+        "Investment summary",
         <Info className="h-4 w-4 text-muted-foreground" />,
         undefined,
         <div className="space-y-4">
           <div>
-            <p className="text-xs font-semibold text-foreground mb-2">{INVESTMENT_SUMMARY_WHATS_NEW_TITLE}</p>
-            <ul className="space-y-1.5">
+            <p className="text-sm font-medium text-foreground mb-2 leading-snug">{INVESTMENT_SUMMARY_WHATS_NEW_TITLE}</p>
+            <ul className="space-y-2">
               {INVESTMENT_SUMMARY_WHATS_NEW_BULLETS.map((b, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
+                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground leading-relaxed">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
                   {b}
                 </li>
               ))}
@@ -324,17 +329,17 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
 
       {cc(
         "growth",
-        "GROWTH DRIVERS",
+        "Growth drivers",
         <TrendingUp className="h-4 w-4 text-muted-foreground" />,
         undefined,
         <div className="space-y-4">
           {GROWTH_DRIVERS.map((g) => (
-            <div key={g.driver} className="space-y-1">
+            <div key={g.driver} className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm font-medium text-foreground">{g.driver}</span>
                 <Badge className={cn("text-[10px] font-semibold", growthImpactColors[g.impactLevel])}>{g.impactLevel}</Badge>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{g.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{g.description}</p>
             </div>
           ))}
         </div>
@@ -342,50 +347,47 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
 
       {cc(
         "moat",
-        "COMPETITIVE MOAT",
+        "Competitive moat",
         <Swords className="h-4 w-4 text-muted-foreground" />,
         undefined,
         <div className="space-y-6">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">MOAT SOURCES</p>
+            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Moat sources</p>
             <ul className="space-y-3">
               {COMPETITIVE_MOAT_SOURCES.map((s) => (
-                <li key={s.name} className="rounded-md border border-border/60 p-3">
+                <li key={s.name} className="rounded-lg border border-border p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm font-medium text-foreground">{s.name}</span>
                     <span className={cn("text-xs font-semibold", moatStrengthColors[s.strength] ?? "")}>{s.strength}</span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{COMPETITIVE_MOAT_SOURCES_DETAIL[s.name]}</p>
+                  <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{COMPETITIVE_MOAT_SOURCES_DETAIL[s.name]}</p>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">COMPETITIVE THREATS</p>
+            <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">Competitive threats</p>
             <ul className="space-y-3">
               {COMPETITIVE_THREATS.map((t) => (
-                <li key={t.name} className="rounded-md border border-border/60 p-3">
+                <li key={t.name} className="rounded-lg border border-border p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="text-sm font-medium text-foreground">{t.name}</span>
                     <span className={cn("text-xs font-semibold", moatStrengthColors[t.level] ?? "")}>{t.level}</span>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{COMPETITIVE_THREATS_DETAIL[t.name]}</p>
+                  <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{COMPETITIVE_THREATS_DETAIL[t.name]}</p>
                 </li>
               ))}
             </ul>
           </div>
           <div className="rounded-md bg-muted/40 p-3">
-            <p className="text-xs text-muted-foreground leading-relaxed">{MOAT_DURABILITY}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{MOAT_DURABILITY}</p>
           </div>
         </div>
       )}
 
-      {/* RISK ASSESSMENT */}
-      <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60 pt-4">RISK ASSESSMENT</p>
-
       {cc(
         "riskmatrix",
-        "RISK MATRIX",
+        "Risk matrix",
         <AlertTriangle className="h-4 w-4 text-muted-foreground" />,
         <Badge variant="secondary" className="text-[10px]">
           {RISK_MATRIX.length} risks
@@ -404,7 +406,7 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
             <tbody className="divide-y divide-border/50">
               {RISK_MATRIX.map((r, i) => (
                 <tr key={i} className="hover:bg-muted/50 align-top">
-                  <td className="py-2.5 pr-3 text-xs font-medium text-foreground">{r.risk}</td>
+                  <td className="py-2.5 pr-3 text-sm font-medium text-foreground">{r.risk}</td>
                   <td className="py-2.5 pr-3">
                     <Badge className={cn("text-[10px]", severityColors[r.severity])}>{r.severity}</Badge>
                   </td>
@@ -413,7 +415,7 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
                       {likelihoodLabel(r.likelihood)}
                     </Badge>
                   </td>
-                  <td className="py-2.5 text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">{r.mitigation}</td>
+                  <td className="py-2.5 text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{r.mitigation}</td>
                 </tr>
               ))}
             </tbody>
@@ -423,48 +425,48 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
 
       {cc(
         "strategic",
-        "RISKS & STRATEGIC ASSESSMENT",
+        "Risks & strategic assessment",
         <Shield className="h-4 w-4 text-muted-foreground" />,
         undefined,
         <div className="space-y-6">
-          <p className="text-sm font-medium text-foreground">{STRATEGIC_ASSESSMENT_INTRO}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{STRATEGIC_ASSESSMENT_INTRO}</p>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">RISK EVALUATION — FOUR PERSPECTIVES</p>
-            <div className="space-y-5">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-3">Risk evaluation — four perspectives</p>
+            <div className="space-y-4">
               {STRATEGIC_PERSPECTIVES.map((p) => (
                 <div key={p.title} className="rounded-lg border border-border p-4">
-                  <p className="text-sm font-bold text-foreground">{p.title}</p>
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground mt-0.5 mb-2">{p.subtitle}</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{p.body}</p>
+                  <p className="text-sm font-medium text-foreground">{p.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 mb-2">{p.subtitle}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{p.body}</p>
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">KEY STRATEGIC QUESTIONS</p>
-            <div className="space-y-5">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-3">Key strategic questions</p>
+            <div className="space-y-4">
               {KEY_STRATEGIC_QUESTIONS.map((q) => (
                 <div key={q.question} className="rounded-lg border border-border p-4 space-y-2">
-                  <p className="text-sm font-semibold text-foreground">{q.question}</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{q.theCase}</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">{q.hesitation}</p>
+                  <p className="text-sm font-medium text-foreground">{q.question}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{q.theCase}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">{q.hesitation}</p>
                   {q.verdict ? (
-                    <p className="text-xs font-medium text-foreground leading-relaxed whitespace-pre-wrap">{q.verdict}</p>
+                    <p className="text-sm font-medium text-foreground leading-relaxed whitespace-pre-wrap">{q.verdict}</p>
                   ) : null}
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold text-foreground mb-1">Ecosystem-Based Triggers</p>
-            <p className="text-xs text-muted-foreground mb-3">{ECOSYSTEM_TRIGGERS_INTRO}</p>
+            <p className="text-sm font-medium text-foreground mb-1">Ecosystem-based triggers</p>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">{ECOSYSTEM_TRIGGERS_INTRO}</p>
             <div className="grid gap-4 md:grid-cols-3">
               {ECOSYSTEM_TRIGGER_COLUMNS.map((col) => (
                 <div key={col.title} className="rounded-lg border border-border p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-foreground mb-2">{col.title}</p>
-                  <ul className="space-y-1">
+                  <p className="text-xs font-medium text-foreground mb-2 leading-snug">{col.title}</p>
+                  <ul className="space-y-1.5">
                     {col.lines.map((line, i) => (
-                      <li key={i} className="text-xs text-muted-foreground">
+                      <li key={i} className="text-sm text-muted-foreground leading-relaxed">
                         {line}
                       </li>
                     ))}
@@ -478,19 +480,19 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
 
       {cc(
         "position",
-        "POSITION SIZING & PRICE TARGETS",
+        "Position sizing & price targets",
         <Target className="h-4 w-4 text-muted-foreground" />,
         undefined,
         <div className="space-y-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">{POSITION_SIZING_ALLOCATION_INTRO}</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">{POSITION_SIZING_ALLOCATION_INTRO}</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-border/50">
                   {POSITION_SIZING_ALLOCATION_ROWS.map((row) => (
                     <tr key={row.profile} className="hover:bg-muted/50">
-                      <td className="py-2 pr-3 text-xs font-medium text-foreground">{row.profile}</td>
-                      <td className="py-2 text-xs tabular-nums text-muted-foreground">{row.range}</td>
+                      <td className="py-2 pr-3 text-sm font-medium text-foreground">{row.profile}</td>
+                      <td className="py-2 text-sm tabular-nums text-muted-foreground">{row.range}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -498,14 +500,14 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">{POSITION_SIZING_ZONES_TITLE}</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">{POSITION_SIZING_ZONES_TITLE}</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-border/50">
                   {POSITION_SIZING_ZONES.map((z) => (
                     <tr key={z.navRange} className="hover:bg-muted/50">
-                      <td className="py-2 pr-3 text-xs font-medium text-foreground">{z.navRange}</td>
-                      <td className="py-2 text-xs text-muted-foreground">{z.action}</td>
+                      <td className="py-2 pr-3 text-sm font-medium text-foreground">{z.navRange}</td>
+                      <td className="py-2 text-sm text-muted-foreground">{z.action}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -513,10 +515,10 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-foreground mb-2">{POSITION_SIZING_PORTFOLIO_TITLE}</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">{POSITION_SIZING_PORTFOLIO_TITLE}</p>
             <ul className="space-y-2">
               {POSITION_SIZING_PORTFOLIO_LINES.map((line, i) => (
-                <li key={i} className="text-xs text-muted-foreground leading-relaxed">
+                <li key={i} className="text-sm text-muted-foreground leading-relaxed">
                   {line}
                 </li>
               ))}
@@ -537,13 +539,13 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
                 <tbody className="divide-y divide-border/50">
                   {POSITION_SIZING.priceTargets.map((pt) => (
                     <tr key={pt.scenario} className="hover:bg-muted/50">
-                      <td className="py-2 text-xs font-medium text-foreground">{pt.scenario}</td>
-                      <td className="py-2 text-xs tabular-nums text-muted-foreground">${pt.ethPrice.toLocaleString()}</td>
-                      <td className="py-2 text-xs tabular-nums text-muted-foreground">{pt.navPremium.toFixed(1)}x</td>
-                      <td className="py-2 text-xs tabular-nums font-medium text-foreground">${pt.impliedPrice.toFixed(2)}</td>
+                      <td className="py-2 text-sm font-medium text-foreground">{pt.scenario}</td>
+                      <td className="py-2 text-sm tabular-nums text-muted-foreground">${pt.ethPrice.toLocaleString()}</td>
+                      <td className="py-2 text-sm tabular-nums text-muted-foreground">{pt.navPremium.toFixed(1)}x</td>
+                      <td className="py-2 text-sm tabular-nums font-medium text-foreground">${pt.impliedPrice.toFixed(2)}</td>
                       <td
                         className={cn(
-                          "py-2 text-xs tabular-nums font-medium",
+                          "py-2 text-sm tabular-nums font-medium",
                           pt.upside >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
                         )}
                       >
@@ -556,55 +558,55 @@ export function AnalysisTab({ ticker }: { ticker: string }) {
               </table>
             </div>
           ) : null}
-          {POSITION_SIZING.notes ? <p className="text-[10px] text-muted-foreground/70">{POSITION_SIZING.notes}</p> : null}
+          {POSITION_SIZING.notes ? <p className="text-xs text-muted-foreground">{POSITION_SIZING.notes}</p> : null}
         </div>
       )}
 
-      {/* HISTORICAL ANALYSIS */}
-      <p className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground/60 pt-4">HISTORICAL ANALYSIS</p>
-
       {cc(
         "archive",
-        `ANALYSIS ARCHIVE (${ANALYSIS_ARCHIVE.length} ENTRIES)`,
+        `Analysis archive (${nArchive} entries)`,
         <Archive className="h-4 w-4 text-muted-foreground" />,
         undefined,
         ANALYSIS_ARCHIVE.length === 0 ? (
-          <p className="text-xs text-muted-foreground">No archived analysis entries yet.</p>
+          <p className="text-sm text-muted-foreground">No archived analysis entries yet.</p>
         ) : (
           <div className="space-y-3">
             {ANALYSIS_ARCHIVE.map((entry, i) => (
               <div key={`${entry.date}-${i}`} className="rounded-lg border border-border p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-medium text-foreground">{entry.title}</span>
+                  <span className="text-sm font-medium text-foreground">{entry.title}</span>
                   <Badge variant="secondary" className="text-[10px] tabular-nums shrink-0">
                     {entry.date}
                   </Badge>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{entry.summary}</p>
-                <p className="mt-1 text-[10px] font-medium text-foreground">{entry.verdict}</p>
+                <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{entry.summary}</p>
+                <p className="mt-1 text-xs font-medium text-foreground">{entry.verdict}</p>
               </div>
             ))}
           </div>
         )
       )}
 
-      {/* CFA glossary */}
-      <div className="rounded-lg border border-border bg-muted/20 p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <BookOpen className="h-4 w-4 text-muted-foreground" />
-          <p className="text-xs font-semibold text-foreground">{CFA_INVESTMENT_GLOSSARY_TITLE}</p>
-        </div>
-        <ul className="space-y-3">
-          {CFA_INVESTMENT_GLOSSARY.map((item) => (
-            <li key={item.term} className="text-xs">
-              <span className="font-semibold text-foreground">{item.term}:</span>{" "}
-              <span className="text-muted-foreground leading-relaxed">{item.definition}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Card>
+        <CardHeader className="p-5 pb-0">
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">{CFA_INVESTMENT_GLOSSARY_TITLE}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-5 pt-3">
+          <ul className="space-y-3">
+            {CFA_INVESTMENT_GLOSSARY.map((item) => (
+              <li key={item.term} className="text-sm leading-relaxed">
+                <span className="font-medium text-foreground">{item.term}:</span>{" "}
+                <span className="text-muted-foreground">{item.definition}</span>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
 
-      <p className="text-center text-[10px] text-muted-foreground pb-4">{INVESTMENT_TAB_FOOTNOTE}</p>
+      <p className="text-center text-xs text-muted-foreground pb-2">{INVESTMENT_TAB_FOOTNOTE}</p>
     </div>
   );
 }
