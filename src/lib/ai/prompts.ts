@@ -302,7 +302,8 @@ export async function buildCoverageContext(
           ? metrics
           : JSON.stringify(metrics, null, 2);
     }
-  } catch {
+  } catch (error) {
+    console.error(`Coverage prompt: entity data for ${upperTicker} not loaded:`, error);
     // Entity data files not yet scaffolded — use registry defaults
   }
 

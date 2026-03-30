@@ -49,7 +49,8 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
       { name: "Nasdaq", quote: qqq },
       { name: "Dow Jones", quote: dia },
     ];
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch news page data:", error);
     // Data unavailable
   }
 

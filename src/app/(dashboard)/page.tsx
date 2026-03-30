@@ -25,6 +25,7 @@ import {
 import { getQuote, getMarketNews } from "@/lib/api/fmp";
 import type { FMPQuote, FMPNews } from "@/lib/api/fmp";
 import { PortfolioSummary } from "@/components/shared/portfolio-summary";
+import { getCurrentUser } from "@/lib/auth/user";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -42,6 +43,9 @@ function getGreeting(): string {
 // ---------------------------------------------------------------------------
 
 export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  const displayName = user.name?.trim() || "there";
+
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -84,7 +88,8 @@ export default async function DashboardPage() {
     }));
     watchlistQuotes = wlQuotes.filter(Boolean) as FMPQuote[];
     latestNews = newsData ?? [];
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch dashboard data:", error);
     // Partial failure is fine — sections will show empty states
   }
 
@@ -93,7 +98,7 @@ export default async function DashboardPage() {
       {/* Greeting */}
       <div>
         <h1 className="text-xl font-semibold text-foreground">
-          {getGreeting()}, there
+          {getGreeting()}, {displayName}
         </h1>
         <p className="text-sm text-muted-foreground">{today}</p>
       </div>

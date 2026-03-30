@@ -145,7 +145,8 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
 
     stockA = buildStockData(tickerA, quoteA, profileA, metricsA);
     stockB = buildStockData(tickerB, quoteB, profileB, metricsB);
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch comparison data:", error);
     // Data unavailable
   }
 

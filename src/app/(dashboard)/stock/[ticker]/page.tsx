@@ -61,7 +61,8 @@ export default async function StockPage({ params }: StockPageProps) {
       getBalanceSheet(upperTicker, "annual", 1),
       getStockNews(upperTicker, 3),
     ]);
-  } catch {
+  } catch (error) {
+    console.error(`Failed to fetch stock data for ${upperTicker}:`, error);
     return (
       <div className="flex items-center justify-center py-20">
         <Card className="max-w-md w-full">
@@ -105,7 +106,8 @@ export default async function StockPage({ params }: StockPageProps) {
         incomeStatements,
         balanceSheet: latestBalanceSheet,
       });
-    } catch {
+    } catch (error) {
+      console.error("Failed to calculate snowflake scores:", error);
       // Scores unavailable
     }
   }
@@ -148,7 +150,8 @@ export default async function StockPage({ params }: StockPageProps) {
         aiAnalysis = data;
       }
     }
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch AI analysis:", error);
     // AI analysis unavailable
   }
 

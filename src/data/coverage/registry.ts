@@ -42,6 +42,8 @@ export const UNIVERSAL_TABS: CoverageTab[] = [...TABS_BEFORE_CUSTOM, ...TABS_AFT
 export interface CoveredStock {
   ticker: string;
   name: string;
+  /** Primary listing exchange (e.g. NASDAQ, NYSE) — optional for prompt context */
+  exchange?: string;
   sector: string;
   coverageDate: string; // when coverage was initiated
   analyst: string;
@@ -54,6 +56,7 @@ const COVERED_STOCKS: Record<string, CoveredStock> = {
   BMNR: {
     ticker: "BMNR",
     name: "Bitmine Immersion Technologies",
+    exchange: "NYSE",
     sector: "Crypto / ETH Treasury",
     coverageDate: "2025-07-01",
     analyst: "Takovic Research",

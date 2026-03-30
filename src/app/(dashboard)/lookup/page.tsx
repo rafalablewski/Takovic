@@ -32,7 +32,8 @@ export default async function LookupPage() {
     ]);
     popularStocks = quotes.filter((q): q is FMPQuote => q !== null);
     trendingStocks = trending ?? [];
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch lookup page data:", error);
     // Data unavailable
   }
 

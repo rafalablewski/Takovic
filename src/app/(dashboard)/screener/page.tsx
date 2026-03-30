@@ -106,7 +106,8 @@ export default async function ScreenerPage({
 
   try {
     stocks = await screenStocks(fmpParams);
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch screener data:", error);
     fetchError = true;
   }
 
