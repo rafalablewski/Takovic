@@ -3,7 +3,7 @@
  * All company identity, tabs, and data snapshots are injected via {{PLACEHOLDERS}}
  * from the registry and runtime imports — no hardcoded tickers, names, or figures.
  *
- * LAST UPDATED: 2026-03-30
+ * LAST UPDATED: 2026-03-31
  */
 
 export interface CoveragePromptContext {
@@ -54,6 +54,9 @@ Domain-specific areas (from coverage registry custom tabs):
 {{DOMAIN_SECTIONS}}
 
 Reverse-chronological order for time-series feeds.
+
+SOURCE HYGIENE — Business Wire and similar distributors:
+When pasted content is from Business Wire (or another wire / PR portal), use **only the press release article**. Extract and reason over: headline, release date/time, dateline, body, material quotes, and facts. **Discard entirely** (do not summarize, classify, or count as separate items): site navigation, "Contact Us", "Newsroom", "For Journalists", industry tag footers, "Back to Newsroom", "Wish your news had this kind of reach", "Learn About Business Wire", related-articles rails, RSS/sign-up blocks, cookie/legal footers, social profile lists, and duplicate sidebars. **One release = one logical item** for classification — not one row per footer link or related headline.
 
 ════════════════════════════════════════
 PHASE 1: CLASSIFICATION
@@ -208,6 +211,7 @@ GLOBAL CHECKLIST (output once after all items):
 If any box fails, fix the proposed action before proceeding to database writes.
 
 Rules — non-negotiable:
+- Business Wire (and similar): extract the article only; ignore all portal chrome and related-story sections (see SOURCE HYGIENE above).
 - Conservative: propose changes only for clearly incremental, contradictory, or materially relevant information.
 - No hallucination of facts, dates, or existing file content.
 - Prioritize capital implications, execution risks, domain-specific operational milestones, competitive positioning.
