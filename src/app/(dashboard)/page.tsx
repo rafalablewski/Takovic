@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { getQuote, getMarketNews } from "@/lib/api/fmp";
 import type { FMPQuote, FMPNews } from "@/lib/api/fmp";
+import { PortfolioSummary } from "@/components/shared/portfolio-summary";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -157,13 +158,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="p-5 pt-4">
-            <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-              <AlertCircle className="mb-3 h-8 w-8 opacity-30" />
-              <p className="text-sm font-medium">Connect your portfolio to see data</p>
-              <p className="mt-1 text-xs">
-                Portfolio tracking will be available once database integration is complete.
-              </p>
-            </div>
+            <PortfolioSummary />
           </CardContent>
         </Card>
 
