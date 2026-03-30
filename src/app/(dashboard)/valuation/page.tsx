@@ -69,7 +69,6 @@ export default function ValuationPage() {
 
   // User-adjustable overrides
   const [dcfGrowthHigh, setDcfGrowthHigh] = useState<number | null>(null);
-  const [dcfGrowthFade, setDcfGrowthFade] = useState<number | null>(null);
   const [highGrowthYears, setHighGrowthYears] = useState(5);
   const [fadeYears, setFadeYears] = useState(5);
   const [terminalGrowth, setTerminalGrowth] = useState(2.5);
@@ -104,7 +103,6 @@ export default function ValuationPage() {
       // Pre-fill overrides with stock-specific values
       const highGrowth = Math.max(data.fcfGrowthRate3yr, data.revenueGrowthRate);
       setDcfGrowthHigh(Math.round(highGrowth * 1000) / 10);
-      setDcfGrowthFade(Math.round(highGrowth * 0.4 * 1000) / 10);
       setDiscountRate(Math.round(data.wacc * 1000) / 10);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
@@ -119,13 +117,12 @@ export default function ValuationPage() {
 
     return runAllModels(stockParams, {
       dcfGrowthHigh: dcfGrowthHigh != null ? dcfGrowthHigh / 100 : undefined,
-      dcfGrowthFade: dcfGrowthFade != null ? dcfGrowthFade / 100 : undefined,
       highGrowthYears,
       fadeYears,
       terminalGrowth: terminalGrowth / 100,
       discountRate: discountRate != null ? discountRate / 100 : undefined,
     });
-  }, [stockParams, dcfGrowthHigh, dcfGrowthFade, highGrowthYears, fadeYears, terminalGrowth, discountRate]);
+  }, [stockParams, dcfGrowthHigh, highGrowthYears, fadeYears, terminalGrowth, discountRate]);
 
   const applicableModels = results?.models.filter((m) => m.applicable) ?? [];
   const inapplicableModels = results?.models.filter((m) => !m.applicable) ?? [];
@@ -317,7 +314,7 @@ export default function ValuationPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <NumberInput
                     label="High Growth Rate"
-                    value={dcfGrowthHigh ?? 0}
+                    value={dcfGrowthHigh}
                     onChange={setDcfGrowthHigh}
                     suffix="%"
                     step={0.5}
@@ -326,22 +323,15 @@ export default function ValuationPage() {
                   <NumberInput
                     label="High Growth Years"
                     value={highGrowthYears}
-                    onChange={setHighGrowthYears}
+                    onChange={(v) => setHighGrowthYears(v ?? 5)}
                     step={1}
                     min={1}
                     max={15}
                   />
                   <NumberInput
-                    label="Fade Growth Rate"
-                    value={dcfGrowthFade ?? 0}
-                    onChange={setDcfGrowthFade}
-                    suffix="%"
-                    step={0.5}
-                  />
-                  <NumberInput
                     label="Fade Years"
                     value={fadeYears}
-                    onChange={setFadeYears}
+                    onChange={(v) => setFadeYears(v ?? 5)}
                     step={1}
                     min={0}
                     max={10}
@@ -349,13 +339,13 @@ export default function ValuationPage() {
                   <NumberInput
                     label="Terminal Growth"
                     value={terminalGrowth}
-                    onChange={setTerminalGrowth}
+                    onChange={(v) => setTerminalGrowth(v ?? 2.5)}
                     suffix="%"
                     step={0.25}
                   />
                   <NumberInput
                     label="Discount Rate (WACC)"
-                    value={discountRate ?? 0}
+                    value={discountRate}
                     onChange={setDiscountRate}
                     suffix="%"
                     step={0.25}
@@ -371,13 +361,13 @@ export default function ValuationPage() {
                   <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
                     <span className="text-muted-foreground">Equity Weight</span>
                     <span className="tabular-nums text-right">
-                      {stockParams.marketCap > 0
+                      {stockParams.marketCap + stockParams.totalDebt > 0
                         ? ((stockParams.marketCap / (stockParams.marketCap + stockParams.totalDebt)) * 100).toFixed(1)
                         : "—"}%
                     </span>
                     <span className="text-muted-foreground">Debt Weight</span>
                     <span className="tabular-nums text-right">
-                      {stockParams.totalDebt > 0
+                      {stockParams.marketCap + stockParams.totalDebt > 0
                         ? ((stockParams.totalDebt / (stockParams.marketCap + stockParams.totalDebt)) * 100).toFixed(1)
                         : "0.0"}%
                     </span>
@@ -730,8 +720,8 @@ function NumberInput({
   hint,
 }: {
   label: string;
-  value: number;
-  onChange: (v: number) => void;
+  value: number | null;
+  onChange: (v: number | null) => void;
   suffix?: string;
   step?: number;
   min?: number;
@@ -745,13 +735,20 @@ function NumberInput({
         <input
           type="number"
           className={cn(inputClass, suffix && "pr-8")}
-          value={value}
+          value={value ?? ""}
           onChange={(e) => {
-            let v = parseFloat(e.target.value);
-            if (isNaN(v)) v = 0;
-            if (min != null) v = Math.max(min, v);
-            if (max != null) v = Math.min(max, v);
-            onChange(v);
+            const val = e.target.value;
+            if (val === "") {
+              onChange(null);
+              return;
+            }
+            const num = parseFloat(val);
+            if (!isNaN(num)) {
+              let clamped = num;
+              if (min != null) clamped = Math.max(min, clamped);
+              if (max != null) clamped = Math.min(max, clamped);
+              onChange(clamped);
+            }
           }}
           step={step}
           min={min}

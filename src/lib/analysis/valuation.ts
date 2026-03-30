@@ -45,7 +45,6 @@ export function calculateDCF(inputs: DCFInputs): number {
     currentFCF,
     fcfGrowthRateHigh,
     highGrowthYears,
-    fcfGrowthRateFade,
     fadeYears,
     terminalGrowthRate,
     discountRate,
@@ -67,13 +66,13 @@ export function calculateDCF(inputs: DCFInputs): number {
     totalPV += fcf / Math.pow(1 + discountRate, year);
   }
 
-  // Phase 2: Fade (linear interpolation from high growth to terminal)
+  // Phase 2: Fade (linear interpolation from high growth to terminal growth)
   for (let i = 0; i < fadeYears; i++) {
     year++;
     const fadeProgress = (i + 1) / fadeYears;
     const fadeRate =
       fcfGrowthRateHigh * (1 - fadeProgress) +
-      fcfGrowthRateFade * fadeProgress;
+      terminalGrowthRate * fadeProgress;
     fcf *= 1 + fadeRate;
     totalPV += fcf / Math.pow(1 + discountRate, year);
   }
@@ -132,8 +131,8 @@ export function calculateLynchFairValue(inputs: LynchInputs): number {
   if (eps <= 0) return 0;
   if (earningsGrowthRate <= 0) return 0;
 
-  // Fair P/E = growth rate (%) + dividend yield (%)
-  const fairPE = earningsGrowthRate + dividendYield;
+  // Fair P/E = growth rate (%) + dividend yield (%) — inputs are decimals
+  const fairPE = (earningsGrowthRate * 100) + (dividendYield * 100);
   return eps * fairPE;
 }
 
@@ -233,7 +232,6 @@ export function runAllModels(
   params: StockValuationParams,
   overrides?: {
     dcfGrowthHigh?: number;
-    dcfGrowthFade?: number;
     highGrowthYears?: number;
     fadeYears?: number;
     terminalGrowth?: number;
@@ -245,7 +243,6 @@ export function runAllModels(
   const wacc = overrides?.discountRate ?? params.wacc;
   const highGrowth =
     overrides?.dcfGrowthHigh ?? Math.max(params.fcfGrowthRate3yr, params.revenueGrowthRate);
-  const fadeGrowth = overrides?.dcfGrowthFade ?? highGrowth * 0.4;
   const terminalGrowth = overrides?.terminalGrowth ?? 0.025;
   const highGrowthYears = overrides?.highGrowthYears ?? 5;
   const fadeYears = overrides?.fadeYears ?? 5;
@@ -257,7 +254,6 @@ export function runAllModels(
         currentFCF: params.freeCashFlow,
         fcfGrowthRateHigh: highGrowth,
         highGrowthYears,
-        fcfGrowthRateFade: fadeGrowth,
         fadeYears,
         terminalGrowthRate: terminalGrowth,
         discountRate: wacc,
@@ -317,21 +313,19 @@ export function runAllModels(
   });
 
   // 4. Peter Lynch PEG
-  const epsGrowthPct =
-    params.revenueGrowthRate > 0 ? params.revenueGrowthRate * 100 : 0;
-  const hasLynchData = params.eps > 0 && epsGrowthPct > 0;
+  const hasLynchData = params.eps > 0 && params.revenueGrowthRate > 0;
   const lynchValue = hasLynchData
     ? calculateLynchFairValue({
         eps: params.eps,
-        earningsGrowthRate: epsGrowthPct,
-        dividendYield: params.dividendYield * 100,
+        earningsGrowthRate: params.revenueGrowthRate,
+        dividendYield: params.dividendYield,
       })
     : 0;
   models.push({
     name: "Peter Lynch Fair Value",
     fairValue: lynchValue,
     description: hasLynchData
-      ? `PEG-based: ${epsGrowthPct.toFixed(1)}% growth + ${(params.dividendYield * 100).toFixed(1)}% yield`
+      ? `PEG-based: ${(params.revenueGrowthRate * 100).toFixed(1)}% growth + ${(params.dividendYield * 100).toFixed(1)}% yield`
       : "Requires positive EPS and growth",
     confidence: hasLynchData ? "medium" : "low",
     applicable: hasLynchData,
@@ -437,7 +431,6 @@ export function runAllModels(
     currentFCF: params.freeCashFlow,
     fcfGrowthRateHigh: highGrowth,
     highGrowthYears,
-    fcfGrowthRateFade: fadeGrowth,
     fadeYears,
     terminalGrowthRate: terminalGrowth,
     discountRate: wacc,

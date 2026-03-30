@@ -57,8 +57,7 @@ export interface DCFInputs {
   currentFCF: number; // most recent annual FCF in dollars
   fcfGrowthRateHigh: number; // high-growth phase annual rate (e.g. 0.12 = 12%)
   highGrowthYears: number; // years of high growth (typically 5)
-  fcfGrowthRateFade: number; // fade-phase annual rate
-  fadeYears: number; // years of fade (typically 5)
+  fadeYears: number; // years of fade to terminal (typically 5)
   terminalGrowthRate: number; // perpetuity growth rate (e.g. 0.025 = 2.5%)
   discountRate: number; // WACC (e.g. 0.10 = 10%)
   sharesOutstanding: number; // total diluted shares
@@ -93,8 +92,8 @@ export interface GrahamInputs {
 /** Inputs for Peter Lynch (PEG-based) fair value */
 export interface LynchInputs {
   eps: number;
-  earningsGrowthRate: number; // percent (e.g. 15 = 15%)
-  dividendYield: number; // percent (e.g. 1.5 = 1.5%)
+  earningsGrowthRate: number; // decimal (e.g. 0.15 = 15%)
+  dividendYield: number; // decimal (e.g. 0.015 = 1.5%)
 }
 
 /** Inputs for Earnings Power Value */
