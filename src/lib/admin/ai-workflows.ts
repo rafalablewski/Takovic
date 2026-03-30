@@ -24,7 +24,8 @@ export const AI_WORKFLOWS: AiWorkflow[] = [
     source: "src/lib/ai/coverage-prompts/coverage-analyst-template.ts + build-coverage-prompt.ts",
     modelEnvKeys: [],
     consumers: [
-      "Manual / IDE — buildCoverageContext(ticker); not yet bound to an API route",
+      "Admin → Prompts & AI (/admin/prompts): resolved prompt + copy",
+      "Manual / IDE — buildCoverageContext(ticker)",
       "Coverage pages: src/app/(dashboard)/coverage/[ticker]",
     ],
   },

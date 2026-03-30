@@ -1,5 +1,5 @@
 import { DevGuideContent } from "@/components/dev-guide/dev-guide-content";
 
-export default function DevGuidePage() {
+export default function AdminDevGuidePage() {
   return <DevGuideContent />;
 }
