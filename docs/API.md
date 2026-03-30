@@ -238,7 +238,7 @@ These endpoints are not yet implemented but are anticipated based on the databas
 | `/key-metrics/{ticker}` | `getKeyMetrics(ticker, period?, limit?)` | `FMPKeyMetrics[]` |
 | `/search` | `searchStocks(query, limit?)` | `FMPSearchResult[]` |
 | `/stock_news` | `getStockNews(ticker, limit?)` | `FMPNews[]` |
-| `/stock_news` (no ticker) | `getMarketNews(limit?)` | `FMPNews[]` |
+| `/stock_news` (requires `tickers`) | `getMarketNews(limit?, tickers?)` — defaults to a broad symbol list if `tickers` omitted | `FMPNews[]` |
 | `/stock-screener` | `screenStocks(params)` | `FMPScreenerResult[]` |
 
 **Rate Limits:** Depends on FMP plan. Free tier allows 250 requests/day. All FMP fetches include `next: { revalidate: 300 }` (5-minute Next.js fetch cache).

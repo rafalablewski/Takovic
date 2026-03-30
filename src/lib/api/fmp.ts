@@ -117,9 +117,16 @@ export async function getStockNews(ticker: string, limit = 20) {
   });
 }
 
-// General market news
-export async function getMarketNews(limit = 30) {
+/** FMP stock_news requires tickers; without them the API returns no rows even with a valid key. */
+const DEFAULT_STOCK_NEWS_TICKERS =
+  "AAPL,MSFT,GOOGL,AMZN,NVDA,TSLA,META,SPY,QQQ";
+
+// General market news (aggregated headlines for the given symbols)
+export async function getMarketNews(limit = 30, tickers?: string) {
+  const tickersParam =
+    tickers?.trim() || DEFAULT_STOCK_NEWS_TICKERS;
   return fetchFMP<FMPNews[]>("/stock_news", {
+    tickers: tickersParam,
     limit: limit.toString(),
   });
 }
