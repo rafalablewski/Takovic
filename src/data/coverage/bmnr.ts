@@ -1,7 +1,7 @@
 /**
  * BMNR coverage data — Bitmine Immersion Technologies
  *
- * LAST UPDATED: 2026-03-27
+ * LAST UPDATED: 2026-03-31
  * NEXT UPDATE: After next 8-K filing or material event
  */
 
@@ -35,7 +35,7 @@ export const OVERVIEW = {
     { title: "NAV premium expansion", detail: "MSTR trades 2-3x; BMNR could follow" },
     { title: "ETF/index inclusion", detail: "Forces passive buying, liquidity premium" },
     { title: "Dividend growth", detail: "Staking scales → higher payouts" },
-    { title: "MAVAN launch", detail: "Proprietary staking = higher yields" },
+    { title: "MAVAN live", detail: "Proprietary staking platform launched Mar 2026" },
     { title: "Regulatory clarity", detail: "ETH not a security, staking approved" },
   ] as CasePoint[],
 
@@ -49,34 +49,34 @@ export const OVERVIEW = {
   ] as CasePoint[],
 
   metrics: [
-    // Valuation
-    { label: "NAV/Share", value: 21.36, description: "Book value per share", format: "currency", group: "valuation" },
-    { label: "Stock Price", value: 18.39, description: "Market price", format: "currency", group: "valuation" },
-    { label: "Premium/Discount", value: -0.139, description: "Trading below NAV", format: "percent", group: "valuation" },
+    // Valuation (stock est. from PR-era marks; reconcile with filings)
+    { label: "NAV/Share", value: 22.9, description: "Rough book incl. ETH+cash+moonshots (PR Mar 30)", format: "currency", group: "valuation" },
+    { label: "Stock Price", value: 17.65, description: "Illustrative (align w/ purchase log era)", format: "currency", group: "valuation" },
+    { label: "Premium/Discount", value: -0.23, description: "Vs rough NAV/share", format: "percent", group: "valuation" },
     { label: "Dividend Yield", value: 0.0022, description: "$0.04/share annually", format: "percent", group: "valuation" },
-    // Holdings
-    { label: "Total ETH", value: 4595562, description: "Holdings", format: "eth", group: "holdings" },
-    { label: "ETH Price", value: 2185, description: "Current", format: "currency", group: "holdings" },
-    { label: "Total Value", value: 10.04e9, description: "ETH holdings", format: "currency", group: "holdings" },
+    // Holdings (PR Mar 30, 2026 — snapshot Mar 29)
+    { label: "Total ETH", value: 4732082, description: "4.732M; 3.92% of 120.7M supply", format: "eth", group: "holdings" },
+    { label: "ETH Price", value: 2005, description: "Mark (COIN ref, PR)", format: "currency", group: "holdings" },
+    { label: "Total Value", value: 9.49e9, description: "ETH at PR mark", format: "currency", group: "holdings" },
     // Staking
-    { label: "ETH Staked", value: 3080000, description: "67.0% of holdings", format: "eth", group: "staking" },
-    { label: "Staking Revenue", value: 209e6, description: "95,758 ETH/yr", format: "currency", group: "staking" },
+    { label: "ETH Staked", value: 3142643, description: "~66% of ETH book (PR)", format: "eth", group: "staking" },
+    { label: "Staking Revenue", value: 177e6, description: "Annualized (PR Mar 30)", format: "currency", group: "staking" },
     // Shares
-    { label: "Shares", value: 470e6, description: "Outstanding", format: "number", group: "shares" },
-    { label: "Market Cap", value: 8.64e9, description: "Equity", format: "currency", group: "shares" },
-    { label: "NAV Multiple", value: 0.86, description: "Premium/Discount", format: "multiplier", group: "shares" },
-    { label: "ETH/Share", value: 0.009778, description: "Per share", format: "text", group: "shares" },
+    { label: "Shares", value: 470e6, description: "Outstanding (approx.)", format: "number", group: "shares" },
+    { label: "Market Cap", value: 8.3e9, description: "~$17.65 × 470M (illustrative)", format: "currency", group: "shares" },
+    { label: "NAV Multiple", value: 0.77, description: "Vs rough NAV/share", format: "multiplier", group: "shares" },
+    { label: "ETH/Share", value: 0.01007, description: "ETH per share (470M SO)", format: "text", group: "shares" },
     // Dividend
     { label: "Quarterly Div", value: 0.01, description: "Per share", format: "currency", group: "dividend" },
     { label: "Annual Div", value: 0.04, description: "Per share", format: "currency", group: "dividend" },
-    { label: "Div Yield", value: 0.0022, description: "Annualized", format: "percent", group: "dividend" },
+    { label: "Div Yield", value: 0.0023, description: "Vs ~$17.65", format: "percent", group: "dividend" },
     { label: "Payout", value: 18.8e6, description: "Annual total", format: "currency", group: "dividend" },
     // Other assets
     { label: "MrBeast Equity", value: 200e6, description: "Beast Industries", format: "currency", group: "other" },
-    { label: "Orbs Stake", value: 83e6, description: "Eightco (OpenAI + Beast)", format: "currency", group: "other" },
-    { label: "BTC Worth", value: 16.5e6, description: "196 BTC", format: "currency", group: "other" },
-    { label: "Total NAV", value: 11.54e9, description: "$24.55/share", format: "currency", group: "other" },
-    { label: "Prem/(Disc) NAV", value: -0.251, description: "Discount to NAV", format: "percent", group: "other" },
+    { label: "Orbs Stake", value: 102e6, description: "Eightco ORBS (PR Mar 30)", format: "currency", group: "other" },
+    { label: "BTC Worth", value: 9.9e6, description: "197 BTC (mark est.)", format: "currency", group: "other" },
+    { label: "Cash", value: 961e6, description: "Total cash (PR)", format: "currency", group: "other" },
+    { label: "Total Stack (PR)", value: 10.7e9, description: "Crypto+cash+moonshots headline", format: "currency", group: "other" },
   ] as OverviewMetric[],
 };
 
@@ -430,8 +430,8 @@ export const COMPARABLES: ComparableCompany[] = [
     ticker: "MSTR",
     name: "MicroStrategy (Strategy)",
     asset: "BTC",
-    holdings: "499,096 BTC",
-    holdingsValue: "$43.4B",
+    holdings: "762,099 BTC",
+    holdingsValue: "~$51B",
     navPremium: "1.75x",
     stakingYield: "0%",
     marketCap: "$75.9B",

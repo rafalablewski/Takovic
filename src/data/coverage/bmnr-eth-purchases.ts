@@ -2,7 +2,7 @@
  * BMNR ETH purchase log — weekly 8-K/PR-derived (Jul 2025 → present).
  *
  * LAST UPDATED: 2026-03-31
- * NEXT UPDATE: After next weekly holdings PR / 8-K
+ * NEXT UPDATE: After next weekly holdings PR / 8-K (ingested Mar 23–30, 2026 PRs)
  */
 
 export interface ETHPurchase {
@@ -23,11 +23,11 @@ export interface ETHPurchase {
 
 export const ETH_PURCHASE_HISTORY_TITLE = "PURCHASE HISTORY";
 export const ETH_PURCHASE_HISTORY_DESCRIPTION =
-  "ETH Purchases.\n\nComplete record of all ETH purchases from weekly 8-K/PR filings. Shows ETH acquired, price paid, mNAV at time of purchase, and total capital deployed. 35 purchase events tracked from Jul 2025 to present.";
+  "ETH Purchases.\n\nComplete record of all ETH purchases from weekly 8-K/PR filings. Shows ETH acquired, price paid, mNAV at time of purchase, and total capital deployed. 37 purchase events tracked from Jul 2025 to present.";
 
 export const ETH_ACCUMULATION_SUMMARY_HEADING = "ACCUMULATION SUMMARY";
 export const ETH_PURCHASE_OVERVIEW_HEADING = "PURCHASE OVERVIEW";
-export const ETH_PURCHASE_OVERVIEW_SOURCE_LINE = "Sourced from PRs — last reported 2026-03-16";
+export const ETH_PURCHASE_OVERVIEW_SOURCE_LINE = "Sourced from PRs — last reported 2026-03-30";
 
 export const ETH_PURCHASE_LOG_HEADING = "PURCHASE LOG (NEWEST FIRST)";
 export const ETH_PURCHASE_LOG_SUBHEADING = "ALL ETH PURCHASES";
@@ -48,27 +48,28 @@ export const ETH_PURCHASE_TABLE_HEADERS = [
 ] as const;
 
 export const ETH_PURCHASE_SUMMARY = {
-  totalPurchases: 35,
-  lastReportedEth: 4_596_000,
-  lastReportedEthDisplay: "4.596M",
-  totalCapitalDeployedUsd: 17.37e9,
-  totalCapitalDeployedDisplay: "$17.37B",
-  averagePricePerEthUsd: 3_780,
-  averagePriceDisplay: "$3,780",
+  totalPurchases: 37,
+  lastReportedEth: 4_732_082,
+  lastReportedEthDisplay: "4.732M",
+  /** Cumulative USD deployed into ETH tranches (log); excludes non-ETH line items. */
+  totalCapitalDeployedUsd: 17_649_500_000,
+  totalCapitalDeployedDisplay: "$17.65B",
+  averagePricePerEthUsd: 3_729,
+  averagePriceDisplay: "$3,729",
   currentMnav: 0.88,
   currentMnavDisplay: "0.88x",
-  currentEthPriceUsd: 2_185,
-  currentEthPriceDisplay: "$2,185",
-  unrealizedPLUsd: -7.33e9,
-  unrealizedPLDisplay: "$-7.33B",
-  unrealizedPLPercentDisplay: "-42.2%",
-  navPerShareUsd: 21.36,
-  navPerShareDisplay: "$21.36",
-  stockPriceUsd: 18.73,
-  stockPriceDisplay: "$18.73",
-  totalEthAcquiredFromLog: 4_595_562,
+  currentEthPriceUsd: 2_005,
+  currentEthPriceDisplay: "$2,005",
+  unrealizedPLUsd: -8_162_190_838,
+  unrealizedPLDisplay: "$-8.16B",
+  unrealizedPLPercentDisplay: "-46.2%",
+  navPerShareUsd: 22.9,
+  navPerShareDisplay: "$22.90",
+  stockPriceUsd: 17.65,
+  stockPriceDisplay: "$17.65",
+  totalEthAcquiredFromLog: 4_732_082,
   firstPurchase: "2025-07-14",
-  lastPurchase: "2026-03-16",
+  lastPurchase: "2026-03-30",
 };
 
 export const ETH_MNAV_METHODOLOGY = {
@@ -122,6 +123,36 @@ Dec 2025–Feb 2026 — Moderate–high. Two confirmed prices, shares anchored b
 
 /** Newest first (matches “purchase log (newest first)”). */
 export const ETH_PURCHASES: ETHPurchase[] = [
+  {
+    date: "2026-03-30",
+    ethAcquired: 71_179,
+    ethPriceUsd: 2_005,
+    usdDeployed: 142.7e6,
+    stockPrevCloseUsd: 20.35,
+    periodRange: "$19.40–$21.10 (est.)",
+    marketCapUsd: 9.55e9,
+    mnav: 0.94,
+    mnavRange: "0.90x–1.05x (est.)",
+    totalEthAfter: 4_732_082,
+    totalEthAfterDisplay: "4.732M",
+    notes:
+      "~472M shares (est.). PR Mar 30, 2026 — snapshot Mar 29, 6:00pm ET. 71,179 ETH past week (elevated vs ~45–50k prior). Total 4,732,082 ETH @ $2,005 (COIN). Cash $961M; ORBS $102M; Beast $200M; 197 BTC. Staked 3,142,643 (~66% of book). MAVAN launched Mar 25. CESR 2.79%; 7-day yield 2.80%. Rank #100 by $ volume ($920M 5-day). MSTR 762,099 BTC ~$51B.",
+  },
+  {
+    date: "2026-03-23",
+    ethAcquired: 65_341,
+    ethPriceUsd: 2_072,
+    usdDeployed: 135.4e6,
+    stockPrevCloseUsd: 20.72,
+    periodRange: "$19.80–$21.50 (est.)",
+    marketCapUsd: 9.85e9,
+    mnav: 0.97,
+    mnavRange: "0.93x–1.04x (est.)",
+    totalEthAfter: 4_660_903,
+    totalEthAfterDisplay: "4.661M",
+    notes:
+      "~471M shares (est.). PR Mar 23, 2026 — snapshot Mar 22, 3:00pm ET. 65,341 ETH past week. Total 4,660,903 ETH @ $2,072 (COIN). Cash $1.1B; ORBS $95M; Beast $200M; 196 BTC. 3.86% of supply. Staked 3,142,643; annualized staking rev ~$184M. CESR 2.75%; 7-day 2.83%. MAVAN early 2026; 3 providers. Rank #101 ($1.2B 5-day). MSTR 761,068 BTC ~$52B.",
+  },
   {
     date: "2026-03-16",
     ethAcquired: 60_999,

@@ -1,5 +1,224 @@
 [
   {
+    "id": "bmnr-tl-092",
+    "date": "2026-03-30",
+    "topic": "Holdings",
+    "title": "📊 ETH 4.732M — $10.7B Stack; +71,179 ETH Week; 3.92% Supply; MAVAN Live",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,660,903",
+        "newValue": "4,732,082",
+        "change": "+71,179 (Mar 29 snapshot)"
+      },
+      {
+        "metric": "ETH Price (mark)",
+        "previous": "$2,072",
+        "newValue": "$2,005",
+        "change": "COIN ref (PR)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.86%",
+        "newValue": "3.92%",
+        "change": "120.7M supply"
+      },
+      {
+        "metric": "Weekly ETH Acquired",
+        "previous": "65,341",
+        "newValue": "71,179",
+        "change": "Elevated vs ~45–50k prior"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$1.1B",
+        "newValue": "$961M",
+        "change": "—"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$95M",
+        "newValue": "$102M",
+        "change": "Moonshot stake"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,142,643",
+        "newValue": "3,142,643",
+        "change": "Unch.; ~66% staked"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$184M",
+        "newValue": "$177M",
+        "change": "PR snapshot"
+      },
+      {
+        "metric": "CESR / BMNR 7-Day",
+        "previous": "2.75% / 2.83%",
+        "newValue": "2.79% / 2.80%",
+        "change": "Quatrefoil / ops"
+      },
+      {
+        "metric": "Full-scale staking reward (forward)",
+        "previous": "$272M/yr",
+        "newValue": "$266M/yr",
+        "change": "@2.80% yield (PR)"
+      },
+      {
+        "metric": "Trading Rank / ADV (5d)",
+        "previous": "#101 / $1.2B",
+        "newValue": "#100 / $920M",
+        "change": "Fundstrat Mar 27"
+      },
+      {
+        "metric": "MSTR (peer ref)",
+        "previous": "761,068 BTC ~$52B",
+        "newValue": "762,099 BTC ~$51B",
+        "change": "PR"
+      }
+    ],
+    "notes": "PR Mar 30, 2026. Snapshot Mar 29, 6:00pm ET. MAVAN launched Mar 25; portion of ETH staked on MAVAN. Chairman: Iran war week 5, ETH +1,160bp vs equities; oil–crypto correlation narrative.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-093",
+    "date": "2026-03-25",
+    "topic": "Product",
+    "title": "🚀 MAVAN Launched — Institutional ETH Staking; +101,776 ETH Routed to MAVAN",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "milestone",
+    "keyChanges": [
+      {
+        "metric": "MAVAN",
+        "previous": "On track Q1 2026",
+        "newValue": "Launched",
+        "change": "Made in America VAlidator Network"
+      },
+      {
+        "metric": "ETH Staked to MAVAN (week)",
+        "previous": "—",
+        "newValue": "101,776 ETH (~$219M)",
+        "change": "PR; scale-up in coming weeks"
+      },
+      {
+        "metric": "Staked ETH (total)",
+        "previous": "3,142,643 ($6.5B @ $2,072)",
+        "newValue": "3,142,643 ($6.8B @ $2,148)",
+        "change": "Snapshot Mar 24, 5pm ET"
+      },
+      {
+        "metric": "Full-scale annual staking reward",
+        "previous": "~$272M/yr",
+        "newValue": "~$300M/yr",
+        "change": "@2.83% 7-day (forward)"
+      },
+      {
+        "metric": "Contact / GTM",
+        "previous": "—",
+        "newValue": "mavan@bitminetech.io",
+        "change": "Institutions, custodians, partners"
+      }
+    ],
+    "notes": "PR Mar 25, 2026. MAVAN: U.S.-based + global architecture; expand to other PoS chains / infra (forward-looking).",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-094",
+    "date": "2026-03-23",
+    "topic": "Holdings",
+    "title": "📊 ETH 4.661M — $11.0B Stack; +65,341 ETH Week; 3.86% Supply",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,595,562",
+        "newValue": "4,660,903",
+        "change": "+65,341 (Mar 22 snapshot)"
+      },
+      {
+        "metric": "ETH Price (mark)",
+        "previous": "$2,185",
+        "newValue": "$2,072",
+        "change": "COIN ref (PR)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.81%",
+        "newValue": "3.86%",
+        "change": "120.7M supply"
+      },
+      {
+        "metric": "Weekly ETH Acquired",
+        "previous": "60,999",
+        "newValue": "65,341",
+        "change": "Sustained >45–50k avg"
+      },
+      {
+        "metric": "Total Stack (PR)",
+        "previous": "$11.5B",
+        "newValue": "$11.0B",
+        "change": "Crypto+cash+moonshots"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$1.2B",
+        "newValue": "$1.1B",
+        "change": "PR Mar 22"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$83M",
+        "newValue": "$95M",
+        "change": "—"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,040,515",
+        "newValue": "3,142,643",
+        "change": "+102,128"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$180M/yr",
+        "newValue": "$184M/yr",
+        "change": "PR"
+      },
+      {
+        "metric": "CESR / BMNR 7-Day",
+        "previous": "2.79% / 2.81%",
+        "newValue": "2.75% / 2.83%",
+        "change": "—"
+      },
+      {
+        "metric": "Full-scale staking reward (forward)",
+        "previous": "$272M/yr",
+        "newValue": "$272M/yr",
+        "change": "At full MAVAN deployment"
+      },
+      {
+        "metric": "Trading Rank / ADV (5d)",
+        "previous": "#105 ($1.0B/day)",
+        "newValue": "#101 ($1.2B)",
+        "change": "Fundstrat Mar 20"
+      },
+      {
+        "metric": "MSTR (peer ref)",
+        "previous": "738,731 BTC ($53B)",
+        "newValue": "761,068 BTC (~$52B)",
+        "change": "PR"
+      }
+    ],
+    "notes": "PR Mar 23, 2026. Snapshot Mar 22, 3pm ET. MAVAN still pre-launch; 3 staking providers. Clarity Act / Polymarket narrative in body (forward-looking).",
+    "source": "PRNewswire"
+  },
+  {
     "id": "bmnr-tl-001",
     "date": "2026-03-17",
     "topic": "Corporate",
