@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useMemo, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,93 +28,80 @@ const TYPE_CONFIG: Record<string, { icon: typeof Clock; color: string; bg: strin
   market: { icon: TrendingUp, color: "text-gray-600 dark:text-gray-400", bg: "bg-gray-100 dark:bg-gray-800", label: "Market" },
 };
 
-const FILTER_TYPES = [
-  { value: "all", label: "All" },
-  { value: "filing", label: "Filings" },
-  { value: "purchase", label: "Purchases" },
-  { value: "corporate", label: "Corporate" },
-  { value: "milestone", label: "Milestones" },
-  { value: "market", label: "Market" },
-];
+const SENTIMENT_BADGE: Record<TimelineEvent["sentiment"], string> = {
+  bullish:
+    "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  neutral: "border border-border bg-muted/60 text-muted-foreground",
+  bearish: "border border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400",
+};
 
 export function TimelineTab({ ticker }: { ticker: string }) {
-  const [filterType, setFilterType] = useState("all");
+  const [filterTopic, setFilterTopic] = useState("all");
   const [showAll, setShowAll] = useState(false);
+
+  const topicOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const e of TIMELINE_EVENTS) {
+      counts.set(e.topic, (counts.get(e.topic) ?? 0) + 1);
+    }
+    const topics = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    return topics;
+  }, []);
 
   if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No timeline data.</p>;
 
-  // Reverse chronological
   const sorted = [...TIMELINE_EVENTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const filtered = filterType === "all" ? sorted : sorted.filter((e) => e.type === filterType);
+  const filtered =
+    filterTopic === "all" ? sorted : sorted.filter((e) => e.topic === filterTopic);
   const visible = showAll ? filtered : filtered.slice(0, 12);
 
   return (
     <div className="space-y-4">
-      {/* Description */}
       <Card>
         <CardContent className="p-5">
           <p className="text-sm text-muted-foreground leading-relaxed">{TIMELINE_DESCRIPTION}</p>
         </CardContent>
       </Card>
 
-      {/* Filter pills */}
-      <div className="flex items-center gap-1.5 overflow-x-auto">
-        <Filter className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-        {FILTER_TYPES.map((ft) => {
-          const count = ft.value === "all" ? sorted.length : sorted.filter((e) => e.type === ft.value).length;
-          if (count === 0 && ft.value !== "all") return null;
-          return (
-            <button
-              key={ft.value}
-              onClick={() => { setFilterType(ft.value); setShowAll(false); }}
-              className={cn(
-                "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
-                filterType === ft.value
-                  ? "bg-foreground text-background"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-              )}
-            >
-              {ft.label}
-              <span className="ml-1 opacity-60">{count}</span>
-            </button>
-          );
-        })}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          <Filter className="h-3 w-3 shrink-0" />
+          Filter by topic
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <TopicPill
+            label="All"
+            count={sorted.length}
+            active={filterTopic === "all"}
+            onClick={() => {
+              setFilterTopic("all");
+              setShowAll(false);
+            }}
+          />
+          {topicOptions.map(([topic, count]) => (
+            <TopicPill
+              key={topic}
+              label={topic}
+              count={count}
+              active={filterTopic === topic}
+              onClick={() => {
+                setFilterTopic(topic);
+                setShowAll(false);
+              }}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Timeline */}
       <Card>
         <CardContent className="p-5">
           <div className="relative">
-            {/* Vertical line */}
             <div className="absolute left-[15px] top-0 bottom-0 w-px bg-border" />
 
             <div className="space-y-0">
-              {visible.map((event, idx) => {
-                const config = TYPE_CONFIG[event.type] ?? TYPE_CONFIG.market;
-                const Icon = config.icon;
-
-                return (
-                  <div key={`${event.date}-${idx}`} className="relative flex gap-4 pb-6 last:pb-0">
-                    {/* Dot */}
-                    <div className={cn("relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full", config.bg)}>
-                      <Icon className={cn("h-3.5 w-3.5", config.color)} />
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 pt-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs tabular-nums text-muted-foreground">{formatDate(event.date)}</span>
-                        <Badge className={cn("text-[10px]", config.bg, config.color)}>{config.label}</Badge>
-                        {event.source && (
-                          <Badge variant="secondary" className="text-[9px]">{event.source}</Badge>
-                        )}
-                      </div>
-                      <p className="mt-0.5 text-sm font-medium text-foreground">{event.title}</p>
-                      <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">{event.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
+              {visible.map((event) => (
+                <TimelineEventRow key={event.id} event={event} />
+              ))}
             </div>
           </div>
 
@@ -133,6 +120,103 @@ export function TimelineTab({ ticker }: { ticker: string }) {
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function TopicPill({
+  label,
+  count,
+  active,
+  onClick,
+}: {
+  label: string;
+  count: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+        active ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+      )}
+    >
+      {label}
+      <span className="ml-1 opacity-60">{count}</span>
+    </button>
+  );
+}
+
+function TimelineEventRow({ event }: { event: TimelineEvent }) {
+  const config = TYPE_CONFIG[event.type] ?? TYPE_CONFIG.market;
+  const Icon = config.icon;
+
+  return (
+    <div className="relative flex gap-4 pb-8 last:pb-0">
+      <div className={cn("relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full", config.bg)}>
+        <Icon className={cn("h-3.5 w-3.5", config.color)} />
+      </div>
+
+      <div className="min-w-0 flex-1 space-y-3 pt-0.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs tabular-nums text-muted-foreground">{formatDate(event.date)}</span>
+          <Badge variant="outline" className="text-[10px] font-normal">
+            {event.topic}
+          </Badge>
+          <Badge className={cn("text-[10px] font-normal", config.bg, config.color)}>{config.label}</Badge>
+          <span
+            className={cn(
+              "rounded-md px-2 py-0.5 text-[10px] font-medium tabular-nums",
+              SENTIMENT_BADGE[event.sentiment]
+            )}
+          >
+            {event.sentimentLabel}
+          </span>
+          {event.source && (
+            <Badge variant="secondary" className="text-[9px]">
+              {event.source}
+            </Badge>
+          )}
+        </div>
+
+        <p className="text-sm font-medium text-foreground leading-snug">{event.title}</p>
+
+        {event.keyChanges.length > 0 && (
+          <div className="space-y-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Key changes</p>
+            <div className="overflow-x-auto rounded-md border border-border">
+              <table className="w-full min-w-[520px] border-collapse text-left text-xs">
+                <thead>
+                  <tr className="border-b border-border bg-muted/40">
+                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Metric</th>
+                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Previous</th>
+                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">New</th>
+                    <th className="px-2 py-1.5 font-medium uppercase tracking-wider text-muted-foreground">Change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {event.keyChanges.map((row, idx) => (
+                    <tr key={`${event.id}-kc-${idx}`} className="border-b border-border/80 last:border-0 hover:bg-muted/30">
+                      <td className="px-2 py-1.5 align-top font-medium text-foreground">{row.metric}</td>
+                      <td className="px-2 py-1.5 align-top tabular-nums text-muted-foreground">{row.previous}</td>
+                      <td className="px-2 py-1.5 align-top tabular-nums text-foreground">{row.newValue}</td>
+                      <td className="px-2 py-1.5 align-top text-muted-foreground">{row.change}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-1">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Notes</p>
+          <p className="whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">{event.notes}</p>
+        </div>
+      </div>
     </div>
   );
 }

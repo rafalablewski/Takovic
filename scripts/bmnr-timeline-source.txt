@@ -1,0 +1,3005 @@
+I'll paste all entires from the timeline tab for BMNR. Please insert them into. 
+
+EVENT TIMELINE
+Track key events for BMNR — ETH accumulation, SEC filings, capital raises, corporate strategy, and product launches
+Company-level catalysts and developments in chronological order
+
+FILTER BY TOPIC
+ETH Holdings (62)
+Staking (19)
+Dilution (30)
+Mining Era (18)
+Strategy (42)
+Financials (16)
+All (91)
+Holdings (38)
+SEC Filing (11)
+Capital (12)
+Corporate (28)
+Product (2)
+Earnings (0)
+- Collapse All
+2026-03-17
+Corporate
+🎤 Tom Lee Investor Presentation Filed — Hong Kong (Reg FD, Ex. 99.1)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Event
+—
+Investor Presentation
+Hong Kong
+Presenter
+—
+Tom Lee
+Executive Chairman
+Filing
+—
+8-K (Reg FD)
+Presentation as Ex. 99.1
+Address
+10845 Griffith Peak Dr #2, Las Vegas, NV
+800 Connecticut Avenue, Norwalk, CT 06854
+HQ relocated
+NOTES
+Tom Lee, Executive Chairman, presented in Hong Kong. Filed Mar 17, event date Mar 14. Notable: 8-K header shows new HQ address at 800 Connecticut Avenue, Norwalk, CT 06854 (previously Las Vegas, NV).
+Source: SEC Filing (8-K)
+2026-03-16
+Holdings
+📊 ETH Holdings Reach 4.596M — $11.5B Total, 3.81% of Supply, 76% to Alchemy of 5%
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,534,563
+4,595,562
++60,999 (+1.3%)
+ETH Price
+$1,965
+$2,185
++11.2% (Coinbase)
+ETH Supply %
+3.76%
+3.81%
++0.05pp (76% to 5%)
+Staked ETH
+3,040,483
+3,040,515
++32 (minimal new staking)
+Staking Ratio
+67.1%
+66.2%
+-0.9pp (mechanical — denominator grew)
+CESR Rate
+2.84%
+2.79%
+-5bp (Quatrefoil)
+BMNR 7-day Yield
+2.91%
+2.81%
+-10bp annualized
+Annualized Staking Rev
+$174M/yr
+$180M/yr
++3% (higher ETH price)
+Full MAVAN Staking Rev
+$259M/yr
+$272M/yr
+Projected at full deployment
+Total Cash
+$1.2B
+$1.2B
+Stable
+Eightco (ORBS)
+$14M
+$83M
++$80M investment increase
+Beast Industries
+$200M
+$200M
+Unchanged
+BTC Holdings
+195
+196
++1 BTC
+Trading Rank
+#125 ($1.0B/day)
+#105 ($1.0B/day)
++20 ranks
+Total Holdings
+$10.3B
+$11.5B
++$1.2B (+11.7%)
+NOTES
+Tom Lee: crypto outperformed S&P 500 by 2,450bp since Iran war start. Higher oil → growth concerns → investors buy growth stocks including crypto. Accelerated accumulation pace: 60,999 ETH (continued at elevated 60K+/week). Two strategic moves: (1) Increased ORBS investment by $80M — ORBS acquired $50M OpenAI equity + $25M Beast Industries; ORBS = "only publicly listed equity with direct OpenAI exposure." (2) Acquired 5,000 ETH from Ethereum Foundation (EF) to enable EF to fund operations without open-market selling. Strategy Inc (MSTR) now 738,731 BTC ($53B). MAVAN on track Q1 2026 (3 staking providers). Institutional: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.
+Source: PRNewswire
+2026-03-12
+Corporate
+🚀 Eightco (ORBS) Secures $125M: BMNR $75M Lead + ARK $25M + Payward $25M; Tom Lee Joins Board
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+BMNR→ORBS Investment
+$14M
+$83M (cumulative)
++$75M commitment (lead investor)
+Total ORBS Raise
+—
+$125M
+BMNR $75M + ARK $25M + Payward $25M
+Tom Lee
+BMNR Chairman only
+BMNR Chairman + ORBS Board Director
+Appointed independent director
+ORBS → OpenAI
+—
+$50M equity stake
+Only public equity with direct OpenAI exposure
+ORBS → Beast Industries
+—
+$25M equity stake
+MrBeast portfolio company
+ARK Invest Role
+BMNR shareholder
+BMNR shareholder + ORBS partner ($25M)
+Brett Winton (Chief Futurist) as advisor
+Payward/Kraken
+BMNR supporter
+BMNR supporter + ORBS investor ($25M)
+Arjun Sethi (co-CEO Kraken) quoted
+NOTES
+Major strategic expansion of BMNR moonshot portfolio. ORBS sits at intersection of AI (OpenAI), blockchain (Worldcoin/World), and creator economy (MrBeast/Beast Industries). Dan Ives steps down as ORBS Chairman. Other ORBS investors: MOZAYYX, World Foundation, Coinfund, Discovery Capital Management, FalconX, Pantera, GSR. ORBS holds Worldcoin + Ethereum as long-term holdings. OpenAI IPO anticipated in 2026 — ORBS gives public market exposure.
+Source: PRNewswire (Eightco Holdings)
+2026-03-09
+Holdings
+📊 ETH Holdings Reach 4.535M — $10.3B Total, 3.76% of Supply, 75% to Alchemy of 5%
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,473,587
+4,534,563
++60,976 (+1.4%)
+ETH Price
+$1,976
+$1,965
+-0.6% (Coinbase)
+ETH Supply %
+3.71%
+3.76%
++0.05pp (75% to 5%)
+Staked ETH
+3,040,483
+3,040,483
+Unchanged
+Staking Ratio
+67.9%
+67.1%
+-0.8pp (mechanical)
+CESR Rate
+2.83%
+2.84%
++1bp (Quatrefoil)
+BMNR 7-day Yield
+2.86%
+2.91%
++5bp annualized
+Annualized Staking Rev
+$172M/yr
+$174M/yr
++1%
+Full MAVAN Staking Rev
+$253M/yr
+$259M/yr
+Projected at full deployment
+Total Cash
+$868M
+$1.2B
++$332M
+Eightco (ORBS)
+$14M
+$14M
+Unchanged
+BTC Holdings
+195
+195
+Unchanged
+Trading Rank
+#145 ($0.8B/day)
+#125 ($1.0B/day)
++20 ranks
+Total Holdings
+$9.9B
+$10.3B
++$0.4B (+4.0%)
+NOTES
+Tom Lee: ETH showed resilience amid war concerns and surging oil. Tracking DeMark Analytics (Symbolik.com) base case — ETH 2026 correlates to S&P 500 fall 2011 (89%) and fall 1987 (93%). If analogs hold, ETH bottoms Mar 8-14 just below recent $1,740 low. "Nobody rings the bell at the bottom" — BMNR slightly increased accumulation pace: 60,976 ETH vs 45-50K typical. Cash surged to $1.2B (from $868M). Strategy Inc (MSTR) 720,737 BTC ($48B). MAVAN on track Q1 2026.
+Source: PRNewswire
+2026-03-02
+Holdings
+📊 ETH Holdings Reach 4.474M — $9.9B Total, 3.71% of Supply, 74% to Alchemy of 5%
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,422,659
+4,473,587
++50,928 (+1.2%)
+ETH Price
+$1,958
+$1,976
++0.9% (Coinbase)
+ETH Supply %
+3.66%
+3.71%
++0.05pp (74% to 5%)
+Staked ETH
+3,040,483
+3,040,483
+Unchanged
+Staking Ratio
+68.7%
+67.9%
+-0.8pp (mechanical)
+CESR Rate
+2.81%
+2.83%
++2bp (Quatrefoil)
+BMNR 7-day Yield
+2.89%
+2.86%
+-3bp annualized
+Annualized Staking Rev
+$171M/yr
+$172M/yr
++$1M
+Full MAVAN Staking Rev
+$249M/yr
+$253M/yr
+Projected at full deployment
+Total Cash
+$691M
+$868M
++$177M
+Eightco (ORBS)
+$17M
+$14M
+-$3M
+Beast Industries
+$200M
+$200M
+Unchanged (initial investment closed)
+BTC Holdings
+193
+195
++2 BTC
+Trading Rank
+#165 ($0.7B/day)
+#145 ($0.8B/day)
++20 ranks
+Total Holdings
+$9.6B
+$9.9B
++$0.3B (+3.1%)
+NOTES
+Tom Lee: "methodically executing Ethereum treasury strategy" through "later stages of mini crypto winter." Geopolitical: US commenced combat operations against Iran — impact on markets in coming weeks. ETH pullback viewed as attractive given strengthening fundamentals. "Price of ETH not reflective of high utility and role as future of finance." Bought 50,928 ETH. MAVAN on track Q1 2026. GENIUS Act + SEC Project Crypto = transformational. Institutional: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.
+Source: PRNewswire
+2026-02-26
+Corporate
+🎤 Tom Lee Presentation Filed as 8-K (Reg FD, Ex. 99.1)
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Event
+—
+Investor Presentation
+Tom Lee, Executive Chairman
+Filing
+—
+8-K (Reg FD)
+Presentation as Ex. 99.1
+NOTES
+Tom Lee, Executive Chairman, presentation filed via 8-K Item 7.01 Regulation FD Disclosure. Filed Feb 26, event date Feb 24. Presentation content not available (exhibit only).
+Source: SEC Filing (8-K)
+2026-02-23
+Holdings
+📊 ETH Holdings Reach 4.423M — $9.6B Total, 3.66% of Supply, 73% to Alchemy of 5%
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,371,497
+4,422,659
++51,162 (+1.2%)
+ETH Price
+$1,998
+$1,958
+-2.0% (Coinbase)
+ETH Supply %
+3.62%
+3.66%
++0.04pp (73% to 5%)
+Staked ETH
+3,040,483
+3,040,483
+Unchanged — new ETH not yet staked
+Staking Ratio
+69.6%
+68.7%
+-0.9pp (mechanical — denominator grew)
+CESR Rate
+2.84%
+2.81%
+-3bp (Quatrefoil)
+BMNR 7-day Yield
+2.89%
+2.89%
+Unchanged annualized
+Annualized Staking Rev
+$176M/yr
+$171M/yr
+-3% (lower ETH price)
+Full MAVAN Staking Rev
+$252M/yr
+$249M/yr
+Projected at full deployment
+Total Cash
+$670M
+$691M
++$21M
+Eightco (ORBS)
+$17M
+$17M
+Unchanged
+Beast Industries
+$200M
+$200M
+Initial investment closed
+BTC Holdings
+193
+193
+Unchanged
+Trading Rank
+#158 ($0.9B/day)
+#165 ($0.7B/day)
+-7 ranks
+Total Holdings
+$9.6B
+$9.6B
+Flat (ETH price decline offset by accumulation + cash)
+NOTES
+Tom Lee: "mini crypto winter" framing. 3 fundamental drivers gaining traction: (i) Wall Street tokenization, (ii) AI/agentic-AI using smart blockchains for execution + payments, (iii) emerging creator economy using blockchains for verification. "Price of ETH is not reflective of the high utility of ETH and its role as the future of finance." Bought 51,162 ETH in past week — continued accumulation during pullback. MAVAN on track Q1 2026 (3 staking providers). GENIUS Act + SEC Project Crypto = transformational. Institutional: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.
+Source: PRNewswire
+2026-02-17
+SEC Filing
+📋 Tom Lee Form 4/A: 1.5M RSU Grant, 500K Vested, 232K Tax-Withheld (~$6.7M)
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+RSU Grant
+—
+1,500,000 RSUs
+500K immediate + 500K 1-yr + 500K 2-yr
+Vested to Common
+—
+500,000 shares
+M code, $0 conversion price
+Tax Withholding
+—
+231,700 shares
+@ $28.84/share (~$6.7M)
+Direct Ownership
+Unknown
+726,722 shares
+Post-transaction
+Indirect Ownership
+Unknown
+222,222 shares
+Thomas J Lee 2012 Trust
+Unvested RSUs
+—
+1,000,000
+500K @ 1-yr + 500K @ 2-yr
+NOTES
+Amended Form 4 for Lee Thomas Jong (Tom Lee), Executive Chairman. Transaction date Jan 23; original Form 4 filed Jan 27; amendment filed Feb 17 to correct prior omission of 231,700 tax-withheld shares. RSU grant of 1.5M units under 2025 Omnibus Incentive Plan. Post-transaction: 726,722 direct + 222,222 indirect (Thomas J Lee 2012 Trust) + 1M unvested RSUs.
+Source: SEC Filing (Form 4/A)
+2026-02-17
+Holdings
+📊 ETH Holdings Reach 4.371M — $9.6B Total, Staking Crosses 3M ETH (69.5%)
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,325,738
+4,371,497
++45,759 (+1.1%)
+ETH Price
+$2,125
+$1,998
+-6.0% (Coinbase)
+ETH Supply %
+3.58%
+3.62%
++0.04pp (72% to 5%)
+Staked ETH
+2,897,459
+3,040,483
++143,024 (+4.9%)
+Staking Ratio
+67.0%
+69.5%
++2.5pp — crosses 67% catalyst
+CESR Rate
+3.11%
+2.84%
+-27bp (Quatrefoil)
+BMNR 7-day Yield
+3.3234%
+2.89%
+-43bp annualized
+Annualized Staking Rev
+$202M/yr
+$176M/yr
+-13% (lower rate + price)
+Full MAVAN Staking Rev
+N/A
+$252M/yr
+Projected at full deployment
+Total Cash
+$595M
+$670M
++$75M
+Eightco (ORBS)
+$19M
+$17M
+-$2M
+Trading Rank
+#107 ($1.3B/day)
+#158 ($0.9B/day)
+-51 ranks
+Total Holdings
+$10.0B
+$9.6B
+-$0.4B (ETH price decline)
+NOTES
+Tom Lee post-Consensus HK: 3 secular drivers for ETH — (i) Wall Street tokenization/privacy on Ethereum, (ii) AI agents using ETH for payments + verification, (iii) creators/proof-of-human on L2s (Worldchain). Sentiment "rock bottom" comparable to Nov 2022 / 2018 lows, but no FTX/3AC-scale failures — "mini-winter" framing from Oct 10 deleveraging. Bought 45,759 ETH in past week despite pullback. Staked ETH crossed 3M milestone (3,040,483), largest staker globally. MAVAN on track for Q1 2026 launch (3 staking providers). $252M projected annual staking revenue at full MAVAN scale. GENIUS Act + SEC Project Crypto compared to 1971 Bretton Woods ending. Beast Industries $200M stake. 193 BTC held. Institutional supporters: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.
+Source: PRNewswire
+2026-02-11
+Corporate
+🎤 Tom Lee Presents at CoinDesk Consensus 2026 in Hong Kong
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Event
+—
+CoinDesk Consensus 2026
+Hong Kong
+Presenter
+—
+Tom Lee
+Executive Chairman
+Filing
+—
+8-K (Reg FD)
+Presentation attached as Ex. 99.1
+NOTES
+Tom Lee, Executive Chairman, presented at CoinDesk Consensus 2026 Conference in Hong Kong. Presentation filed as Exhibit 99.1 via 8-K (Item 7.01 Regulation FD Disclosure). Major global crypto conference appearance signals continued institutional outreach and thought leadership positioning.
+Source: SEC Filing (8-K)
+2026-02-10
+Corporate
+🦁 Beast Industries Acquires Step Banking App — BMNR's $200M Investment Expands into Fintech
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Acquisition
+—
+Step Banking App
+Beast Industries acquires
+Step Users
+—
+7M+
+Mobile-first fintech users
+Step Funding
+—
+~$500M raised
+Backers: Curry, D'Amelio, Timberlake
+BMNR Exposure
+$200M equity
+$200M + Step platform
+Expanded fintech reach
+Beast Subscribers
+450M+
+460M+
+YouTube subscribers
+NOTES
+Beast Industries (MrBeast, 460M+ YouTube subscribers, 5B monthly views) acquired Step, a mobile-first financial services app with 7M+ users focused on financial literacy and credit-building for younger generations. Step previously raised ~$500M from Stephen Curry, Charli D'Amelio, Justin Timberlake. BMNR's $200M equity investment in Beast Industries now has exposure to a full fintech platform. Jeff Housenbold (Beast CEO) noted expansion into regulated sectors and financial platforms. The article explicitly mentions: "The transaction follows a $200 million investment in Beast Industries from BitMine Immersion Technologies, the leading Ethereum treasury firm, signaling potential expansion into digital asset offerings alongside traditional financial services." MrBeast: "Nobody taught me about investing, building credit, or managing money when I was growing up. I want to give millions of young people the financial foundation I never had."
+Source: CoinDesk / Press Release
+2026-02-09
+SEC Filing
+📋 S-8 Filed: 2025 Omnibus Incentive Plan Registration
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Filing
+—
+Form S-8
+2025 Omnibus Incentive Plan
+Legal Counsel
+—
+Winston & Strawn LLP
+Houston
+Board Signers
+—
+8 directors
+Tsang, Kim, Lee, Maloney, Love, Sharbutt, Edgeworth, Howe, Sechan
+NOTES
+Bitmine registered shares under the 2025 Omnibus Incentive Plan via Form S-8. Filed by Chi Tsang (CEO) with Winston & Strawn LLP as legal counsel. Signed by full board: Chi Tsang (CEO/Director), Young Kim (CFO/COO/Director), Thomas Lee (Executive Chairman), Michael Maloney, Lori Love, David Sharbutt, Jason Edgeworth, Olivia Howe, Robert Sechan. Incorporates by reference recent 10-K, 10-Q, and 8-K filings. Standard equity compensation registration for employee/director incentive plan.
+Source: SEC Filing (S-8)
+2026-01-28
+Corporate
+👤 Erik Nelson Separation — President Terminated Without Cause, $605K Severance
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Officer
+Erik Nelson (President)
+Terminated
+Without Cause, effective Jan 22
+Notice Payment
+—
+$20,000
+30 days base salary in lieu of notice
+Severance Payment
+—
+$585,000
+Lump sum within 30 days
+Total Severance
+—
+$605,000
+$20K notice + $585K severance
+Non-Compete
+Active
+Waived
+Released from Sections 6(a)-(c)
+Equity
+Per company books
+Retained existing shares
+No additional grants
+NOTES
+Erik Nelson terminated without Cause as President, effective January 22, 2026. Separation Agreement filed as Exhibit 10.1. Total severance: $605K ($20K notice + $585K lump sum). Non-competition and non-solicitation covenants fully waived and released. Nelson retains existing shares per company books but waived all additional equity rights. Confidentiality obligations continue. Employment Agreement dated September 1, 2025. Board noted termination "is not related to a disagreement with the Company on any matter relating to the Company's operations, policies, or practices." Board thanked Nelson for "distinguished service and valuable contributions." Compensation Committee and Board approved the separation. Filed January 28, 2026.
+Source: SEC Filing (8-K)
+2026-02-09
+Holdings
+📊 ETH Holdings Reach 4.326M — $10.0B Total, ETH -62% from 2025 Highs, V-Recovery Expected
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,285,125
+4,325,738
++40,613 (+0.9%)
+ETH Price
+$2,317
+$2,125
+-8.3% (Coinbase)
+ETH Supply %
+3.55%
+3.58%
++0.03pp (72% to 5%)
+Staked ETH
+2,897,459
+2,897,459
+Unchanged
+Staking Ratio
+67.6%
+67.0%
+-0.6pp (more ETH, same staked)
+Total Cash
+$586M
+$595M
++$9M
+Eightco (ORBS)
+$20M
+$19M
+-$1M
+Trading Rank
+#105
+#107
+-2 ($1.3B/day)
+Total Holdings
+$10.7B
+$10.0B
+-$0.7B (ETH price)
+Staking Revenue
+$188M/yr
+$202M/yr
++7% WoW annualized
+CESR Rate
+~2.81%
+3.11%
++30bp (Quatrefoil)
+NOTES
+ETH -62% from 2025 highs, but Tom Lee: this is the 8th time since 2018 ETH has fallen 50%+ from a recent high (happens annually). V-shaped recoveries follow every time. 2025 example: ETH fell -64% Jan→Mar then surged $1,600→$5,000. Ethereum daily txns ATH (2.5M), active addresses ATH (1M daily). "Best investment opportunities present themselves after declines." CESR improved to 3.11%. Annualized staking $202M (+7% WoW). Bitmine 7-day yield 3.3234%. Beast $200M initial investment closed. GENIUS Act + SEC Project Crypto compared to ending Bretton Woods 1971. 193 BTC held. $595M cash.
+Source: PRNewswire
+2026-02-02
+Holdings
+📊 ETH Holdings Reach 4.285M — $10.7B Total, Staking Explodes to 67.6%
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,243,338
+4,285,125
++41,787 (+1.0%)
+ETH Price
+$2,839
+$2,317
+-18.4% (Coinbase)
+ETH Supply %
+3.52%
+3.55%
++0.03pp (71% to 5%)
+Staked ETH
+2,009,267
+2,897,459
++888,192 (+44.2%)
+Staking Ratio
+47.4%
+67.6%
++20.2pp
+Total Cash
+$682M
+$586M
+-$96M
+Eightco (ORBS)
+$19M
+$20M
++$1M
+Trading Rank
+#91
+#105
+-14 ($1.1B/day)
+Total Holdings
+$12.8B
+$10.7B
+-$2.1B (ETH price)
+Staking Revenue
+N/A
+$188M/yr
++18% WoW annualized
+NOTES
+ETH price dropped sharply (~$3,000→$2,317) but fundamentals strengthening: Ethereum daily txns hit ATH (2.5M via theblock.co), active addresses soared to ATH (1M daily). Tom Lee: "non-fundamental factors" explain weakness — leverage not returned since Oct 10th, gold "vortex" pulling risk appetite. Gold -9% on Jan 30 (4th largest daily drop) may signal near-term top (similar to Jan 22, 1980 pattern). Staking exploded +888K ETH to 2.9M (67.6% of holdings, largest staker in world). Annualized staking revenue $188M (up 18% WoW). MAVAN on track Q1 2026 (3 staking providers). GENIUS Act + SEC Project Crypto "transformational." Beast $200M closed. 193 BTC held.
+Source: PRNewswire
+2026-01-26
+Holdings
+📊 ETH Holdings Reach 4.243M — $12.8B Total, Davos 2026 Bullish
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,203,036
+4,243,338
++40,302 (+1.0%)
+ETH Price
+$3,211
+$2,839
+-11.6% (Coinbase)
+ETH Supply %
+3.48%
+3.52%
++0.04pp
+Staked ETH
+1,838,003
+2,009,267
++171,264 (+9.3%)
+Total Cash
+$979M
+$682M
+-$297M
+Eightco (ORBS)
+$22M
+$19M
+-$3M
+Trading Rank
+#60
+#91
+-31 ($1.2B/day)
+Total Holdings
+$14.5B
+$12.8B
+-$1.7B (ETH price)
+NOTES
+Davos 2026 sentiment strongly bullish on crypto/blockchain. Larry Fink (BlackRock): "Tokenization is necessary... if we have one common blockchain, we could reduce corruption." David Sacks (White House): "Banking and crypto will transform into a single digital asset industry." Bill Winters (Standard Chartered): "Most things will settle in digital form... this is the year when this is happening in scale." ETHBTC ratio climbing since mid-October as investors recognize Wall Street building on Ethereum. Staking income: $374M/yr at scale (2.81% CESR). MAVAN on track Q1 2026. Beast Industries $200M closed.
+Source: PRNewswire
+2026-01-20
+Holdings
+📊 ETH Holdings Reach 4.203M — $14.5B Total, 81% Shareholder YES
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,167,768
+4,203,036
++35,268 (+0.8%)
+ETH Price
+$3,119
+$3,211
++2.9% (Coinbase)
+ETH Supply %
+3.45%
+3.48%
++0.03pp
+Staked ETH
+1,256,083
+1,838,003
++581,920 (+46.3%)
+Total Cash
+$988M
+$979M
+-$9M (post Beast)
+Shareholder Vote
+Pending
+81% YES
+52.2% turnout
+Beast Industries
+Announced
+CLOSED
+$200M invested
+Stockholders
+N/A
+500,000+
+Individual investors
+Trading Rank
+#67
+#60
++7 ($1.5B/day)
+NOTES
+Shareholder vote passed with 81% YES on Proposal 2 (share authorization 500M→50B), 52.2% of outstanding shares voted. Beast Industries $200M investment officially closed Jan 17. Staking surged to 1.838M ETH (43.7% of holdings, $5.9B value). 500,000+ individual stockholders. BMNR now #60 most traded US stock at $1.5B/day average volume. CESR rate: 2.81%. MAVAN remains on track for Q1 2026.
+Source: PRNewswire
+2026-01-15
+Corporate
+🦁 $200M Strategic Investment in Beast Industries (MrBeast)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Investment
+$0
+$200M equity
+Beast Industries
+Investor Base
+Institutions
++ MrBeast/Beast Industries
+Strategic partnership
+Target Audience
+Institutions
++ GenZ/GenAlpha/Millennials
+Demographic expansion
+Deal Close
+—
+Jan 19, 2026
+Expected
+Annual Meeting
+—
+Jan 15, 2026
+Wynn Las Vegas (today)
+NOTES
+$200M equity investment into Beast Industries (MrBeast - 450M+ YouTube subscribers, 5B monthly views). CEO Jeff Housenbold: "Their support is a strong validation of our vision." Tom Lee: "Beast Industries is the leading content creator of our generation with reach and engagement unmatched with GenZ, GenAlpha and Millennials." Exploring DeFi integration into Beast's upcoming financial services platform. Premier institutional investors reaffirmed: ARK (Cathie Wood), MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, and Tom Lee. Annual Meeting livestreamed on X @bitmnr. Goal: acquiring 5% of ETH.
+Source: PRNewswire
+2026-01-13
+SEC Filing
+📋 Q1 2026 10-Q: $10.6B Digital Assets, First Staking Revenue
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Period Covered
+—
+Nov 30, 2025
+Q1 2026
+Digital Assets
+$8.26B (FY25)
+$10.56B
++$2.3B (+28%)
+ETH Holdings
+2.38M (FY25)
+3,737,140
++1.36M (+57%)
+Cash
+$512M
+$888M
++$376M (+73%)
+Total Assets
+$8.8B
+$11.5B
++$2.7B (+31%)
+Stockholders Equity
+$8.69B
+$11.25B
++$2.56B (+29%)
+Staking Revenue
+$0
+$980K
+First ever!
+Net Loss
+$349M NI (FY25)
+$(5.2B)
+Unrealized ETH loss
+Shares Outstanding
+384M
+409M (Nov 30)
++25M
+NOTES
+First quarterly filing post-ETH pivot. Key highlights: (1) Digital assets grew to $10.56B (3.74M ETH @ $2,821 avg); (2) First staking revenue recognized: $980K; (3) Net loss of $5.2B driven almost entirely by $5.25B unrealized loss on ETH holdings due to price decline; (4) Cash position strengthened to $888M; (5) Eightco investment valued at $35.9M (up from $20M cost); (6) Material weakness in internal controls still being remediated. Chi Tsang confirmed as CEO (Nov 20), Young Kim as CFO/COO (Jan 7). Shares outstanding: 409M (Nov 30) → 455M (Jan 12).
+Source: SEC Filing (10-Q)
+2026-01-12
+Holdings
+📊 ETH Holdings Reach 4.168M — $14.0B Total Holdings
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,143,502
+4,167,768
++24,266 (+0.6%)
+ETH Price
+$3,196
+$3,119
+-2.4% (Coinbase)
+ETH Supply %
+3.43%
+3.45%
++0.02pp (70% to 5%)
+Staked ETH
+659,219
+1,256,083
++596,864 (+90.5%)
+Total Cash
+$915M
+$988M
++$73M (+8%)
+Trading Rank
+#44
+#67
+-23 ($1.3B/day)
+Shares Outstanding
+426M
+434M
++8M
+NOTES
+Tom Lee urges stockholders to vote YES on proposal #2 (authorized shares increase from 500M to 50B). Staking scaled massively: +596,864 ETH staked in one week to 1.256M total (30% of holdings). MAVAN on track Q1 2026. At scale staking = $374M/yr (>$1M/day). Annual Meeting Jan 15 @ Wynn Las Vegas. BMNR now 70% of the way to "Alchemy of 5%". Tom Lee 2026 thesis: "crypto prices recover with stronger gains in 2027-2028." GENIUS Act compared to Aug 15, 1971 (end of Bretton Woods).
+Source: PRNewswire
+2026-01-09
+Corporate
+👔 CFO/COO Appointed: Young Kim (MIT/HBS, Columbia Threadneedle)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+CFO
+Vacant (Mow Jan 16)
+Young Kim
+Effective immediately
+COO
+N/A
+Young Kim (dual role)
+New position
+Board
+—
++Young Kim
+Reports to Tom Lee
+Background
+—
+MIT + HBS
+"Engineer-investor"
+Experience
+—
+20+ years
+Multi-billion AUM
+NOTES
+Young Kim appointed CFO and COO, effective immediately. Also joins Board of Directors, reports to Tom Lee. Background: MIT engineering + Harvard Business School. 2021-2025: Partner & Senior PM at Axiom Investors. 2011-2021: Senior PM at Columbia Threadneedle Investments. Early career: software engineer, VC, investment research. Tom Lee: "[Young] will play an integral role in helping to execute our roadmap and scale the business." Kim: "With a strong foundation in place, Bitmine is well positioned to scale." Also confirmed: 3.43% ETH supply, Annual Meeting Jan 15 @ Wynn Las Vegas. Institutional backers: ARK, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital.
+Source: PRNewswire
+2026-01-05
+Holdings
+📊 8-K: ETH Holdings $14.2B - 4.144M ETH Milestone
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,110,525
+4,143,502
++32,977 (+0.8%)
+ETH Price
+$2,948
+$3,196
++8.4% (Coinbase)
+Holdings Value
+$13.2B
+$14.2B
++$1.0B (+7.6%)
+Staked ETH
+408,627
+659,219
++250,592 (+61.3%)
+Total Cash
+$500M
+$915M
++$415M (+83%)
+ETH Supply %
+3.41%
+3.43%
++0.02pp
+NOTES
+Relentless accumulation continues through holiday week. 32,977 ETH acquired in past week alone. Staking scaled dramatically (+250,592 in one week to 659,219 total staked). Cash position nearly doubled to $915M. BMNR now #44 most traded stock in US ($1.1B/day avg volume). Machine operating at full capacity. Annual Meeting Jan 15 @ Wynn Las Vegas.
+Source: SEC Filing (8-K)
+2026-01-02
+Corporate
+📢 Chairman's Message: Vote YES on Authorized Shares Increase
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Proposal 2
+500M authorized
+50B authorized
+100x increase
+Vote Deadline
+—
+Jan 14, 2026 11:59 PM ET
+12 days
+Annual Meeting
+—
+Jan 15, 2026
+Wynn Las Vegas
+ETH/BMNR Coefficient
+Implied
+0.015 × ETH + accretion
+Per Bloomberg
+Split @ $22k ETH
+—
+$500 BMNR → 20:1
+8.5B shares
+Split @ $250k ETH
+—
+$5,000 BMNR → 100:1
+43B shares
+NOTES
+Tom Lee video explaining why shareholders should vote YES: (1) Capital markets flexibility - ATM, convertibles, warrants; (2) M&A optionality; (3) Future stock splits as ETH price rises. Price correlation formalized: BMNR = 0.015×ETH + ETH/share accretion. Implied splits needed to keep shares ~$25: $22k ETH→20:1, $62.5k→60:1, $250k→100:1. Current shares: 426M. Institutional backers reaffirmed: ARK (Cathie Wood), MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital. ETH/BTC target: 0.25 ("payment rails"). Livestream on X @bitmnr.
+Source: SEC Filing (8-K, DEFA14A)
+2025-12-29
+Holdings
+📊 ETH Holdings Reach 4.11 Million - $13.2B Total Holdings
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+4,066,062
+4,110,525
++44,463 (+1.1%)
+ETH Price
+$2,991
+$2,948
+-1.4% (Coinbase)
+ETH Supply %
+3.37%
+3.41%
++0.04pp (⅔ to 5%)
+Staked ETH
+342,560
+408,627
++66,067 (+19.3%)
+Total Cash
+$1.0B
+$1.0B
+Unchanged
+Trading Rank
+#66
+#47
++19 ($980M/day)
+NOTES
+Chairman's message re: Annual Meeting Jan 15 @ Wynn Las Vegas. 4 key proposals need stockholder approval. MAVAN on track Q1 2026. Working with 3 staking providers. Staking fee at scale: $374M/year ($1M+/day). CESR rate 2.81%. Moonshots: $23M Eightco (ORBS).
+Source: Press Release
+2025-12-29
+Product
+🔥 STAKING UPDATE: 408,627 ETH Staked via 3 Providers
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Staked
+0
+408,627 ETH
+First official disclosure
+Staking Value
+$0
+$1.2 billion
+At $2,948/ETH
+% of Holdings Staked
+0%
+9.94%
+Of 4.11M ETH
+Staking Providers
+0
+3 providers
+Pre-MAVAN
+CESR Rate
+N/A
+2.81%
+Quatrefoil
+Annual Fee @ Scale
+N/A
+$374M/year
+>$1M/day
+NOTES
+First official PR confirming staking operations: 408,627 ETH staked ($1.2B). Working with 3 staking providers pre-MAVAN. MAVAN (Made in America VAlidator Network) on track for Q1 2026 commercial launch. At full scale, staking generates $374M annual (~$1M+/day) at 2.81% CESR.
+Source: Press Release (Official)
+2025-12-22
+Holdings
+🎯 4M MILESTONE: ETH Holdings Reach 4.066 Million Tokens
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,967,210
+4,066,062
++98,852 (+2.5%)
+ETH Price
+$3,074
+$2,991
+-2.7%
+ETH Supply %
+3.29%
+3.37%
++0.08pp
+Total Holdings
+$13.2B
+$13.2B
+Stable
+Cash
+$1.0B
+$1.0B
+Unchanged
+Trading Rank
+#41
+#66
+-25 (vol down)
+NOTES
+8-K filed with operational update PR. Exceeded 4M ETH after 5.5 months. Two-thirds to "Alchemy of 5%". Annual meeting Jan 15, 2026 at Wynn Las Vegas.
+Source: 8-K Filing + Press Release
+2025-12-19
+SEC Filing
+Annual Meeting Announcement - Jan 15, 2026
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Meeting Date
+N/A
+Jan 15, 2026
+Wynn Las Vegas
+Key Vote
+N/A
+50B authorized shares
+Proposal
+NOTES
+Annual shareholder meeting scheduled. DEFR14A proxy filed. 50B authorized shares proposal for future capital flexibility.
+Source: 8-K Filing
+2025-12-15
+Holdings
+ETH Holdings Reach 3.97 Million Tokens
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,864,951
+3,967,210
++102,259 (+2.6%)
+ETH Price
+$3,139
+$3,074
+-2.1%
+Total Holdings
+$13.2B
+$13.3B
++0.8%
+Cash
+$0.9B
+$1.0B
++11%
+Trading Rank
+#37
+#41
+-4
+NOTES
+8-K filed with operational update. Crypto prices stabilizing post-Oct 10. MAVAN staking to deploy early Q1 2026. Trading $1.9B/day.
+Source: 8-K Filing + Press Release
+2025-12-11
+Corporate
+CFO Raymond Mow Separation Agreement
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+CFO Departure
+N/A
+Jan 16, 2026
+Effective date
+Severance
+N/A
+$1,137,500 lump sum
+Cash
+Bonus
+N/A
+$150K accelerated
+Pro-rated
+RSU Vesting
+N/A
+$455K value
+Accelerated
+Reason
+N/A
+Without Cause
+No disagreement
+NOTES
+Separation Agreement filed. CFO exits with significant package. Termination "without Cause" - not related to disagreement on operations/policies. Transition period through Jan 16.
+Source: 8-K Filing
+2025-12-08
+Holdings
+ETH Holdings Exceed 3.86 Million + Binance Blockchain Week Video
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,726,499
+3,864,951
++138,452 (+3.7%)
+ETH Price
+$3,008
+$3,139
++4.4%
+Total Holdings
+$12.1B
+$13.2B
++9.1%
+Weekly Pace
+54,156
+138,452
++156%
+Trading Rank
+#39
+#37
++2
+NOTES
+8-K filed with Tom Lee Binance Blockchain Week video + transcript. Chairman message: "The Crypto Supercycle is Intact". Significant buying acceleration.
+Source: 8-K Filing + Press Release
+2025-12-05
+Corporate
+Director Raymond Mow Resigns from Board
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Board Resignation
+N/A
+Raymond Mow
+Immediate
+Reason
+N/A
+Not due to disagreement
+Confirmed
+NOTES
+CFO Mow resigned from Board (remains CFO until Jan 16). 8-K confirms resignation not related to disagreement on operations/policies/practices.
+Source: 8-K Filing
+2025-12-05
+Capital
+📊 Insider Sales: Bates, Mow, Bayles — ~$112M Total (Oct-Dec 2025)
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Bates (CEO→Former)
+~41%
+~30%
+~2.8M shares sold ($70M)
+Mow (CFO→Former)
+N/A
+~1M shares sold
+$25M
+Bayles (Secretary→Former)
+N/A
+~700K shares sold
+$17M
+Total Insider Sales
+$0
+~$112M
+Avg ~$25/share
+Bates Pledge
+—
+~800K shares to UBS
+Collateral
+NOTES
+Multiple Form 4 filings during Oct-Dec 2025 revealed significant insider selling concurrent with management transition. Bates (former CEO) reduced from ~41% to ~30%, sold ~2.8M shares for ~$70M mostly under Rule 10b5-1 pre-arranged plan plus pledged ~800K to UBS as collateral. Mow (former CFO, separated Dec 18) sold ~1M shares for ~$25M. Bayles (former Secretary, left board Nov 11) sold ~700K shares for ~$17M. Total insider proceeds ~$112M at avg ~$25/share. Sales coincided with leadership transition to Chi Tsang (CEO) and Young Kim (CFO/COO).
+Source: SEC Filing (Form 4)
+2025-12-04
+Corporate
+Binance Blockchain Week Presentation Filed
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Event
+N/A
+Binance Blockchain Week Dubai
+Dec 2025
+Presenter
+N/A
+Tom Lee (Chairman)
+Keynote
+NOTES
+8-K filed with Tom Lee Binance Blockchain Week 2025 presentation. "The Crypto Supercycle, Ethereum 1971 Moment & MAVAN Staking Strategy."
+Source: 8-K Filing
+2025-12-01
+Holdings
+ETH Holdings Reach 3.73 Million Tokens
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,559,879
+3,726,499
++166,620 (+4.7%)
+ETH Price
+$3,120
+$3,008
+-3.6%
+Total Holdings
+$11.8B
+$12.1B
++2.5%
+Cash
+$607M
+$876M
++44%
+ETH Supply %
+2.9%
+3.0%
++0.1pp
+NOTES
+8-K filed. 7+ weeks past Oct 10 shock. Stepped up weekly purchases by 39%. Now >3% of ETH supply.
+Source: 8-K Filing + Press Release
+2025-11-21
+SEC Filing
+📊 FY25 EARNINGS: GAAP EPS $13.39 + First Dividend
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+FY25 Net Income
+N/A
+$328.2M
+First profitable FY
+FY25 EPS
+N/A
+$13.39
+Fully diluted
+ETH (Aug 31)
+0
+1,874,927
+Audited
+ETH Cost Basis
+N/A
+$7.43B
+Audited
+Dividend
+$0
+$0.01/share
+First ever
+Shares Outstanding
+2.5M (Aug 24)
+234.7M
++9,305%
+NOTES
+First large-cap crypto company to pay dividend. Ex-div Dec 5, pay Dec 29. MAVAN staking pilot testing, full deployment Q1 2026.
+Source: 10-K Filing + Press Release
+2025-11-17
+Holdings
+ETH Holdings Reach 3.6 Million + November Chairman Message
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,505,723
+3,559,879
++54,156 (+1.5%)
+ETH Price
+$3,639
+$3,120
+-14.3%
+Total Holdings
+$13.2B
+$11.8B
+-10.6%
+Cash
+$398M
+$607M
++52%
+ETH Supply %
+2.9%
+2.9%
+Unchanged
+NOTES
+Nov Chairman message: 5 factors driving 4-year crypto cycle. Tokenization on ETH is massive unlock for innovation. Post-Oct 10 recovery ongoing.
+Source: Press Release
+2025-11-14
+Corporate
+🔄 CEO CHANGE: Chi Tsang Appointed + 3 New Board Members
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+CEO
+Jonathan Bates
+Chi Tsang
+New appointment
+Board +
+N/A
+Robert Sechan (NewEdge)
+Independent
+Board +
+N/A
+Jason Edgeworth (JPD Holdings)
+Independent
+Board +
+N/A
+Olivia Howe (RigUp CLO)
+Independent
+ETH Supply %
+N/A
+>2.9%
+Reference
+NOTES
+Chi Tsang: "Mobile/internet explosion of 1990s mirrors blockchain today." Bates: "Proud of building from ground up to NYSE and world's largest ETH holder." Sechan: "Known Tom Lee 20 years."
+Source: Press Release
+2025-11-11
+Corporate
+Major Board Restructuring (8-K)
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Directors Resigned
+6
+3 out (Bayles, Kelly, Nelson)
+-3
+Directors Appointed
+N/A
+Edgeworth, Howe, Sechan
++3
+Corporate Secretary
+Seth Bayles
+Erik Nelson
+Reassigned
+NOTES
+Not due to disagreement. Nelson remains President. New directors bring energy, legal, and investment expertise.
+Source: 8-K Filing
+2025-11-10
+Holdings
+ETH Holdings Reach 3.5 Million Tokens (2.9% of Supply)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,395,422
+3,505,723
++110,288 (+3.2%)
+ETH Price
+$3,903
+$3,639
+-6.8%
+Total Holdings
+$13.7B
+$13.2B
+-3.6%
+Moonshots
+$62M
+$61M (OCTO)
+-1.6%
+Cash
+$389M
+$398M
++2.3%
+Weekly Buy Pace
+82,353
+110,288
++34%
+ETH Supply %
+2.8%
+2.9%
++0.1pp (>halfway)
+Trading Rank
+#60
+#48
++12
+MSTR Holdings
+640,808 BTC
+641,205 BTC
++397 BTC
+NOTES
+Dip buying: +34% more ETH week-over-week. NYSE event with Ethereum Foundation hosted "many financial institutions." Wall Street tokenization interest high. BMNR+MSTR = 88% of global DAT trading volume.
+Source: Press Release
+2025-11-03
+Holdings
+📊 HALFWAY: ETH Holdings Reach 3.4 Million (2.8% of Supply)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,313,069
+3,395,422
++82,353 (+2.5%)
+ETH Price
+$4,164
+$3,903
+-6.3%
+Total Holdings
+$14.2B
+$13.7B
+-3.5%
+Moonshots
+$88M
+$62M (OCTO)
+-30%
+Cash
+$305M
+$389M
++27%
+ETH Supply %
+2.8%
+2.8%
+Confirmed
+Trading Rank
+#46
+#60
+-14
+MSTR Holdings
+640,418 BTC
+640,808 BTC
++390 BTC
+NOTES
+Now >halfway to Alchemy of 5%. Oct 10 liquidation = largest ever in crypto history. Open interest on ETH fell -45% (largest decline in ETH history). "Healthy reset."
+Source: Press Release
+2025-10-27
+Holdings
+ETH Holdings Exceed 3.31 Million Tokens
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,236,014
+3,313,069
++77,055 (+2.4%)
+ETH Price
+$4,022
+$4,164
++3.5%
+Total Holdings
+$13.4B
+$14.2B
++6.0%
+Moonshots
+$119M
+$88M (OCTO)
+-26%
+Cash
+$219M
+$305M
++39%
+ETH Supply %
+2.7%
+2.8%
++0.1pp
+Trading Rank
+#33
+#46
+-13
+MSTR Holdings
+640,250 BTC
+640,418 BTC
++168 BTC
+NOTES
+US-China trade talk progress = positive for crypto. ETH open interest at Jun 30 levels ($2,500 ETH then). BMNR+MSTR = 88% of global DAT volume.
+Source: Press Release
+2025-10-20
+Holdings
+ETH Holdings Exceed 3.24 Million (Post-Crash Recovery)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+3,032,188
+3,236,014
++203,826 (+6.7%)
+ETH Price
+$4,154
+$4,022
+-3.2%
+Total Holdings
+$12.9B
+$13.4B
++3.9%
+Moonshots
+$135M
+$119M (OCTO)
+-12%
+Cash
+$104M
+$219M
++111%
+ETH Supply %
+2.5%
+2.7%
++0.2pp (>halfway)
+Trading Rank
+#22
+#33
+-11
+MSTR Holdings
+640,031 BTC
+640,250 BTC
++219 BTC
+NOTES
+Largest deleveraging event last week created price dislocation. ETH open interest = Jun 30 levels (ETH was $2,500). Attractive risk/reward. +203K ETH bought.
+Source: Press Release
+2025-10-13
+Holdings
+📊 3M MILESTONE: ETH Holdings Exceed 3.03 Million + Oct Chairman Message
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+2,830,151
+3,032,188
++202,037 (+7.1%)
+ETH Price
+$4,535
+$4,154
+-8.4%
+Total Holdings
+$13.4B
+$12.9B
+-3.7%
+Moonshots
+$113M
+$135M (OCTO)
++19%
+Cash
+$456M
+$104M
+-77% (deployed)
+ETH Supply %
+2.3%
+2.5%
++0.2pp (halfway)
+Trading Rank
+#28
+#22
++6 (volatility)
+MSTR Holdings
+640,031 BTC
+640,031 BTC
+Unchanged
+NOTES
+⚠️ Oct 10 liquidation = LARGEST EVER single-day crypto deleveraging in history. BMNR bought aggressively (+202K ETH). Chairman keynote at Token2049 Singapore: "Ethereum Supercycle." $3.5B/day trading.
+Source: Press Release
+2025-10-06
+Holdings
+ETH Holdings Exceed 2.83 Million Tokens
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+2,650,900
+2,830,151
++179,251 (+6.8%)
+ETH Price
+$4,141
+$4,535
++9.5%
+Total Holdings
+$11.6B
+$13.4B
++15.5%
+Moonshots
+$157M
+$113M (OCTO)
+-28%
+Cash
+$436M
+$456M
++4.6%
+ETH Supply %
+2.2%
+2.3%
++0.1pp
+Trading Rank
+#26
+#28
+-2
+MSTR Holdings
+639,835 BTC
+640,031 BTC
++196 BTC
+NOTES
+Token2049 Singapore week. Met Ethereum core developers and ecosystem players. "Clear focus on enabling Wall Street and AI to build on ETH." AI + crypto = two Supercycle narratives.
+Source: Press Release
+2025-10-28
+Capital
+🏛️ Founders Fund (Peter Thiel) Files SC 13G/A — 5.1% Ownership
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Shareholder
+Undisclosed
+Founders Fund (Thiel)
+5.1% beneficial
+Filing Type
+—
+SC 13G/A (Amendment)
+Passive investment
+NOTES
+Peter Thiel's Founders Fund filed amended SC 13G/A disclosing 5.1% beneficial ownership of BMNR. Major validation of ETH treasury thesis from one of Silicon Valley's most prominent investors. Founders Fund was also a PIPE participant in the July 2025 private placement.
+Source: SEC Filing (SC 13G/A)
+2025-09-30
+Capital
+📋 Xuan Yong Xiao Files SC 13D — 7.5% Beneficial Ownership (28.97M Shares)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Shareholder
+Undisclosed
+Xuan Yong Xiao
+7.5% beneficial
+Shares
+—
+28,970,000
+Direct holding
+Filing Type
+—
+SC 13D
+Active investment
+NOTES
+Xuan Yong Xiao filed SC 13D disclosing 7.5% beneficial ownership (28.97M shares). One of the largest individual shareholders. SC 13D (vs 13G) indicates potential for active engagement with company.
+Source: SEC Filing (SC 13D)
+2025-09-29
+Holdings
+ETH Holdings Exceed 2.65 Million Tokens
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+2,416,054
+2,650,900
++234,846 (+9.7%)
+ETH Price
+$4,497
+$4,141
+-7.9%
+Total Holdings
+$11.4B
+$11.6B
++1.8%
+Moonshots
+$175M
+$157M (OCTO)
+-10%
+Cash
+$345M
+$436M
++26%
+ETH Supply %
+2.0%
+2.2%
++0.2pp
+Trading Rank
+#24
+#26
+-2
+MSTR Holdings
+638,460 BTC
+639,835 BTC
++1,375 BTC
+NOTES
+AI + crypto = two Supercycle narratives. Both require neutral public blockchains. ETH = premier choice (100% uptime, high reliability). "Price is discount to future."
+Source: Press Release
+2025-09-22
+Holdings
+📊 2% MILESTONE: ETH Holdings Exceed 2.4 Million (2% of Supply)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+2,151,676
+2,416,054
++264,378 (+12.3%)
+ETH Price
+$4,632
+$4,497
+-2.9%
+Total Holdings
+$10.77B
+$11.4B
++5.8%
+Moonshots
+$214M
+$175M (OCTO)
+-18%
+Cash
+$569M
+$345M
+-39% (deployed)
+ETH Supply %
+1.8%
+2.0%
++0.2pp
+Trading Rank
+#28
+#24
++4
+Stock Price
+N/A
+$61.29 (20-DMA)
+Reference
+NOTES
+📈 At 1% ETH (Aug) stock was ~$38. At 2% stock >$61. "Power law benefits large holders." $3.5B/day trading volume.
+Source: Press Release
+2025-09-22
+Capital
+$365M Registered Direct Offering @ 14% Premium
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Shares Sold
+N/A
+5,217,715
+@ $70.00
+Premium
+N/A
+14% to $61.29 close
+Accretive
+Warrants Issued
+N/A
+10,435,430
+@ $87.50 exercise
+Gross Proceeds
+N/A
+$365.24M
+For ETH
+Warrant Expiry
+N/A
+Mar 22, 2027
+18 months
+Potential Total
+N/A
+$1.28B
+If warrants exercised
+Placement Agent
+N/A
+Moelis & Company
+New
+NOTES
+Sold at premium = "materially accretive to existing shareholders." Total potential $1.28B (common + warrant exercise). Institutional confidence in BMNR execution.
+Source: 8-K Filing
+2025-09-15
+Holdings
+📊 2M MILESTONE: ETH Holdings Exceed 2.15 Million
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+2,069,443
+2,151,676
++82,233 (+4.0%)
+ETH Price
+$4,312
+$4,632
++7.4%
+Total Holdings
+$9.2B
+$10.77B
++17.1%
+Cash
+$266M
+$569M
++114%
+Moonshots
+$20M
+$214M (Eightco/OCTO)
++970%
+Trading Rank
+#30
+#28
++2
+MSTR Holdings
+636,505 BTC
+638,460 BTC
++1,955 BTC
+NOTES
+Nearly $11B in total holdings incl moonshots. Surpassed 2M ETH. "Power law benefits large holders." Tom Lee: "AI/agentic-AI creating token economy supercycle." #28 most traded stock ($2.0B/day).
+Source: Press Release
+2025-09-08
+Holdings
+📊 2M MILESTONE: ETH Holdings Exceed 2.07 Million + First "Moonshot"
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+1,866,974
+2,069,443
++202,469 (+10.8%)
+ETH Price
+$4,458
+$4,312
+-3.3%
+Total Holdings
+$8.98B
+$9.21B
++2.6%
+Cash
+$635M
+$266M
+-58% (deployed)
+Moonshot Investment
+$0
+$20M (Eightco/OCTO)
+First
+Trading Rank
+#22
+#30
+-8
+MSTR Holdings
+629,376 BTC
+636,505 BTC
+Reference
+NOTES
+Surpassed 2M ETH milestone. $20M into Eightco (OCTO) as first "Moonshot" - Worldcoin treasury strategy. 1% of balance sheet for ETH ecosystem investments. #30 most traded ($1.7B/day).
+Source: Press Release
+2025-09-05
+Corporate
+Statement on NYSE American Listing & Capital Markets Access
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Listing Status
+NYSE American
+Fully compliant
+Confirmed
+ATM Program
+Active
+No shareholder approval needed
+Clarified
+NOTES
+Response to media reports on NASDAQ crypto treasury scrutiny. BMNR on NYSE American, not affected. PIPE closed July 8 with NYSE approval. ATM continues without shareholder vote.
+Source: Press Release
+2025-09-02
+Holdings
+August Chairman Message + Holdings Update (1.87M ETH)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+1,713,899
+1,866,974
++153,075 (+8.9%)
+ETH Price
+$4,808
+$4,458
+-7.3%
+Total Holdings
+$8.8B
+$8.98B
++2%
+Cash
+$562M
+$635M
++13%
+NOTES
+August Chairman Message discusses 1971 Bretton Woods parallel. GENIUS Act + SEC Project Crypto = "multi-decade opportunity for ETH." #22 most traded stock ($2.3B/day).
+Source: Press Release
+2025-09-01
+Corporate
+Executive Employment Agreements
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+CEO Bates Comp
+N/A
+$3,037,000/yr
+Formalized
+CFO Mow Comp
+N/A
+$1,023,750/yr
+Formalized
+President Nelson Comp
+N/A
+$406,250/yr
+Formalized
+NOTES
+Formal employment agreements. CEO severance: $3.04M (2 years cash) if terminated without cause.
+Source: 8-K Filing
+2025-08-28
+Corporate
+David Sharbutt Joins Board - Digital Infrastructure Vision
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+1,713,899
+1,792,690
++78,791
+ETH Price
+$4,808
+$4,591
+-4.5%
+Total Holdings
+$8.8B
+$9.0B+
++2.3%
+Cash
+$562M
+$775M
++38%
+New Director
+N/A
+David E. Sharbutt
+American Tower veteran
+NOTES
+Sharbutt: 17 years on AMT board (2006-2023), founder/CEO Alamosa Holdings (sold to Sprint 2006). Tom Lee: "ETH Treasuries = digital infrastructure like wireless towers." AMT expanded 6X to 30X EV/EBITDA 2003-2020.
+Source: Press Release
+2025-08-25
+Holdings
+ETH Holdings Reach 1.71 Million (#1 ETH Treasury)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+1,523,373
+1,713,899
++190,526 (+12.5%)
+ETH Price
+$4,326
+$4,808
++11.1%
+Total Holdings
+$6.6B
+$8.8B
++33%
+Cash
+$80M
+$562M
++602%
+NAV/Share
+$22.84 (Jul 27)
+$39.84
++74%
+NOTES
+Second consecutive week raising $2B+. #20 most traded US stock ($2.8B/day). NAV/share nearly doubled in 4 weeks.
+Source: Press Release
+2025-08-25
+Corporate
+Director Appointment: David E. Sharbutt (8-K)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Board Size
+5
+6
++1
+New Director
+N/A
+David E. Sharbutt
+Independent
+NOTES
+SEC filing formalizing Sharbutt appointment. BS EE Texas Tech 1971.
+Source: 8-K Filing
+2025-08-18
+Holdings
+ETH Holdings Exceed 1.52 Million - #1 ETH, #2 Global Treasury
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+1,150,263
+1,523,373
++373,110 (+32%)
+ETH Price
+$4,311
+$4,326
++0.3%
+Total Holdings
+$5.0B
+$6.6B
++32%
+Trading Rank
+#25
+#10
++15
+NOTES
+Now #1 ETH treasury and #2 global crypto treasury (behind only MSTR). #10 most liquid US stock at $6.4B/day.
+Source: Press Release
+2025-08-12
+SEC Filing
+ATM Expansion to $24.5 Billion Total
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ATM Capacity
+$4.5B
+$24.5B
++$20B
+Prior ATM Used
+N/A
+$4.5B (99.99%)
+Exhausted
+NOTES
+Prior $4.5B ATM exhausted in 5 weeks. Massive $20B expansion via 424B5 prospectus supplement.
+Source: 424B5 Filing
+2025-08-11
+Holdings
+📊 1M MILESTONE: ETH Holdings Exceed 1.15 Million
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+833,137
+1,150,263
++317,126 (+38%)
+ETH Price
+$3,492
+$4,311
++23%
+Total Holdings
+$2.9B
+$5.0B
++72%
+Weekly Increase
+N/A
++$2.0B
+Largest ever
+NOTES
+Passed 1M ETH and became world largest ETH treasury in just 5 weeks. #25 most liquid US stock ($2.2B/day).
+Source: Press Release
+2025-08-04
+Holdings
+ETH Holdings Exceed 833K - Largest ETH Treasury
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+~0
+833,137
+From zero in 35 days
+ETH Price
+N/A
+$3,492
+Reference
+Total Holdings
+N/A
+$2.9B
+#3 crypto treasury
+Bill Miller III
+N/A
+Top investor
+Confirmed
+NOTES
+Lightning speed: 833K ETH from zero in 35 days. #3 largest crypto treasury (behind MSTR, MARA). Bill Miller III joins as major investor.
+Source: Press Release
+2025-07-29
+Capital
+$1 Billion Stock Repurchase Program Announced
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Buyback Auth
+$0
+$1.0B
+Board approved
+ETH Holdings
+566,776
+625,000
++58,224
+ETH Price
+$3,644
+$3,755
++3.0%
+Cash
+N/A
+$401.4M
+Unencumbered
+BTC Holdings
+154
+192
++38 BTC
+NAV/Share
+N/A
+$22.76
+First reported
+Fully Diluted Shares
+N/A
+121,739,533
+Reference
+NOTES
+Open-ended buyback program. Tom Lee: "Best expected return may be to acquire our own shares." Total crypto+cash: $2.77B. First BTC update since June.
+Source: Press Release
+2025-07-28
+Corporate
+Launch of "Alchemy of 5%" Investor Presentation + Chairman Message Series
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+New Content
+None
+Investor deck + video series
+Launched
+Strategy Explained
+N/A
+"Alchemy of 5%"
+Public
+NOTES
+Tom Lee launches monthly "Chairman's Message" video series. Investor presentation titled "The Alchemy of 5%" explains ETH treasury strategy.
+Source: Press Release
+2025-07-28
+Capital
+ATM Expansion to $4.5B + PIPE Resale Registration
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ATM Capacity
+$2.0B
+$4.5B
++$2.5B
+PIPE Shares Registered
+0
+56.12M
+Resale
+Pre-Funded Warrants
+0
+11.0M @ $0.0001
+Registered
+NOTES
+Cantor as buyback broker @ $0.02/share. PIPE resale registration for June offering investors. Strategic advisor warrants: 3.19M @ $5.40.
+Source: 8-K + S-3ASR Filing
+2025-07-24
+Holdings
+ETH Holdings Exceed $2 Billion (566K ETH)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+300,657
+566,776
++88% in 1 week
+ETH Price
+$3,462
+$3,644
++5.3%
+Total Holdings
+$1.0B
+$2.0B+
++100%
+Days Since PIPE
+N/A
+16 days
+From $250M
+NOTES
+Surpassed $2B ETH in 16 days after $250M PIPE. 700%+ increase from initial proceeds. On track for 5% goal.
+Source: Press Release
+2025-07-23
+Corporate
+Options Trading Commences on NYSE
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Options Trading
+None
+LIVE on NYSE
+New listing
+Ticker
+N/A
+BMNR options
+Active
+NOTES
+BMNR options now available on NYSE via OCC. Expands investor access, enhances liquidity, provides hedging tools.
+Source: Press Release
+2025-07-22
+Capital
+🏆 ARK Invest Acquires $182M of BMNR Shares
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ARK Investment
+$0
+$182M (4.77M shares)
+Major investor
+Net Proceeds
+N/A
+$177M for ETH
+100% to crypto
+Investor Base
+VCs + institutions
++ Cathie Wood/ARK
+Expanded
+NOTES
+Cathie Wood's ARK Invest takes substantial stake via ATM block trade. Tom Lee: "Cathie is a pioneer of exponential investing." 100% of proceeds to ETH.
+Source: Press Release
+2025-07-17
+Holdings
+📊 $1B MILESTONE: ETH Holdings Exceed $1 Billion
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+163,142
+300,657
++84% in 3 days
+ETH Price
+$3,073
+$3,462
++12.7%
+Total Holdings
+$500M
+$1.0B+
++100%
+Days Since PIPE
+N/A
+7 days
+From $250M
+ETH via Options
+N/A
+60,000 ETH (~$200M)
+Backed by cash
+NOTES
+Surpassed $1B ETH in just 7 days after $250M PIPE close. 60K ETH held via in-the-money options, backed 1:1 with ~$200M cash.
+Source: Press Release
+2025-07-14
+Holdings
+ETH Holdings Exceed $500 Million (163K ETH)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ETH Holdings
+~0
+163,142
+Rapid accumulation
+ETH Price
+N/A
+$3,073
+Reference
+Total Holdings
+$250M PIPE
+$500M+
++100%
+Days Since PIPE
+N/A
+3 days
+From close
+NOTES
+Doubled PIPE proceeds in 3 days. Tom Lee: "Reflexive benefit of acquiring large holdings." CEO Bates: "Wall Street is getting ETH-pilled."
+Source: Press Release
+2025-07-09
+Capital
+$250M PIPE Closes - ETH Treasury Strategy Begins
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+PIPE Proceeds
+$0
+$250M
+Closed
+Primary Treasury Asset
+BTC
+ETH
+PIVOT
+Lead Investor
+N/A
+MOZAYYX
+New
+Other Investors
+N/A
+Founders Fund, Pantera, Kraken, Galaxy, DCG
+Top-tier
+NOTES
+Official ETH treasury launch. MOZAYYX led with Founders Fund, Pantera, FalconX, Republic, Kraken, Galaxy, DCG, and Tom Lee. "Foundational step in ETH strategy."
+Source: Press Release + 8-K
+2025-07-09
+SEC Filing
+$2 Billion ATM Program Launch
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+ATM Program
+None
+$2.0B
+New
+Sales Agents
+N/A
+Cantor + ThinkEquity
+Appointed
+Commission Rate
+N/A
+3.0%
+New
+Registration
+N/A
+333-288579
+Filed
+NOTES
+Controlled Equity Offering Sales Agreement. Automatic shelf (WKSI status) enables rapid capital deployment.
+Source: 8-K + S-3ASR Filing
+2025-07-08
+Corporate
+Ethereum Tower Consulting Agreement
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Treasury Advisor
+None
+Ethereum Tower LLC
+10-year term
+Strategic Advisor
+None
+Ethereum Tower Instant
+6-month term
+Advisor Fee
+N/A
+1% to $1B, 0.5% $1-5B, 0.25% >$5B
+AUM-based
+Advisor Warrants
+N/A
+5% fully diluted @ $5.40
+5-year term
+NOTES
+ETH Treasury Strategy consulting agreement. Focus on maximizing ETH accumulation and value accretion.
+Source: 8-K Filing
+2025-07-02
+Capital
+IPO Overallotment Exercised
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Shares Issued
+2,250,000 (IPO)
++337,500
++15%
+Price
+$8.00 public
+$7.40 to underwriter
+92.5%
+Gross Proceeds
+$18M
++$2.7M
+Additional
+NOTES
+ThinkEquity fully exercised 45-day overallotment option from June 6 offering.
+Source: 8-K Filing
+2025-06-30
+Capital
+🚀 FIRST ETH PIVOT - Private Placement
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Cash Offering Shares
+0
+36,309,592
+@ $4.50
+Pre-Funded Warrants
+0
+11,006,444
+@ $4.4999
+Crypto Offering Shares
+0
+8,804,122
+@ $4.50 (ETH/BTC)
+Use of Proceeds
+BTC Mining
+ETH Treasury
+PIVOT
+NOTES
+WATERSHED EVENT: Birth of BMNR as ETH treasury company. 20% for staking/DeFi, 5% for validator tech.
+Source: 8-K Filing
+2025-06-17
+Holdings
+BTC Treasury Complete: 154.167 BTC Purchased
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+BTC Holdings
+100
+154.167
++54.167
+Total BTC Spent
+N/A
+$16.347M
+Complete
+Avg Price/BTC
+N/A
+$106,033
+Reference
+IPO Proceeds Used
+$16.34M
+100%
+Deployed
+NOTES
+Completed BTC purchases from June 6 IPO. 100% of proceeds invested as committed. Final BTC treasury before ETH pivot.
+Source: Press Release
+2025-06-09
+Holdings
+First BTC Purchase: 100 Bitcoin Acquired
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+BTC Holdings
+0
+100
+First purchase
+Source
+N/A
+IPO proceeds
+Open market
+NOTES
+First open market BTC purchase from June 6 offering. CEO: "Excited to establish our Bitcoin Treasury." Pre-ETH pivot.
+Source: Press Release
+2025-06-06
+Capital
+Public Offering Closes (NYSE Uplisting)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Shares Issued
+~2.5M
++2,250,000
+IPO
+Price
+N/A
+$8.00
+Public offering
+Proceeds
+N/A
+~$18M
+New capital
+NOTES
+Concurrent with NYSE American uplisting. First major capital raise enabling ETH pivot.
+Source: 8-K Filing
+2025-06-05
+Corporate
+NYSE American Trading Commences
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Exchange
+OTCQX
+NYSE American
+Uplisting
+Last OTCQX Day
+N/A
+June 4, 2025
+Final
+NOTES
+Major milestone enabling institutional access and ATM programs.
+Source: 8-K Filing
+2025-06-02
+Corporate
+NYSE American Listing Approved
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Listing Status
+Pending
+Approved
+Confirmed
+Expected Start
+N/A
+~June 5, 2025
+Announced
+NOTES
+Press release announcing NYSE American approval. CEO: Jonathan Bates.
+Source: 8-K Filing
+2025-06-01
+Corporate
+Thomas J. Lee Appointed Chairman
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Chairman
+Jonathan Bates
+Thomas J. Lee
+New
+Strategic Focus
+BTC Mining
+ETH Treasury
+Aligned
+NOTES
+Tom Lee (Fundstrat co-founder) appointed Chairman. Leadership aligned with ETH treasury vision.
+Source: 10-K Filing Reference
+2024-11-29
+SEC Filing
+FY2024 10-K Delayed — Auditor Transition Post-BF Borgers Ban
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Filing Status
+On time
+Extension filed
+NT 10-K
+Reason
+—
+Auditor transition
+BF Borgers banned May 2024
+NOTES
+FY2024 annual report delayed due to auditor transition after BF Borgers CPA firm was banned by SEC in May 2024. Extension filed to allow new auditor to complete review.
+Source: SEC Filing (NT 10-K)
+2024-10-15
+Holdings
+First ETH Purchase Agreement Filed (Pre-IPO Treasury Start)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Asset
+BTC only
+ETH acquisition
+New crypto asset
+Filing
+—
+8-K
+Material agreement
+NOTES
+First ETH purchase agreement filed via 8-K, foreshadowing the massive ETH treasury pivot that would follow the June 2025 PIPE close. Pre-IPO ETH exposure begins.
+Source: SEC Filing (8-K)
+2024-08-15
+Product
+ETH Staking Agreement Signed (Projected 4-5% Yields)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Revenue Source
+Mining/Hosting only
++ ETH Staking
+New yield stream
+Projected Yield
+—
+4-5% APY
+Staking income
+NOTES
+ETH staking agreement signed, projecting 4-5% annual yields. Early precursor to the MAVAN staking strategy that would launch in Q1 2026.
+Source: SEC Filing (8-K)
+2024-05-01
+Corporate
+Auditor BF Borgers Banned by SEC — Forced Replacement
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Auditor
+BF Borgers, CPA
+Resigned (SEC ban)
+Mandatory
+Filing Impact
+Current
+Delayed
+10-K/10-Q at risk
+NOTES
+BF Borgers CPA firm banned by SEC, forcing resignation. Auditor change announcement followed June 5. This created filing delays through late 2024 (NT 10-K filed Nov 29). Material internal controls weakness noted.
+Source: SEC Filing (8-K)
+2023-08-28
+SEC Filing
+SEC Initiates Crypto Disclosure Review — Multiple Comment Rounds
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+SEC Action
+Routine
+Crypto-focused review
+Enhanced scrutiny
+Topics
+—
+Breakeven, pools, impairment, halving
+7 rounds Aug 23-Nov 24
+Breakeven
+Not disclosed
+~$2,500/BTC incl. financing
+Required disclosure
+NOTES
+SEC initiated intensive crypto disclosure review spanning 7 CORRESP rounds from Aug 2023 to Nov 2024. Required enhanced disclosures on: BTC mining breakeven (~$2,500/BTC including miner financing costs), pool mechanics (FPPS, <24hr contracts, no material rights), cryptocurrency impairment (lowest intraday price method), Bitcoin halving impact, and no direct exposure to FTX/crypto bankruptcies.
+Source: SEC Filing (CORRESP)
+2022-08-29
+Corporate
+Michael Maloney Resigns from Board + First Bitcoin Treasury Purchases
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Board
+Maloney (12.5% holder)
+Resigned
+No disagreements
+Treasury
+Cash only
+BTC purchases begun
+8-K filed
+NOTES
+Maloney (largest early shareholder at 12.5%) resigned from board with no disagreements. Concurrent 8-K filings announced first Bitcoin purchase/sales agreements, marking start of crypto treasury strategy. BTC purchases continued through late 2022 (Oct and Nov 8-Ks).
+Source: SEC Filing (8-K)
+2022-07-15
+Corporate
+Name Changed to Bitmine + Authorized Shares Increased to 500M
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Company Name
+Sandy Springs Holdings
+Bitmine Immersion Technologies
+Rebranding
+Authorized Shares
+~10M
+500,000,000
+~50x increase
+Approval
+—
+Majority consent
+DEF 14C
+NOTES
+Definitive information statement (DEF 14C) approved name change from Sandy Springs Holdings to Bitmine Immersion Technologies. Authorized shares increased to 500M to enable future crypto expansion. Preliminary PRE 14C filed same day. Marked official rebranding from dormant shell to crypto mining company.
+Source: SEC Filing (DEF 14C)
+2022-05-31
+SEC Filing
+First Revenue: $428K from Crypto Hosting (Q3 FY2022)
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Revenue
+$0 (prior 5 quarters)
+$428K
+First ever
+Source
+None
+Crypto hosting/mining
+Operational
+Net Loss
+$503K (Q2)
+$2.1M
+Expansion costs
+Assets
+$4.8M
+$4.8M
+Equipment + crypto
+NOTES
+Q3 FY2022 10-Q showed first revenues ($428K from hosting) after 5 consecutive quarters of $0. Net loss increased to $2.1M due to expansion costs (depreciation, G&A). S-1 for $10M offering filed same period for mining expansion, later withdrawn Jun 2023.
+Source: SEC Filing (10-Q)
+2021-08-19
+Corporate
+Founding Shareholders Established — 5 SC 13D Filings + 5 Form 3s
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Maloney
+0%
+12.5% (1.5M shares)
+Largest holder
+Abed Equities
+0%
+9.3% (1M shares)
+Passive
+Jorgensen
+0%
+~9% (1M shares)
+Passive
+Bates
+0%
+>5% (via LP/LLC)
+Control person
+Ramnath
+0%
+>5% (via Bitflair)
+Mining expertise
+NOTES
+In July-September 2021, five SC 13D beneficial ownership filings and five Form 3 initial ownership reports established the founding shareholder base. Total concentrated ownership: ~5M+ shares (~30%+ of outstanding). Insiders included Maloney (12.5%, largest), Abed Equities (9.3%), Jorgensen (9%), Bates (via LP entities, later CEO), and Ramnath (via Bitflair Mining, brought mining expertise). Board additions: Bayles, Mow (later CFO), Bates. All filings within a 2-month window signaling coordinated shell→mining pivot.
+Source: SEC Filing (SC 13D)
+2021-04-04
+Capital
+First Capital Raise: $1.05M Exempt Offering (Rule 506(b))
++ Bullish
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+Capital Raised
+$0
+$1.05M
+Form D offering
+Exemption
+—
+Rule 506(b)
+Private placement
+NOTES
+First capital raise post-shell registration. $1.05M raised via Form D exempt offering under Rule 506(b). Amended (Form D/A) August 4 confirming total sold. Funded initial mining pivot operations.
+Source: SEC Filing (Form D)
+2020-10-27
+SEC Filing
+SEC Registration: Sandy Springs Holdings (Shell Company, 2.8M Shares)
+~ Neutral
+KEY CHANGES
+METRIC
+PREVIOUS
+NEW
+CHANGE
+SEC Status
+Unregistered
+Exchange Act reporting
+Form 10-12G
+Shares
+—
+2,800,000
+Initial outstanding
+Assets/Revenue
+—
+$0 / $0
+Shell entity
+Debt
+—
+$50K promissory note
+Only liability
+NOTES
+Sandy Springs Holdings (later Bitmine) filed Form 10-12G for SEC registration as a shell company with no operations, assets, or revenues. 2.8M shares outstanding. $50K promissory note was sole liability. Inception date: July 16, 2020 post-merger of dormant entities. SEC review followed with 4 CORRESP rounds (Nov 2020-Mar 2021) clarifying reorganization accounting (ASC 250-10/805-50) before registration was cleared March 23, 2021.
+Source: SEC Filing (Form 10-12G)

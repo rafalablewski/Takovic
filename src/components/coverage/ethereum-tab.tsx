@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -8,6 +7,7 @@ import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
 import { ETHEREUM_INTELLIGENCE } from "@/data/coverage/bmnr";
 import type { ValueAccrualStep, RoadmapMilestone } from "@/data/coverage/bmnr";
 import { EcosystemNewsFeed } from "@/components/coverage/ecosystem-news-feed";
+import { CoverageSectionCollapsible } from "@/components/coverage/coverage-section-collapsible";
 import {
   Activity,
   TrendingUp,
@@ -17,45 +17,10 @@ import {
   Building2,
   BookOpen,
   Milestone,
-  ChevronDown,
-  ChevronUp,
   Quote,
   Zap,
   GraduationCap,
 } from "lucide-react";
-
-// ---------------------------------------------------------------------------
-// Collapsible
-// ---------------------------------------------------------------------------
-
-function Collapsible({
-  title,
-  icon,
-  badge,
-  defaultOpen = false,
-  children,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  badge?: React.ReactNode;
-  defaultOpen?: boolean;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <Card>
-      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between p-5 text-left">
-        <div className="flex items-center gap-2">
-          {icon}
-          <span className="text-sm font-medium text-foreground">{title}</span>
-          {badge}
-        </div>
-        {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-      </button>
-      {open && <CardContent className="px-5 pb-5 pt-0">{children}</CardContent>}
-    </Card>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Roadmap status styling
@@ -86,7 +51,7 @@ export function EthereumTab({ ticker }: { ticker: string }) {
       </Card>
 
       {/* ---- BMNR ↔ ETH Correlation ---- */}
-      <Collapsible
+      <CoverageSectionCollapsible
         title="BMNR ↔ ETH Correlation"
         icon={<Activity className="h-4 w-4 text-muted-foreground" />}
         defaultOpen
@@ -103,10 +68,10 @@ export function EthereumTab({ ticker }: { ticker: string }) {
             ))}
           </div>
         </div>
-      </Collapsible>
+      </CoverageSectionCollapsible>
 
       {/* ---- Ethereum Network Metrics ---- */}
-      <Collapsible
+      <CoverageSectionCollapsible
         title="Ethereum Network Metrics"
         icon={<BarChart3 className="h-4 w-4 text-muted-foreground" />}
         defaultOpen
@@ -138,10 +103,10 @@ export function EthereumTab({ ticker }: { ticker: string }) {
             <p className="text-xs text-muted-foreground leading-relaxed">{data.networkMetrics.whyItMatters}</p>
           </div>
         </div>
-      </Collapsible>
+      </CoverageSectionCollapsible>
 
       {/* ---- Institutional Flows (ETH ETFs) ---- */}
-      <Collapsible
+      <CoverageSectionCollapsible
         title="Institutional Flows (ETH ETFs)"
         icon={<Building2 className="h-4 w-4 text-muted-foreground" />}
       >
@@ -180,10 +145,10 @@ export function EthereumTab({ ticker }: { ticker: string }) {
             </table>
           </div>
         </div>
-      </Collapsible>
+      </CoverageSectionCollapsible>
 
       {/* ---- Thesis Framework ---- */}
-      <Collapsible
+      <CoverageSectionCollapsible
         title="Institutional Adoption Thesis"
         icon={<BookOpen className="h-4 w-4 text-muted-foreground" />}
       >
@@ -201,10 +166,10 @@ export function EthereumTab({ ticker }: { ticker: string }) {
             </div>
           ))}
         </div>
-      </Collapsible>
+      </CoverageSectionCollapsible>
 
       {/* ---- Value Accrual Mechanics ---- */}
-      <Collapsible
+      <CoverageSectionCollapsible
         title="Value Accrual Mechanics"
         icon={<Zap className="h-4 w-4 text-muted-foreground" />}
         badge={<Badge variant="secondary" className="text-[10px]">{data.valueAccrualSteps.length} steps</Badge>}
@@ -222,10 +187,10 @@ export function EthereumTab({ ticker }: { ticker: string }) {
             <p className="text-xs text-muted-foreground leading-relaxed">{data.investmentCaseQuote}</p>
           </div>
         </div>
-      </Collapsible>
+      </CoverageSectionCollapsible>
 
       {/* ---- Protocol Roadmap ---- */}
-      <Collapsible
+      <CoverageSectionCollapsible
         title="Ethereum Protocol Roadmap"
         icon={<Milestone className="h-4 w-4 text-muted-foreground" />}
       >
@@ -234,7 +199,7 @@ export function EthereumTab({ ticker }: { ticker: string }) {
             <RoadmapRow key={m.name} milestone={m} />
           ))}
         </div>
-      </Collapsible>
+      </CoverageSectionCollapsible>
 
       {/* ---- Ecosystem Intelligence News Feed ---- */}
       <EcosystemNewsFeed />

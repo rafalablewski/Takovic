@@ -4,6 +4,7 @@ import {
   ADMIN_SESSION_COOKIE,
   verifyAdminSessionToken,
 } from "@/lib/admin/session-token";
+import { AdminChrome } from "./admin-chrome";
 
 /**
  * Admin routes under this segment require a valid session cookie.
@@ -26,5 +27,5 @@ export default async function AdminProtectedLayout({
     redirect("/admin/login");
   }
 
-  return <>{children}</>;
+  return <AdminChrome>{children}</AdminChrome>;
 }

@@ -1,0 +1,4242 @@
+[
+  {
+    "id": "bmnr-tl-092",
+    "date": "2026-03-30",
+    "topic": "Holdings",
+    "title": "📊 ETH 4.732M — $10.7B Stack; +71,179 ETH Week; 3.92% Supply; MAVAN Live",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,660,903",
+        "newValue": "4,732,082",
+        "change": "+71,179 (Mar 29 snapshot)"
+      },
+      {
+        "metric": "ETH Price (mark)",
+        "previous": "$2,072",
+        "newValue": "$2,005",
+        "change": "COIN ref (PR)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.86%",
+        "newValue": "3.92%",
+        "change": "120.7M supply"
+      },
+      {
+        "metric": "Weekly ETH Acquired",
+        "previous": "65,341",
+        "newValue": "71,179",
+        "change": "Elevated vs ~45–50k prior"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$1.1B",
+        "newValue": "$961M",
+        "change": "—"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$95M",
+        "newValue": "$102M",
+        "change": "Moonshot stake"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,142,643",
+        "newValue": "3,142,643",
+        "change": "Unch.; ~66% staked"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$184M",
+        "newValue": "$177M",
+        "change": "PR snapshot"
+      },
+      {
+        "metric": "CESR / BMNR 7-Day",
+        "previous": "2.75% / 2.83%",
+        "newValue": "2.79% / 2.80%",
+        "change": "Quatrefoil / ops"
+      },
+      {
+        "metric": "Full-scale staking reward (forward)",
+        "previous": "$272M/yr",
+        "newValue": "$266M/yr",
+        "change": "@2.80% yield (PR)"
+      },
+      {
+        "metric": "Trading Rank / ADV (5d)",
+        "previous": "#101 / $1.2B",
+        "newValue": "#100 / $920M",
+        "change": "Fundstrat Mar 27"
+      },
+      {
+        "metric": "MSTR (peer ref)",
+        "previous": "761,068 BTC ~$52B",
+        "newValue": "762,099 BTC ~$51B",
+        "change": "PR"
+      }
+    ],
+    "notes": "PR Mar 30, 2026. Snapshot Mar 29, 6:00pm ET. MAVAN launched Mar 25; portion of ETH staked on MAVAN. Chairman: Iran war week 5, ETH +1,160bp vs equities; oil–crypto correlation narrative.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-093",
+    "date": "2026-03-25",
+    "topic": "Product",
+    "title": "🚀 MAVAN Launched — Institutional ETH Staking; +101,776 ETH Routed to MAVAN",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "milestone",
+    "keyChanges": [
+      {
+        "metric": "MAVAN",
+        "previous": "On track Q1 2026",
+        "newValue": "Launched",
+        "change": "Made in America VAlidator Network"
+      },
+      {
+        "metric": "ETH Staked to MAVAN (week)",
+        "previous": "—",
+        "newValue": "101,776 ETH (~$219M)",
+        "change": "PR; scale-up in coming weeks"
+      },
+      {
+        "metric": "Staked ETH (total)",
+        "previous": "3,142,643 ($6.5B @ $2,072)",
+        "newValue": "3,142,643 ($6.8B @ $2,148)",
+        "change": "Snapshot Mar 24, 5pm ET"
+      },
+      {
+        "metric": "Full-scale annual staking reward",
+        "previous": "~$272M/yr",
+        "newValue": "~$300M/yr",
+        "change": "@2.83% 7-day (forward)"
+      },
+      {
+        "metric": "Contact / GTM",
+        "previous": "—",
+        "newValue": "mavan@bitminetech.io",
+        "change": "Institutions, custodians, partners"
+      }
+    ],
+    "notes": "PR Mar 25, 2026. MAVAN: U.S.-based + global architecture; expand to other PoS chains / infra (forward-looking).",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-094",
+    "date": "2026-03-23",
+    "topic": "Holdings",
+    "title": "📊 ETH 4.661M — $11.0B Stack; +65,341 ETH Week; 3.86% Supply",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,595,562",
+        "newValue": "4,660,903",
+        "change": "+65,341 (Mar 22 snapshot)"
+      },
+      {
+        "metric": "ETH Price (mark)",
+        "previous": "$2,185",
+        "newValue": "$2,072",
+        "change": "COIN ref (PR)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.81%",
+        "newValue": "3.86%",
+        "change": "120.7M supply"
+      },
+      {
+        "metric": "Weekly ETH Acquired",
+        "previous": "60,999",
+        "newValue": "65,341",
+        "change": "Sustained >45–50k avg"
+      },
+      {
+        "metric": "Total Stack (PR)",
+        "previous": "$11.5B",
+        "newValue": "$11.0B",
+        "change": "Crypto+cash+moonshots"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$1.2B",
+        "newValue": "$1.1B",
+        "change": "PR Mar 22"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$83M",
+        "newValue": "$95M",
+        "change": "—"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,040,515",
+        "newValue": "3,142,643",
+        "change": "+102,128"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$180M/yr",
+        "newValue": "$184M/yr",
+        "change": "PR"
+      },
+      {
+        "metric": "CESR / BMNR 7-Day",
+        "previous": "2.79% / 2.81%",
+        "newValue": "2.75% / 2.83%",
+        "change": "—"
+      },
+      {
+        "metric": "Full-scale staking reward (forward)",
+        "previous": "$272M/yr",
+        "newValue": "$272M/yr",
+        "change": "At full MAVAN deployment"
+      },
+      {
+        "metric": "Trading Rank / ADV (5d)",
+        "previous": "#105 ($1.0B/day)",
+        "newValue": "#101 ($1.2B)",
+        "change": "Fundstrat Mar 20"
+      },
+      {
+        "metric": "MSTR (peer ref)",
+        "previous": "738,731 BTC ($53B)",
+        "newValue": "761,068 BTC (~$52B)",
+        "change": "PR"
+      }
+    ],
+    "notes": "PR Mar 23, 2026. Snapshot Mar 22, 3pm ET. MAVAN still pre-launch; 3 staking providers. Clarity Act / Polymarket narrative in body (forward-looking).",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-001",
+    "date": "2026-03-17",
+    "topic": "Corporate",
+    "title": "🎤 Tom Lee Investor Presentation Filed — Hong Kong (Reg FD, Ex. 99.1)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Event",
+        "previous": "—",
+        "newValue": "Investor Presentation",
+        "change": "Hong Kong"
+      },
+      {
+        "metric": "Presenter",
+        "previous": "—",
+        "newValue": "Tom Lee",
+        "change": "Executive Chairman"
+      },
+      {
+        "metric": "Filing",
+        "previous": "—",
+        "newValue": "8-K (Reg FD)",
+        "change": "Presentation as Ex. 99.1"
+      },
+      {
+        "metric": "Address",
+        "previous": "10845 Griffith Peak Dr #2, Las Vegas, NV",
+        "newValue": "800 Connecticut Avenue, Norwalk, CT 06854",
+        "change": "HQ relocated"
+      }
+    ],
+    "notes": "Tom Lee, Executive Chairman, presented in Hong Kong. Filed Mar 17, event date Mar 14. Notable: 8-K header shows new HQ address at 800 Connecticut Avenue, Norwalk, CT 06854 (previously Las Vegas, NV).",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-002",
+    "date": "2026-03-16",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.596M — $11.5B Total, 3.81% of Supply, 76% to Alchemy of 5%",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,534,563",
+        "newValue": "4,595,562",
+        "change": "+60,999 (+1.3%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$1,965",
+        "newValue": "$2,185",
+        "change": "+11.2% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.76%",
+        "newValue": "3.81%",
+        "change": "+0.05pp (76% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,040,483",
+        "newValue": "3,040,515",
+        "change": "+32 (minimal new staking)"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "67.1%",
+        "newValue": "66.2%",
+        "change": "-0.9pp (mechanical — denominator grew)"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "2.84%",
+        "newValue": "2.79%",
+        "change": "-5bp (Quatrefoil)"
+      },
+      {
+        "metric": "BMNR 7-day Yield",
+        "previous": "2.91%",
+        "newValue": "2.81%",
+        "change": "-10bp annualized"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$174M/yr",
+        "newValue": "$180M/yr",
+        "change": "+3% (higher ETH price)"
+      },
+      {
+        "metric": "Full MAVAN Staking Rev",
+        "previous": "$259M/yr",
+        "newValue": "$272M/yr",
+        "change": "Projected at full deployment"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$1.2B",
+        "newValue": "$1.2B",
+        "change": "Stable"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$14M",
+        "newValue": "$83M",
+        "change": "+$80M investment increase"
+      },
+      {
+        "metric": "Beast Industries",
+        "previous": "$200M",
+        "newValue": "$200M",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "BTC Holdings",
+        "previous": "195",
+        "newValue": "196",
+        "change": "+1 BTC"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#125 ($1.0B/day)",
+        "newValue": "#105 ($1.0B/day)",
+        "change": "+20 ranks"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$10.3B",
+        "newValue": "$11.5B",
+        "change": "+$1.2B (+11.7%)"
+      }
+    ],
+    "notes": "Tom Lee: crypto outperformed S&P 500 by 2,450bp since Iran war start. Higher oil → growth concerns → investors buy growth stocks including crypto. Accelerated accumulation pace: 60,999 ETH (continued at elevated 60K+/week). Two strategic moves: (1) Increased ORBS investment by $80M — ORBS acquired $50M OpenAI equity + $25M Beast Industries; ORBS = \"only publicly listed equity with direct OpenAI exposure.\" (2) Acquired 5,000 ETH from Ethereum Foundation (EF) to enable EF to fund operations without open-market selling. Strategy Inc (MSTR) now 738,731 BTC ($53B). MAVAN on track Q1 2026 (3 staking providers). Institutional: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-003",
+    "date": "2026-03-12",
+    "topic": "Corporate",
+    "title": "🚀 Eightco (ORBS) Secures $125M: BMNR $75M Lead + ARK $25M + Payward $25M; Tom Lee Joins Board",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "BMNR→ORBS Investment",
+        "previous": "$14M",
+        "newValue": "$83M (cumulative)",
+        "change": "+$75M commitment (lead investor)"
+      },
+      {
+        "metric": "Total ORBS Raise",
+        "previous": "—",
+        "newValue": "$125M",
+        "change": "BMNR $75M + ARK $25M + Payward $25M"
+      },
+      {
+        "metric": "Tom Lee",
+        "previous": "BMNR Chairman only",
+        "newValue": "BMNR Chairman + ORBS Board Director",
+        "change": "Appointed independent director"
+      },
+      {
+        "metric": "ORBS → OpenAI",
+        "previous": "—",
+        "newValue": "$50M equity stake",
+        "change": "Only public equity with direct OpenAI exposure"
+      },
+      {
+        "metric": "ORBS → Beast Industries",
+        "previous": "—",
+        "newValue": "$25M equity stake",
+        "change": "MrBeast portfolio company"
+      },
+      {
+        "metric": "ARK Invest Role",
+        "previous": "BMNR shareholder",
+        "newValue": "BMNR shareholder + ORBS partner ($25M)",
+        "change": "Brett Winton (Chief Futurist) as advisor"
+      },
+      {
+        "metric": "Payward/Kraken",
+        "previous": "BMNR supporter",
+        "newValue": "BMNR supporter + ORBS investor ($25M)",
+        "change": "Arjun Sethi (co-CEO Kraken) quoted"
+      }
+    ],
+    "notes": "Major strategic expansion of BMNR moonshot portfolio. ORBS sits at intersection of AI (OpenAI), blockchain (Worldcoin/World), and creator economy (MrBeast/Beast Industries). Dan Ives steps down as ORBS Chairman. Other ORBS investors: MOZAYYX, World Foundation, Coinfund, Discovery Capital Management, FalconX, Pantera, GSR. ORBS holds Worldcoin + Ethereum as long-term holdings. OpenAI IPO anticipated in 2026 — ORBS gives public market exposure.",
+    "source": "PRNewswire (Eightco Holdings)"
+  },
+  {
+    "id": "bmnr-tl-004",
+    "date": "2026-03-09",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.535M — $10.3B Total, 3.76% of Supply, 75% to Alchemy of 5%",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,473,587",
+        "newValue": "4,534,563",
+        "change": "+60,976 (+1.4%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$1,976",
+        "newValue": "$1,965",
+        "change": "-0.6% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.71%",
+        "newValue": "3.76%",
+        "change": "+0.05pp (75% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,040,483",
+        "newValue": "3,040,483",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "67.9%",
+        "newValue": "67.1%",
+        "change": "-0.8pp (mechanical)"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "2.83%",
+        "newValue": "2.84%",
+        "change": "+1bp (Quatrefoil)"
+      },
+      {
+        "metric": "BMNR 7-day Yield",
+        "previous": "2.86%",
+        "newValue": "2.91%",
+        "change": "+5bp annualized"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$172M/yr",
+        "newValue": "$174M/yr",
+        "change": "+1%"
+      },
+      {
+        "metric": "Full MAVAN Staking Rev",
+        "previous": "$253M/yr",
+        "newValue": "$259M/yr",
+        "change": "Projected at full deployment"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$868M",
+        "newValue": "$1.2B",
+        "change": "+$332M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$14M",
+        "newValue": "$14M",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "BTC Holdings",
+        "previous": "195",
+        "newValue": "195",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#145 ($0.8B/day)",
+        "newValue": "#125 ($1.0B/day)",
+        "change": "+20 ranks"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$9.9B",
+        "newValue": "$10.3B",
+        "change": "+$0.4B (+4.0%)"
+      }
+    ],
+    "notes": "Tom Lee: ETH showed resilience amid war concerns and surging oil. Tracking DeMark Analytics (Symbolik.com) base case — ETH 2026 correlates to S&P 500 fall 2011 (89%) and fall 1987 (93%). If analogs hold, ETH bottoms Mar 8-14 just below recent $1,740 low. \"Nobody rings the bell at the bottom\" — BMNR slightly increased accumulation pace: 60,976 ETH vs 45-50K typical. Cash surged to $1.2B (from $868M). Strategy Inc (MSTR) 720,737 BTC ($48B). MAVAN on track Q1 2026.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-005",
+    "date": "2026-03-02",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.474M — $9.9B Total, 3.71% of Supply, 74% to Alchemy of 5%",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,422,659",
+        "newValue": "4,473,587",
+        "change": "+50,928 (+1.2%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$1,958",
+        "newValue": "$1,976",
+        "change": "+0.9% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.66%",
+        "newValue": "3.71%",
+        "change": "+0.05pp (74% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,040,483",
+        "newValue": "3,040,483",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "68.7%",
+        "newValue": "67.9%",
+        "change": "-0.8pp (mechanical)"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "2.81%",
+        "newValue": "2.83%",
+        "change": "+2bp (Quatrefoil)"
+      },
+      {
+        "metric": "BMNR 7-day Yield",
+        "previous": "2.89%",
+        "newValue": "2.86%",
+        "change": "-3bp annualized"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$171M/yr",
+        "newValue": "$172M/yr",
+        "change": "+$1M"
+      },
+      {
+        "metric": "Full MAVAN Staking Rev",
+        "previous": "$249M/yr",
+        "newValue": "$253M/yr",
+        "change": "Projected at full deployment"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$691M",
+        "newValue": "$868M",
+        "change": "+$177M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$17M",
+        "newValue": "$14M",
+        "change": "-$3M"
+      },
+      {
+        "metric": "Beast Industries",
+        "previous": "$200M",
+        "newValue": "$200M",
+        "change": "Unchanged (initial investment closed)"
+      },
+      {
+        "metric": "BTC Holdings",
+        "previous": "193",
+        "newValue": "195",
+        "change": "+2 BTC"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#165 ($0.7B/day)",
+        "newValue": "#145 ($0.8B/day)",
+        "change": "+20 ranks"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$9.6B",
+        "newValue": "$9.9B",
+        "change": "+$0.3B (+3.1%)"
+      }
+    ],
+    "notes": "Tom Lee: \"methodically executing Ethereum treasury strategy\" through \"later stages of mini crypto winter.\" Geopolitical: US commenced combat operations against Iran — impact on markets in coming weeks. ETH pullback viewed as attractive given strengthening fundamentals. \"Price of ETH not reflective of high utility and role as future of finance.\" Bought 50,928 ETH. MAVAN on track Q1 2026. GENIUS Act + SEC Project Crypto = transformational. Institutional: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-006",
+    "date": "2026-02-26",
+    "topic": "Corporate",
+    "title": "🎤 Tom Lee Presentation Filed as 8-K (Reg FD, Ex. 99.1)",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Event",
+        "previous": "—",
+        "newValue": "Investor Presentation",
+        "change": "Tom Lee, Executive Chairman"
+      },
+      {
+        "metric": "Filing",
+        "previous": "—",
+        "newValue": "8-K (Reg FD)",
+        "change": "Presentation as Ex. 99.1"
+      }
+    ],
+    "notes": "Tom Lee, Executive Chairman, presentation filed via 8-K Item 7.01 Regulation FD Disclosure. Filed Feb 26, event date Feb 24. Presentation content not available (exhibit only).",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-007",
+    "date": "2026-02-23",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.423M — $9.6B Total, 3.66% of Supply, 73% to Alchemy of 5%",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,371,497",
+        "newValue": "4,422,659",
+        "change": "+51,162 (+1.2%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$1,998",
+        "newValue": "$1,958",
+        "change": "-2.0% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.62%",
+        "newValue": "3.66%",
+        "change": "+0.04pp (73% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "3,040,483",
+        "newValue": "3,040,483",
+        "change": "Unchanged — new ETH not yet staked"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "69.6%",
+        "newValue": "68.7%",
+        "change": "-0.9pp (mechanical — denominator grew)"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "2.84%",
+        "newValue": "2.81%",
+        "change": "-3bp (Quatrefoil)"
+      },
+      {
+        "metric": "BMNR 7-day Yield",
+        "previous": "2.89%",
+        "newValue": "2.89%",
+        "change": "Unchanged annualized"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$176M/yr",
+        "newValue": "$171M/yr",
+        "change": "-3% (lower ETH price)"
+      },
+      {
+        "metric": "Full MAVAN Staking Rev",
+        "previous": "$252M/yr",
+        "newValue": "$249M/yr",
+        "change": "Projected at full deployment"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$670M",
+        "newValue": "$691M",
+        "change": "+$21M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$17M",
+        "newValue": "$17M",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Beast Industries",
+        "previous": "$200M",
+        "newValue": "$200M",
+        "change": "Initial investment closed"
+      },
+      {
+        "metric": "BTC Holdings",
+        "previous": "193",
+        "newValue": "193",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#158 ($0.9B/day)",
+        "newValue": "#165 ($0.7B/day)",
+        "change": "-7 ranks"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$9.6B",
+        "newValue": "$9.6B",
+        "change": "Flat (ETH price decline offset by accumulation + cash)"
+      }
+    ],
+    "notes": "Tom Lee: \"mini crypto winter\" framing. 3 fundamental drivers gaining traction: (i) Wall Street tokenization, (ii) AI/agentic-AI using smart blockchains for execution + payments, (iii) emerging creator economy using blockchains for verification. \"Price of ETH is not reflective of the high utility of ETH and its role as the future of finance.\" Bought 51,162 ETH in past week — continued accumulation during pullback. MAVAN on track Q1 2026 (3 staking providers). GENIUS Act + SEC Project Crypto = transformational. Institutional: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-008",
+    "date": "2026-02-17",
+    "topic": "SEC Filing",
+    "title": "📋 Tom Lee Form 4/A: 1.5M RSU Grant, 500K Vested, 232K Tax-Withheld (~$6.7M)",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "RSU Grant",
+        "previous": "—",
+        "newValue": "1,500,000 RSUs",
+        "change": "500K immediate + 500K 1-yr + 500K 2-yr"
+      },
+      {
+        "metric": "Vested to Common",
+        "previous": "—",
+        "newValue": "500,000 shares",
+        "change": "M code, $0 conversion price"
+      },
+      {
+        "metric": "Tax Withholding",
+        "previous": "—",
+        "newValue": "231,700 shares",
+        "change": "@ $28.84/share (~$6.7M)"
+      },
+      {
+        "metric": "Direct Ownership",
+        "previous": "Unknown",
+        "newValue": "726,722 shares",
+        "change": "Post-transaction"
+      },
+      {
+        "metric": "Indirect Ownership",
+        "previous": "Unknown",
+        "newValue": "222,222 shares",
+        "change": "Thomas J Lee 2012 Trust"
+      },
+      {
+        "metric": "Unvested RSUs",
+        "previous": "—",
+        "newValue": "1,000,000",
+        "change": "500K @ 1-yr + 500K @ 2-yr"
+      }
+    ],
+    "notes": "Amended Form 4 for Lee Thomas Jong (Tom Lee), Executive Chairman. Transaction date Jan 23; original Form 4 filed Jan 27; amendment filed Feb 17 to correct prior omission of 231,700 tax-withheld shares. RSU grant of 1.5M units under 2025 Omnibus Incentive Plan. Post-transaction: 726,722 direct + 222,222 indirect (Thomas J Lee 2012 Trust) + 1M unvested RSUs.",
+    "source": "SEC Filing (Form 4/A)"
+  },
+  {
+    "id": "bmnr-tl-009",
+    "date": "2026-02-17",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.371M — $9.6B Total, Staking Crosses 3M ETH (69.5%)",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,325,738",
+        "newValue": "4,371,497",
+        "change": "+45,759 (+1.1%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$2,125",
+        "newValue": "$1,998",
+        "change": "-6.0% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.58%",
+        "newValue": "3.62%",
+        "change": "+0.04pp (72% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "2,897,459",
+        "newValue": "3,040,483",
+        "change": "+143,024 (+4.9%)"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "67.0%",
+        "newValue": "69.5%",
+        "change": "+2.5pp — crosses 67% catalyst"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "3.11%",
+        "newValue": "2.84%",
+        "change": "-27bp (Quatrefoil)"
+      },
+      {
+        "metric": "BMNR 7-day Yield",
+        "previous": "3.3234%",
+        "newValue": "2.89%",
+        "change": "-43bp annualized"
+      },
+      {
+        "metric": "Annualized Staking Rev",
+        "previous": "$202M/yr",
+        "newValue": "$176M/yr",
+        "change": "-13% (lower rate + price)"
+      },
+      {
+        "metric": "Full MAVAN Staking Rev",
+        "previous": "N/A",
+        "newValue": "$252M/yr",
+        "change": "Projected at full deployment"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$595M",
+        "newValue": "$670M",
+        "change": "+$75M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$19M",
+        "newValue": "$17M",
+        "change": "-$2M"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#107 ($1.3B/day)",
+        "newValue": "#158 ($0.9B/day)",
+        "change": "-51 ranks"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$10.0B",
+        "newValue": "$9.6B",
+        "change": "-$0.4B (ETH price decline)"
+      }
+    ],
+    "notes": "Tom Lee post-Consensus HK: 3 secular drivers for ETH — (i) Wall Street tokenization/privacy on Ethereum, (ii) AI agents using ETH for payments + verification, (iii) creators/proof-of-human on L2s (Worldchain). Sentiment \"rock bottom\" comparable to Nov 2022 / 2018 lows, but no FTX/3AC-scale failures — \"mini-winter\" framing from Oct 10 deleveraging. Bought 45,759 ETH in past week despite pullback. Staked ETH crossed 3M milestone (3,040,483), largest staker globally. MAVAN on track for Q1 2026 launch (3 staking providers). $252M projected annual staking revenue at full MAVAN scale. GENIUS Act + SEC Project Crypto compared to 1971 Bretton Woods ending. Beast Industries $200M stake. 193 BTC held. Institutional supporters: ARK/Cathie Wood, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, Tom Lee.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-010",
+    "date": "2026-02-11",
+    "topic": "Corporate",
+    "title": "🎤 Tom Lee Presents at CoinDesk Consensus 2026 in Hong Kong",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Event",
+        "previous": "—",
+        "newValue": "CoinDesk Consensus 2026",
+        "change": "Hong Kong"
+      },
+      {
+        "metric": "Presenter",
+        "previous": "—",
+        "newValue": "Tom Lee",
+        "change": "Executive Chairman"
+      },
+      {
+        "metric": "Filing",
+        "previous": "—",
+        "newValue": "8-K (Reg FD)",
+        "change": "Presentation attached as Ex. 99.1"
+      }
+    ],
+    "notes": "Tom Lee, Executive Chairman, presented at CoinDesk Consensus 2026 Conference in Hong Kong. Presentation filed as Exhibit 99.1 via 8-K (Item 7.01 Regulation FD Disclosure). Major global crypto conference appearance signals continued institutional outreach and thought leadership positioning.",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-011",
+    "date": "2026-02-10",
+    "topic": "Corporate",
+    "title": "🦁 Beast Industries Acquires Step Banking App — BMNR's $200M Investment Expands into Fintech",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Acquisition",
+        "previous": "—",
+        "newValue": "Step Banking App",
+        "change": "Beast Industries acquires"
+      },
+      {
+        "metric": "Step Users",
+        "previous": "—",
+        "newValue": "7M+",
+        "change": "Mobile-first fintech users"
+      },
+      {
+        "metric": "Step Funding",
+        "previous": "—",
+        "newValue": "~$500M raised",
+        "change": "Backers: Curry, D'Amelio, Timberlake"
+      },
+      {
+        "metric": "BMNR Exposure",
+        "previous": "$200M equity",
+        "newValue": "$200M + Step platform",
+        "change": "Expanded fintech reach"
+      },
+      {
+        "metric": "Beast Subscribers",
+        "previous": "450M+",
+        "newValue": "460M+",
+        "change": "YouTube subscribers"
+      }
+    ],
+    "notes": "Beast Industries (MrBeast, 460M+ YouTube subscribers, 5B monthly views) acquired Step, a mobile-first financial services app with 7M+ users focused on financial literacy and credit-building for younger generations. Step previously raised ~$500M from Stephen Curry, Charli D'Amelio, Justin Timberlake. BMNR's $200M equity investment in Beast Industries now has exposure to a full fintech platform. Jeff Housenbold (Beast CEO) noted expansion into regulated sectors and financial platforms. The article explicitly mentions: \"The transaction follows a $200 million investment in Beast Industries from BitMine Immersion Technologies, the leading Ethereum treasury firm, signaling potential expansion into digital asset offerings alongside traditional financial services.\" MrBeast: \"Nobody taught me about investing, building credit, or managing money when I was growing up. I want to give millions of young people the financial foundation I never had.\"",
+    "source": "CoinDesk / Press Release"
+  },
+  {
+    "id": "bmnr-tl-012",
+    "date": "2026-02-09",
+    "topic": "SEC Filing",
+    "title": "📋 S-8 Filed: 2025 Omnibus Incentive Plan Registration",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "Filing",
+        "previous": "—",
+        "newValue": "Form S-8",
+        "change": "2025 Omnibus Incentive Plan"
+      },
+      {
+        "metric": "Legal Counsel",
+        "previous": "—",
+        "newValue": "Winston & Strawn LLP",
+        "change": "Houston"
+      },
+      {
+        "metric": "Board Signers",
+        "previous": "—",
+        "newValue": "8 directors",
+        "change": "Tsang, Kim, Lee, Maloney, Love, Sharbutt, Edgeworth, Howe, Sechan"
+      }
+    ],
+    "notes": "Bitmine registered shares under the 2025 Omnibus Incentive Plan via Form S-8. Filed by Chi Tsang (CEO) with Winston & Strawn LLP as legal counsel. Signed by full board: Chi Tsang (CEO/Director), Young Kim (CFO/COO/Director), Thomas Lee (Executive Chairman), Michael Maloney, Lori Love, David Sharbutt, Jason Edgeworth, Olivia Howe, Robert Sechan. Incorporates by reference recent 10-K, 10-Q, and 8-K filings. Standard equity compensation registration for employee/director incentive plan.",
+    "source": "SEC Filing (S-8)"
+  },
+  {
+    "id": "bmnr-tl-013",
+    "date": "2026-01-28",
+    "topic": "Corporate",
+    "title": "👤 Erik Nelson Separation — President Terminated Without Cause, $605K Severance",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Officer",
+        "previous": "Erik Nelson (President)",
+        "newValue": "Terminated",
+        "change": "Without Cause, effective Jan 22"
+      },
+      {
+        "metric": "Notice Payment",
+        "previous": "—",
+        "newValue": "$20,000",
+        "change": "30 days base salary in lieu of notice"
+      },
+      {
+        "metric": "Severance Payment",
+        "previous": "—",
+        "newValue": "$585,000",
+        "change": "Lump sum within 30 days"
+      },
+      {
+        "metric": "Total Severance",
+        "previous": "—",
+        "newValue": "$605,000",
+        "change": "$20K notice + $585K severance"
+      },
+      {
+        "metric": "Non-Compete",
+        "previous": "Active",
+        "newValue": "Waived",
+        "change": "Released from Sections 6(a)-(c)"
+      },
+      {
+        "metric": "Equity",
+        "previous": "Per company books",
+        "newValue": "Retained existing shares",
+        "change": "No additional grants"
+      }
+    ],
+    "notes": "Erik Nelson terminated without Cause as President, effective January 22, 2026. Separation Agreement filed as Exhibit 10.1. Total severance: $605K ($20K notice + $585K lump sum). Non-competition and non-solicitation covenants fully waived and released. Nelson retains existing shares per company books but waived all additional equity rights. Confidentiality obligations continue. Employment Agreement dated September 1, 2025. Board noted termination \"is not related to a disagreement with the Company on any matter relating to the Company's operations, policies, or practices.\" Board thanked Nelson for \"distinguished service and valuable contributions.\" Compensation Committee and Board approved the separation. Filed January 28, 2026.",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-014",
+    "date": "2026-02-09",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.326M — $10.0B Total, ETH -62% from 2025 Highs, V-Recovery Expected",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,285,125",
+        "newValue": "4,325,738",
+        "change": "+40,613 (+0.9%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$2,317",
+        "newValue": "$2,125",
+        "change": "-8.3% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.55%",
+        "newValue": "3.58%",
+        "change": "+0.03pp (72% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "2,897,459",
+        "newValue": "2,897,459",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "67.6%",
+        "newValue": "67.0%",
+        "change": "-0.6pp (more ETH, same staked)"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$586M",
+        "newValue": "$595M",
+        "change": "+$9M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$20M",
+        "newValue": "$19M",
+        "change": "-$1M"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#105",
+        "newValue": "#107",
+        "change": "-2 ($1.3B/day)"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$10.7B",
+        "newValue": "$10.0B",
+        "change": "-$0.7B (ETH price)"
+      },
+      {
+        "metric": "Staking Revenue",
+        "previous": "$188M/yr",
+        "newValue": "$202M/yr",
+        "change": "+7% WoW annualized"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "~2.81%",
+        "newValue": "3.11%",
+        "change": "+30bp (Quatrefoil)"
+      }
+    ],
+    "notes": "ETH -62% from 2025 highs, but Tom Lee: this is the 8th time since 2018 ETH has fallen 50%+ from a recent high (happens annually). V-shaped recoveries follow every time. 2025 example: ETH fell -64% Jan→Mar then surged $1,600→$5,000. Ethereum daily txns ATH (2.5M), active addresses ATH (1M daily). \"Best investment opportunities present themselves after declines.\" CESR improved to 3.11%. Annualized staking $202M (+7% WoW). Bitmine 7-day yield 3.3234%. Beast $200M initial investment closed. GENIUS Act + SEC Project Crypto compared to ending Bretton Woods 1971. 193 BTC held. $595M cash.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-015",
+    "date": "2026-02-02",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.285M — $10.7B Total, Staking Explodes to 67.6%",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,243,338",
+        "newValue": "4,285,125",
+        "change": "+41,787 (+1.0%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$2,839",
+        "newValue": "$2,317",
+        "change": "-18.4% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.52%",
+        "newValue": "3.55%",
+        "change": "+0.03pp (71% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "2,009,267",
+        "newValue": "2,897,459",
+        "change": "+888,192 (+44.2%)"
+      },
+      {
+        "metric": "Staking Ratio",
+        "previous": "47.4%",
+        "newValue": "67.6%",
+        "change": "+20.2pp"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$682M",
+        "newValue": "$586M",
+        "change": "-$96M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$19M",
+        "newValue": "$20M",
+        "change": "+$1M"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#91",
+        "newValue": "#105",
+        "change": "-14 ($1.1B/day)"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$12.8B",
+        "newValue": "$10.7B",
+        "change": "-$2.1B (ETH price)"
+      },
+      {
+        "metric": "Staking Revenue",
+        "previous": "N/A",
+        "newValue": "$188M/yr",
+        "change": "+18% WoW annualized"
+      }
+    ],
+    "notes": "ETH price dropped sharply (~$3,000→$2,317) but fundamentals strengthening: Ethereum daily txns hit ATH (2.5M via theblock.co), active addresses soared to ATH (1M daily). Tom Lee: \"non-fundamental factors\" explain weakness — leverage not returned since Oct 10th, gold \"vortex\" pulling risk appetite. Gold -9% on Jan 30 (4th largest daily drop) may signal near-term top (similar to Jan 22, 1980 pattern). Staking exploded +888K ETH to 2.9M (67.6% of holdings, largest staker in world). Annualized staking revenue $188M (up 18% WoW). MAVAN on track Q1 2026 (3 staking providers). GENIUS Act + SEC Project Crypto \"transformational.\" Beast $200M closed. 193 BTC held.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-016",
+    "date": "2026-01-26",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.243M — $12.8B Total, Davos 2026 Bullish",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,203,036",
+        "newValue": "4,243,338",
+        "change": "+40,302 (+1.0%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,211",
+        "newValue": "$2,839",
+        "change": "-11.6% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.48%",
+        "newValue": "3.52%",
+        "change": "+0.04pp"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "1,838,003",
+        "newValue": "2,009,267",
+        "change": "+171,264 (+9.3%)"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$979M",
+        "newValue": "$682M",
+        "change": "-$297M"
+      },
+      {
+        "metric": "Eightco (ORBS)",
+        "previous": "$22M",
+        "newValue": "$19M",
+        "change": "-$3M"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#60",
+        "newValue": "#91",
+        "change": "-31 ($1.2B/day)"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$14.5B",
+        "newValue": "$12.8B",
+        "change": "-$1.7B (ETH price)"
+      }
+    ],
+    "notes": "Davos 2026 sentiment strongly bullish on crypto/blockchain. Larry Fink (BlackRock): \"Tokenization is necessary... if we have one common blockchain, we could reduce corruption.\" David Sacks (White House): \"Banking and crypto will transform into a single digital asset industry.\" Bill Winters (Standard Chartered): \"Most things will settle in digital form... this is the year when this is happening in scale.\" ETHBTC ratio climbing since mid-October as investors recognize Wall Street building on Ethereum. Staking income: $374M/yr at scale (2.81% CESR). MAVAN on track Q1 2026. Beast Industries $200M closed.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-017",
+    "date": "2026-01-20",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.203M — $14.5B Total, 81% Shareholder YES",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,167,768",
+        "newValue": "4,203,036",
+        "change": "+35,268 (+0.8%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,119",
+        "newValue": "$3,211",
+        "change": "+2.9% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.45%",
+        "newValue": "3.48%",
+        "change": "+0.03pp"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "1,256,083",
+        "newValue": "1,838,003",
+        "change": "+581,920 (+46.3%)"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$988M",
+        "newValue": "$979M",
+        "change": "-$9M (post Beast)"
+      },
+      {
+        "metric": "Shareholder Vote",
+        "previous": "Pending",
+        "newValue": "81% YES",
+        "change": "52.2% turnout"
+      },
+      {
+        "metric": "Beast Industries",
+        "previous": "Announced",
+        "newValue": "CLOSED",
+        "change": "$200M invested"
+      },
+      {
+        "metric": "Stockholders",
+        "previous": "N/A",
+        "newValue": "500,000+",
+        "change": "Individual investors"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#67",
+        "newValue": "#60",
+        "change": "+7 ($1.5B/day)"
+      }
+    ],
+    "notes": "Shareholder vote passed with 81% YES on Proposal 2 (share authorization 500M→50B), 52.2% of outstanding shares voted. Beast Industries $200M investment officially closed Jan 17. Staking surged to 1.838M ETH (43.7% of holdings, $5.9B value). 500,000+ individual stockholders. BMNR now #60 most traded US stock at $1.5B/day average volume. CESR rate: 2.81%. MAVAN remains on track for Q1 2026.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-018",
+    "date": "2026-01-15",
+    "topic": "Corporate",
+    "title": "🦁 $200M Strategic Investment in Beast Industries (MrBeast)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Investment",
+        "previous": "$0",
+        "newValue": "$200M equity",
+        "change": "Beast Industries"
+      },
+      {
+        "metric": "Investor Base",
+        "previous": "Institutions",
+        "newValue": "+ MrBeast/Beast Industries",
+        "change": "Strategic partnership"
+      },
+      {
+        "metric": "Target Audience",
+        "previous": "Institutions",
+        "newValue": "+ GenZ/GenAlpha/Millennials",
+        "change": "Demographic expansion"
+      },
+      {
+        "metric": "Deal Close",
+        "previous": "—",
+        "newValue": "Jan 19, 2026",
+        "change": "Expected"
+      },
+      {
+        "metric": "Annual Meeting",
+        "previous": "—",
+        "newValue": "Jan 15, 2026",
+        "change": "Wynn Las Vegas (today)"
+      }
+    ],
+    "notes": "$200M equity investment into Beast Industries (MrBeast - 450M+ YouTube subscribers, 5B monthly views). CEO Jeff Housenbold: \"Their support is a strong validation of our vision.\" Tom Lee: \"Beast Industries is the leading content creator of our generation with reach and engagement unmatched with GenZ, GenAlpha and Millennials.\" Exploring DeFi integration into Beast's upcoming financial services platform. Premier institutional investors reaffirmed: ARK (Cathie Wood), MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital, and Tom Lee. Annual Meeting livestreamed on X @bitmnr. Goal: acquiring 5% of ETH.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-019",
+    "date": "2026-01-13",
+    "topic": "SEC Filing",
+    "title": "📋 Q1 2026 10-Q: $10.6B Digital Assets, First Staking Revenue",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "Period Covered",
+        "previous": "—",
+        "newValue": "Nov 30, 2025",
+        "change": "Q1 2026"
+      },
+      {
+        "metric": "Digital Assets",
+        "previous": "$8.26B (FY25)",
+        "newValue": "$10.56B",
+        "change": "+$2.3B (+28%)"
+      },
+      {
+        "metric": "ETH Holdings",
+        "previous": "2.38M (FY25)",
+        "newValue": "3,737,140",
+        "change": "+1.36M (+57%)"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$512M",
+        "newValue": "$888M",
+        "change": "+$376M (+73%)"
+      },
+      {
+        "metric": "Total Assets",
+        "previous": "$8.8B",
+        "newValue": "$11.5B",
+        "change": "+$2.7B (+31%)"
+      },
+      {
+        "metric": "Stockholders Equity",
+        "previous": "$8.69B",
+        "newValue": "$11.25B",
+        "change": "+$2.56B (+29%)"
+      },
+      {
+        "metric": "Staking Revenue",
+        "previous": "$0",
+        "newValue": "$980K",
+        "change": "First ever!"
+      },
+      {
+        "metric": "Net Loss",
+        "previous": "$349M NI (FY25)",
+        "newValue": "$(5.2B)",
+        "change": "Unrealized ETH loss"
+      },
+      {
+        "metric": "Shares Outstanding",
+        "previous": "384M",
+        "newValue": "409M (Nov 30)",
+        "change": "+25M"
+      }
+    ],
+    "notes": "First quarterly filing post-ETH pivot. Key highlights: (1) Digital assets grew to $10.56B (3.74M ETH @ $2,821 avg); (2) First staking revenue recognized: $980K; (3) Net loss of $5.2B driven almost entirely by $5.25B unrealized loss on ETH holdings due to price decline; (4) Cash position strengthened to $888M; (5) Eightco investment valued at $35.9M (up from $20M cost); (6) Material weakness in internal controls still being remediated. Chi Tsang confirmed as CEO (Nov 20), Young Kim as CFO/COO (Jan 7). Shares outstanding: 409M (Nov 30) → 455M (Jan 12).",
+    "source": "SEC Filing (10-Q)"
+  },
+  {
+    "id": "bmnr-tl-020",
+    "date": "2026-01-12",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.168M — $14.0B Total Holdings",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,143,502",
+        "newValue": "4,167,768",
+        "change": "+24,266 (+0.6%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,196",
+        "newValue": "$3,119",
+        "change": "-2.4% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.43%",
+        "newValue": "3.45%",
+        "change": "+0.02pp (70% to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "659,219",
+        "newValue": "1,256,083",
+        "change": "+596,864 (+90.5%)"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$915M",
+        "newValue": "$988M",
+        "change": "+$73M (+8%)"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#44",
+        "newValue": "#67",
+        "change": "-23 ($1.3B/day)"
+      },
+      {
+        "metric": "Shares Outstanding",
+        "previous": "426M",
+        "newValue": "434M",
+        "change": "+8M"
+      }
+    ],
+    "notes": "Tom Lee urges stockholders to vote YES on proposal #2 (authorized shares increase from 500M to 50B). Staking scaled massively: +596,864 ETH staked in one week to 1.256M total (30% of holdings). MAVAN on track Q1 2026. At scale staking = $374M/yr (>$1M/day). Annual Meeting Jan 15 @ Wynn Las Vegas. BMNR now 70% of the way to \"Alchemy of 5%\". Tom Lee 2026 thesis: \"crypto prices recover with stronger gains in 2027-2028.\" GENIUS Act compared to Aug 15, 1971 (end of Bretton Woods).",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-021",
+    "date": "2026-01-09",
+    "topic": "Corporate",
+    "title": "👔 CFO/COO Appointed: Young Kim (MIT/HBS, Columbia Threadneedle)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "CFO",
+        "previous": "Vacant (Mow Jan 16)",
+        "newValue": "Young Kim",
+        "change": "Effective immediately"
+      },
+      {
+        "metric": "COO",
+        "previous": "N/A",
+        "newValue": "Young Kim (dual role)",
+        "change": "New position"
+      },
+      {
+        "metric": "Board",
+        "previous": "—",
+        "newValue": "+Young Kim",
+        "change": "Reports to Tom Lee"
+      },
+      {
+        "metric": "Background",
+        "previous": "—",
+        "newValue": "MIT + HBS",
+        "change": "\"Engineer-investor\""
+      },
+      {
+        "metric": "Experience",
+        "previous": "—",
+        "newValue": "20+ years",
+        "change": "Multi-billion AUM"
+      }
+    ],
+    "notes": "Young Kim appointed CFO and COO, effective immediately. Also joins Board of Directors, reports to Tom Lee. Background: MIT engineering + Harvard Business School. 2021-2025: Partner & Senior PM at Axiom Investors. 2011-2021: Senior PM at Columbia Threadneedle Investments. Early career: software engineer, VC, investment research. Tom Lee: \"[Young] will play an integral role in helping to execute our roadmap and scale the business.\" Kim: \"With a strong foundation in place, Bitmine is well positioned to scale.\" Also confirmed: 3.43% ETH supply, Annual Meeting Jan 15 @ Wynn Las Vegas. Institutional backers: ARK, MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital.",
+    "source": "PRNewswire"
+  },
+  {
+    "id": "bmnr-tl-022",
+    "date": "2026-01-05",
+    "topic": "Holdings",
+    "title": "📊 8-K: ETH Holdings $14.2B - 4.144M ETH Milestone",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,110,525",
+        "newValue": "4,143,502",
+        "change": "+32,977 (+0.8%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$2,948",
+        "newValue": "$3,196",
+        "change": "+8.4% (Coinbase)"
+      },
+      {
+        "metric": "Holdings Value",
+        "previous": "$13.2B",
+        "newValue": "$14.2B",
+        "change": "+$1.0B (+7.6%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "408,627",
+        "newValue": "659,219",
+        "change": "+250,592 (+61.3%)"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$500M",
+        "newValue": "$915M",
+        "change": "+$415M (+83%)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.41%",
+        "newValue": "3.43%",
+        "change": "+0.02pp"
+      }
+    ],
+    "notes": "Relentless accumulation continues through holiday week. 32,977 ETH acquired in past week alone. Staking scaled dramatically (+250,592 in one week to 659,219 total staked). Cash position nearly doubled to $915M. BMNR now #44 most traded stock in US ($1.1B/day avg volume). Machine operating at full capacity. Annual Meeting Jan 15 @ Wynn Las Vegas.",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-023",
+    "date": "2026-01-02",
+    "topic": "Corporate",
+    "title": "📢 Chairman's Message: Vote YES on Authorized Shares Increase",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Proposal 2",
+        "previous": "500M authorized",
+        "newValue": "50B authorized",
+        "change": "100x increase"
+      },
+      {
+        "metric": "Vote Deadline",
+        "previous": "—",
+        "newValue": "Jan 14, 2026 11:59 PM ET",
+        "change": "12 days"
+      },
+      {
+        "metric": "Annual Meeting",
+        "previous": "—",
+        "newValue": "Jan 15, 2026",
+        "change": "Wynn Las Vegas"
+      },
+      {
+        "metric": "ETH/BMNR Coefficient",
+        "previous": "Implied",
+        "newValue": "0.015 × ETH + accretion",
+        "change": "Per Bloomberg"
+      },
+      {
+        "metric": "Split @ $22k ETH",
+        "previous": "—",
+        "newValue": "$500 BMNR → 20:1",
+        "change": "8.5B shares"
+      },
+      {
+        "metric": "Split @ $250k ETH",
+        "previous": "—",
+        "newValue": "$5,000 BMNR → 100:1",
+        "change": "43B shares"
+      }
+    ],
+    "notes": "Tom Lee video explaining why shareholders should vote YES: (1) Capital markets flexibility - ATM, convertibles, warrants; (2) M&A optionality; (3) Future stock splits as ETH price rises. Price correlation formalized: BMNR = 0.015×ETH + ETH/share accretion. Implied splits needed to keep shares ~$25: $22k ETH→20:1, $62.5k→60:1, $250k→100:1. Current shares: 426M. Institutional backers reaffirmed: ARK (Cathie Wood), MOZAYYX, Founders Fund, Bill Miller III, Pantera, Kraken, DCG, Galaxy Digital. ETH/BTC target: 0.25 (\"payment rails\"). Livestream on X @bitmnr.",
+    "source": "SEC Filing (8-K, DEFA14A)"
+  },
+  {
+    "id": "bmnr-tl-024",
+    "date": "2025-12-29",
+    "topic": "Holdings",
+    "title": "📊 ETH Holdings Reach 4.11 Million - $13.2B Total Holdings",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "4,066,062",
+        "newValue": "4,110,525",
+        "change": "+44,463 (+1.1%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$2,991",
+        "newValue": "$2,948",
+        "change": "-1.4% (Coinbase)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.37%",
+        "newValue": "3.41%",
+        "change": "+0.04pp (⅔ to 5%)"
+      },
+      {
+        "metric": "Staked ETH",
+        "previous": "342,560",
+        "newValue": "408,627",
+        "change": "+66,067 (+19.3%)"
+      },
+      {
+        "metric": "Total Cash",
+        "previous": "$1.0B",
+        "newValue": "$1.0B",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#66",
+        "newValue": "#47",
+        "change": "+19 ($980M/day)"
+      }
+    ],
+    "notes": "Chairman's message re: Annual Meeting Jan 15 @ Wynn Las Vegas. 4 key proposals need stockholder approval. MAVAN on track Q1 2026. Working with 3 staking providers. Staking fee at scale: $374M/year ($1M+/day). CESR rate 2.81%. Moonshots: $23M Eightco (ORBS).",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-025",
+    "date": "2025-12-29",
+    "topic": "Product",
+    "title": "🔥 STAKING UPDATE: 408,627 ETH Staked via 3 Providers",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "milestone",
+    "keyChanges": [
+      {
+        "metric": "ETH Staked",
+        "previous": "0",
+        "newValue": "408,627 ETH",
+        "change": "First official disclosure"
+      },
+      {
+        "metric": "Staking Value",
+        "previous": "$0",
+        "newValue": "$1.2 billion",
+        "change": "At $2,948/ETH"
+      },
+      {
+        "metric": "% of Holdings Staked",
+        "previous": "0%",
+        "newValue": "9.94%",
+        "change": "Of 4.11M ETH"
+      },
+      {
+        "metric": "Staking Providers",
+        "previous": "0",
+        "newValue": "3 providers",
+        "change": "Pre-MAVAN"
+      },
+      {
+        "metric": "CESR Rate",
+        "previous": "N/A",
+        "newValue": "2.81%",
+        "change": "Quatrefoil"
+      },
+      {
+        "metric": "Annual Fee @ Scale",
+        "previous": "N/A",
+        "newValue": "$374M/year",
+        "change": ">$1M/day"
+      }
+    ],
+    "notes": "First official PR confirming staking operations: 408,627 ETH staked ($1.2B). Working with 3 staking providers pre-MAVAN. MAVAN (Made in America VAlidator Network) on track for Q1 2026 commercial launch. At full scale, staking generates $374M annual (~$1M+/day) at 2.81% CESR.",
+    "source": "Press Release (Official)"
+  },
+  {
+    "id": "bmnr-tl-026",
+    "date": "2025-12-22",
+    "topic": "Holdings",
+    "title": "🎯 4M MILESTONE: ETH Holdings Reach 4.066 Million Tokens",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,967,210",
+        "newValue": "4,066,062",
+        "change": "+98,852 (+2.5%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,074",
+        "newValue": "$2,991",
+        "change": "-2.7%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "3.29%",
+        "newValue": "3.37%",
+        "change": "+0.08pp"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$13.2B",
+        "newValue": "$13.2B",
+        "change": "Stable"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$1.0B",
+        "newValue": "$1.0B",
+        "change": "Unchanged"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#41",
+        "newValue": "#66",
+        "change": "-25 (vol down)"
+      }
+    ],
+    "notes": "8-K filed with operational update PR. Exceeded 4M ETH after 5.5 months. Two-thirds to \"Alchemy of 5%\". Annual meeting Jan 15, 2026 at Wynn Las Vegas.",
+    "source": "8-K Filing + Press Release"
+  },
+  {
+    "id": "bmnr-tl-027",
+    "date": "2025-12-19",
+    "topic": "SEC Filing",
+    "title": "Annual Meeting Announcement - Jan 15, 2026",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "Meeting Date",
+        "previous": "N/A",
+        "newValue": "Jan 15, 2026",
+        "change": "Wynn Las Vegas"
+      },
+      {
+        "metric": "Key Vote",
+        "previous": "N/A",
+        "newValue": "50B authorized shares",
+        "change": "Proposal"
+      }
+    ],
+    "notes": "Annual shareholder meeting scheduled. DEFR14A proxy filed. 50B authorized shares proposal for future capital flexibility.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-028",
+    "date": "2025-12-15",
+    "topic": "Holdings",
+    "title": "ETH Holdings Reach 3.97 Million Tokens",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,864,951",
+        "newValue": "3,967,210",
+        "change": "+102,259 (+2.6%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,139",
+        "newValue": "$3,074",
+        "change": "-2.1%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$13.2B",
+        "newValue": "$13.3B",
+        "change": "+0.8%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$0.9B",
+        "newValue": "$1.0B",
+        "change": "+11%"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#37",
+        "newValue": "#41",
+        "change": "-4"
+      }
+    ],
+    "notes": "8-K filed with operational update. Crypto prices stabilizing post-Oct 10. MAVAN staking to deploy early Q1 2026. Trading $1.9B/day.",
+    "source": "8-K Filing + Press Release"
+  },
+  {
+    "id": "bmnr-tl-029",
+    "date": "2025-12-11",
+    "topic": "Corporate",
+    "title": "CFO Raymond Mow Separation Agreement",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "CFO Departure",
+        "previous": "N/A",
+        "newValue": "Jan 16, 2026",
+        "change": "Effective date"
+      },
+      {
+        "metric": "Severance",
+        "previous": "N/A",
+        "newValue": "$1,137,500 lump sum",
+        "change": "Cash"
+      },
+      {
+        "metric": "Bonus",
+        "previous": "N/A",
+        "newValue": "$150K accelerated",
+        "change": "Pro-rated"
+      },
+      {
+        "metric": "RSU Vesting",
+        "previous": "N/A",
+        "newValue": "$455K value",
+        "change": "Accelerated"
+      },
+      {
+        "metric": "Reason",
+        "previous": "N/A",
+        "newValue": "Without Cause",
+        "change": "No disagreement"
+      }
+    ],
+    "notes": "Separation Agreement filed. CFO exits with significant package. Termination \"without Cause\" - not related to disagreement on operations/policies. Transition period through Jan 16.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-030",
+    "date": "2025-12-08",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 3.86 Million + Binance Blockchain Week Video",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,726,499",
+        "newValue": "3,864,951",
+        "change": "+138,452 (+3.7%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,008",
+        "newValue": "$3,139",
+        "change": "+4.4%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$12.1B",
+        "newValue": "$13.2B",
+        "change": "+9.1%"
+      },
+      {
+        "metric": "Weekly Pace",
+        "previous": "54,156",
+        "newValue": "138,452",
+        "change": "+156%"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#39",
+        "newValue": "#37",
+        "change": "+2"
+      }
+    ],
+    "notes": "8-K filed with Tom Lee Binance Blockchain Week video + transcript. Chairman message: \"The Crypto Supercycle is Intact\". Significant buying acceleration.",
+    "source": "8-K Filing + Press Release"
+  },
+  {
+    "id": "bmnr-tl-031",
+    "date": "2025-12-05",
+    "topic": "Corporate",
+    "title": "Director Raymond Mow Resigns from Board",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Board Resignation",
+        "previous": "N/A",
+        "newValue": "Raymond Mow",
+        "change": "Immediate"
+      },
+      {
+        "metric": "Reason",
+        "previous": "N/A",
+        "newValue": "Not due to disagreement",
+        "change": "Confirmed"
+      }
+    ],
+    "notes": "CFO Mow resigned from Board (remains CFO until Jan 16). 8-K confirms resignation not related to disagreement on operations/policies/practices.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-032",
+    "date": "2025-12-05",
+    "topic": "Capital",
+    "title": "📊 Insider Sales: Bates, Mow, Bayles — ~$112M Total (Oct-Dec 2025)",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Bates (CEO→Former)",
+        "previous": "~41%",
+        "newValue": "~30%",
+        "change": "~2.8M shares sold ($70M)"
+      },
+      {
+        "metric": "Mow (CFO→Former)",
+        "previous": "N/A",
+        "newValue": "~1M shares sold",
+        "change": "$25M"
+      },
+      {
+        "metric": "Bayles (Secretary→Former)",
+        "previous": "N/A",
+        "newValue": "~700K shares sold",
+        "change": "$17M"
+      },
+      {
+        "metric": "Total Insider Sales",
+        "previous": "$0",
+        "newValue": "~$112M",
+        "change": "Avg ~$25/share"
+      },
+      {
+        "metric": "Bates Pledge",
+        "previous": "—",
+        "newValue": "~800K shares to UBS",
+        "change": "Collateral"
+      }
+    ],
+    "notes": "Multiple Form 4 filings during Oct-Dec 2025 revealed significant insider selling concurrent with management transition. Bates (former CEO) reduced from ~41% to ~30%, sold ~2.8M shares for ~$70M mostly under Rule 10b5-1 pre-arranged plan plus pledged ~800K to UBS as collateral. Mow (former CFO, separated Dec 18) sold ~1M shares for ~$25M. Bayles (former Secretary, left board Nov 11) sold ~700K shares for ~$17M. Total insider proceeds ~$112M at avg ~$25/share. Sales coincided with leadership transition to Chi Tsang (CEO) and Young Kim (CFO/COO).",
+    "source": "SEC Filing (Form 4)"
+  },
+  {
+    "id": "bmnr-tl-033",
+    "date": "2025-12-04",
+    "topic": "Corporate",
+    "title": "Binance Blockchain Week Presentation Filed",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Event",
+        "previous": "N/A",
+        "newValue": "Binance Blockchain Week Dubai",
+        "change": "Dec 2025"
+      },
+      {
+        "metric": "Presenter",
+        "previous": "N/A",
+        "newValue": "Tom Lee (Chairman)",
+        "change": "Keynote"
+      }
+    ],
+    "notes": "8-K filed with Tom Lee Binance Blockchain Week 2025 presentation. \"The Crypto Supercycle, Ethereum 1971 Moment & MAVAN Staking Strategy.\"",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-034",
+    "date": "2025-12-01",
+    "topic": "Holdings",
+    "title": "ETH Holdings Reach 3.73 Million Tokens",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,559,879",
+        "newValue": "3,726,499",
+        "change": "+166,620 (+4.7%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,120",
+        "newValue": "$3,008",
+        "change": "-3.6%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$11.8B",
+        "newValue": "$12.1B",
+        "change": "+2.5%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$607M",
+        "newValue": "$876M",
+        "change": "+44%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.9%",
+        "newValue": "3.0%",
+        "change": "+0.1pp"
+      }
+    ],
+    "notes": "8-K filed. 7+ weeks past Oct 10 shock. Stepped up weekly purchases by 39%. Now >3% of ETH supply.",
+    "source": "8-K Filing + Press Release"
+  },
+  {
+    "id": "bmnr-tl-035",
+    "date": "2025-11-21",
+    "topic": "SEC Filing",
+    "title": "📊 FY25 EARNINGS: GAAP EPS $13.39 + First Dividend",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "FY25 Net Income",
+        "previous": "N/A",
+        "newValue": "$328.2M",
+        "change": "First profitable FY"
+      },
+      {
+        "metric": "FY25 EPS",
+        "previous": "N/A",
+        "newValue": "$13.39",
+        "change": "Fully diluted"
+      },
+      {
+        "metric": "ETH (Aug 31)",
+        "previous": "0",
+        "newValue": "1,874,927",
+        "change": "Audited"
+      },
+      {
+        "metric": "ETH Cost Basis",
+        "previous": "N/A",
+        "newValue": "$7.43B",
+        "change": "Audited"
+      },
+      {
+        "metric": "Dividend",
+        "previous": "$0",
+        "newValue": "$0.01/share",
+        "change": "First ever"
+      },
+      {
+        "metric": "Shares Outstanding",
+        "previous": "2.5M (Aug 24)",
+        "newValue": "234.7M",
+        "change": "+9,305%"
+      }
+    ],
+    "notes": "First large-cap crypto company to pay dividend. Ex-div Dec 5, pay Dec 29. MAVAN staking pilot testing, full deployment Q1 2026.",
+    "source": "10-K Filing + Press Release"
+  },
+  {
+    "id": "bmnr-tl-036",
+    "date": "2025-11-17",
+    "topic": "Holdings",
+    "title": "ETH Holdings Reach 3.6 Million + November Chairman Message",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,505,723",
+        "newValue": "3,559,879",
+        "change": "+54,156 (+1.5%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,639",
+        "newValue": "$3,120",
+        "change": "-14.3%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$13.2B",
+        "newValue": "$11.8B",
+        "change": "-10.6%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$398M",
+        "newValue": "$607M",
+        "change": "+52%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.9%",
+        "newValue": "2.9%",
+        "change": "Unchanged"
+      }
+    ],
+    "notes": "Nov Chairman message: 5 factors driving 4-year crypto cycle. Tokenization on ETH is massive unlock for innovation. Post-Oct 10 recovery ongoing.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-037",
+    "date": "2025-11-14",
+    "topic": "Corporate",
+    "title": "🔄 CEO CHANGE: Chi Tsang Appointed + 3 New Board Members",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "CEO",
+        "previous": "Jonathan Bates",
+        "newValue": "Chi Tsang",
+        "change": "New appointment"
+      },
+      {
+        "metric": "Board +",
+        "previous": "N/A",
+        "newValue": "Robert Sechan (NewEdge)",
+        "change": "Independent"
+      },
+      {
+        "metric": "Board +",
+        "previous": "N/A",
+        "newValue": "Jason Edgeworth (JPD Holdings)",
+        "change": "Independent"
+      },
+      {
+        "metric": "Board +",
+        "previous": "N/A",
+        "newValue": "Olivia Howe (RigUp CLO)",
+        "change": "Independent"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "N/A",
+        "newValue": ">2.9%",
+        "change": "Reference"
+      }
+    ],
+    "notes": "Chi Tsang: \"Mobile/internet explosion of 1990s mirrors blockchain today.\" Bates: \"Proud of building from ground up to NYSE and world's largest ETH holder.\" Sechan: \"Known Tom Lee 20 years.\"",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-038",
+    "date": "2025-11-11",
+    "topic": "Corporate",
+    "title": "Major Board Restructuring (8-K)",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Directors Resigned",
+        "previous": "6",
+        "newValue": "3 out (Bayles, Kelly, Nelson)",
+        "change": "-3"
+      },
+      {
+        "metric": "Directors Appointed",
+        "previous": "N/A",
+        "newValue": "Edgeworth, Howe, Sechan",
+        "change": "+3"
+      },
+      {
+        "metric": "Corporate Secretary",
+        "previous": "Seth Bayles",
+        "newValue": "Erik Nelson",
+        "change": "Reassigned"
+      }
+    ],
+    "notes": "Not due to disagreement. Nelson remains President. New directors bring energy, legal, and investment expertise.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-039",
+    "date": "2025-11-10",
+    "topic": "Holdings",
+    "title": "ETH Holdings Reach 3.5 Million Tokens (2.9% of Supply)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,395,422",
+        "newValue": "3,505,723",
+        "change": "+110,288 (+3.2%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,903",
+        "newValue": "$3,639",
+        "change": "-6.8%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$13.7B",
+        "newValue": "$13.2B",
+        "change": "-3.6%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$62M",
+        "newValue": "$61M (OCTO)",
+        "change": "-1.6%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$389M",
+        "newValue": "$398M",
+        "change": "+2.3%"
+      },
+      {
+        "metric": "Weekly Buy Pace",
+        "previous": "82,353",
+        "newValue": "110,288",
+        "change": "+34%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.8%",
+        "newValue": "2.9%",
+        "change": "+0.1pp (>halfway)"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#60",
+        "newValue": "#48",
+        "change": "+12"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "640,808 BTC",
+        "newValue": "641,205 BTC",
+        "change": "+397 BTC"
+      }
+    ],
+    "notes": "Dip buying: +34% more ETH week-over-week. NYSE event with Ethereum Foundation hosted \"many financial institutions.\" Wall Street tokenization interest high. BMNR+MSTR = 88% of global DAT trading volume.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-040",
+    "date": "2025-11-03",
+    "topic": "Holdings",
+    "title": "📊 HALFWAY: ETH Holdings Reach 3.4 Million (2.8% of Supply)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,313,069",
+        "newValue": "3,395,422",
+        "change": "+82,353 (+2.5%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,164",
+        "newValue": "$3,903",
+        "change": "-6.3%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$14.2B",
+        "newValue": "$13.7B",
+        "change": "-3.5%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$88M",
+        "newValue": "$62M (OCTO)",
+        "change": "-30%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$305M",
+        "newValue": "$389M",
+        "change": "+27%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.8%",
+        "newValue": "2.8%",
+        "change": "Confirmed"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#46",
+        "newValue": "#60",
+        "change": "-14"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "640,418 BTC",
+        "newValue": "640,808 BTC",
+        "change": "+390 BTC"
+      }
+    ],
+    "notes": "Now >halfway to Alchemy of 5%. Oct 10 liquidation = largest ever in crypto history. Open interest on ETH fell -45% (largest decline in ETH history). \"Healthy reset.\"",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-041",
+    "date": "2025-10-27",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 3.31 Million Tokens",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,236,014",
+        "newValue": "3,313,069",
+        "change": "+77,055 (+2.4%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,022",
+        "newValue": "$4,164",
+        "change": "+3.5%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$13.4B",
+        "newValue": "$14.2B",
+        "change": "+6.0%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$119M",
+        "newValue": "$88M (OCTO)",
+        "change": "-26%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$219M",
+        "newValue": "$305M",
+        "change": "+39%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.7%",
+        "newValue": "2.8%",
+        "change": "+0.1pp"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#33",
+        "newValue": "#46",
+        "change": "-13"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "640,250 BTC",
+        "newValue": "640,418 BTC",
+        "change": "+168 BTC"
+      }
+    ],
+    "notes": "US-China trade talk progress = positive for crypto. ETH open interest at Jun 30 levels ($2,500 ETH then). BMNR+MSTR = 88% of global DAT volume.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-042",
+    "date": "2025-10-20",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 3.24 Million (Post-Crash Recovery)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "3,032,188",
+        "newValue": "3,236,014",
+        "change": "+203,826 (+6.7%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,154",
+        "newValue": "$4,022",
+        "change": "-3.2%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$12.9B",
+        "newValue": "$13.4B",
+        "change": "+3.9%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$135M",
+        "newValue": "$119M (OCTO)",
+        "change": "-12%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$104M",
+        "newValue": "$219M",
+        "change": "+111%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.5%",
+        "newValue": "2.7%",
+        "change": "+0.2pp (>halfway)"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#22",
+        "newValue": "#33",
+        "change": "-11"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "640,031 BTC",
+        "newValue": "640,250 BTC",
+        "change": "+219 BTC"
+      }
+    ],
+    "notes": "Largest deleveraging event last week created price dislocation. ETH open interest = Jun 30 levels (ETH was $2,500). Attractive risk/reward. +203K ETH bought.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-043",
+    "date": "2025-10-13",
+    "topic": "Holdings",
+    "title": "📊 3M MILESTONE: ETH Holdings Exceed 3.03 Million + Oct Chairman Message",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "2,830,151",
+        "newValue": "3,032,188",
+        "change": "+202,037 (+7.1%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,535",
+        "newValue": "$4,154",
+        "change": "-8.4%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$13.4B",
+        "newValue": "$12.9B",
+        "change": "-3.7%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$113M",
+        "newValue": "$135M (OCTO)",
+        "change": "+19%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$456M",
+        "newValue": "$104M",
+        "change": "-77% (deployed)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.3%",
+        "newValue": "2.5%",
+        "change": "+0.2pp (halfway)"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#28",
+        "newValue": "#22",
+        "change": "+6 (volatility)"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "640,031 BTC",
+        "newValue": "640,031 BTC",
+        "change": "Unchanged"
+      }
+    ],
+    "notes": "⚠️ Oct 10 liquidation = LARGEST EVER single-day crypto deleveraging in history. BMNR bought aggressively (+202K ETH). Chairman keynote at Token2049 Singapore: \"Ethereum Supercycle.\" $3.5B/day trading.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-044",
+    "date": "2025-10-06",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 2.83 Million Tokens",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "2,650,900",
+        "newValue": "2,830,151",
+        "change": "+179,251 (+6.8%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,141",
+        "newValue": "$4,535",
+        "change": "+9.5%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$11.6B",
+        "newValue": "$13.4B",
+        "change": "+15.5%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$157M",
+        "newValue": "$113M (OCTO)",
+        "change": "-28%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$436M",
+        "newValue": "$456M",
+        "change": "+4.6%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.2%",
+        "newValue": "2.3%",
+        "change": "+0.1pp"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#26",
+        "newValue": "#28",
+        "change": "-2"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "639,835 BTC",
+        "newValue": "640,031 BTC",
+        "change": "+196 BTC"
+      }
+    ],
+    "notes": "Token2049 Singapore week. Met Ethereum core developers and ecosystem players. \"Clear focus on enabling Wall Street and AI to build on ETH.\" AI + crypto = two Supercycle narratives.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-045",
+    "date": "2025-10-28",
+    "topic": "Capital",
+    "title": "🏛️ Founders Fund (Peter Thiel) Files SC 13G/A — 5.1% Ownership",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Shareholder",
+        "previous": "Undisclosed",
+        "newValue": "Founders Fund (Thiel)",
+        "change": "5.1% beneficial"
+      },
+      {
+        "metric": "Filing Type",
+        "previous": "—",
+        "newValue": "SC 13G/A (Amendment)",
+        "change": "Passive investment"
+      }
+    ],
+    "notes": "Peter Thiel's Founders Fund filed amended SC 13G/A disclosing 5.1% beneficial ownership of BMNR. Major validation of ETH treasury thesis from one of Silicon Valley's most prominent investors. Founders Fund was also a PIPE participant in the July 2025 private placement.",
+    "source": "SEC Filing (SC 13G/A)"
+  },
+  {
+    "id": "bmnr-tl-046",
+    "date": "2025-09-30",
+    "topic": "Capital",
+    "title": "📋 Xuan Yong Xiao Files SC 13D — 7.5% Beneficial Ownership (28.97M Shares)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Shareholder",
+        "previous": "Undisclosed",
+        "newValue": "Xuan Yong Xiao",
+        "change": "7.5% beneficial"
+      },
+      {
+        "metric": "Shares",
+        "previous": "—",
+        "newValue": "28,970,000",
+        "change": "Direct holding"
+      },
+      {
+        "metric": "Filing Type",
+        "previous": "—",
+        "newValue": "SC 13D",
+        "change": "Active investment"
+      }
+    ],
+    "notes": "Xuan Yong Xiao filed SC 13D disclosing 7.5% beneficial ownership (28.97M shares). One of the largest individual shareholders. SC 13D (vs 13G) indicates potential for active engagement with company.",
+    "source": "SEC Filing (SC 13D)"
+  },
+  {
+    "id": "bmnr-tl-047",
+    "date": "2025-09-29",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 2.65 Million Tokens",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "2,416,054",
+        "newValue": "2,650,900",
+        "change": "+234,846 (+9.7%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,497",
+        "newValue": "$4,141",
+        "change": "-7.9%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$11.4B",
+        "newValue": "$11.6B",
+        "change": "+1.8%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$175M",
+        "newValue": "$157M (OCTO)",
+        "change": "-10%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$345M",
+        "newValue": "$436M",
+        "change": "+26%"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "2.0%",
+        "newValue": "2.2%",
+        "change": "+0.2pp"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#24",
+        "newValue": "#26",
+        "change": "-2"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "638,460 BTC",
+        "newValue": "639,835 BTC",
+        "change": "+1,375 BTC"
+      }
+    ],
+    "notes": "AI + crypto = two Supercycle narratives. Both require neutral public blockchains. ETH = premier choice (100% uptime, high reliability). \"Price is discount to future.\"",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-048",
+    "date": "2025-09-22",
+    "topic": "Holdings",
+    "title": "📊 2% MILESTONE: ETH Holdings Exceed 2.4 Million (2% of Supply)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "2,151,676",
+        "newValue": "2,416,054",
+        "change": "+264,378 (+12.3%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,632",
+        "newValue": "$4,497",
+        "change": "-2.9%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$10.77B",
+        "newValue": "$11.4B",
+        "change": "+5.8%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$214M",
+        "newValue": "$175M (OCTO)",
+        "change": "-18%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$569M",
+        "newValue": "$345M",
+        "change": "-39% (deployed)"
+      },
+      {
+        "metric": "ETH Supply %",
+        "previous": "1.8%",
+        "newValue": "2.0%",
+        "change": "+0.2pp"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#28",
+        "newValue": "#24",
+        "change": "+4"
+      },
+      {
+        "metric": "Stock Price",
+        "previous": "N/A",
+        "newValue": "$61.29 (20-DMA)",
+        "change": "Reference"
+      }
+    ],
+    "notes": "📈 At 1% ETH (Aug) stock was ~$38. At 2% stock >$61. \"Power law benefits large holders.\" $3.5B/day trading volume.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-049",
+    "date": "2025-09-22",
+    "topic": "Capital",
+    "title": "$365M Registered Direct Offering @ 14% Premium",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Shares Sold",
+        "previous": "N/A",
+        "newValue": "5,217,715",
+        "change": "@ $70.00"
+      },
+      {
+        "metric": "Premium",
+        "previous": "N/A",
+        "newValue": "14% to $61.29 close",
+        "change": "Accretive"
+      },
+      {
+        "metric": "Warrants Issued",
+        "previous": "N/A",
+        "newValue": "10,435,430",
+        "change": "@ $87.50 exercise"
+      },
+      {
+        "metric": "Gross Proceeds",
+        "previous": "N/A",
+        "newValue": "$365.24M",
+        "change": "For ETH"
+      },
+      {
+        "metric": "Warrant Expiry",
+        "previous": "N/A",
+        "newValue": "Mar 22, 2027",
+        "change": "18 months"
+      },
+      {
+        "metric": "Potential Total",
+        "previous": "N/A",
+        "newValue": "$1.28B",
+        "change": "If warrants exercised"
+      },
+      {
+        "metric": "Placement Agent",
+        "previous": "N/A",
+        "newValue": "Moelis & Company",
+        "change": "New"
+      }
+    ],
+    "notes": "Sold at premium = \"materially accretive to existing shareholders.\" Total potential $1.28B (common + warrant exercise). Institutional confidence in BMNR execution.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-050",
+    "date": "2025-09-15",
+    "topic": "Holdings",
+    "title": "📊 2M MILESTONE: ETH Holdings Exceed 2.15 Million",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "2,069,443",
+        "newValue": "2,151,676",
+        "change": "+82,233 (+4.0%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,312",
+        "newValue": "$4,632",
+        "change": "+7.4%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$9.2B",
+        "newValue": "$10.77B",
+        "change": "+17.1%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$266M",
+        "newValue": "$569M",
+        "change": "+114%"
+      },
+      {
+        "metric": "Moonshots",
+        "previous": "$20M",
+        "newValue": "$214M (Eightco/OCTO)",
+        "change": "+970%"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#30",
+        "newValue": "#28",
+        "change": "+2"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "636,505 BTC",
+        "newValue": "638,460 BTC",
+        "change": "+1,955 BTC"
+      }
+    ],
+    "notes": "Nearly $11B in total holdings incl moonshots. Surpassed 2M ETH. \"Power law benefits large holders.\" Tom Lee: \"AI/agentic-AI creating token economy supercycle.\" #28 most traded stock ($2.0B/day).",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-051",
+    "date": "2025-09-08",
+    "topic": "Holdings",
+    "title": "📊 2M MILESTONE: ETH Holdings Exceed 2.07 Million + First \"Moonshot\"",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "1,866,974",
+        "newValue": "2,069,443",
+        "change": "+202,469 (+10.8%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,458",
+        "newValue": "$4,312",
+        "change": "-3.3%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$8.98B",
+        "newValue": "$9.21B",
+        "change": "+2.6%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$635M",
+        "newValue": "$266M",
+        "change": "-58% (deployed)"
+      },
+      {
+        "metric": "Moonshot Investment",
+        "previous": "$0",
+        "newValue": "$20M (Eightco/OCTO)",
+        "change": "First"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#22",
+        "newValue": "#30",
+        "change": "-8"
+      },
+      {
+        "metric": "MSTR Holdings",
+        "previous": "629,376 BTC",
+        "newValue": "636,505 BTC",
+        "change": "Reference"
+      }
+    ],
+    "notes": "Surpassed 2M ETH milestone. $20M into Eightco (OCTO) as first \"Moonshot\" - Worldcoin treasury strategy. 1% of balance sheet for ETH ecosystem investments. #30 most traded ($1.7B/day).",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-052",
+    "date": "2025-09-05",
+    "topic": "Corporate",
+    "title": "Statement on NYSE American Listing & Capital Markets Access",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Listing Status",
+        "previous": "NYSE American",
+        "newValue": "Fully compliant",
+        "change": "Confirmed"
+      },
+      {
+        "metric": "ATM Program",
+        "previous": "Active",
+        "newValue": "No shareholder approval needed",
+        "change": "Clarified"
+      }
+    ],
+    "notes": "Response to media reports on NASDAQ crypto treasury scrutiny. BMNR on NYSE American, not affected. PIPE closed July 8 with NYSE approval. ATM continues without shareholder vote.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-053",
+    "date": "2025-09-02",
+    "topic": "Holdings",
+    "title": "August Chairman Message + Holdings Update (1.87M ETH)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "1,713,899",
+        "newValue": "1,866,974",
+        "change": "+153,075 (+8.9%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,808",
+        "newValue": "$4,458",
+        "change": "-7.3%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$8.8B",
+        "newValue": "$8.98B",
+        "change": "+2%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$562M",
+        "newValue": "$635M",
+        "change": "+13%"
+      }
+    ],
+    "notes": "August Chairman Message discusses 1971 Bretton Woods parallel. GENIUS Act + SEC Project Crypto = \"multi-decade opportunity for ETH.\" #22 most traded stock ($2.3B/day).",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-054",
+    "date": "2025-09-01",
+    "topic": "Corporate",
+    "title": "Executive Employment Agreements",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "CEO Bates Comp",
+        "previous": "N/A",
+        "newValue": "$3,037,000/yr",
+        "change": "Formalized"
+      },
+      {
+        "metric": "CFO Mow Comp",
+        "previous": "N/A",
+        "newValue": "$1,023,750/yr",
+        "change": "Formalized"
+      },
+      {
+        "metric": "President Nelson Comp",
+        "previous": "N/A",
+        "newValue": "$406,250/yr",
+        "change": "Formalized"
+      }
+    ],
+    "notes": "Formal employment agreements. CEO severance: $3.04M (2 years cash) if terminated without cause.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-055",
+    "date": "2025-08-28",
+    "topic": "Corporate",
+    "title": "David Sharbutt Joins Board - Digital Infrastructure Vision",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "1,713,899",
+        "newValue": "1,792,690",
+        "change": "+78,791"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,808",
+        "newValue": "$4,591",
+        "change": "-4.5%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$8.8B",
+        "newValue": "$9.0B+",
+        "change": "+2.3%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$562M",
+        "newValue": "$775M",
+        "change": "+38%"
+      },
+      {
+        "metric": "New Director",
+        "previous": "N/A",
+        "newValue": "David E. Sharbutt",
+        "change": "American Tower veteran"
+      }
+    ],
+    "notes": "Sharbutt: 17 years on AMT board (2006-2023), founder/CEO Alamosa Holdings (sold to Sprint 2006). Tom Lee: \"ETH Treasuries = digital infrastructure like wireless towers.\" AMT expanded 6X to 30X EV/EBITDA 2003-2020.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-056",
+    "date": "2025-08-25",
+    "topic": "Holdings",
+    "title": "ETH Holdings Reach 1.71 Million (#1 ETH Treasury)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "1,523,373",
+        "newValue": "1,713,899",
+        "change": "+190,526 (+12.5%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,326",
+        "newValue": "$4,808",
+        "change": "+11.1%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$6.6B",
+        "newValue": "$8.8B",
+        "change": "+33%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "$80M",
+        "newValue": "$562M",
+        "change": "+602%"
+      },
+      {
+        "metric": "NAV/Share",
+        "previous": "$22.84 (Jul 27)",
+        "newValue": "$39.84",
+        "change": "+74%"
+      }
+    ],
+    "notes": "Second consecutive week raising $2B+. #20 most traded US stock ($2.8B/day). NAV/share nearly doubled in 4 weeks.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-057",
+    "date": "2025-08-25",
+    "topic": "Corporate",
+    "title": "Director Appointment: David E. Sharbutt (8-K)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Board Size",
+        "previous": "5",
+        "newValue": "6",
+        "change": "+1"
+      },
+      {
+        "metric": "New Director",
+        "previous": "N/A",
+        "newValue": "David E. Sharbutt",
+        "change": "Independent"
+      }
+    ],
+    "notes": "SEC filing formalizing Sharbutt appointment. BS EE Texas Tech 1971.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-058",
+    "date": "2025-08-18",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 1.52 Million - #1 ETH, #2 Global Treasury",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "1,150,263",
+        "newValue": "1,523,373",
+        "change": "+373,110 (+32%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$4,311",
+        "newValue": "$4,326",
+        "change": "+0.3%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$5.0B",
+        "newValue": "$6.6B",
+        "change": "+32%"
+      },
+      {
+        "metric": "Trading Rank",
+        "previous": "#25",
+        "newValue": "#10",
+        "change": "+15"
+      }
+    ],
+    "notes": "Now #1 ETH treasury and #2 global crypto treasury (behind only MSTR). #10 most liquid US stock at $6.4B/day.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-059",
+    "date": "2025-08-12",
+    "topic": "SEC Filing",
+    "title": "ATM Expansion to $24.5 Billion Total",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "ATM Capacity",
+        "previous": "$4.5B",
+        "newValue": "$24.5B",
+        "change": "+$20B"
+      },
+      {
+        "metric": "Prior ATM Used",
+        "previous": "N/A",
+        "newValue": "$4.5B (99.99%)",
+        "change": "Exhausted"
+      }
+    ],
+    "notes": "Prior $4.5B ATM exhausted in 5 weeks. Massive $20B expansion via 424B5 prospectus supplement.",
+    "source": "424B5 Filing"
+  },
+  {
+    "id": "bmnr-tl-060",
+    "date": "2025-08-11",
+    "topic": "Holdings",
+    "title": "📊 1M MILESTONE: ETH Holdings Exceed 1.15 Million",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "833,137",
+        "newValue": "1,150,263",
+        "change": "+317,126 (+38%)"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,492",
+        "newValue": "$4,311",
+        "change": "+23%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$2.9B",
+        "newValue": "$5.0B",
+        "change": "+72%"
+      },
+      {
+        "metric": "Weekly Increase",
+        "previous": "N/A",
+        "newValue": "+$2.0B",
+        "change": "Largest ever"
+      }
+    ],
+    "notes": "Passed 1M ETH and became world largest ETH treasury in just 5 weeks. #25 most liquid US stock ($2.2B/day).",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-061",
+    "date": "2025-08-04",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed 833K - Largest ETH Treasury",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "~0",
+        "newValue": "833,137",
+        "change": "From zero in 35 days"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "N/A",
+        "newValue": "$3,492",
+        "change": "Reference"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "N/A",
+        "newValue": "$2.9B",
+        "change": "#3 crypto treasury"
+      },
+      {
+        "metric": "Bill Miller III",
+        "previous": "N/A",
+        "newValue": "Top investor",
+        "change": "Confirmed"
+      }
+    ],
+    "notes": "Lightning speed: 833K ETH from zero in 35 days. #3 largest crypto treasury (behind MSTR, MARA). Bill Miller III joins as major investor.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-062",
+    "date": "2025-07-29",
+    "topic": "Capital",
+    "title": "$1 Billion Stock Repurchase Program Announced",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Buyback Auth",
+        "previous": "$0",
+        "newValue": "$1.0B",
+        "change": "Board approved"
+      },
+      {
+        "metric": "ETH Holdings",
+        "previous": "566,776",
+        "newValue": "625,000",
+        "change": "+58,224"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,644",
+        "newValue": "$3,755",
+        "change": "+3.0%"
+      },
+      {
+        "metric": "Cash",
+        "previous": "N/A",
+        "newValue": "$401.4M",
+        "change": "Unencumbered"
+      },
+      {
+        "metric": "BTC Holdings",
+        "previous": "154",
+        "newValue": "192",
+        "change": "+38 BTC"
+      },
+      {
+        "metric": "NAV/Share",
+        "previous": "N/A",
+        "newValue": "$22.76",
+        "change": "First reported"
+      },
+      {
+        "metric": "Fully Diluted Shares",
+        "previous": "N/A",
+        "newValue": "121,739,533",
+        "change": "Reference"
+      }
+    ],
+    "notes": "Open-ended buyback program. Tom Lee: \"Best expected return may be to acquire our own shares.\" Total crypto+cash: $2.77B. First BTC update since June.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-063",
+    "date": "2025-07-28",
+    "topic": "Corporate",
+    "title": "Launch of \"Alchemy of 5%\" Investor Presentation + Chairman Message Series",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "New Content",
+        "previous": "None",
+        "newValue": "Investor deck + video series",
+        "change": "Launched"
+      },
+      {
+        "metric": "Strategy Explained",
+        "previous": "N/A",
+        "newValue": "\"Alchemy of 5%\"",
+        "change": "Public"
+      }
+    ],
+    "notes": "Tom Lee launches monthly \"Chairman's Message\" video series. Investor presentation titled \"The Alchemy of 5%\" explains ETH treasury strategy.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-064",
+    "date": "2025-07-28",
+    "topic": "Capital",
+    "title": "ATM Expansion to $4.5B + PIPE Resale Registration",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "ATM Capacity",
+        "previous": "$2.0B",
+        "newValue": "$4.5B",
+        "change": "+$2.5B"
+      },
+      {
+        "metric": "PIPE Shares Registered",
+        "previous": "0",
+        "newValue": "56.12M",
+        "change": "Resale"
+      },
+      {
+        "metric": "Pre-Funded Warrants",
+        "previous": "0",
+        "newValue": "11.0M @ $0.0001",
+        "change": "Registered"
+      }
+    ],
+    "notes": "Cantor as buyback broker @ $0.02/share. PIPE resale registration for June offering investors. Strategic advisor warrants: 3.19M @ $5.40.",
+    "source": "8-K + S-3ASR Filing"
+  },
+  {
+    "id": "bmnr-tl-065",
+    "date": "2025-07-24",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed $2 Billion (566K ETH)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "300,657",
+        "newValue": "566,776",
+        "change": "+88% in 1 week"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,462",
+        "newValue": "$3,644",
+        "change": "+5.3%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$1.0B",
+        "newValue": "$2.0B+",
+        "change": "+100%"
+      },
+      {
+        "metric": "Days Since PIPE",
+        "previous": "N/A",
+        "newValue": "16 days",
+        "change": "From $250M"
+      }
+    ],
+    "notes": "Surpassed $2B ETH in 16 days after $250M PIPE. 700%+ increase from initial proceeds. On track for 5% goal.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-066",
+    "date": "2025-07-23",
+    "topic": "Corporate",
+    "title": "Options Trading Commences on NYSE",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Options Trading",
+        "previous": "None",
+        "newValue": "LIVE on NYSE",
+        "change": "New listing"
+      },
+      {
+        "metric": "Ticker",
+        "previous": "N/A",
+        "newValue": "BMNR options",
+        "change": "Active"
+      }
+    ],
+    "notes": "BMNR options now available on NYSE via OCC. Expands investor access, enhances liquidity, provides hedging tools.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-067",
+    "date": "2025-07-22",
+    "topic": "Capital",
+    "title": "🏆 ARK Invest Acquires $182M of BMNR Shares",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "ARK Investment",
+        "previous": "$0",
+        "newValue": "$182M (4.77M shares)",
+        "change": "Major investor"
+      },
+      {
+        "metric": "Net Proceeds",
+        "previous": "N/A",
+        "newValue": "$177M for ETH",
+        "change": "100% to crypto"
+      },
+      {
+        "metric": "Investor Base",
+        "previous": "VCs + institutions",
+        "newValue": "+ Cathie Wood/ARK",
+        "change": "Expanded"
+      }
+    ],
+    "notes": "Cathie Wood's ARK Invest takes substantial stake via ATM block trade. Tom Lee: \"Cathie is a pioneer of exponential investing.\" 100% of proceeds to ETH.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-068",
+    "date": "2025-07-17",
+    "topic": "Holdings",
+    "title": "📊 $1B MILESTONE: ETH Holdings Exceed $1 Billion",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "163,142",
+        "newValue": "300,657",
+        "change": "+84% in 3 days"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "$3,073",
+        "newValue": "$3,462",
+        "change": "+12.7%"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$500M",
+        "newValue": "$1.0B+",
+        "change": "+100%"
+      },
+      {
+        "metric": "Days Since PIPE",
+        "previous": "N/A",
+        "newValue": "7 days",
+        "change": "From $250M"
+      },
+      {
+        "metric": "ETH via Options",
+        "previous": "N/A",
+        "newValue": "60,000 ETH (~$200M)",
+        "change": "Backed by cash"
+      }
+    ],
+    "notes": "Surpassed $1B ETH in just 7 days after $250M PIPE close. 60K ETH held via in-the-money options, backed 1:1 with ~$200M cash.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-069",
+    "date": "2025-07-14",
+    "topic": "Holdings",
+    "title": "ETH Holdings Exceed $500 Million (163K ETH)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "ETH Holdings",
+        "previous": "~0",
+        "newValue": "163,142",
+        "change": "Rapid accumulation"
+      },
+      {
+        "metric": "ETH Price",
+        "previous": "N/A",
+        "newValue": "$3,073",
+        "change": "Reference"
+      },
+      {
+        "metric": "Total Holdings",
+        "previous": "$250M PIPE",
+        "newValue": "$500M+",
+        "change": "+100%"
+      },
+      {
+        "metric": "Days Since PIPE",
+        "previous": "N/A",
+        "newValue": "3 days",
+        "change": "From close"
+      }
+    ],
+    "notes": "Doubled PIPE proceeds in 3 days. Tom Lee: \"Reflexive benefit of acquiring large holdings.\" CEO Bates: \"Wall Street is getting ETH-pilled.\"",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-070",
+    "date": "2025-07-09",
+    "topic": "Capital",
+    "title": "$250M PIPE Closes - ETH Treasury Strategy Begins",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "PIPE Proceeds",
+        "previous": "$0",
+        "newValue": "$250M",
+        "change": "Closed"
+      },
+      {
+        "metric": "Primary Treasury Asset",
+        "previous": "BTC",
+        "newValue": "ETH",
+        "change": "PIVOT"
+      },
+      {
+        "metric": "Lead Investor",
+        "previous": "N/A",
+        "newValue": "MOZAYYX",
+        "change": "New"
+      },
+      {
+        "metric": "Other Investors",
+        "previous": "N/A",
+        "newValue": "Founders Fund, Pantera, Kraken, Galaxy, DCG",
+        "change": "Top-tier"
+      }
+    ],
+    "notes": "Official ETH treasury launch. MOZAYYX led with Founders Fund, Pantera, FalconX, Republic, Kraken, Galaxy, DCG, and Tom Lee. \"Foundational step in ETH strategy.\"",
+    "source": "Press Release + 8-K"
+  },
+  {
+    "id": "bmnr-tl-071",
+    "date": "2025-07-09",
+    "topic": "SEC Filing",
+    "title": "$2 Billion ATM Program Launch",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "ATM Program",
+        "previous": "None",
+        "newValue": "$2.0B",
+        "change": "New"
+      },
+      {
+        "metric": "Sales Agents",
+        "previous": "N/A",
+        "newValue": "Cantor + ThinkEquity",
+        "change": "Appointed"
+      },
+      {
+        "metric": "Commission Rate",
+        "previous": "N/A",
+        "newValue": "3.0%",
+        "change": "New"
+      },
+      {
+        "metric": "Registration",
+        "previous": "N/A",
+        "newValue": "333-288579",
+        "change": "Filed"
+      }
+    ],
+    "notes": "Controlled Equity Offering Sales Agreement. Automatic shelf (WKSI status) enables rapid capital deployment.",
+    "source": "8-K + S-3ASR Filing"
+  },
+  {
+    "id": "bmnr-tl-072",
+    "date": "2025-07-08",
+    "topic": "Corporate",
+    "title": "Ethereum Tower Consulting Agreement",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Treasury Advisor",
+        "previous": "None",
+        "newValue": "Ethereum Tower LLC",
+        "change": "10-year term"
+      },
+      {
+        "metric": "Strategic Advisor",
+        "previous": "None",
+        "newValue": "Ethereum Tower Instant",
+        "change": "6-month term"
+      },
+      {
+        "metric": "Advisor Fee",
+        "previous": "N/A",
+        "newValue": "1% to $1B, 0.5% $1-5B, 0.25% >$5B",
+        "change": "AUM-based"
+      },
+      {
+        "metric": "Advisor Warrants",
+        "previous": "N/A",
+        "newValue": "5% fully diluted @ $5.40",
+        "change": "5-year term"
+      }
+    ],
+    "notes": "ETH Treasury Strategy consulting agreement. Focus on maximizing ETH accumulation and value accretion.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-073",
+    "date": "2025-07-02",
+    "topic": "Capital",
+    "title": "IPO Overallotment Exercised",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Shares Issued",
+        "previous": "2,250,000 (IPO)",
+        "newValue": "+337,500",
+        "change": "+15%"
+      },
+      {
+        "metric": "Price",
+        "previous": "$8.00 public",
+        "newValue": "$7.40 to underwriter",
+        "change": "92.5%"
+      },
+      {
+        "metric": "Gross Proceeds",
+        "previous": "$18M",
+        "newValue": "+$2.7M",
+        "change": "Additional"
+      }
+    ],
+    "notes": "ThinkEquity fully exercised 45-day overallotment option from June 6 offering.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-074",
+    "date": "2025-06-30",
+    "topic": "Capital",
+    "title": "🚀 FIRST ETH PIVOT - Private Placement",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Cash Offering Shares",
+        "previous": "0",
+        "newValue": "36,309,592",
+        "change": "@ $4.50"
+      },
+      {
+        "metric": "Pre-Funded Warrants",
+        "previous": "0",
+        "newValue": "11,006,444",
+        "change": "@ $4.4999"
+      },
+      {
+        "metric": "Crypto Offering Shares",
+        "previous": "0",
+        "newValue": "8,804,122",
+        "change": "@ $4.50 (ETH/BTC)"
+      },
+      {
+        "metric": "Use of Proceeds",
+        "previous": "BTC Mining",
+        "newValue": "ETH Treasury",
+        "change": "PIVOT"
+      }
+    ],
+    "notes": "WATERSHED EVENT: Birth of BMNR as ETH treasury company. 20% for staking/DeFi, 5% for validator tech.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-075",
+    "date": "2025-06-17",
+    "topic": "Holdings",
+    "title": "BTC Treasury Complete: 154.167 BTC Purchased",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "BTC Holdings",
+        "previous": "100",
+        "newValue": "154.167",
+        "change": "+54.167"
+      },
+      {
+        "metric": "Total BTC Spent",
+        "previous": "N/A",
+        "newValue": "$16.347M",
+        "change": "Complete"
+      },
+      {
+        "metric": "Avg Price/BTC",
+        "previous": "N/A",
+        "newValue": "$106,033",
+        "change": "Reference"
+      },
+      {
+        "metric": "IPO Proceeds Used",
+        "previous": "$16.34M",
+        "newValue": "100%",
+        "change": "Deployed"
+      }
+    ],
+    "notes": "Completed BTC purchases from June 6 IPO. 100% of proceeds invested as committed. Final BTC treasury before ETH pivot.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-076",
+    "date": "2025-06-09",
+    "topic": "Holdings",
+    "title": "First BTC Purchase: 100 Bitcoin Acquired",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "BTC Holdings",
+        "previous": "0",
+        "newValue": "100",
+        "change": "First purchase"
+      },
+      {
+        "metric": "Source",
+        "previous": "N/A",
+        "newValue": "IPO proceeds",
+        "change": "Open market"
+      }
+    ],
+    "notes": "First open market BTC purchase from June 6 offering. CEO: \"Excited to establish our Bitcoin Treasury.\" Pre-ETH pivot.",
+    "source": "Press Release"
+  },
+  {
+    "id": "bmnr-tl-077",
+    "date": "2025-06-06",
+    "topic": "Capital",
+    "title": "Public Offering Closes (NYSE Uplisting)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Shares Issued",
+        "previous": "~2.5M",
+        "newValue": "+2,250,000",
+        "change": "IPO"
+      },
+      {
+        "metric": "Price",
+        "previous": "N/A",
+        "newValue": "$8.00",
+        "change": "Public offering"
+      },
+      {
+        "metric": "Proceeds",
+        "previous": "N/A",
+        "newValue": "~$18M",
+        "change": "New capital"
+      }
+    ],
+    "notes": "Concurrent with NYSE American uplisting. First major capital raise enabling ETH pivot.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-078",
+    "date": "2025-06-05",
+    "topic": "Corporate",
+    "title": "NYSE American Trading Commences",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Exchange",
+        "previous": "OTCQX",
+        "newValue": "NYSE American",
+        "change": "Uplisting"
+      },
+      {
+        "metric": "Last OTCQX Day",
+        "previous": "N/A",
+        "newValue": "June 4, 2025",
+        "change": "Final"
+      }
+    ],
+    "notes": "Major milestone enabling institutional access and ATM programs.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-079",
+    "date": "2025-06-02",
+    "topic": "Corporate",
+    "title": "NYSE American Listing Approved",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Listing Status",
+        "previous": "Pending",
+        "newValue": "Approved",
+        "change": "Confirmed"
+      },
+      {
+        "metric": "Expected Start",
+        "previous": "N/A",
+        "newValue": "~June 5, 2025",
+        "change": "Announced"
+      }
+    ],
+    "notes": "Press release announcing NYSE American approval. CEO: Jonathan Bates.",
+    "source": "8-K Filing"
+  },
+  {
+    "id": "bmnr-tl-080",
+    "date": "2025-06-01",
+    "topic": "Corporate",
+    "title": "Thomas J. Lee Appointed Chairman",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Chairman",
+        "previous": "Jonathan Bates",
+        "newValue": "Thomas J. Lee",
+        "change": "New"
+      },
+      {
+        "metric": "Strategic Focus",
+        "previous": "BTC Mining",
+        "newValue": "ETH Treasury",
+        "change": "Aligned"
+      }
+    ],
+    "notes": "Tom Lee (Fundstrat co-founder) appointed Chairman. Leadership aligned with ETH treasury vision.",
+    "source": "10-K Filing Reference"
+  },
+  {
+    "id": "bmnr-tl-081",
+    "date": "2024-11-29",
+    "topic": "SEC Filing",
+    "title": "FY2024 10-K Delayed — Auditor Transition Post-BF Borgers Ban",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "Filing Status",
+        "previous": "On time",
+        "newValue": "Extension filed",
+        "change": "NT 10-K"
+      },
+      {
+        "metric": "Reason",
+        "previous": "—",
+        "newValue": "Auditor transition",
+        "change": "BF Borgers banned May 2024"
+      }
+    ],
+    "notes": "FY2024 annual report delayed due to auditor transition after BF Borgers CPA firm was banned by SEC in May 2024. Extension filed to allow new auditor to complete review.",
+    "source": "SEC Filing (NT 10-K)"
+  },
+  {
+    "id": "bmnr-tl-082",
+    "date": "2024-10-15",
+    "topic": "Holdings",
+    "title": "First ETH Purchase Agreement Filed (Pre-IPO Treasury Start)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "purchase",
+    "keyChanges": [
+      {
+        "metric": "Asset",
+        "previous": "BTC only",
+        "newValue": "ETH acquisition",
+        "change": "New crypto asset"
+      },
+      {
+        "metric": "Filing",
+        "previous": "—",
+        "newValue": "8-K",
+        "change": "Material agreement"
+      }
+    ],
+    "notes": "First ETH purchase agreement filed via 8-K, foreshadowing the massive ETH treasury pivot that would follow the June 2025 PIPE close. Pre-IPO ETH exposure begins.",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-083",
+    "date": "2024-08-15",
+    "topic": "Product",
+    "title": "ETH Staking Agreement Signed (Projected 4-5% Yields)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "milestone",
+    "keyChanges": [
+      {
+        "metric": "Revenue Source",
+        "previous": "Mining/Hosting only",
+        "newValue": "+ ETH Staking",
+        "change": "New yield stream"
+      },
+      {
+        "metric": "Projected Yield",
+        "previous": "—",
+        "newValue": "4-5% APY",
+        "change": "Staking income"
+      }
+    ],
+    "notes": "ETH staking agreement signed, projecting 4-5% annual yields. Early precursor to the MAVAN staking strategy that would launch in Q1 2026.",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-084",
+    "date": "2024-05-01",
+    "topic": "Corporate",
+    "title": "Auditor BF Borgers Banned by SEC — Forced Replacement",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Auditor",
+        "previous": "BF Borgers, CPA",
+        "newValue": "Resigned (SEC ban)",
+        "change": "Mandatory"
+      },
+      {
+        "metric": "Filing Impact",
+        "previous": "Current",
+        "newValue": "Delayed",
+        "change": "10-K/10-Q at risk"
+      }
+    ],
+    "notes": "BF Borgers CPA firm banned by SEC, forcing resignation. Auditor change announcement followed June 5. This created filing delays through late 2024 (NT 10-K filed Nov 29). Material internal controls weakness noted.",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-085",
+    "date": "2023-08-28",
+    "topic": "SEC Filing",
+    "title": "SEC Initiates Crypto Disclosure Review — Multiple Comment Rounds",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "SEC Action",
+        "previous": "Routine",
+        "newValue": "Crypto-focused review",
+        "change": "Enhanced scrutiny"
+      },
+      {
+        "metric": "Topics",
+        "previous": "—",
+        "newValue": "Breakeven, pools, impairment, halving",
+        "change": "7 rounds Aug 23-Nov 24"
+      },
+      {
+        "metric": "Breakeven",
+        "previous": "Not disclosed",
+        "newValue": "~$2,500/BTC incl. financing",
+        "change": "Required disclosure"
+      }
+    ],
+    "notes": "SEC initiated intensive crypto disclosure review spanning 7 CORRESP rounds from Aug 2023 to Nov 2024. Required enhanced disclosures on: BTC mining breakeven (~$2,500/BTC including miner financing costs), pool mechanics (FPPS, <24hr contracts, no material rights), cryptocurrency impairment (lowest intraday price method), Bitcoin halving impact, and no direct exposure to FTX/crypto bankruptcies.",
+    "source": "SEC Filing (CORRESP)"
+  },
+  {
+    "id": "bmnr-tl-086",
+    "date": "2022-08-29",
+    "topic": "Corporate",
+    "title": "Michael Maloney Resigns from Board + First Bitcoin Treasury Purchases",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Board",
+        "previous": "Maloney (12.5% holder)",
+        "newValue": "Resigned",
+        "change": "No disagreements"
+      },
+      {
+        "metric": "Treasury",
+        "previous": "Cash only",
+        "newValue": "BTC purchases begun",
+        "change": "8-K filed"
+      }
+    ],
+    "notes": "Maloney (largest early shareholder at 12.5%) resigned from board with no disagreements. Concurrent 8-K filings announced first Bitcoin purchase/sales agreements, marking start of crypto treasury strategy. BTC purchases continued through late 2022 (Oct and Nov 8-Ks).",
+    "source": "SEC Filing (8-K)"
+  },
+  {
+    "id": "bmnr-tl-087",
+    "date": "2022-07-15",
+    "topic": "Corporate",
+    "title": "Name Changed to Bitmine + Authorized Shares Increased to 500M",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Company Name",
+        "previous": "Sandy Springs Holdings",
+        "newValue": "Bitmine Immersion Technologies",
+        "change": "Rebranding"
+      },
+      {
+        "metric": "Authorized Shares",
+        "previous": "~10M",
+        "newValue": "500,000,000",
+        "change": "~50x increase"
+      },
+      {
+        "metric": "Approval",
+        "previous": "—",
+        "newValue": "Majority consent",
+        "change": "DEF 14C"
+      }
+    ],
+    "notes": "Definitive information statement (DEF 14C) approved name change from Sandy Springs Holdings to Bitmine Immersion Technologies. Authorized shares increased to 500M to enable future crypto expansion. Preliminary PRE 14C filed same day. Marked official rebranding from dormant shell to crypto mining company.",
+    "source": "SEC Filing (DEF 14C)"
+  },
+  {
+    "id": "bmnr-tl-088",
+    "date": "2022-05-31",
+    "topic": "SEC Filing",
+    "title": "First Revenue: $428K from Crypto Hosting (Q3 FY2022)",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "Revenue",
+        "previous": "$0 (prior 5 quarters)",
+        "newValue": "$428K",
+        "change": "First ever"
+      },
+      {
+        "metric": "Source",
+        "previous": "None",
+        "newValue": "Crypto hosting/mining",
+        "change": "Operational"
+      },
+      {
+        "metric": "Net Loss",
+        "previous": "$503K (Q2)",
+        "newValue": "$2.1M",
+        "change": "Expansion costs"
+      },
+      {
+        "metric": "Assets",
+        "previous": "$4.8M",
+        "newValue": "$4.8M",
+        "change": "Equipment + crypto"
+      }
+    ],
+    "notes": "Q3 FY2022 10-Q showed first revenues ($428K from hosting) after 5 consecutive quarters of $0. Net loss increased to $2.1M due to expansion costs (depreciation, G&A). S-1 for $10M offering filed same period for mining expansion, later withdrawn Jun 2023.",
+    "source": "SEC Filing (10-Q)"
+  },
+  {
+    "id": "bmnr-tl-089",
+    "date": "2021-08-19",
+    "topic": "Corporate",
+    "title": "Founding Shareholders Established — 5 SC 13D Filings + 5 Form 3s",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Maloney",
+        "previous": "0%",
+        "newValue": "12.5% (1.5M shares)",
+        "change": "Largest holder"
+      },
+      {
+        "metric": "Abed Equities",
+        "previous": "0%",
+        "newValue": "9.3% (1M shares)",
+        "change": "Passive"
+      },
+      {
+        "metric": "Jorgensen",
+        "previous": "0%",
+        "newValue": "~9% (1M shares)",
+        "change": "Passive"
+      },
+      {
+        "metric": "Bates",
+        "previous": "0%",
+        "newValue": ">5% (via LP/LLC)",
+        "change": "Control person"
+      },
+      {
+        "metric": "Ramnath",
+        "previous": "0%",
+        "newValue": ">5% (via Bitflair)",
+        "change": "Mining expertise"
+      }
+    ],
+    "notes": "In July-September 2021, five SC 13D beneficial ownership filings and five Form 3 initial ownership reports established the founding shareholder base. Total concentrated ownership: ~5M+ shares (~30%+ of outstanding). Insiders included Maloney (12.5%, largest), Abed Equities (9.3%), Jorgensen (9%), Bates (via LP entities, later CEO), and Ramnath (via Bitflair Mining, brought mining expertise). Board additions: Bayles, Mow (later CFO), Bates. All filings within a 2-month window signaling coordinated shell→mining pivot.",
+    "source": "SEC Filing (SC 13D)"
+  },
+  {
+    "id": "bmnr-tl-090",
+    "date": "2021-04-04",
+    "topic": "Capital",
+    "title": "First Capital Raise: $1.05M Exempt Offering (Rule 506(b))",
+    "sentiment": "bullish",
+    "sentimentLabel": "+ Bullish",
+    "type": "corporate",
+    "keyChanges": [
+      {
+        "metric": "Capital Raised",
+        "previous": "$0",
+        "newValue": "$1.05M",
+        "change": "Form D offering"
+      },
+      {
+        "metric": "Exemption",
+        "previous": "—",
+        "newValue": "Rule 506(b)",
+        "change": "Private placement"
+      }
+    ],
+    "notes": "First capital raise post-shell registration. $1.05M raised via Form D exempt offering under Rule 506(b). Amended (Form D/A) August 4 confirming total sold. Funded initial mining pivot operations.",
+    "source": "SEC Filing (Form D)"
+  },
+  {
+    "id": "bmnr-tl-091",
+    "date": "2020-10-27",
+    "topic": "SEC Filing",
+    "title": "SEC Registration: Sandy Springs Holdings (Shell Company, 2.8M Shares)",
+    "sentiment": "neutral",
+    "sentimentLabel": "~ Neutral",
+    "type": "filing",
+    "keyChanges": [
+      {
+        "metric": "SEC Status",
+        "previous": "Unregistered",
+        "newValue": "Exchange Act reporting",
+        "change": "Form 10-12G"
+      },
+      {
+        "metric": "Shares",
+        "previous": "—",
+        "newValue": "2,800,000",
+        "change": "Initial outstanding"
+      },
+      {
+        "metric": "Assets/Revenue",
+        "previous": "—",
+        "newValue": "$0 / $0",
+        "change": "Shell entity"
+      },
+      {
+        "metric": "Debt",
+        "previous": "—",
+        "newValue": "$50K promissory note",
+        "change": "Only liability"
+      }
+    ],
+    "notes": "Sandy Springs Holdings (later Bitmine) filed Form 10-12G for SEC registration as a shell company with no operations, assets, or revenues. 2.8M shares outstanding. $50K promissory note was sole liability. Inception date: July 16, 2020 post-merger of dormant entities. SEC review followed with 4 CORRESP rounds (Nov 2020-Mar 2021) clarifying reorganization accounting (ASC 250-10/805-50) before registration was cleared March 23, 2021.",
+    "source": "SEC Filing (Form 10-12G)"
+  }
+]

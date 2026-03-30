@@ -21,10 +21,11 @@ export const AI_WORKFLOWS: AiWorkflow[] = [
     name: "Coverage analyst",
     purpose:
       "Classify pasted research items, comps intelligence, cross-refs, and pre-write gates for covered tickers ({{PLACEHOLDER}} template).",
-    source: "src/lib/ai/prompts.ts",
+    source: "src/lib/ai/coverage-prompts/coverage-analyst-template.ts + build-coverage-prompt.ts",
     modelEnvKeys: [],
     consumers: [
-      "Manual / IDE — buildCoverageContext(ticker); not yet bound to an API route",
+      "Admin → Prompts & AI (/admin/prompts): resolved prompt + copy",
+      "Manual / IDE — buildCoverageContext(ticker)",
       "Coverage pages: src/app/(dashboard)/coverage/[ticker]",
     ],
   },
