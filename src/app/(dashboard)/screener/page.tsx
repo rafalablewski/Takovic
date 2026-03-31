@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatNumber } from "@/lib/utils";
-import type { MarketEquityRow } from "@/lib/db/market-equities";
-import { searchMarketEquities } from "@/lib/db/market-equities";
+import type { MarketEquityRow } from "@/lib/screener/yahoo-screener";
+import { searchMarketEquities } from "@/lib/screener/yahoo-screener";
 import { ScreenerFilterForm } from "@/components/screener/filter-form";
 import { ScreenerPagination } from "@/components/screener/pagination";
 import { ScreenerExportButton } from "@/components/screener/export-button";
@@ -121,9 +121,7 @@ export default async function ScreenerPage({
         <div>
           <h1 className="text-xl font-semibold text-foreground">Stock Screener</h1>
           <p className="text-sm text-muted-foreground">
-            Filter CSV-seeded listings (US, Canada, Europe). Update data in{" "}
-            <span className="font-mono text-xs">data/market-equities/universe.csv</span>{" "}
-            and run <span className="font-mono text-xs">npm run db:seed:market-equities</span>.
+            Screen stocks in real time using Yahoo Finance data.
           </p>
         </div>
         <ScreenerExportButton
@@ -249,10 +247,8 @@ export default async function ScreenerPage({
                           className="px-5 py-8 text-center text-sm text-muted-foreground"
                         >
                           {fetchError
-                            ? "Could not load screener data. Check DATABASE_URL and that migration 0001_market_equities.sql has been applied."
-                            : totalMatching === 0
-                              ? "No rows in market_equities yet. Run npm run db:seed:market-equities (see data/market-equities/README.md)."
-                              : "No stocks match your filters. Try broadening your criteria."}
+                            ? "Could not load screener data. Yahoo Finance may be temporarily unavailable."
+                            : "No stocks match your filters. Try broadening your criteria."}
                         </td>
                       </tr>
                     )}

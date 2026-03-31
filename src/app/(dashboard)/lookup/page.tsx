@@ -11,7 +11,7 @@ import { formatCurrency, formatPercent, formatNumber } from "@/lib/utils";
 import {
   getMarketEquitiesBySymbols,
   getTrendingMarketEquities,
-} from "@/lib/db/market-equities";
+} from "@/lib/screener/yahoo-screener";
 import {
   Search,
   ArrowUpRight,
