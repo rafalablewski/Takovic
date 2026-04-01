@@ -74,6 +74,9 @@ function likelihoodLabel(l: string): string {
   return "High likelihood";
 }
 
+/** Shape of `INVESTMENT_CURRENT_ASSESSMENT.headlineMetrics` in coverage data modules. */
+type InvestmentHeadlineMetric = { label: string; value: string; sub?: string };
+
 // ---------------------------------------------------------------------------
 // Collapsible — same shell as capital-structure-tab / overview CollapsibleSection
 // ---------------------------------------------------------------------------
@@ -275,7 +278,7 @@ function AnalysisTabContent({ mod }: { mod: Record<string, unknown> }) {
         </CardHeader>
         <CardContent className="p-5 pt-4">
           <div className="grid gap-4 sm:grid-cols-3">
-            {INVESTMENT_CURRENT_ASSESSMENT.headlineMetrics.map((m) => (
+            {(INVESTMENT_CURRENT_ASSESSMENT.headlineMetrics as InvestmentHeadlineMetric[]).map((m) => (
               <div key={m.label}>
                 <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{m.label}</p>
                 <p className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{m.value}</p>
