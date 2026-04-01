@@ -6,7 +6,7 @@ import {
   getIncomeStatement,
   getBalanceSheet,
   getStockNews,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import { calculateSnowflakeScores } from "@/lib/analysis/scores";
 import { generateStockSummary } from "@/lib/ai/claude";
 import { getCached, setCache, cacheKey, CACHE_TTL } from "@/lib/cache";

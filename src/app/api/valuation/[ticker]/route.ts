@@ -6,7 +6,7 @@ import {
   getIncomeStatement,
   getBalanceSheet,
   getCashFlowStatement,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 import type { StockValuationParams } from "@/types/analysis";
 
 // Industry median multiples by sector (reasonable defaults)

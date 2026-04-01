@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchStocks } from "@/lib/api/fmp";
+import { searchStocks } from "@/lib/api/yahoo";
 import { getCached, setCache, cacheKey, CACHE_TTL } from "@/lib/cache";
 
 export async function GET(request: NextRequest) {

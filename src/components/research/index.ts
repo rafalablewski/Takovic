@@ -11,3 +11,4 @@ export { SentimentBadge } from "./sentiment-badge";
 export { StockDetailClient, type StockDetailClientProps, type AiAnalysisPayload } from "./stock-detail-client";
 export { StockRow } from "./stock-row";
 export { Tag } from "./tag";
+export { OptionsTab, type OptionsTabProps } from "./options-tab";

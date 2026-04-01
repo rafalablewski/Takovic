@@ -15,45 +15,50 @@ import {
 } from "@/components/ui/tooltip";
 import {
   LayoutDashboard,
+  Globe,
   SlidersHorizontal,
+  CalendarDays,
   Star,
   PieChart,
-  Newspaper,
-  Search,
+  Bell,
   GitCompareArrows,
   Calculator,
-  Settings,
-  HelpCircle,
   BookOpen,
+  FileText,
+  Newspaper,
+  HelpCircle,
+  Settings,
   ChevronLeft,
   ChevronRight,
   TrendingUp,
-  Shield,
   LayoutGrid,
   X,
 } from "lucide-react";
 
 const showAdminNav = process.env.NEXT_PUBLIC_SHOW_ADMIN === "true";
 
-const mainNavigation = [
+const marketsNav = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Markets", href: "/markets", icon: Globe },
   { name: "Screener", href: "/screener", icon: SlidersHorizontal },
+  { name: "Calendar", href: "/calendar", icon: CalendarDays },
+];
+
+const investNav = [
   { name: "Watchlist", href: "/watchlist", icon: Star },
   { name: "Portfolio", href: "/portfolio", icon: PieChart },
-  { name: "News", href: "/news", icon: Newspaper },
+  { name: "Alerts", href: "/alerts", icon: Bell },
 ];
 
-const analysisTools = [
-  { name: "Stock Lookup", href: "/lookup", icon: Search },
-  { name: "Compare Stocks", href: "/compare", icon: GitCompareArrows },
+const analyzeNav = [
+  { name: "Compare", href: "/compare", icon: GitCompareArrows },
   { name: "Valuation", href: "/valuation", icon: Calculator },
-  { name: "Intelligence", href: "/intelligence", icon: Shield },
-  { name: "Coverage", href: "/coverage", icon: BookOpen },
+  { name: "Research", href: "/coverage", icon: BookOpen },
+  { name: "Filings", href: "/intelligence", icon: FileText },
 ];
 
-const secondaryLinks = [
-  { name: "Dev Guide", href: "/dev-guide", icon: BookOpen },
-  { name: "Settings", href: "/settings", icon: Settings },
+const learnNav = [
+  { name: "News", href: "/news", icon: Newspaper },
   { name: "Help", href: "/help", icon: HelpCircle },
 ];
 
@@ -249,8 +254,8 @@ function SidebarNavBody({
 }) {
   return (
     <div className="flex flex-col gap-6 py-2">
-      <NavSection label="Navigation" collapsed={collapsed}>
-        {mainNavigation.map((item) => (
+      <NavSection label="Markets" collapsed={collapsed}>
+        {marketsNav.map((item) => (
           <NavItem
             key={item.href}
             href={item.href}
@@ -263,8 +268,22 @@ function SidebarNavBody({
         ))}
       </NavSection>
 
-      <NavSection label="Analysis" collapsed={collapsed}>
-        {analysisTools.map((item) => (
+      <NavSection label="Invest" collapsed={collapsed}>
+        {investNav.map((item) => (
+          <NavItem
+            key={item.href}
+            href={item.href}
+            icon={item.icon}
+            label={item.name}
+            active={isActive(item.href)}
+            collapsed={collapsed}
+            onAfterNavigate={onAfterNavigate}
+          />
+        ))}
+      </NavSection>
+
+      <NavSection label="Analyze" collapsed={collapsed}>
+        {analyzeNav.map((item) => (
           <NavItem
             key={item.href}
             href={item.href}
@@ -293,8 +312,8 @@ function SidebarNavBody({
         </NavSection>
       )}
 
-      <NavSection label="Account" collapsed={collapsed}>
-        {secondaryLinks.map((item) => (
+      <NavSection label="Learn" collapsed={collapsed}>
+        {learnNav.map((item) => (
           <NavItem
             key={item.href}
             href={item.href}

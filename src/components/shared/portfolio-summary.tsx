@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent, cn } from "@/lib/utils";
-import type { FMPQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/yahoo";
 
 interface Holding {
   id: string;

@@ -31,14 +31,17 @@ import { useSidebar } from "@/components/layout/sidebar-context";
 /** Map pathnames to page titles */
 const titleMap: Record<string, string> = {
   "/": "Dashboard",
+  "/markets": "Markets",
   "/screener": "Stock Screener",
+  "/calendar": "Calendar",
   "/watchlist": "Watchlist",
   "/portfolio": "Portfolio",
-  "/news": "News",
-  "/lookup": "Stock Lookup",
-  "/compare": "Compare Stocks",
+  "/alerts": "Alerts",
+  "/compare": "Compare",
   "/valuation": "Valuation",
-  "/dev-guide": "Developer Guide",
+  "/coverage": "Research",
+  "/intelligence": "Filings",
+  "/news": "News",
   "/settings": "Settings",
   "/help": "Help",
 };

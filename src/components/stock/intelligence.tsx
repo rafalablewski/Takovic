@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import type { FMPPressRelease } from "@/lib/api/fmp";
+import type { FMPPressRelease } from "@/lib/api/yahoo";
 import {
   FileText,
   Megaphone,

@@ -6,13 +6,12 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { formatCurrency, formatNumber } from "@/lib/utils";
-import type { MarketEquityRow } from "@/lib/db/market-equities";
-import { searchMarketEquities } from "@/lib/db/market-equities";
-import { Download } from "lucide-react";
+import type { MarketEquityRow } from "@/lib/screener/yahoo-screener";
+import { searchMarketEquities } from "@/lib/screener/yahoo-screener";
 import { ScreenerFilterForm } from "@/components/screener/filter-form";
 import { ScreenerPagination } from "@/components/screener/pagination";
+import { ScreenerExportButton } from "@/components/screener/export-button";
 
 /** Number of results per page */
 const PAGE_SIZE = 20;
@@ -122,15 +121,20 @@ export default async function ScreenerPage({
         <div>
           <h1 className="text-xl font-semibold text-foreground">Stock Screener</h1>
           <p className="text-sm text-muted-foreground">
-            Filter CSV-seeded listings (US, Canada, Europe). Update data in{" "}
-            <span className="font-mono text-xs">data/market-equities/universe.csv</span>{" "}
-            and run <span className="font-mono text-xs">npm run db:seed:market-equities</span>.
+            Screen stocks in real time using Yahoo Finance data.
           </p>
         </div>
-        <Button variant="outline" size="sm" className="gap-1.5">
-          <Download className="h-4 w-4" />
-          Export
-        </Button>
+        <ScreenerExportButton
+          stocks={paginatedStocks.map((s) => ({
+            symbol: s.symbol,
+            name: s.name ?? "",
+            sector: s.sector ?? "",
+            price: num(s.price),
+            marketCap: num(s.marketCap),
+            volume: num(s.volume),
+            change: num(s.changePct),
+          }))}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
@@ -243,10 +247,8 @@ export default async function ScreenerPage({
                           className="px-5 py-8 text-center text-sm text-muted-foreground"
                         >
                           {fetchError
-                            ? "Could not load screener data. Check DATABASE_URL and that migration 0001_market_equities.sql has been applied."
-                            : totalMatching === 0
-                              ? "No rows in market_equities yet. Run npm run db:seed:market-equities (see data/market-equities/README.md)."
-                              : "No stocks match your filters. Try broadening your criteria."}
+                            ? "Could not load screener data. Yahoo Finance may be temporarily unavailable."
+                            : "No stocks match your filters. Try broadening your criteria."}
                         </td>
                       </tr>
                     )}

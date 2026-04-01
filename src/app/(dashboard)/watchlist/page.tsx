@@ -16,7 +16,7 @@ import {
   AddStockDialog,
   CreateWatchlistDialog,
 } from "@/components/shared/watchlist-dialogs";
-import type { FMPQuote } from "@/lib/api/fmp";
+import type { FMPQuote } from "@/lib/api/yahoo";
 import {
   Plus,
   Trash2,
@@ -24,7 +24,9 @@ import {
   FolderPlus,
   Pencil,
   Check,
+  Download,
 } from "lucide-react";
+import { exportWatchlistCSV } from "@/lib/export";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -382,6 +384,28 @@ export default function WatchlistPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 text-xs"
+            onClick={() => {
+              if (!activeWatchlist) return;
+              const stocks = getStocksForWatchlist(activeWatchlist);
+              exportWatchlistCSV(
+                stocks.map((s) => ({
+                  ticker: s.ticker,
+                  name: s.name,
+                  price: s.price,
+                  change: 0,
+                  changePercent: s.change,
+                }))
+              );
+            }}
+            disabled={!activeWatchlist || getStocksForWatchlist(activeWatchlist).length === 0}
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export CSV
+          </Button>
           <Button
             variant="outline"
             size="sm"

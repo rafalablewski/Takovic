@@ -5,7 +5,7 @@
  */
 
 import type { SnowflakeScores } from "@/types/analysis";
-import type { FMPKeyMetrics, FMPIncomeStatement, FMPBalanceSheet } from "@/lib/api/fmp";
+import type { FMPKeyMetrics, FMPIncomeStatement, FMPBalanceSheet } from "@/lib/api/yahoo";
 
 interface ScoreInput {
   metrics: FMPKeyMetrics;

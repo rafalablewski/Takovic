@@ -4,7 +4,7 @@ import {
   getHistoricalPriceFull,
   type FMPHistoricalBar,
   type FMPIntradayBar,
-} from "@/lib/api/fmp";
+} from "@/lib/api/yahoo";
 
 export const dynamic = "force-dynamic";
 
@@ -14,12 +14,24 @@ function ymd(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-function barsToPoints(bars: FMPHistoricalBar[]): { time: number; value: number }[] {
+interface ChartPoint { time: number; value: number }
+interface OHLCPoint { time: number; open: number; high: number; low: number; close: number; volume: number }
+
+function barsToPoints(bars: FMPHistoricalBar[]): { points: ChartPoint[]; ohlc: OHLCPoint[] } {
   const sorted = [...bars].sort((a, b) => a.date.localeCompare(b.date));
-  return sorted.map((b) => ({
+  const points = sorted.map((b) => ({
     time: Math.floor(new Date(b.date + "T12:00:00Z").getTime() / 1000),
     value: b.close,
   }));
+  const ohlc = sorted.map((b) => ({
+    time: Math.floor(new Date(b.date + "T12:00:00Z").getTime() / 1000),
+    open: b.open,
+    high: b.high,
+    low: b.low,
+    close: b.close,
+    volume: b.volume,
+  }));
+  return { points, ohlc };
 }
 
 /** FMP intraday: usually "YYYY-MM-DD HH:mm:ss" or ISO with T; normalize without relying on a single space. */
@@ -32,18 +44,27 @@ function parseIntradayBarMs(dateStr: string): number {
   return Date.parse(withZone);
 }
 
-function intradayToPoints(bars: FMPIntradayBar[]): { time: number; value: number }[] {
+function intradayToPoints(bars: FMPIntradayBar[]): { points: ChartPoint[]; ohlc: OHLCPoint[] } {
   const sorted = [...bars].sort((a, b) => a.date.localeCompare(b.date));
-  return sorted
+  const valid = sorted
     .map((b) => {
       const ms = parseIntradayBarMs(b.date);
       if (!Number.isFinite(ms)) return null;
-      return {
-        time: Math.floor(ms / 1000),
-        value: b.close,
-      };
+      const time = Math.floor(ms / 1000);
+      return { bar: b, time };
     })
-    .filter((p): p is { time: number; value: number } => p != null);
+    .filter((v): v is { bar: FMPIntradayBar; time: number } => v != null);
+
+  const points = valid.map((v) => ({ time: v.time, value: v.bar.close }));
+  const ohlc = valid.map((v) => ({
+    time: v.time,
+    open: v.bar.open,
+    high: v.bar.high,
+    low: v.bar.low,
+    close: v.bar.close,
+    volume: v.bar.volume,
+  }));
+  return { points, ohlc };
 }
 
 export async function GET(
@@ -65,11 +86,12 @@ export async function GET(
       from.setDate(from.getDate() - 8);
       const fromStr = ymd(from);
       const raw = await getHistoricalChart5Min(upper, fromStr, toStr);
-      let points = intradayToPoints(Array.isArray(raw) ? raw : []);
+      let { points, ohlc } = intradayToPoints(Array.isArray(raw) ? raw : []);
       if (points.length > 400) {
         points = points.slice(-400);
+        ohlc = ohlc.slice(-400);
       }
-      return NextResponse.json({ range, points, resolution: "5min" as const });
+      return NextResponse.json({ range, points, ohlc, resolution: "5min" as const });
     }
 
     const from = new Date(to);
@@ -99,8 +121,8 @@ export async function GET(
       to: toStr,
     });
     const historical = full?.historical ?? [];
-    const points = barsToPoints(historical);
-    return NextResponse.json({ range, points, resolution: "day" as const });
+    const { points, ohlc } = barsToPoints(historical);
+    return NextResponse.json({ range, points, ohlc, resolution: "day" as const });
   } catch (e) {
     console.error(`Chart API ${upper} ${range}:`, e);
     return NextResponse.json(

@@ -15,11 +15,18 @@ import {
   getIncomeStatement,
   getBalanceSheet,
   getStockNews,
-} from "@/lib/api/fmp";
+  getAnalystEstimates,
+  getPriceTargetConsensus,
+  getAnalystRecommendations,
+  getUpgradesDowngrades,
+  getInstitutionalHolders,
+  getInsiderTrading,
+  getHistoricalDividends,
+} from "@/lib/api/yahoo";
 import { calculateSnowflakeScores } from "@/lib/analysis/scores";
 import { getServerBaseUrl } from "@/lib/server-base-url";
 import { StockDetailClient } from "@/components/research/stock-detail-client";
-import type { FMPKeyMetrics } from "@/lib/api/fmp";
+import type { FMPKeyMetrics } from "@/lib/api/yahoo";
 
 interface StockPageProps {
   params: Promise<{ ticker: string }>;
@@ -42,17 +49,44 @@ export default async function StockPage({
     metrics,
     incomeStatements,
     balanceSheets,
-    news;
+    news,
+    analystEstimates,
+    priceTargetConsensus,
+    analystRecommendations,
+    upgradesDowngrades,
+    institutionalHolders,
+    insiderTrades,
+    dividendData;
 
   try {
-    [quote, profile, metrics, incomeStatements, balanceSheets, news] =
-      await Promise.all([
+    [
+      quote,
+      profile,
+      metrics,
+      incomeStatements,
+      balanceSheets,
+      news,
+      analystEstimates,
+      priceTargetConsensus,
+      analystRecommendations,
+      upgradesDowngrades,
+      institutionalHolders,
+      insiderTrades,
+      dividendData,
+    ] = await Promise.all([
         getQuote(upperTicker),
         getProfile(upperTicker),
         getKeyMetrics(upperTicker, "annual", 1),
         getIncomeStatement(upperTicker, financialPeriod, 12),
         getBalanceSheet(upperTicker, "annual", 1),
         getStockNews(upperTicker, 20),
+        getAnalystEstimates(upperTicker).catch(() => []),
+        getPriceTargetConsensus(upperTicker).catch(() => null),
+        getAnalystRecommendations(upperTicker).catch(() => []),
+        getUpgradesDowngrades(upperTicker).catch(() => []),
+        getInstitutionalHolders(upperTicker).catch(() => []),
+        getInsiderTrading(upperTicker).catch(() => []),
+        getHistoricalDividends(upperTicker).catch(() => null),
       ]);
   } catch (error) {
     console.error(`Failed to fetch stock data for ${upperTicker}:`, error);
@@ -65,8 +99,7 @@ export default async function StockPage({
               Error Loading Stock
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Failed to fetch data for {upperTicker}. Check that FMP_API_KEY is
-              configured.
+              Failed to fetch data for {upperTicker}. Please try again later.
             </p>
           </CardContent>
         </Card>
@@ -215,6 +248,15 @@ export default async function StockPage({
         news={news ?? []}
         snowflakeScores={snowflakeScores}
         aiAnalysis={aiAnalysis}
+        consensus={priceTargetConsensus}
+        recommendations={analystRecommendations ?? []}
+        estimates={analystEstimates ?? []}
+        upgrades={upgradesDowngrades ?? []}
+        institutionalHolders={institutionalHolders ?? []}
+        insiderTrades={insiderTrades ?? []}
+        dividendHistory={dividendData?.historical ?? []}
+        dividendYield={latestMetrics?.dividendYield ?? null}
+        latestEps={quote.eps ?? null}
       />
     </Suspense>
   );

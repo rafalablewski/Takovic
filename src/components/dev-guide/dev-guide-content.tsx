@@ -309,7 +309,7 @@ const sections: GuideSection[] = [
       {
         title: "Wildcard permissions for safe automation",
         description:
-          'Set permission patterns like Bash(npm run *), Edit(src/**), and Read(src/**) in .claude/settings.json instead of dangerously-skip-permissions. This lets Claude freely edit pages, components, and lib files while blocking access to .env (FMP_API_KEY, ANTHROPIC_API_KEY, database URL).',
+          'Set permission patterns like Bash(npm run *), Edit(src/**), and Read(src/**) in .claude/settings.json instead of dangerously-skip-permissions. This lets Claude freely edit pages, components, and lib files while blocking access to .env (YAHOO_FINANCE, ANTHROPIC_API_KEY, database URL).',
         source: "Boris Cherny",
       },
       {
@@ -398,7 +398,7 @@ const sections: GuideSection[] = [
       {
         title: "Use /doctor when things break",
         description:
-          "If FMP API calls fail, Claude AI analysis returns errors, or Redis cache isn\u2019t connecting, run /doctor first. It checks environment variables (FMP_API_KEY, ANTHROPIC_API_KEY), Neon database connectivity, and Upstash Redis health systematically.",
+          "If FMP API calls fail, Claude AI analysis returns errors, or Redis cache isn\u2019t connecting, run /doctor first. It checks environment variables (YAHOO_FINANCE, ANTHROPIC_API_KEY), Neon database connectivity, and Upstash Redis health systematically.",
       },
     ],
   },

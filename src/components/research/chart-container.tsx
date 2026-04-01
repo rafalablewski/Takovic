@@ -4,6 +4,8 @@ import * as React from "react";
 import {
   createChart,
   LineSeries,
+  CandlestickSeries,
+  HistogramSeries,
   ColorType,
   type IChartApi,
   type ISeriesApi,
@@ -15,12 +17,42 @@ import type { ChartRange } from "@/app/api/stocks/[ticker]/chart/route";
 
 const RANGES: ChartRange[] = ["1D", "1W", "1M", "3M", "1Y", "MAX"];
 
+type ChartType = "line" | "candle";
+
+interface OHLCPoint {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
 function readCssVar(name: string, fallback: string): string {
   if (typeof document === "undefined") return fallback;
   const v = getComputedStyle(document.documentElement)
     .getPropertyValue(name)
     .trim();
   return v || fallback;
+}
+
+/** Calculate simple moving average from close prices. */
+function computeSMA(
+  data: { time: number; close: number }[],
+  period: number
+): { time: UTCTimestamp; value: number }[] {
+  const result: { time: UTCTimestamp; value: number }[] = [];
+  for (let i = period - 1; i < data.length; i++) {
+    let sum = 0;
+    for (let j = i - period + 1; j <= i; j++) {
+      sum += data[j].close;
+    }
+    result.push({
+      time: data[i].time as UTCTimestamp,
+      value: sum / period,
+    });
+  }
+  return result;
 }
 
 export function ChartContainer({
@@ -32,18 +64,31 @@ export function ChartContainer({
 }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const chartRef = React.useRef<IChartApi | null>(null);
-  const seriesRef = React.useRef<ISeriesApi<"Line"> | null>(null);
+
+  /* We track series refs loosely since they get recreated on type change */
+  const priceSeriesRef = React.useRef<ISeriesApi<"Line"> | ISeriesApi<"Candlestick"> | null>(null);
+  const volumeSeriesRef = React.useRef<ISeriesApi<"Histogram"> | null>(null);
+  const smaSeriesRef = React.useRef<ISeriesApi<"Line"> | null>(null);
+
   const [range, setRange] = React.useState<ChartRange>("1Y");
+  const [chartType, setChartType] = React.useState<ChartType>("line");
+  const [showSMA, setShowSMA] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
+  /* Keep fetched data so we can re-render when chart type / SMA toggles change without refetching */
+  const dataRef = React.useRef<{
+    points: { time: number; value: number }[];
+    ohlc: OHLCPoint[];
+  } | null>(null);
+
+  /* ---------- chart instance (created once) ---------- */
   React.useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const textColor = readCssVar("--muted-foreground", "#888");
     const gridColor = readCssVar("--chart-grid", "rgba(255,255,255,0.06)");
-    const lineColor = readCssVar("--chart-line", "#b8bcc4");
 
     const chart = createChart(el, {
       layout: {
@@ -72,16 +117,7 @@ export function ChartContainer({
       height: el.clientHeight,
     });
 
-    const series = chart.addSeries(LineSeries, {
-      color: lineColor,
-      lineWidth: 1,
-      crosshairMarkerVisible: true,
-      lastValueVisible: true,
-      priceLineVisible: true,
-    });
-
     chartRef.current = chart;
-    seriesRef.current = series;
 
     const ro = new ResizeObserver(() => {
       if (!containerRef.current || !chartRef.current) return;
@@ -96,13 +132,14 @@ export function ChartContainer({
       ro.disconnect();
       chart.remove();
       chartRef.current = null;
-      seriesRef.current = null;
+      priceSeriesRef.current = null;
+      volumeSeriesRef.current = null;
+      smaSeriesRef.current = null;
     };
   }, []);
 
+  /* ---------- fetch data when ticker/range changes ---------- */
   React.useEffect(() => {
-    if (!seriesRef.current || !chartRef.current) return;
-
     let cancelled = false;
     async function load() {
       setLoading(true);
@@ -113,17 +150,9 @@ export function ChartContainer({
         );
         const json = await res.json();
         if (cancelled) return;
-        const s = seriesRef.current;
-        const c = chartRef.current;
-        if (!s || !c) return;
         const points = (json.points ?? []) as { time: number; value: number }[];
-        s.setData(
-          points.map((p) => ({
-            time: p.time as UTCTimestamp,
-            value: p.value,
-          }))
-        );
-        c.timeScale().fitContent();
+        const ohlc = (json.ohlc ?? []) as OHLCPoint[];
+        dataRef.current = { points, ohlc };
         if (points.length === 0) {
           setError("No price data for this range.");
         }
@@ -146,6 +175,110 @@ export function ChartContainer({
     };
   }, [ticker, range]);
 
+  /* ---------- render series when data, chartType, or showSMA changes ---------- */
+  React.useEffect(() => {
+    const chart = chartRef.current;
+    const data = dataRef.current;
+    if (!chart || !data || loading) return;
+
+    /* Remove old series */
+    if (priceSeriesRef.current) {
+      try { chart.removeSeries(priceSeriesRef.current); } catch { /* already removed */ }
+      priceSeriesRef.current = null;
+    }
+    if (volumeSeriesRef.current) {
+      try { chart.removeSeries(volumeSeriesRef.current); } catch { /* already removed */ }
+      volumeSeriesRef.current = null;
+    }
+    if (smaSeriesRef.current) {
+      try { chart.removeSeries(smaSeriesRef.current); } catch { /* already removed */ }
+      smaSeriesRef.current = null;
+    }
+
+    const lineColor = readCssVar("--chart-line", "#b8bcc4");
+
+    /* --- Volume histogram (added first so it renders behind price) --- */
+    if (data.ohlc.length > 0) {
+      const volSeries = chart.addSeries(HistogramSeries, {
+        priceFormat: { type: "volume" },
+        priceScaleId: "volume",
+      });
+
+      chart.priceScale("volume").applyOptions({
+        scaleMargins: { top: 0.8, bottom: 0 },
+        borderVisible: false,
+      });
+
+      volSeries.setData(
+        data.ohlc.map((bar: OHLCPoint) => ({
+          time: bar.time as UTCTimestamp,
+          value: bar.volume,
+          color:
+            bar.close >= bar.open
+              ? "oklch(0.72 0.17 155 / 0.3)" /* emerald, 30% opacity */
+              : "oklch(0.63 0.21 25 / 0.3)",  /* red, 30% opacity */
+        }))
+      );
+      volumeSeriesRef.current = volSeries;
+    }
+
+    /* --- Price series --- */
+    if (chartType === "candle" && data.ohlc.length > 0) {
+      const candleSeries = chart.addSeries(CandlestickSeries, {
+        upColor: "oklch(0.72 0.17 155)",
+        downColor: "oklch(0.63 0.21 25)",
+        borderUpColor: "oklch(0.72 0.17 155)",
+        borderDownColor: "oklch(0.63 0.21 25)",
+        wickUpColor: "oklch(0.72 0.17 155)",
+        wickDownColor: "oklch(0.63 0.21 25)",
+        lastValueVisible: true,
+        priceLineVisible: true,
+      });
+      candleSeries.setData(
+        data.ohlc.map((bar: OHLCPoint) => ({
+          time: bar.time as UTCTimestamp,
+          open: bar.open,
+          high: bar.high,
+          low: bar.low,
+          close: bar.close,
+        }))
+      );
+      priceSeriesRef.current = candleSeries;
+    } else {
+      const lineSeries = chart.addSeries(LineSeries, {
+        color: lineColor,
+        lineWidth: 1,
+        crosshairMarkerVisible: true,
+        lastValueVisible: true,
+        priceLineVisible: true,
+      });
+      lineSeries.setData(
+        data.points.map((p: { time: number; value: number }) => ({
+          time: p.time as UTCTimestamp,
+          value: p.value,
+        }))
+      );
+      priceSeriesRef.current = lineSeries;
+    }
+
+    /* --- SMA overlay --- */
+    if (showSMA && data.ohlc.length >= 20) {
+      const smaSeries = chart.addSeries(LineSeries, {
+        color: "oklch(0.62 0.19 250 / 0.5)", /* blue at 50% opacity */
+        lineWidth: 1,
+        crosshairMarkerVisible: false,
+        lastValueVisible: false,
+        priceLineVisible: false,
+      });
+
+      const smaData = computeSMA(data.ohlc, 20);
+      smaSeries.setData(smaData);
+      smaSeriesRef.current = smaSeries;
+    }
+
+    chart.timeScale().fitContent();
+  }, [chartType, showSMA, loading]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className={cn("surface-panel flex flex-col gap-3 p-4 sm:p-5", className)}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -157,30 +290,69 @@ export function ChartContainer({
             FMP · delayed
           </p>
         </div>
-        <ToggleGroup
-          type="single"
-          value={range}
-          onValueChange={(v) => v && setRange(v as ChartRange)}
-          variant="outline"
-          size="sm"
-          className="flex-wrap justify-start"
-        >
-          {RANGES.map((r) => (
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Chart type toggle */}
+          <ToggleGroup
+            type="single"
+            value={chartType}
+            onValueChange={(v) => v && setChartType(v as ChartType)}
+            variant="outline"
+            size="sm"
+          >
             <ToggleGroupItem
-              key={r}
-              value={r}
+              value="line"
               className="h-7 px-2 text-[11px] data-[state=on]:bg-secondary"
             >
-              {r}
+              Line
             </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
+            <ToggleGroupItem
+              value="candle"
+              className="h-7 px-2 text-[11px] data-[state=on]:bg-secondary"
+            >
+              Candle
+            </ToggleGroupItem>
+          </ToggleGroup>
+
+          {/* SMA toggle */}
+          <button
+            type="button"
+            onClick={() => setShowSMA((p) => !p)}
+            className={cn(
+              "h-7 rounded-md border px-2 text-[11px] transition-colors",
+              showSMA
+                ? "border-primary/40 bg-secondary text-foreground"
+                : "border-border text-muted-foreground hover:bg-muted/50"
+            )}
+          >
+            SMA 20
+          </button>
+
+          {/* Range toggles */}
+          <ToggleGroup
+            type="single"
+            value={range}
+            onValueChange={(v) => v && setRange(v as ChartRange)}
+            variant="outline"
+            size="sm"
+            className="flex-wrap justify-start"
+          >
+            {RANGES.map((r) => (
+              <ToggleGroupItem
+                key={r}
+                value={r}
+                className="h-7 px-2 text-[11px] data-[state=on]:bg-secondary"
+              >
+                {r}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
       </div>
       <div className="relative h-[280px] w-full min-h-[200px]">
         <div ref={containerRef} className="absolute inset-0" />
         {loading && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/40 text-xs text-muted-foreground">
-            Loading…
+            Loading...
           </div>
         )}
         {error && !loading && (

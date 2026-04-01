@@ -18,7 +18,18 @@ import {
   sentimentLabel,
   cn,
 } from "@/lib/utils";
-import type { FMPQuote, FMPProfile, FMPIncomeStatement, FMPNews } from "@/lib/api/fmp";
+import type {
+  FMPQuote,
+  FMPProfile,
+  FMPIncomeStatement,
+  FMPNews,
+  FMPPriceTargetConsensus,
+  FMPAnalystRecommendation,
+  FMPAnalystEstimate,
+  FMPUpgradeDowngrade,
+  FMPInstitutionalHolder,
+  FMPInsiderTrade,
+} from "@/lib/api/yahoo";
 import type { SnowflakeScores } from "@/types/analysis";
 import { QuoteStrip } from "@/components/research/quote-strip";
 import { ChartContainer } from "@/components/research/chart-container";
@@ -30,10 +41,15 @@ import { FinancialsGrowthChart } from "@/components/research/financials-growth-c
 import { FilingsPanel } from "@/components/stock/filings-panel";
 import { DataBlock } from "@/components/layout/data-block";
 import { Section } from "@/components/layout/section";
+import { AnalystsTab } from "@/components/research/analysts-tab";
+import { OwnershipTab } from "@/components/research/ownership-tab";
+import { DividendsTab } from "@/components/research/dividends-tab";
+import { OptionsTab } from "@/components/research/options-tab";
 import {
   TrendingUp,
   Sparkles,
   ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 
 const VALID_TABS = new Set([
@@ -42,6 +58,10 @@ const VALID_TABS = new Set([
   "news",
   "analysis",
   "filings",
+  "analysts",
+  "ownership",
+  "dividends",
+  "options",
 ]);
 
 /** Single neutral fill — length encodes score; avoids rainbow UI */
@@ -68,6 +88,15 @@ export type StockDetailClientProps = {
   news: FMPNews[];
   snowflakeScores: SnowflakeScores | null;
   aiAnalysis: AiAnalysisPayload;
+  consensus: FMPPriceTargetConsensus | null;
+  recommendations: FMPAnalystRecommendation[];
+  estimates: FMPAnalystEstimate[];
+  upgrades: FMPUpgradeDowngrade[];
+  institutionalHolders: FMPInstitutionalHolder[];
+  insiderTrades: FMPInsiderTrade[];
+  dividendHistory: import("@/lib/api/yahoo").FMPDividendRecord[];
+  dividendYield: number | null;
+  latestEps: number | null;
 };
 
 function buildGrowthRows(statements: FMPIncomeStatement[]) {
@@ -107,6 +136,15 @@ export function StockDetailClient({
   news,
   snowflakeScores,
   aiAnalysis,
+  consensus,
+  recommendations,
+  estimates,
+  upgrades,
+  institutionalHolders,
+  insiderTrades,
+  dividendHistory,
+  dividendYield,
+  latestEps,
 }: StockDetailClientProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -211,6 +249,23 @@ export function StockDetailClient({
         initialQuote={quote}
         metricChips={metricChips}
       />
+
+      {/* ETF banner — show when the profile industry suggests an ETF */}
+      {profile?.industry &&
+        /ETF|Exchange.Traded/i.test(profile.industry) && (
+          <Link
+            href={`/etf/${ticker}`}
+            className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/[0.03] px-4 py-2.5 text-sm transition-colors hover:bg-primary/[0.06]"
+          >
+            <span className="font-medium text-foreground">
+              This is an ETF.
+            </span>
+            <span className="text-muted-foreground">
+              View ETF Analysis
+            </span>
+            <ArrowRight className="ml-auto h-4 w-4 text-primary" />
+          </Link>
+        )}
 
       {tab === "overview" && (
         <Section className="space-y-5 pt-1">
@@ -426,6 +481,42 @@ export function StockDetailClient({
         <div className="pt-1">
           <FilingsPanel ticker={ticker} />
         </div>
+      )}
+
+      {tab === "analysts" && (
+        <AnalystsTab
+          ticker={ticker}
+          currentPrice={quote.price}
+          consensus={consensus}
+          recommendations={recommendations}
+          estimates={estimates}
+          upgrades={upgrades}
+        />
+      )}
+
+      {tab === "ownership" && (
+        <OwnershipTab
+          ticker={ticker}
+          institutionalHolders={institutionalHolders}
+          insiderTrades={insiderTrades}
+        />
+      )}
+
+      {tab === "dividends" && (
+        <DividendsTab
+          ticker={ticker}
+          currentPrice={quote.price}
+          dividendHistory={dividendHistory}
+          latestEps={latestEps}
+          dividendYield={dividendYield}
+        />
+      )}
+
+      {tab === "options" && (
+        <OptionsTab
+          ticker={ticker}
+          currentPrice={quote.price}
+        />
       )}
     </div>
   );
