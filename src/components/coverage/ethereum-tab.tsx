@@ -5,7 +5,11 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
-import type { ValueAccrualStep, RoadmapMilestone } from "@/data/coverage/bmnr-ethereum";
+import type {
+  EthereumIntelligence,
+  ValueAccrualStep,
+  RoadmapMilestone,
+} from "@/data/coverage/bmnr-ethereum";
 import { EcosystemNewsFeed } from "@/components/coverage/ecosystem-news-feed";
 import { CoverageSectionCollapsible } from "@/components/coverage/coverage-section-collapsible";
 import {
@@ -38,12 +42,8 @@ const roadmapStatus: Record<string, string> = {
 
 type EthereumIntelState =
   | { status: "loading" }
-  | { status: "ready"; data: EthereumIntelligenceLoaded }
+  | { status: "ready"; data: EthereumIntelligence }
   | { status: "empty" };
-
-/** Loaded from coverage module `ETHEREUM_INTELLIGENCE` (structure matches bmnr-ethereum). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type EthereumIntelligenceLoaded = any;
 
 function isEthereumIntelligenceShape(x: unknown): boolean {
   if (!x || typeof x !== "object") return false;
@@ -69,7 +69,7 @@ export function EthereumTab({ ticker }: { ticker: string }) {
         if (cancelled) return;
         const raw = mod.ETHEREUM_INTELLIGENCE;
         if (isEthereumIntelligenceShape(raw)) {
-          setState({ status: "ready", data: raw as EthereumIntelligenceLoaded });
+          setState({ status: "ready", data: raw as EthereumIntelligence });
         } else {
           setState({ status: "empty" });
         }
@@ -96,7 +96,7 @@ function EthereumTabContent({
   data,
   ticker,
 }: {
-  data: EthereumIntelligenceLoaded;
+  data: EthereumIntelligence;
   ticker: string;
 }) {
   return (

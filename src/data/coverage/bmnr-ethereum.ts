@@ -290,3 +290,6 @@ export const ETHEREUM_INTELLIGENCE = {
     "BMNR Correlation: BMNR stock price highly correlated with ETH. Tracking ecosystem health is essential for BMNR thesis — positive ETH catalysts are positive BMNR catalysts.",
   ],
 };
+
+/** Runtime shape of `ETHEREUM_INTELLIGENCE` for coverage UI (dynamic import). */
+export type EthereumIntelligence = typeof ETHEREUM_INTELLIGENCE;
