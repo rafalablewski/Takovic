@@ -6,10 +6,11 @@
  * instead we use NAV-based projection with staking yield, dilution, and
  * asset growth assumptions.
  *
- * LAST UPDATED: 2026-03-27
- * NEXT UPDATE: After Q1 2026 earnings or significant treasury changes
+ * LAST UPDATED: 2026-04-01
+ * NEXT UPDATE: When BMNR_VALUATION_SNAPSHOT or MSTR profile changes
  */
 
+import { getBmnrCryptoTreasuryProfile } from "@/data/coverage/bmnr-crypto-snapshot";
 import type {
   CryptoTreasuryProfile,
   CryptoTreasuryInputs,
@@ -31,17 +32,7 @@ export function isCryptoTreasury(ticker: string): boolean {
 // ---------------------------------------------------------------------------
 
 const PROFILES: Record<string, CryptoTreasuryProfile> = {
-  BMNR: {
-    ticker: "BMNR",
-    companyName: "Bitmine Immersion Technologies",
-    asset: "ETH",
-    assetHoldings: 2_141, // ETH held
-    assetPrice: 2_185, // current ETH price USD
-    sharesOutstanding: 48_500_000, // diluted
-    currentStockPrice: 0.95,
-    stakingRatio: 0.30, // ~30% of holdings staked
-    marketCap: 46_075_000,
-  },
+  BMNR: getBmnrCryptoTreasuryProfile(),
   MSTR: {
     ticker: "MSTR",
     companyName: "MicroStrategy",
@@ -132,7 +123,7 @@ export function getSliderParams(asset: string): SliderParam[] {
         key: "stakingYield",
         label: "Staking Yield (APY)",
         description:
-          "Annual yield from ETH staking. Base Ethereum staking: 3-4% APY. With restaking (EigenLayer): 4-7%+. BMNR currently stakes ~30% of holdings.",
+          "Annual yield from ETH staking. Base Ethereum staking: 3-4% APY. With restaking (EigenLayer): 4-7%+. BMNR stakes a majority of ETH book (see coverage snapshot / Model tab inputs).",
         presets: [
           { value: 0.01, label: "1%" },
           { value: 0.02, label: "2%" },

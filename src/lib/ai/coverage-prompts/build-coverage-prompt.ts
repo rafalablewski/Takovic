@@ -23,9 +23,10 @@ function buildCompsGuidanceForPrompt(upperTicker: string): string {
   ].join("\n\n");
 }
 
-/** BMNR: tie analyst reasoning to the ETH purchase log + mNAV framing. Other tickers: empty. */
+/** Tickers with `ethPurchaseAnalystPrompt` in registry: ETH purchase log + mNAV framing. */
 function buildAdditionalAnalystInstructionsBlock(upperTicker: string, companyName: string): string {
-  if (upperTicker !== "BMNR") return "";
+  const stock = getCoveredStock(upperTicker);
+  if (!stock?.ethPurchaseAnalystPrompt) return "";
 
   const lower = upperTicker.toLowerCase();
   return [

@@ -1,11 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
-import { ETHEREUM_INTELLIGENCE } from "@/data/coverage/bmnr";
-import type { ValueAccrualStep, RoadmapMilestone } from "@/data/coverage/bmnr";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import type { ValueAccrualStep, RoadmapMilestone } from "@/data/coverage/bmnr-ethereum";
 import { EcosystemNewsFeed } from "@/components/coverage/ecosystem-news-feed";
 import { CoverageSectionCollapsible } from "@/components/coverage/coverage-section-collapsible";
 import {
@@ -36,11 +36,69 @@ const roadmapStatus: Record<string, string> = {
 // Main
 // ---------------------------------------------------------------------------
 
+type EthereumIntelState =
+  | { status: "loading" }
+  | { status: "ready"; data: EthereumIntelligenceLoaded }
+  | { status: "empty" };
+
+/** Loaded from coverage module `ETHEREUM_INTELLIGENCE` (structure matches bmnr-ethereum). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type EthereumIntelligenceLoaded = any;
+
+function isEthereumIntelligenceShape(x: unknown): boolean {
+  if (!x || typeof x !== "object") return false;
+  const o = x as Record<string, unknown>;
+  return (
+    typeof o.description === "string" &&
+    o.correlation != null &&
+    typeof o.correlation === "object" &&
+    o.networkMetrics != null &&
+    typeof o.networkMetrics === "object"
+  );
+}
+
 export function EthereumTab({ ticker }: { ticker: string }) {
-  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No Ethereum data for this stock.</p>;
+  const [state, setState] = useState<EthereumIntelState>({ status: "loading" });
 
-  const data = ETHEREUM_INTELLIGENCE;
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        const raw = mod.ETHEREUM_INTELLIGENCE;
+        if (isEthereumIntelligenceShape(raw)) {
+          setState({ status: "ready", data: raw as EthereumIntelligenceLoaded });
+        } else {
+          setState({ status: "empty" });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
 
+  if (state.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading Ethereum intelligence…</p>;
+  }
+  if (state.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No Ethereum intelligence for this coverage.</p>;
+  }
+
+  return <EthereumTabContent data={state.data} ticker={ticker} />;
+}
+
+function EthereumTabContent({
+  data,
+  ticker,
+}: {
+  data: EthereumIntelligenceLoaded;
+  ticker: string;
+}) {
   return (
     <div className="space-y-4">
       {/* Description */}
@@ -202,7 +260,7 @@ export function EthereumTab({ ticker }: { ticker: string }) {
       </CoverageSectionCollapsible>
 
       {/* ---- Ecosystem Intelligence News Feed ---- */}
-      <EcosystemNewsFeed />
+      <EcosystemNewsFeed ticker={ticker} />
 
       {/* ---- CFA Notes ---- */}
       <Card>

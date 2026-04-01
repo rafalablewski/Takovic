@@ -5,28 +5,27 @@
  * NEXT UPDATE: After next 8-K filing or material event
  */
 
-import type { ComparableCompany } from "@/types/coverage";
+import type {
+  AnalystCoverage,
+  CasePoint,
+  ComparableCompany,
+  CoverageOverview,
+  OverviewMetric,
+} from "@/types/coverage";
+import { BMNR_VALUATION_SNAPSHOT as S } from "./bmnr-crypto-snapshot";
 
-export type { ComparableCompany } from "@/types/coverage";
+export type {
+  AnalystCoverage,
+  CasePoint,
+  ComparableCompany,
+  OverviewMetric,
+} from "@/types/coverage";
 
 // ---------------------------------------------------------------------------
 // Overview
 // ---------------------------------------------------------------------------
 
-export interface CasePoint {
-  title: string;
-  detail: string;
-}
-
-export interface OverviewMetric {
-  label: string;
-  value: string | number;
-  description: string;
-  format?: "currency" | "percent" | "number" | "eth" | "multiplier" | "text";
-  group: "valuation" | "holdings" | "staking" | "shares" | "dividend" | "other";
-}
-
-export const OVERVIEW = {
+export const OVERVIEW: CoverageOverview = {
   thesis:
     "BMNR: ETH treasury company accumulating ETH through strategic capital raises and generating yield via staking. Key metrics: NAV per share, NAV premium/discount, and dividend yield.",
 
@@ -49,35 +48,35 @@ export const OVERVIEW = {
   ] as CasePoint[],
 
   metrics: [
-    // Valuation (stock est. from PR-era marks; reconcile with filings)
-    { label: "NAV/Share", value: 22.9, description: "Rough book incl. ETH+cash+moonshots (PR Mar 30)", format: "currency", group: "valuation" },
-    { label: "Stock Price", value: 17.65, description: "Illustrative (align w/ purchase log era)", format: "currency", group: "valuation" },
-    { label: "Premium/Discount", value: -0.23, description: "Vs rough NAV/share", format: "percent", group: "valuation" },
-    { label: "Dividend Yield", value: 0.0022, description: "$0.04/share annually", format: "percent", group: "valuation" },
+    // Valuation — numeric fields from BMNR_VALUATION_SNAPSHOT (shared with Model tab)
+    { label: "NAV/Share", value: S.navPerShare, description: "Rough book incl. ETH+cash+moonshots (PR Mar 30)", format: "currency", group: "valuation" },
+    { label: "Stock Price", value: S.stockPriceUsd, description: "Illustrative (align w/ purchase log era)", format: "currency", group: "valuation" },
+    { label: "Premium/Discount", value: S.premiumDiscount, description: "Vs rough NAV/share", format: "percent", group: "valuation" },
+    { label: "Dividend Yield", value: S.dividendYield, description: "$0.04/share annually", format: "percent", group: "valuation" },
     // Holdings (PR Mar 30, 2026 — snapshot Mar 29)
-    { label: "Total ETH", value: 4732082, description: "4.732M; 3.92% of 120.7M supply", format: "eth", group: "holdings" },
-    { label: "ETH Price", value: 2005, description: "Mark (COIN ref, PR)", format: "currency", group: "holdings" },
-    { label: "Total Value", value: 9.49e9, description: "ETH at PR mark", format: "currency", group: "holdings" },
+    { label: "Total ETH", value: S.totalEth, description: "4.732M; 3.92% of 120.7M supply", format: "eth", group: "holdings" },
+    { label: "ETH Price", value: S.ethPriceUsd, description: "Mark (COIN ref, PR)", format: "currency", group: "holdings" },
+    { label: "Total Value", value: S.totalEthValueUsd, description: "ETH at PR mark", format: "currency", group: "holdings" },
     // Staking
-    { label: "ETH Staked", value: 3142643, description: "~66% of ETH book (PR)", format: "eth", group: "staking" },
-    { label: "Staking Revenue", value: 177e6, description: "Annualized (PR Mar 30)", format: "currency", group: "staking" },
+    { label: "ETH Staked", value: S.ethStaked, description: "~66% of ETH book (PR)", format: "eth", group: "staking" },
+    { label: "Staking Revenue", value: S.stakingRevenueAnnualized, description: "Annualized (PR Mar 30)", format: "currency", group: "staking" },
     // Shares
-    { label: "Shares", value: 470e6, description: "Outstanding (approx.)", format: "number", group: "shares" },
-    { label: "Market Cap", value: 8.3e9, description: "~$17.65 × 470M (illustrative)", format: "currency", group: "shares" },
-    { label: "NAV Multiple", value: 0.77, description: "Vs rough NAV/share", format: "multiplier", group: "shares" },
-    { label: "ETH/Share", value: 0.01007, description: "ETH per share (470M SO)", format: "text", group: "shares" },
+    { label: "Shares", value: S.sharesOutstanding, description: "Outstanding (approx.)", format: "number", group: "shares" },
+    { label: "Market Cap", value: S.stockPriceUsd * S.sharesOutstanding, description: "Stock price × shares (PR-era)", format: "currency", group: "shares" },
+    { label: "NAV Multiple", value: S.navMultiple, description: "Vs rough NAV/share", format: "multiplier", group: "shares" },
+    { label: "ETH/Share", value: S.ethPerShare, description: "ETH per share (470M SO)", format: "text", group: "shares" },
     // Dividend
-    { label: "Quarterly Div", value: 0.01, description: "Per share", format: "currency", group: "dividend" },
-    { label: "Annual Div", value: 0.04, description: "Per share", format: "currency", group: "dividend" },
-    { label: "Div Yield", value: 0.0023, description: "Vs ~$17.65", format: "percent", group: "dividend" },
-    { label: "Payout", value: 18.8e6, description: "Annual total", format: "currency", group: "dividend" },
+    { label: "Quarterly Div", value: S.quarterlyDiv, description: "Per share", format: "currency", group: "dividend" },
+    { label: "Annual Div", value: S.annualDiv, description: "Per share", format: "currency", group: "dividend" },
+    { label: "Div Yield", value: S.divYieldVsStock, description: "Vs ~$17.65", format: "percent", group: "dividend" },
+    { label: "Payout", value: S.payoutAnnual, description: "Annual total", format: "currency", group: "dividend" },
     // Other assets
-    { label: "MrBeast Equity", value: 200e6, description: "Beast Industries", format: "currency", group: "other" },
-    { label: "Orbs Stake", value: 102e6, description: "Eightco ORBS (PR Mar 30)", format: "currency", group: "other" },
-    { label: "BTC Worth", value: 9.9e6, description: "197 BTC (mark est.)", format: "currency", group: "other" },
-    { label: "Cash", value: 961e6, description: "Total cash (PR)", format: "currency", group: "other" },
-    { label: "Total Stack (PR)", value: 10.7e9, description: "Crypto+cash+moonshots headline", format: "currency", group: "other" },
-  ] as OverviewMetric[],
+    { label: "MrBeast Equity", value: S.mrBeastEquity, description: "Beast Industries", format: "currency", group: "other" },
+    { label: "Orbs Stake", value: S.orbsStake, description: "Eightco ORBS (PR Mar 30)", format: "currency", group: "other" },
+    { label: "BTC Worth", value: S.btcWorth, description: "197 BTC (mark est.)", format: "currency", group: "other" },
+    { label: "Cash", value: S.cashUsd, description: "Total cash (PR)", format: "currency", group: "other" },
+    { label: "Total Stack (PR)", value: S.totalStackUsd, description: "Crypto+cash+moonshots headline", format: "currency", group: "other" },
+  ] satisfies OverviewMetric[],
 };
 
 // ---------------------------------------------------------------------------
@@ -138,15 +137,6 @@ export {
 // ---------------------------------------------------------------------------
 // Wall Street Coverage
 // ---------------------------------------------------------------------------
-
-export interface AnalystCoverage {
-  firm: string;
-  analyst: string;
-  rating: "Strong Buy" | "Buy" | "Hold" | "Sell" | "Strong Sell";
-  priceTarget: number | null;
-  date: string;
-  note: string;
-}
 
 export const WALL_STREET: AnalystCoverage[] = [
   // BMNR is a micro-cap — limited/no institutional coverage yet
@@ -226,6 +216,8 @@ export const CAPITAL_STRUCTURE = {
     riskScenario: "If ETH declines, dilution is destructive to per-share value",
   },
 };
+
+export type CapitalStructureData = typeof CAPITAL_STRUCTURE;
 
 // ---------------------------------------------------------------------------
 // Comparable Analysis

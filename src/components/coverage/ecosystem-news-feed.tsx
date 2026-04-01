@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ECOSYSTEM_NEWS } from "@/data/coverage/bmnr-ecosystem-news";
 import type { EcosystemNewsItem } from "@/data/coverage/bmnr-ecosystem-news";
 import {
   Newspaper,
@@ -49,41 +48,104 @@ const sentimentConfig = {
   bearish: { label: "- Bearish", color: "text-red-600 dark:text-red-400" },
 };
 
+function isEcosystemNewsArray(x: unknown): x is EcosystemNewsItem[] {
+  return (
+    Array.isArray(x) &&
+    x.every(
+      (i) =>
+        i &&
+        typeof i === "object" &&
+        "id" in i &&
+        "category" in i &&
+        "company" in i &&
+        "title" in i
+    )
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main Component
 // ---------------------------------------------------------------------------
 
-export function EcosystemNewsFeed() {
+export function EcosystemNewsFeed({ ticker }: { ticker: string }) {
+  const [items, setItems] = useState<EcosystemNewsItem[]>([]);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "empty">("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setLoadState("loading");
+    import(`@/data/coverage/${lower}-ecosystem-news`)
+      .then((mod) => {
+        if (cancelled) return;
+        const raw = mod.ECOSYSTEM_NEWS;
+        if (isEcosystemNewsArray(raw)) {
+          setItems(raw);
+          setLoadState("ready");
+        } else {
+          setItems([]);
+          setLoadState("empty");
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setItems([]);
+          setLoadState("empty");
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
+
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [companyFilter, setCompanyFilter] = useState<string | null>(null);
   const [showCount, setShowCount] = useState(10);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // Derive company list with counts
   const companyCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const item of ECOSYSTEM_NEWS) {
+    for (const item of items) {
       const co = item.company.split(" / ")[0].split(" (")[0];
       counts[co] = (counts[co] ?? 0) + 1;
     }
     return Object.entries(counts)
       .sort((a, b) => b[1] - a[1])
       .filter(([, count]) => count >= 2);
-  }, []);
+  }, [items]);
 
-  // Filter
   const filtered = useMemo(() => {
-    let items = ECOSYSTEM_NEWS;
+    let list = items;
     if (categoryFilter !== "all") {
-      items = items.filter((i) => i.category === categoryFilter);
+      list = list.filter((i) => i.category === categoryFilter);
     }
     if (companyFilter) {
-      items = items.filter((i) => i.company.includes(companyFilter));
+      list = list.filter((i) => i.company.includes(companyFilter));
     }
-    return items;
-  }, [categoryFilter, companyFilter]);
+    return list;
+  }, [items, categoryFilter, companyFilter]);
 
   const visible = filtered.slice(0, showCount);
+
+  if (loadState === "loading") {
+    return (
+      <Card>
+        <CardContent className="p-5">
+          <p className="text-sm text-muted-foreground">Loading ecosystem news…</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (loadState === "empty" || items.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-5">
+          <p className="text-sm text-muted-foreground">No ecosystem news feed for this coverage.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -102,16 +164,18 @@ export function EcosystemNewsFeed() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
             <Building2 className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             <button
+              type="button"
               onClick={() => { setCompanyFilter(null); setShowCount(10); }}
               className={cn(
                 "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
                 !companyFilter ? "bg-foreground text-background" : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
               )}
             >
-              All ({ECOSYSTEM_NEWS.length})
+              All ({items.length})
             </button>
             {companyCounts.slice(0, 15).map(([company, count]) => (
               <button
+                type="button"
                 key={company}
                 onClick={() => { setCompanyFilter(companyFilter === company ? null : company); setShowCount(10); }}
                 className={cn(
@@ -129,11 +193,12 @@ export function EcosystemNewsFeed() {
             <Filter className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             {CATEGORY_FILTERS.map((f) => {
               const count = f.value === "all"
-                ? ECOSYSTEM_NEWS.length
-                : ECOSYSTEM_NEWS.filter((i) => i.category === f.value).length;
+                ? items.length
+                : items.filter((i) => i.category === f.value).length;
               if (count === 0 && f.value !== "all") return null;
               return (
                 <button
+                  type="button"
                   key={f.value}
                   onClick={() => { setCategoryFilter(f.value); setShowCount(10); }}
                   className={cn(
@@ -197,6 +262,7 @@ export function EcosystemNewsFeed() {
 
                   {/* Expand toggle */}
                   <button
+                    type="button"
                     onClick={() => setExpandedId(isExpanded ? null : item.id)}
                     className="text-xs font-medium text-primary hover:underline"
                   >
