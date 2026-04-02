@@ -412,36 +412,43 @@ function build(): CapitalStructureData {
 
   const detailViews: CapitalStructureData["detailViews"] = [
     {
+      id: "share-classes",
       count: String(shareClasses.length),
       title: "Share Classes",
       subtitle: "Common + converted preferred",
     },
     {
+      id: "major-holders",
       count: String(majorShareholders.length),
       title: "Major Holders",
       subtitle: "Bill Miller + institutions",
     },
     {
+      id: "equity-programs",
       count: String(equityOfferings.length),
       title: "Equity programs",
       subtitle: offeringsSubtitle,
     },
     {
+      id: "warrant-types",
       count: String(warrants.length),
       title: "Warrant Types",
       subtitle: warrantTypesSubtitle,
     },
     {
+      id: "dilution",
       count: `${dilutionPct.toFixed(0)}%`,
       title: "Total Dilution",
       subtitle: `${(FD_SHARES / 1e6).toFixed(1)}M FD shares`,
     },
     {
+      id: "liquidity",
       count: usdShort(S.cashUsd, 0),
       title: "Liquidity",
       subtitle: "Cash + ETH treasury",
     },
     {
+      id: "insider-activity",
       count: String(insiderSales.length + rsuGrants.length),
       title: "Insider Activity",
       subtitle: "Form 4 filings",

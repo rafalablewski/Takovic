@@ -251,8 +251,10 @@ export interface CapitalInfoRow {
   value: string;
 }
 
-/** Summary tiles under the capital narrative (counts + subtitle). */
+/** Summary tiles / sub-nav keys for the Capital tab (`?cap=`). */
 export interface CapitalDetailViewTile {
+  /** URL-safe id, e.g. `share-classes` */
+  id: string;
   count: string;
   title: string;
   subtitle: string;

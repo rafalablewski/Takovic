@@ -85,6 +85,9 @@ function CoveragePageInner() {
       ) {
         p.set("ops", stock.operationsSubTabs[0].id);
       }
+      if (id === "capital-structure" && !p.get("cap")) {
+        p.set("cap", "share-classes");
+      }
       router.replace(`${pathname}?${p.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams, stock?.operationsSubTabs]
