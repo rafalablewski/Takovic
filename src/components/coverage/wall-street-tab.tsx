@@ -51,7 +51,8 @@ function isWallStreetFirms(x: unknown): x is WallStreetFirmCoverage[] {
 
 export function WallStreetTab({ ticker }: { ticker: string }) {
   const [state, setState] = useState<WallStreetState>({ status: "loading" });
-  const [openDetail, setOpenDetail] = useState<Record<string, boolean>>({});
+  /** At most one firm’s research detail open at a time (accordion). */
+  const [openDetailFirmId, setOpenDetailFirmId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -78,6 +79,10 @@ export function WallStreetTab({ ticker }: { ticker: string }) {
     return () => {
       cancelled = true;
     };
+  }, [ticker]);
+
+  useEffect(() => {
+    setOpenDetailFirmId(null);
   }, [ticker]);
 
   if (state.status === "loading") {
@@ -164,7 +169,8 @@ export function WallStreetTab({ ticker }: { ticker: string }) {
 
       <div>
         {firms.map((firm, idx) => {
-          const expanded = openDetail[firm.id] ?? false;
+          const expanded = openDetailFirmId === firm.id;
+          const detailPanelId = `wall-street-detail-${firm.id}`;
           return (
             <article key={firm.id}>
               {idx > 0 ? <Separator className="my-0 bg-border/80" /> : null}
@@ -270,15 +276,34 @@ export function WallStreetTab({ ticker }: { ticker: string }) {
                 <div className="mt-10">
                   <button
                     type="button"
+                    id={`wall-street-toggle-${firm.id}`}
+                    aria-expanded={expanded}
+                    aria-controls={detailPanelId}
                     onClick={() =>
-                      setOpenDetail((o) => ({ ...o, [firm.id]: !expanded }))
+                      setOpenDetailFirmId((id) =>
+                        id === firm.id ? null : firm.id
+                      )
                     }
-                    className="group inline-flex items-center gap-2 border-b border-transparent pb-0.5 text-sm font-medium text-foreground transition-colors hover:border-foreground/40"
+                    className="group inline-flex items-center gap-2 border-b border-transparent pb-0.5 text-left text-sm font-medium text-foreground transition-colors hover:border-foreground/40"
                   >
-                    {expanded ? "Hide research detail" : "View research detail"}
+                    {expanded ? (
+                      <>
+                        Hide research detail
+                        <span className="font-normal text-muted-foreground">
+                          · {firm.firm}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        View research detail
+                        <span className="font-normal text-muted-foreground">
+                          · {firm.firm}
+                        </span>
+                      </>
+                    )}
                     <ChevronDown
                       className={cn(
-                        "h-4 w-4 text-muted-foreground transition-transform duration-200",
+                        "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
                         expanded && "rotate-180"
                       )}
                     />
@@ -286,7 +311,15 @@ export function WallStreetTab({ ticker }: { ticker: string }) {
                 </div>
 
                 {expanded ? (
-                  <div className="mt-8 space-y-10 border border-border/60 bg-muted/20 px-6 py-10 sm:px-10">
+                  <div
+                    id={detailPanelId}
+                    role="region"
+                    aria-labelledby={`wall-street-toggle-${firm.id}`}
+                    className="mt-8 space-y-10 border border-border/60 bg-muted/20 px-6 py-10 sm:px-10"
+                  >
+                    <p className={cn(sectionLabel, "text-foreground/80")}>
+                      Research detail — {firm.firm}
+                    </p>
                     <section>
                       <h4 className={sectionLabel}>{firm.detail.aiSummaryTitle}</h4>
                       <div className="mt-4 max-w-2xl space-y-4 text-sm leading-[1.65] text-foreground/90">
