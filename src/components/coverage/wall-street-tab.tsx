@@ -1,11 +1,52 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
-import { WALL_STREET, WALL_STREET_NOTE } from "@/data/coverage/bmnr";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import type { AnalystCoverage } from "@/types/coverage";
 import { Building2, Info } from "lucide-react";
 
+type WallStreetState =
+  | { status: "loading" }
+  | { status: "ready"; analysts: AnalystCoverage[]; note: string | null }
+  | { status: "empty" };
+
+function isAnalystCoverageArray(x: unknown): x is AnalystCoverage[] {
+  return Array.isArray(x) && x.every((a) => a && typeof a === "object" && "firm" in a);
+}
+
 export function WallStreetTab({ ticker }: { ticker: string }) {
-  const analysts = isEthTreasury(ticker) ? WALL_STREET : [];
-  const note = isEthTreasury(ticker) ? WALL_STREET_NOTE : null;
+  const [state, setState] = useState<WallStreetState>({ status: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        const raw = mod.WALL_STREET;
+        const analysts = isAnalystCoverageArray(raw) ? raw : [];
+        const note =
+          typeof mod.WALL_STREET_NOTE === "string" ? mod.WALL_STREET_NOTE : null;
+        setState({ status: "ready", analysts, note });
+      })
+      .catch(() => {
+        if (!cancelled) setState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
+
+  if (state.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading analyst coverage…</p>;
+  }
+  if (state.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No analyst coverage data.</p>;
+  }
+
+  const { analysts, note } = state;
 
   return (
     <div className="space-y-6">
@@ -27,7 +68,9 @@ export function WallStreetTab({ ticker }: { ticker: string }) {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">{a.rating}</p>
-                    {a.priceTarget && <p className="text-xs tabular-nums text-muted-foreground">PT: ${a.priceTarget}</p>}
+                    {a.priceTarget != null && (
+                      <p className="text-xs tabular-nums text-muted-foreground">PT: ${a.priceTarget}</p>
+                    )}
                   </div>
                 </div>
               ))}

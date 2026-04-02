@@ -1,13 +1,68 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+"use client";
+
+import { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { cn, formatCurrency, formatLargeNumber } from "@/lib/utils";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
-import { QUARTERLY_FINANCIALS, FINANCIALS_DESCRIPTION } from "@/data/coverage/bmnr";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import type { QuarterlyFinancial } from "@/data/coverage/bmnr";
 import { DollarSign, TrendingUp, TrendingDown } from "lucide-react";
 
-export function FinancialsTab({ ticker }: { ticker: string }) {
-  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No financial data.</p>;
+type FinancialsState =
+  | { status: "loading" }
+  | { status: "ready"; quarters: QuarterlyFinancial[]; description: string }
+  | { status: "empty" };
 
-  const quarters = QUARTERLY_FINANCIALS;
+function isQuarterlyFinancialArray(x: unknown): x is QuarterlyFinancial[] {
+  return (
+    Array.isArray(x) &&
+    x.length > 0 &&
+    x.every(
+      (q) =>
+        q &&
+        typeof q === "object" &&
+        "period" in q &&
+        typeof (q as QuarterlyFinancial).ethHoldings === "number"
+    )
+  );
+}
+
+export function FinancialsTab({ ticker }: { ticker: string }) {
+  const [state, setState] = useState<FinancialsState>({ status: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        const raw = mod.QUARTERLY_FINANCIALS;
+        const desc =
+          typeof mod.FINANCIALS_DESCRIPTION === "string"
+            ? mod.FINANCIALS_DESCRIPTION
+            : "";
+        if (isQuarterlyFinancialArray(raw)) {
+          setState({ status: "ready", quarters: raw, description: desc });
+        } else {
+          setState({ status: "empty" });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
+
+  if (state.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading financials…</p>;
+  }
+  if (state.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No financial data.</p>;
+  }
+
+  const { quarters, description } = state;
   const latest = quarters[quarters.length - 1];
   const prev = quarters.length > 1 ? quarters[quarters.length - 2] : null;
 
@@ -16,7 +71,7 @@ export function FinancialsTab({ ticker }: { ticker: string }) {
       {/* Description */}
       <Card>
         <CardContent className="p-5">
-          <p className="text-sm text-muted-foreground leading-relaxed">{FINANCIALS_DESCRIPTION}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
         </CardContent>
       </Card>
 

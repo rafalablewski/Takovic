@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatLargeNumber } from "@/lib/utils";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
-import { CAPITAL_STRUCTURE } from "@/data/coverage/bmnr";
-import type { CapitalMetric } from "@/data/coverage/bmnr";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import type { CapitalMetric, CapitalStructureData } from "@/data/coverage/bmnr";
 import {
   Layers,
   AlertTriangle,
@@ -58,6 +57,7 @@ function Collapsible({
   return (
     <Card>
       <button
+        type="button"
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between p-5 text-left"
       >
@@ -81,9 +81,56 @@ function Collapsible({
 // Main
 // ---------------------------------------------------------------------------
 
+type CapitalState =
+  | { status: "loading" }
+  | { status: "ready"; data: CapitalStructureData }
+  | { status: "empty" };
+
+function isCapitalStructureData(x: unknown): x is CapitalStructureData {
+  if (!x || typeof x !== "object") return false;
+  const o = x as Record<string, unknown>;
+  return (
+    typeof o.description === "string" &&
+    Array.isArray(o.headlines) &&
+    typeof o.summary === "string" &&
+    o.atmProgram != null &&
+    typeof o.atmProgram === "object"
+  );
+}
+
 export function CapitalStructureTab({ ticker }: { ticker: string }) {
-  const data = isEthTreasury(ticker) ? CAPITAL_STRUCTURE : null;
-  if (!data) return <p className="text-sm text-muted-foreground">No capital structure data.</p>;
+  const [state, setState] = useState<CapitalState>({ status: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        const raw = mod.CAPITAL_STRUCTURE;
+        if (isCapitalStructureData(raw)) {
+          setState({ status: "ready", data: raw });
+        } else {
+          setState({ status: "empty" });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
+
+  if (state.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading capital structure…</p>;
+  }
+  if (state.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No capital structure data.</p>;
+  }
+
+  const { data } = state;
 
   return (
     <div className="space-y-4">

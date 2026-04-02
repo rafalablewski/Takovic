@@ -53,6 +53,8 @@ export const cacheKey = {
   aiSummary: (ticker: string) => `ai:summary:${ticker}`,
   screener: (hash: string) => `screener:${hash}`,
   search: (query: string) => `search:${query}`,
+  coverageLiveQuotes: (ticker: string) =>
+    `coverage:live:v2:${ticker.toUpperCase()}`,
 };
 
 export default redis;

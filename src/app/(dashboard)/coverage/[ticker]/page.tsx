@@ -1,6 +1,7 @@
 "use client";
 
-import { use, useState } from "react";
+import { Suspense, use, useCallback, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getCoveredStock, getTabsForStock } from "@/data/coverage/registry";
@@ -41,12 +42,50 @@ interface PageProps {
   params: Promise<{ ticker: string }>;
 }
 
-export default function CoveragePage({ params }: PageProps) {
+export default function CoveragePage(props: PageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-6 text-sm text-muted-foreground">Loading coverage…</div>
+      }
+    >
+      <CoveragePageInner {...props} />
+    </Suspense>
+  );
+}
+
+function CoveragePageInner({ params }: PageProps) {
   const { ticker } = use(params);
   const upperTicker = ticker.toUpperCase();
   const stock = getCoveredStock(upperTicker);
   const tabs = getTabsForStock(upperTicker);
-  const [activeTab, setActiveTab] = useState(tabs[0]?.id ?? "overview");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const tabIds = useMemo(() => new Set(tabs.map((t) => t.id)), [tabs]);
+  const defaultTabId = tabs[0]?.id ?? "overview";
+
+  const tabParam = searchParams.get("tab");
+  const activeTab =
+    tabParam && tabIds.has(tabParam) ? tabParam : defaultTabId;
+
+  const setTab = useCallback(
+    (id: string) => {
+      const p = new URLSearchParams(searchParams.toString());
+      p.set("tab", id);
+      if (
+        id === "operations" &&
+        stock?.operationsSubTabs &&
+        stock.operationsSubTabs.length > 0 &&
+        !p.get("ops")
+      ) {
+        p.set("ops", stock.operationsSubTabs[0].id);
+      }
+      router.replace(`${pathname}?${p.toString()}`, { scroll: false });
+    },
+    [pathname, router, searchParams, stock?.operationsSubTabs]
+  );
 
   if (!stock) {
     return (
@@ -63,7 +102,6 @@ export default function CoveragePage({ params }: PageProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
@@ -81,7 +119,6 @@ export default function CoveragePage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Tab navigation */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
         {tabs.map((tab) => {
           const Icon = ICON_MAP[tab.icon];
@@ -89,7 +126,8 @@ export default function CoveragePage({ params }: PageProps) {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              type="button"
+              onClick={() => setTab(tab.id)}
               className={cn(
                 "flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-xs font-medium transition-colors",
                 isActive
@@ -104,9 +142,14 @@ export default function CoveragePage({ params }: PageProps) {
         })}
       </div>
 
-      {/* Tab content */}
       {activeTab === "overview" && <OverviewTab ticker={upperTicker} />}
-      {activeTab === "operations" && <OperationsTab ticker={upperTicker} />}
+      {activeTab === "operations" && (
+        <OperationsTab
+          ticker={upperTicker}
+          intro={stock.operationsIntro}
+          subTabs={stock.operationsSubTabs}
+        />
+      )}
       {activeTab === "analysis" && <AnalysisTab ticker={upperTicker} />}
       {activeTab === "comparables" && <ComparablesTab ticker={upperTicker} />}
       {activeTab === "financials" && <FinancialsTab ticker={upperTicker} />}

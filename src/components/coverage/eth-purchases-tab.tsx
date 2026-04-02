@@ -1,31 +1,159 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, cn } from "@/lib/utils";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
 import { CoverageSectionCollapsible } from "@/components/coverage/coverage-section-collapsible";
-import {
-  ETH_PURCHASES,
-  ETH_PURCHASE_SUMMARY,
-  ETH_PURCHASE_HISTORY_DESCRIPTION,
-  ETH_PURCHASE_OVERVIEW_HEADING,
-  ETH_PURCHASE_OVERVIEW_SOURCE_LINE,
-  ETH_PURCHASE_LOG_SUBHEADING,
-  ETH_PURCHASE_TABLE_HEADERS,
-  ETH_MNAV_METHODOLOGY,
-} from "@/data/coverage/bmnr";
+import type { ETHPurchase } from "@/data/coverage/bmnr-eth-purchases";
 import { ShoppingCart, BarChart3, Table2, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 
+/** Rows shown before “Show all” in the purchase log table. */
+const INITIAL_PURCHASE_ROWS = 12;
+
+/** Shape matches coverage modules that export ETH purchase blocks (e.g. bmnr). */
+type EthPurchaseSummaryShape = {
+  totalPurchases: number;
+  lastReportedEthDisplay: string;
+  totalCapitalDeployedDisplay: string;
+  averagePriceDisplay: string;
+  currentMnavDisplay: string;
+  currentEthPriceDisplay: string;
+  unrealizedPLDisplay: string;
+  unrealizedPLPercentDisplay: string;
+  navPerShareDisplay: string;
+  stockPriceDisplay: string;
+  totalEthAcquiredFromLog: number;
+};
+
+type EthMnavMethodologyShape = {
+  intro: string;
+  steps: Array<{
+    label: string;
+    title: string;
+    formulaLabel: string;
+    formula: string;
+    example: string;
+    exampleCalc: string;
+    result: string;
+  }>;
+  interpretationHeading: string;
+  interpretation: string[];
+  dataSourcesHeading: string;
+  dataSources: string;
+  accuracyByPeriodHeading: string;
+  accuracyByPeriod: string;
+};
+
+type EthPurchasesState =
+  | { status: "loading" }
+  | {
+      status: "ready";
+      purchases: ETHPurchase[];
+      summary: EthPurchaseSummaryShape;
+      historyDescription: string;
+      overviewHeading: string;
+      overviewSourceLine: string;
+      logSubheading: string;
+      tableHeaders: readonly string[];
+      mnavMethodology: EthMnavMethodologyShape;
+    }
+  | { status: "empty" };
+
+function isEthPurchaseArray(x: unknown): x is ETHPurchase[] {
+  return (
+    Array.isArray(x) &&
+    x.length > 0 &&
+    x.every(
+      (p) =>
+        p &&
+        typeof p === "object" &&
+        typeof (p as ETHPurchase).date === "string" &&
+        typeof (p as ETHPurchase).ethAcquired === "number"
+    )
+  );
+}
+
 export function ETHPurchasesTab({ ticker }: { ticker: string }) {
+  const [loadState, setLoadState] = useState<EthPurchasesState>({ status: "loading" });
   const [showAll, setShowAll] = useState(false);
 
-  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No ETH purchase data.</p>;
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setLoadState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        const purchases = mod.ETH_PURCHASES;
+        if (!isEthPurchaseArray(purchases)) {
+          setLoadState({ status: "empty" });
+          return;
+        }
+        const summary = mod.ETH_PURCHASE_SUMMARY;
+        if (!summary || typeof summary !== "object") {
+          setLoadState({ status: "empty" });
+          return;
+        }
+        const mnav = mod.ETH_MNAV_METHODOLOGY;
+        if (!mnav || typeof mnav !== "object") {
+          setLoadState({ status: "empty" });
+          return;
+        }
+        setLoadState({
+          status: "ready",
+          purchases,
+          summary: summary as EthPurchaseSummaryShape,
+          historyDescription:
+            typeof mod.ETH_PURCHASE_HISTORY_DESCRIPTION === "string"
+              ? mod.ETH_PURCHASE_HISTORY_DESCRIPTION
+              : "",
+          overviewHeading:
+            typeof mod.ETH_PURCHASE_OVERVIEW_HEADING === "string"
+              ? mod.ETH_PURCHASE_OVERVIEW_HEADING
+              : "",
+          overviewSourceLine:
+            typeof mod.ETH_PURCHASE_OVERVIEW_SOURCE_LINE === "string"
+              ? mod.ETH_PURCHASE_OVERVIEW_SOURCE_LINE
+              : "",
+          logSubheading:
+            typeof mod.ETH_PURCHASE_LOG_SUBHEADING === "string"
+              ? mod.ETH_PURCHASE_LOG_SUBHEADING
+              : "",
+          tableHeaders: Array.isArray(mod.ETH_PURCHASE_TABLE_HEADERS)
+            ? (mod.ETH_PURCHASE_TABLE_HEADERS as string[])
+            : [],
+          mnavMethodology: mnav as EthMnavMethodologyShape,
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setLoadState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
 
-  const summary = ETH_PURCHASE_SUMMARY;
-  const purchases = ETH_PURCHASES;
-  const visible = showAll ? purchases : purchases.slice(0, 12);
+  if (loadState.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading ETH purchases…</p>;
+  }
+  if (loadState.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No ETH purchase data.</p>;
+  }
+
+  const {
+    purchases,
+    summary,
+    historyDescription,
+    overviewHeading,
+    overviewSourceLine,
+    logSubheading,
+    tableHeaders,
+    mnavMethodology: ETH_MNAV_METHODOLOGY,
+  } = loadState;
+
+  const visible = showAll ? purchases : purchases.slice(0, INITIAL_PURCHASE_ROWS);
 
   return (
     <div className="space-y-4">
@@ -35,7 +163,7 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
         defaultOpen
       >
         <p className="whitespace-pre-line text-sm text-muted-foreground leading-relaxed">
-          {ETH_PURCHASE_HISTORY_DESCRIPTION}
+          {historyDescription}
         </p>
       </CoverageSectionCollapsible>
 
@@ -47,9 +175,9 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
         <div className="space-y-4">
           <div className="rounded-md bg-muted/40 p-3">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-              {ETH_PURCHASE_OVERVIEW_HEADING}
+              {overviewHeading}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{ETH_PURCHASE_OVERVIEW_SOURCE_LINE}</p>
+            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{overviewSourceLine}</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -80,12 +208,12 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
         defaultOpen
       >
         <div className="space-y-3">
-          <p className="text-xs text-muted-foreground">{ETH_PURCHASE_LOG_SUBHEADING}</p>
+          <p className="text-xs text-muted-foreground">{logSubheading}</p>
           <div className="overflow-x-auto -mx-1 px-1">
             <table className="w-full min-w-[960px] text-sm">
               <thead>
                 <tr>
-                  {ETH_PURCHASE_TABLE_HEADERS.map((h) => (
+                  {tableHeaders.map((h) => (
                     <th
                       key={h}
                       className="pb-2 pr-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground"
@@ -134,7 +262,7 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
             </table>
           </div>
 
-          {purchases.length > 12 && (
+          {purchases.length > INITIAL_PURCHASE_ROWS && (
             <div className="flex justify-center pt-1">
               <Button
                 variant="ghost"
@@ -213,7 +341,6 @@ export function ETHPurchasesTab({ ticker }: { ticker: string }) {
   );
 }
 
-/** Same rhythm as Ethereum tab → BMNR ↔ ETH Correlation metric cells */
 function MetricCell({
   label,
   value,

@@ -1,43 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
-import {
-  INVESTMENT_DUE_DILIGENCE,
-  INVESTMENT_CURRENT_ASSESSMENT,
-  ECOSYSTEM_HEALTH,
-  SCORECARD,
-  INVESTMENT_SUMMARY_WHATS_NEW_TITLE,
-  INVESTMENT_SUMMARY_WHATS_NEW_BULLETS,
-  INVESTMENT_SUMMARY_HEADLINE,
-  INVESTMENT_SUMMARY_CLOSING_QUOTE,
-  GROWTH_DRIVERS,
-  COMPETITIVE_MOAT_SOURCES,
-  COMPETITIVE_MOAT_SOURCES_DETAIL,
-  COMPETITIVE_THREATS,
-  COMPETITIVE_THREATS_DETAIL,
-  MOAT_DURABILITY,
-  RISK_MATRIX,
-  STRATEGIC_ASSESSMENT_INTRO,
-  STRATEGIC_PERSPECTIVES,
-  KEY_STRATEGIC_QUESTIONS,
-  ECOSYSTEM_TRIGGERS_INTRO,
-  ECOSYSTEM_TRIGGER_COLUMNS,
-  POSITION_SIZING,
-  POSITION_SIZING_ALLOCATION_INTRO,
-  POSITION_SIZING_ALLOCATION_ROWS,
-  POSITION_SIZING_ZONES_TITLE,
-  POSITION_SIZING_ZONES,
-  POSITION_SIZING_PORTFOLIO_TITLE,
-  POSITION_SIZING_PORTFOLIO_LINES,
-  ANALYSIS_ARCHIVE,
-  CFA_INVESTMENT_GLOSSARY_TITLE,
-  CFA_INVESTMENT_GLOSSARY,
-  INVESTMENT_TAB_FOOTNOTE,
-} from "@/data/coverage/bmnr";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import type { CoverageAnalysisModule } from "@/types/coverage-analysis-module";
 import {
   BarChart3,
   ChevronDown,
@@ -153,11 +121,82 @@ function CollapsibleCardRemount({
 // Main
 // ---------------------------------------------------------------------------
 
+type AnalysisLoadState =
+  | { status: "loading" }
+  | { status: "ready"; mod: Record<string, unknown> }
+  | { status: "empty" };
+
 export function AnalysisTab({ ticker }: { ticker: string }) {
+  const [loadState, setLoadState] = useState<AnalysisLoadState>({ status: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setLoadState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        if (mod.INVESTMENT_DUE_DILIGENCE) {
+          setLoadState({ status: "ready", mod });
+        } else {
+          setLoadState({ status: "empty" });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoadState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
+
+  if (loadState.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading investment analysis…</p>;
+  }
+  if (loadState.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No analysis data.</p>;
+  }
+
+  return <AnalysisTabContent mod={loadState.mod} />;
+}
+
+function AnalysisTabContent({ mod }: { mod: Record<string, unknown> }) {
+  const {
+    INVESTMENT_DUE_DILIGENCE,
+    INVESTMENT_CURRENT_ASSESSMENT,
+    ECOSYSTEM_HEALTH,
+    SCORECARD,
+    INVESTMENT_SUMMARY_WHATS_NEW_TITLE,
+    INVESTMENT_SUMMARY_WHATS_NEW_BULLETS,
+    INVESTMENT_SUMMARY_HEADLINE,
+    INVESTMENT_SUMMARY_CLOSING_QUOTE,
+    GROWTH_DRIVERS,
+    COMPETITIVE_MOAT_SOURCES,
+    COMPETITIVE_MOAT_SOURCES_DETAIL,
+    COMPETITIVE_THREATS,
+    COMPETITIVE_THREATS_DETAIL,
+    MOAT_DURABILITY,
+    RISK_MATRIX,
+    STRATEGIC_ASSESSMENT_INTRO,
+    STRATEGIC_PERSPECTIVES,
+    KEY_STRATEGIC_QUESTIONS,
+    ECOSYSTEM_TRIGGERS_INTRO,
+    ECOSYSTEM_TRIGGER_COLUMNS,
+    POSITION_SIZING,
+    POSITION_SIZING_ALLOCATION_INTRO,
+    POSITION_SIZING_ALLOCATION_ROWS,
+    POSITION_SIZING_ZONES_TITLE,
+    POSITION_SIZING_ZONES,
+    POSITION_SIZING_PORTFOLIO_TITLE,
+    POSITION_SIZING_PORTFOLIO_LINES,
+    ANALYSIS_ARCHIVE,
+    CFA_INVESTMENT_GLOSSARY_TITLE,
+    CFA_INVESTMENT_GLOSSARY,
+    INVESTMENT_TAB_FOOTNOTE,
+  } = mod as unknown as CoverageAnalysisModule;
+
   const [layoutKey, setLayoutKey] = useState(0);
   const [defaultExpanded, setDefaultExpanded] = useState(true);
-
-  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No analysis data.</p>;
 
   const expandAll = () => {
     setDefaultExpanded(true);

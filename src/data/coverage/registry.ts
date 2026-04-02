@@ -39,6 +39,11 @@ export const UNIVERSAL_TABS: CoverageTab[] = [...TABS_BEFORE_CUSTOM, ...TABS_AFT
 // Covered stock profiles
 // ---------------------------------------------------------------------------
 
+export interface OperationsSubTab {
+  id: string;
+  label: string;
+}
+
 export interface CoveredStock {
   ticker: string;
   name: string;
@@ -50,6 +55,11 @@ export interface CoveredStock {
   status: "active" | "suspended" | "archived";
   description: string;
   customTabs: CoverageTab[]; // stock-specific tabs
+  /** Shown under Business Operations when `operations` custom tab is present */
+  operationsIntro?: string;
+  operationsSubTabs?: readonly OperationsSubTab[];
+  /** Adds ETH purchase log / mNAV block to the coverage analyst prompt */
+  ethPurchaseAnalystPrompt?: boolean;
 }
 
 const COVERED_STOCKS: Record<string, CoveredStock> = {
@@ -65,6 +75,13 @@ const COVERED_STOCKS: Record<string, CoveredStock> = {
     customTabs: [
       { id: "operations", label: "Business Operations", description: "Ethereum ecosystem, staking, ETH acquisitions", icon: "Briefcase" },
     ],
+    operationsIntro:
+      "Ethereum ecosystem, staking operations, and ETH acquisition history.",
+    operationsSubTabs: [
+      { id: "ethereum", label: "Ethereum" },
+      { id: "eth-purchases", label: "ETH Purchases" },
+    ],
+    ethPurchaseAnalystPrompt: true,
   },
 };
 

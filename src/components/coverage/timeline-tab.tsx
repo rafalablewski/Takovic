@@ -1,13 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { isEthTreasury } from "@/lib/analysis/crypto-treasury-registry";
-import { TIMELINE_EVENTS, TIMELINE_DESCRIPTION } from "@/data/coverage/bmnr";
-import type { TimelineEvent } from "@/data/coverage/bmnr";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import type { TimelineEvent } from "@/data/coverage/bmnr-timeline";
+
+/** Initial rows before “Show all” for timeline (matches prior UX). */
+const INITIAL_TIMELINE_VISIBLE = 12;
 import {
   Clock,
   FileText,
@@ -35,25 +37,81 @@ const SENTIMENT_BADGE: Record<TimelineEvent["sentiment"], string> = {
   bearish: "border border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400",
 };
 
+type TimelineState =
+  | { status: "loading" }
+  | { status: "ready"; events: TimelineEvent[]; description: string }
+  | { status: "empty" };
+
+function isTimelineEventArray(x: unknown): x is TimelineEvent[] {
+  return (
+    Array.isArray(x) &&
+    x.length > 0 &&
+    x.every(
+      (e) =>
+        e &&
+        typeof e === "object" &&
+        "id" in e &&
+        "date" in e &&
+        "topic" in e &&
+        "sentiment" in e
+    )
+  );
+}
+
 export function TimelineTab({ ticker }: { ticker: string }) {
+  const [loadState, setLoadState] = useState<TimelineState>({ status: "loading" });
   const [filterTopic, setFilterTopic] = useState("all");
   const [showAll, setShowAll] = useState(false);
 
+  useEffect(() => {
+    let cancelled = false;
+    const lower = ticker.toLowerCase();
+    setLoadState({ status: "loading" });
+    importCoverageTickerModule(lower)
+      .then((mod) => {
+        if (cancelled) return;
+        const raw = mod.TIMELINE_EVENTS;
+        const description =
+          typeof mod.TIMELINE_DESCRIPTION === "string" ? mod.TIMELINE_DESCRIPTION : "";
+        if (isTimelineEventArray(raw)) {
+          setLoadState({ status: "ready", events: raw, description });
+        } else {
+          setLoadState({ status: "empty" });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoadState({ status: "empty" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticker]);
+
+  const events = loadState.status === "ready" ? loadState.events : [];
+
   const topicOptions = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const e of TIMELINE_EVENTS) {
+    for (const e of events) {
       counts.set(e.topic, (counts.get(e.topic) ?? 0) + 1);
     }
-    const topics = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-    return topics;
-  }, []);
+    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [events]);
 
-  if (!isEthTreasury(ticker)) return <p className="text-sm text-muted-foreground">No timeline data.</p>;
+  if (loadState.status === "loading") {
+    return <p className="text-sm text-muted-foreground">Loading timeline…</p>;
+  }
+  if (loadState.status === "empty") {
+    return <p className="text-sm text-muted-foreground">No timeline data.</p>;
+  }
 
-  const sorted = [...TIMELINE_EVENTS].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const { description: TIMELINE_DESCRIPTION } = loadState;
+
+  const sorted = [...loadState.events].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
   const filtered =
     filterTopic === "all" ? sorted : sorted.filter((e) => e.topic === filterTopic);
-  const visible = showAll ? filtered : filtered.slice(0, 12);
+  const visible = showAll ? filtered : filtered.slice(0, INITIAL_TIMELINE_VISIBLE);
 
   return (
     <div className="space-y-4">
@@ -105,7 +163,7 @@ export function TimelineTab({ ticker }: { ticker: string }) {
             </div>
           </div>
 
-          {filtered.length > 12 && (
+          {filtered.length > INITIAL_TIMELINE_VISIBLE && (
             <div className="flex justify-center pt-4">
               <Button
                 variant="ghost"
