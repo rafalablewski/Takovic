@@ -1,15 +1,52 @@
 /**
  * BMNR Comps — extended peer snapshot, valuation matrix, SOTP, NAV sensitivity.
  *
+ * BMNR row + SOTP ETH line + implied-matrix "current" align with
+ * `BMNR_VALUATION_SNAPSHOT` (PR Mar 30, 2026). Peer prices otherwise static.
+ *
  * LAST UPDATED: 2026-04-02
  * NEXT UPDATE: After material NAV, ETH price, or peer filing changes
  */
 
 import type { PeerSnapshotBundle } from "@/types/coverage";
+import { BMNR_VALUATION_SNAPSHOT as S } from "./bmnr-crypto-snapshot";
+
+/** Market cap per canonical snapshot: price × diluted shares */
+const BMNR_MCAP_B = (S.stockPriceUsd * S.sharesOutstanding) / 1e9;
+
+/** SOTP illustrative total: ETH spot + scaled staking NPV + fixed premia (aligned to PR-era ETH book) */
+const SOTP_TOTAL_STR = `$${(
+  S.totalEthValueUsd / 1e9 +
+  1.06 +
+  0.5 +
+  0.3
+).toFixed(2)}B`;
+
+/** Prior grid built at ~$21.36 NAV/sh; scale to `S.navPerShare` */
+const NAV_SENSITIVITY_BASE = 21.36;
+const NAV_SENS_SCALE = S.navPerShare / NAV_SENSITIVITY_BASE;
+const LEGACY_NAV_GRID = [
+  ["$8.01", "$10.68", "$13.35", "$16.02", "$21.36"],
+  ["$12.02", "$16.02", "$20.03", "$24.04", "$32.05"],
+  ["$16.02", "$21.36", "$26.71", "$32.05", "$42.73"],
+  ["$20.03", "$26.71", "$33.38", "$40.06", "$53.41"],
+  ["$24.04", "$32.05", "$40.06", "$48.07", "$64.09"],
+  ["$32.05", "$42.73", "$53.41", "$64.09", "$85.46"],
+] as const;
+
+function scaleNavCell(cell: string): string {
+  const n = Number.parseFloat(cell.replace(/[$,]/g, ""));
+  if (!Number.isFinite(n)) return cell;
+  return `$${(n * NAV_SENS_SCALE).toFixed(2)}`;
+}
+
+const NAV_SENSITIVITY_VALUES = LEGACY_NAV_GRID.map((row) =>
+  row.map(scaleNavCell)
+);
 
 export const PEER_SNAPSHOT_METADATA = {
   lastUpdated: "2026-04-02",
-  source: "Internal comps snapshot",
+  source: "Internal comps snapshot (BMNR figures tied to BMNR_VALUATION_SNAPSHOT)",
   nextExpectedUpdate: "Quarterly or after major peer events",
 } as const;
 
@@ -28,12 +65,13 @@ export const PEER_SNAPSHOT: PeerSnapshotBundle = {
       assetBadge: "ETH",
       role: "ETH",
       lenses: ["eth_treasury"],
-      holdings: "4,595,562",
-      navPerShare: "$21.36",
-      price: "$19.69",
-      premium: "-8%",
-      yieldDisplay: "3.11%",
-      marketCap: "$9.3B",
+      holdings: S.totalEth.toLocaleString("en-US"),
+      navPerShare: `$${S.navPerShare.toFixed(2)}`,
+      price: `$${S.stockPriceUsd.toFixed(2)}`,
+      premium: `${S.premiumDiscount >= 0 ? "+" : ""}${Math.round(S.premiumDiscount * 100)}%`,
+      /** ~7-day / CESR-style staking yield — see `bmnr-eth-purchases` PR Mar 30 block */
+      yieldDisplay: "2.80%",
+      marketCap: `$${BMNR_MCAP_B.toFixed(1)}B`,
       isSubject: true,
     },
     {
@@ -44,7 +82,7 @@ export const PEER_SNAPSHOT: PeerSnapshotBundle = {
       threat: "high",
       role: "BTC TREASURY",
       lenses: ["btc_treasury"],
-      holdings: "671,268",
+      holdings: "713,502",
       navPerShare: "$297.02",
       price: "$390",
       premium: "+31%",
@@ -164,56 +202,55 @@ export const PEER_SNAPSHOT: PeerSnapshotBundle = {
   yieldAdvantage: {
     title: "Yield advantage",
     subtitle: "ETH staking generates yield vs BTC's 0% — structural advantage",
-    statLabel: "Annual staking yield vs BTC (0%)",
-    statValue: "+3.11%",
+    statLabel: "Staking yield (PR-era CESR / 7-day, vs BTC 0%)",
+    statValue: "+2.80%",
   },
   valuationFramework:
     "NAV-based valuation for crypto treasury companies. Premium/discount analysis vs peers.",
   impliedValuationTitle: "Implied valuation matrix",
-  impliedValuationCaption:
-    "BMNR value under different NAV multiples (current: $9.25B)",
+  impliedValuationCaption: `BMNR value under different NAV multiples (current mcap ~$${BMNR_MCAP_B.toFixed(1)}B, ${S.stockPriceUsd.toFixed(2)} × ${(S.sharesOutstanding / 1e6).toFixed(0)}M sh, PR Mar 30 snapshot)`,
   impliedValuationRows: [
     {
       method: "NAV Multiple",
       peerBasis: "MSTR Premium",
       multiple: "2.0x",
       impliedValue: "$20.08B",
-      vsCurrent: "+117%",
+      vsCurrent: "+142%",
     },
     {
       method: "NAV Multiple",
       peerBasis: "Market Average",
       multiple: "1.5x",
       impliedValue: "$15.06B",
-      vsCurrent: "+63%",
+      vsCurrent: "+82%",
     },
     {
       method: "NAV Multiple",
       peerBasis: "Fair Value",
       multiple: "1.0x",
       impliedValue: "$10.04B",
-      vsCurrent: "+9%",
+      vsCurrent: "+21%",
     },
     {
       method: "NAV Multiple",
       peerBasis: "Discount",
       multiple: "0.75x",
       impliedValue: "$7.53B",
-      vsCurrent: "-19%",
+      vsCurrent: "-9%",
     },
     {
       method: "Yield-Adjusted",
       peerBasis: "ETH Yield Premium",
       multiple: "1.3x",
       impliedValue: "$13.05B",
-      vsCurrent: "+41%",
+      vsCurrent: "+57%",
     },
     {
       method: "Yield-Adjusted",
       peerBasis: "5yr Compound",
       multiple: "1.15x",
       impliedValue: "$11.70B",
-      vsCurrent: "+26%",
+      vsCurrent: "+41%",
     },
   ],
   sotpTitle: "Sum-of-the-parts (SOTP)",
@@ -221,14 +258,14 @@ export const PEER_SNAPSHOT: PeerSnapshotBundle = {
     {
       component: "ETH Holdings",
       metric: "Spot value",
-      multiple: "4.60M ETH · 1.0x",
-      value: "$10.04B",
+      multiple: `${(S.totalEth / 1e6).toFixed(2)}M ETH · 1.0x`,
+      value: `$${(S.totalEthValueUsd / 1e9).toFixed(2)}B`,
     },
     {
       component: "Staking Yield",
       metric: "5yr NPV @ 10%",
-      multiple: "3.11% APY · NPV",
-      value: "$1.18B",
+      multiple: "2.80% APY · NPV",
+      value: "$1.06B",
     },
     {
       component: "Operational Premium",
@@ -244,7 +281,7 @@ export const PEER_SNAPSHOT: PeerSnapshotBundle = {
     },
   ],
   sotpTotalLabel: "SOTP Total",
-  sotpTotalValue: "$12.03B",
+  sotpTotalValue: SOTP_TOTAL_STR,
   navSensitivity: {
     caption: "NAV premium sensitivity",
     subtitle:
@@ -258,13 +295,6 @@ export const PEER_SNAPSHOT: PeerSnapshotBundle = {
       "$4,370",
     ],
     colLabels: ["0.75X", "1X", "1.25X", "1.5X", "2X"],
-    values: [
-      ["$8.01", "$10.68", "$13.35", "$16.02", "$21.36"],
-      ["$12.02", "$16.02", "$20.03", "$24.04", "$32.05"],
-      ["$16.02", "$21.36", "$26.71", "$32.05", "$42.73"],
-      ["$20.03", "$26.71", "$33.38", "$40.06", "$53.41"],
-      ["$24.04", "$32.05", "$40.06", "$48.07", "$64.09"],
-      ["$32.05", "$42.73", "$53.41", "$64.09", "$85.46"],
-    ],
+    values: NAV_SENSITIVITY_VALUES,
   },
 };
