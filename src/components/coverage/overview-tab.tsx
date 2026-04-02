@@ -315,6 +315,17 @@ export function OverviewTab({ ticker }: { ticker: string }) {
     };
   }, [ticker]);
 
+  const displayMetrics = useMemo((): OverviewMetric[] | null => {
+    if (state.status !== "ready") return null;
+    const { data } = state;
+    if (ticker.toUpperCase() !== "BMNR" || !liveQuotes) return data.metrics;
+    return applyBmnrLivePricesToOverviewMetrics(
+      data.metrics,
+      liveQuotes.stock?.price ?? null,
+      liveQuotes.eth?.price ?? null
+    );
+  }, [ticker, state, liveQuotes]);
+
   if (state.status === "loading") {
     return <p className="text-sm text-muted-foreground">Loading overview…</p>;
   }
@@ -323,15 +334,7 @@ export function OverviewTab({ ticker }: { ticker: string }) {
   }
 
   const data = state.data;
-
-  const displayMetrics = useMemo(() => {
-    if (ticker.toUpperCase() !== "BMNR" || !liveQuotes) return data.metrics;
-    return applyBmnrLivePricesToOverviewMetrics(
-      data.metrics,
-      liveQuotes.stock?.price ?? null,
-      liveQuotes.eth?.price ?? null
-    );
-  }, [ticker, data.metrics, liveQuotes]);
+  const metrics = displayMetrics ?? data.metrics;
 
   return (
     <div className="space-y-4">
@@ -361,7 +364,7 @@ export function OverviewTab({ ticker }: { ticker: string }) {
         </CardHeader>
         <CardContent className="p-5 pt-3">
           <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
-            {displayMetrics.map((metric) => {
+            {metrics.map((metric) => {
               const isNegative =
                 typeof metric.value === "number" && metric.value < 0;
               const isPercent = metric.format === "percent";
