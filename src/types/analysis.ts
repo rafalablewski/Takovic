@@ -241,6 +241,19 @@ export interface CryptoTreasuryInputs {
   netEthHoldingsGrowthRate: number;
 }
 
+/**
+ * BMNR model quick scenario: pairs terminal ETH spot CAGR with terminal NAV multiple.
+ * Used only by the crypto treasury UI for ticker BMNR.
+ */
+export interface CryptoTreasuryBmnrScenario {
+  id: string;
+  label: string;
+  /** Annual spot CAGR to terminal year (decimal), e.g. -0.3 = −30%. */
+  assetGrowthRate: number;
+  /** Terminal implied price ÷ NAV per share. */
+  navPremium: number;
+}
+
 /** Single year in the projection table */
 export interface CryptoTreasuryYearProjection {
   year: number;

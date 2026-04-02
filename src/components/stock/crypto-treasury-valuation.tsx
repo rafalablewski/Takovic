@@ -17,12 +17,15 @@ import {
   getCryptoTreasuryProfile,
   getDefaultInputs,
   getSliderParams,
+  BMNR_MODEL_SCENARIOS,
+  matchBmnrModelScenario,
 } from "@/lib/analysis/crypto-treasury-registry";
 import { isCovered } from "@/data/coverage/registry";
 import type {
   CryptoTreasuryProfile,
   CryptoTreasuryInputs,
   CryptoTreasuryResult,
+  CryptoTreasuryBmnrScenario,
   SliderParam,
 } from "@/types/analysis";
 import {
@@ -366,6 +369,70 @@ function ModelMarketCapCell({ marketCap }: { marketCap: number }) {
 }
 
 // ---------------------------------------------------------------------------
+// BMNR — preset scenarios (spot CAGR × terminal NAV multiple)
+// ---------------------------------------------------------------------------
+
+function BmnrModelScenarioStrip({
+  inputs,
+  onApply,
+}: {
+  inputs: CryptoTreasuryInputs;
+  onApply: (s: CryptoTreasuryBmnrScenario) => void;
+}) {
+  const active = matchBmnrModelScenario(inputs);
+
+  return (
+    <div className="rounded-lg border border-border bg-muted/20 p-3 space-y-2">
+      <div>
+        <p className="text-xs font-medium text-foreground">BMNR scenarios</p>
+        <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">
+          Sets ETH spot CAGR to terminal and NAV multiple; dilution, discount, and net
+          holdings growth stay on your sliders.
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {BMNR_MODEL_SCENARIOS.map((s) => {
+          const isOn = active?.id === s.id;
+          const spotPct = (s.assetGrowthRate * 100).toFixed(0);
+          const spotLabel =
+            s.assetGrowthRate >= 0 ? `+${spotPct}%` : `${spotPct}%`;
+          return (
+            <Button
+              key={s.id}
+              type="button"
+              variant={isOn ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-2.5 text-[11px] font-medium gap-1"
+              aria-pressed={isOn}
+              onClick={() => onApply(s)}
+              title={`${spotLabel} spot CAGR (to year N), ${s.navPremium}x terminal NAV`}
+            >
+              <span>{s.label}</span>
+              <span
+                className={cn(
+                  "font-normal tabular-nums",
+                  isOn ? "text-primary-foreground/80" : "text-muted-foreground"
+                )}
+              >
+                {spotLabel}
+              </span>
+              <span
+                className={cn(
+                  "tabular-nums",
+                  isOn ? "text-primary-foreground/70" : "opacity-70"
+                )}
+              >
+                {s.navPremium}x
+              </span>
+            </Button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
@@ -437,6 +504,14 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
   const updateInput = (key: string, value: number) => {
     setInputs((prev) => ({ ...prev, [key]: value }));
   };
+
+  const applyBmnrScenario = useCallback((s: CryptoTreasuryBmnrScenario) => {
+    setInputs((prev) => ({
+      ...prev,
+      assetGrowthRate: s.assetGrowthRate,
+      navPremium: s.navPremium,
+    }));
+  }, []);
 
   const results: CryptoTreasuryResult = useMemo(
     () => runCryptoTreasuryValuation(effectiveProfile, inputs),
@@ -557,6 +632,9 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         {/* Sliders — 3 cols */}
         <div className="lg:col-span-3 space-y-5">
+          {profile.ticker === "BMNR" && profile.asset === "ETH" ? (
+            <BmnrModelScenarioStrip inputs={inputs} onApply={applyBmnrScenario} />
+          ) : null}
           {sliderParams.map((param) => (
             <SliderPresetRow
               key={param.key}

@@ -14,6 +14,7 @@ import { getBmnrCryptoTreasuryProfile } from "@/data/coverage/bmnr-crypto-snapsh
 import type {
   CryptoTreasuryProfile,
   CryptoTreasuryInputs,
+  CryptoTreasuryBmnrScenario,
   SliderParam,
 } from "@/types/analysis";
 
@@ -97,6 +98,37 @@ export function getDefaultInputs(
   asset: string
 ): CryptoTreasuryInputs {
   return { ...(DEFAULT_INPUTS[asset] ?? DEFAULT_INPUTS.ETH) };
+}
+
+// ---------------------------------------------------------------------------
+// BMNR — one-tap scenarios (ETH spot CAGR × terminal NAV multiple)
+// ---------------------------------------------------------------------------
+
+/** Ordered bearish → bullish; applies `assetGrowthRate` + `navPremium` only. */
+export const BMNR_MODEL_SCENARIOS: readonly CryptoTreasuryBmnrScenario[] = [
+  { id: "worst", label: "WORST", assetGrowthRate: -0.3, navPremium: 0.4 },
+  { id: "bear", label: "BEAR", assetGrowthRate: -0.05, navPremium: 0.7 },
+  { id: "base", label: "BASE", assetGrowthRate: 0.1, navPremium: 1.0 },
+  { id: "mgmt", label: "MGMT", assetGrowthRate: 0.2, navPremium: 1.2 },
+  { id: "bull", label: "BULL", assetGrowthRate: 0.35, navPremium: 1.5 },
+  { id: "moon", label: "MOON", assetGrowthRate: 0.6, navPremium: 2.0 },
+];
+
+const BMNR_SCENARIO_EPS = 1e-5;
+
+/** Returns the BMNR scenario whose spot CAGR and NAV multiple match inputs, if any. */
+export function matchBmnrModelScenario(
+  inputs: Pick<CryptoTreasuryInputs, "assetGrowthRate" | "navPremium">
+): CryptoTreasuryBmnrScenario | null {
+  for (const s of BMNR_MODEL_SCENARIOS) {
+    if (
+      Math.abs(s.assetGrowthRate - inputs.assetGrowthRate) < BMNR_SCENARIO_EPS &&
+      Math.abs(s.navPremium - inputs.navPremium) < BMNR_SCENARIO_EPS
+    ) {
+      return s;
+    }
+  }
+  return null;
 }
 
 // ---------------------------------------------------------------------------
