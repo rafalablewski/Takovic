@@ -4,14 +4,25 @@
 
 import { Redis } from "@upstash/redis";
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+let redis: Redis | null = null;
+
+function getRedis(): Redis | null {
+  if (redis) return redis;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  redis = new Redis({ url, token });
+  return redis;
+}
 
 export async function getCached<T>(key: string): Promise<T | null> {
-  const data = await redis.get<T>(key);
-  return data;
+  const client = getRedis();
+  if (!client) return null;
+  try {
+    return await client.get<T>(key);
+  } catch {
+    return null;
+  }
 }
 
 export async function setCache<T>(
@@ -19,13 +30,25 @@ export async function setCache<T>(
   value: T,
   ttlSeconds: number
 ): Promise<void> {
-  await redis.set(key, value, { ex: ttlSeconds });
+  const client = getRedis();
+  if (!client) return;
+  try {
+    await client.set(key, value, { ex: ttlSeconds });
+  } catch {
+    /* ignore */
+  }
 }
 
 export async function invalidateCache(pattern: string): Promise<void> {
-  const keys = await redis.keys(pattern);
-  if (keys.length > 0) {
-    await redis.del(...keys);
+  const client = getRedis();
+  if (!client) return;
+  try {
+    const keys = await client.keys(pattern);
+    if (keys.length > 0) {
+      await client.del(...keys);
+    }
+  } catch {
+    /* ignore */
   }
 }
 
@@ -56,5 +79,3 @@ export const cacheKey = {
   coverageLiveQuotes: (ticker: string) =>
     `coverage:live:v2:${ticker.toUpperCase()}`,
 };
-
-export default redis;

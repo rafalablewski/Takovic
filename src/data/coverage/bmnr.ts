@@ -1,12 +1,11 @@
 /**
  * BMNR coverage data — Bitmine Immersion Technologies
  *
- * LAST UPDATED: 2026-03-31
+ * LAST UPDATED: 2026-04-02
  * NEXT UPDATE: After next 8-K filing or material event
  */
 
 import type {
-  AnalystCoverage,
   CasePoint,
   ComparableCompany,
   CoverageOverview,
@@ -18,7 +17,9 @@ export type {
   AnalystCoverage,
   CasePoint,
   ComparableCompany,
+  CompetitorNewsItem,
   OverviewMetric,
+  PeerSnapshotBundle,
 } from "@/types/coverage";
 
 // ---------------------------------------------------------------------------
@@ -138,148 +139,36 @@ export {
 // Wall Street Coverage
 // ---------------------------------------------------------------------------
 
-export const WALL_STREET: AnalystCoverage[] = [
-  // BMNR is a micro-cap — limited/no institutional coverage yet
-];
-
-export const WALL_STREET_NOTE =
-  "No institutional analyst coverage has been initiated for BMNR as of March 2026. This is typical for micro-cap crypto treasury companies. Coverage is expected to increase following potential uplisting or significant AUM growth.";
+export {
+  WALL_STREET,
+  WALL_STREET_FIRMS,
+  WALL_STREET_NOTE,
+} from "./bmnr-wall-street";
 
 // ---------------------------------------------------------------------------
 // Capital Structure
 // ---------------------------------------------------------------------------
 
-export interface CapitalMetric {
-  label: string;
-  value: string | number;
-  format?: "number" | "currency" | "percent" | "text";
-}
-
-export interface CapitalInfoRow {
-  label: string;
-  value: string;
-}
-
-export const CAPITAL_STRUCTURE = {
-  description:
-    "ETH treasury capital strategy, share structure, ATM programs, warrant detail, and dilution analysis. Single-class common stock with rapid execution capability.",
-  summary:
-    "ETH treasury company with 470M shares outstanding. Active ATM program and convertible notes add dilution risk.",
-
-  // Key headline metrics
-  headlines: [
-    { label: "Shares Outstanding", value: 470e6, format: "number" },
-    { label: "Fully Diluted", value: 484.2e6, format: "number" },
-    { label: "Basic Mkt Cap", value: 8.64e9, format: "currency" },
-    { label: "FD Mkt Cap", value: 8.90e9, format: "currency" },
-  ] as CapitalMetric[],
-
-  // Info grid
-  info: [
-    { label: "Stock Price", value: "$18.39" },
-    { label: "Dilution", value: "+3.0%" },
-    { label: "Common Stock", value: "470M" },
-    { label: "Convertible Notes", value: "Various" },
-    { label: "ATM Program", value: "Active" },
-    { label: "Source", value: "SEC / Market" },
-  ] as CapitalInfoRow[],
-
-  // Detailed sections (collapsible)
-  shareClass: "Single class — Common Stock",
-  sharesOutstanding: 470_000_000,
-  fullyDiluted: 484_200_000,
-  sharesAuthorized: 1_000_000_000,
-
-  warrants: {
-    description: "Multiple warrant series outstanding from prior financing rounds and convertible note conversions",
-    estimatedDilution: "~14.2M additional shares if all exercised (+3.0%)",
-  },
-  atmProgram: {
-    active: true,
-    description: "At-the-market offering program for continuous equity raises",
-    facility: "Up to $2B capacity (estimated)",
-    usage: "Used weekly for ETH purchases — primary capital deployment vehicle",
-  },
-  registeredDirects: {
-    active: true,
-    description: "Registered direct offerings for larger block raises",
-    frequency: "As needed for larger ETH acquisitions",
-  },
-  convertibleNotes: {
-    active: true,
-    description: "Various convertible note series outstanding",
-    detail: "Conversion prices at varying strikes; adds dilution on conversion",
-  },
-  dilutionAnalysis: {
-    annualRate: "15-25% estimated based on recent activity",
-    mitigant: "Dilution proceeds used 100% for ETH purchases — accretive if ETH appreciates faster than dilution",
-    riskScenario: "If ETH declines, dilution is destructive to per-share value",
-  },
-};
-
-export type CapitalStructureData = typeof CAPITAL_STRUCTURE;
+export {
+  CAPITAL_STRUCTURE,
+  CAPITAL_STRUCTURE_METADATA,
+} from "./bmnr-capital-structure";
 
 // ---------------------------------------------------------------------------
-// Comparable Analysis
+// Comparable Analysis — legacy card grid (empty; see PEER_SNAPSHOT)
 // ---------------------------------------------------------------------------
 
-export const COMPARABLES: ComparableCompany[] = [
-  {
-    ticker: "MSTR",
-    name: "MicroStrategy (Strategy)",
-    asset: "BTC",
-    holdings: "762,099 BTC",
-    holdingsValue: "~$51B",
-    navPremium: "1.75x",
-    stakingYield: "0%",
-    marketCap: "$75.9B",
-    threatLevel: "low",
-    competitiveFocus: "BTC treasury pioneer — different asset, but sets NAV premium precedent",
-    keyDifferentiator: "BTC-only, no staking yield, much larger scale",
-  },
-  {
-    ticker: "COIN",
-    name: "Coinbase",
-    asset: "Mixed",
-    holdings: "N/A (exchange)",
-    holdingsValue: "N/A",
-    navPremium: "N/A",
-    stakingYield: "Staking-as-a-service",
-    marketCap: "$46B",
-    threatLevel: "medium",
-    competitiveFocus: "Could launch ETH treasury strategy or offer competing staking products",
-    keyDifferentiator: "Exchange model, staking infrastructure provider",
-  },
-  {
-    ticker: "ETHE",
-    name: "Grayscale Ethereum Trust",
-    asset: "ETH",
-    holdings: "~2.6M ETH",
-    holdingsValue: "$5.7B",
-    navPremium: "~1.0x",
-    stakingYield: "0%",
-    marketCap: "$5.7B",
-    threatLevel: "high",
-    competitiveFocus: "Direct ETH exposure competitor — cheaper, more liquid, no staking",
-    keyDifferentiator: "ETF structure, no staking yield, institutional access",
-  },
-  {
-    ticker: "ETHD",
-    name: "Various ETH ETFs",
-    asset: "ETH",
-    holdings: "Various",
-    holdingsValue: "$10B+ combined",
-    navPremium: "~1.0x",
-    stakingYield: "0% (pending SEC approval)",
-    marketCap: "N/A",
-    threatLevel: "high",
-    competitiveFocus: "Passive ETH exposure at 1.0x NAV — staking ETFs would narrow BMNR's yield advantage",
-    keyDifferentiator: "Low-cost passive, no staking (yet), high liquidity",
-  },
-];
+export const COMPARABLES: ComparableCompany[] = [];
 
-export const COMPARABLES_INSIGHT =
-  "Each card combines quantitative metrics (holdings, NAV, premium) with qualitative intelligence (threat level, competitive focus). BMNR's ETH staking yield vs BTC treasuries' 0% is the key structural differentiator.";
+export {
+  PEER_SNAPSHOT,
+  PEER_SNAPSHOT_METADATA,
+} from "./bmnr-peer-snapshot";
+
+export {
+  COMPETITOR_NEWS,
+  COMPETITOR_NEWS_METADATA,
+} from "./bmnr-competitor-news";
 
 // ---------------------------------------------------------------------------
 // Financials

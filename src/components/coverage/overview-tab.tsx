@@ -1,16 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { cn, formatCurrency, formatLargeNumber, formatPercent } from "@/lib/utils";
 import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
-import type { CasePoint, CoverageOverview, OverviewMetric } from "@/types/coverage";
+import { applyBmnrLivePricesToOverviewMetrics } from "@/lib/coverage/bmnr-overview-live-metrics";
+import { toNormalizedLiveQuotes } from "@/lib/coverage/normalize-live-quotes";
+import type {
+  CasePoint,
+  CoverageOverview,
+  LiveQuoteRow,
+  LiveQuotesPayload,
+  NormalizedLiveQuotesPayload,
+  OverviewMetric,
+} from "@/types/coverage";
 import {
   TrendingUp,
   TrendingDown,
   Plus,
   Minus,
   Activity,
+  RefreshCw,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -47,79 +58,45 @@ function formatMetricValue(metric: OverviewMetric): string {
 // Live quotes (BMNR + ETH spot via Yahoo; cached on server)
 // ---------------------------------------------------------------------------
 
-type LiveQuoteRow = {
-  symbol: string;
-  label: string;
-  price: number;
-  changesPercentage: number;
-};
-
-type LiveQuotesPayload = {
-  stock: LiveQuoteRow | null;
-  eth: LiveQuoteRow | null;
-  ethSymbol: string;
-  includeEthSpot: boolean;
-  updatedAt: number;
-};
-
-function normalizeQuote(
-  q: { symbol: string; name: string; price: number; changesPercentage: number } | null,
-  labelSymbol: string
-): LiveQuoteRow | null {
-  if (!q || !Number.isFinite(q.price)) return null;
-  return {
-    symbol: q.symbol,
-    label: labelSymbol,
-    price: q.price,
-    changesPercentage: q.changesPercentage,
-  };
-}
-
-function LivePricesStrip({ ticker }: { ticker: string }) {
+function LivePricesStrip({
+  ticker,
+  onQuotesChange,
+}: {
+  ticker: string;
+  onQuotesChange?: (data: NormalizedLiveQuotesPayload) => void;
+}) {
   const [state, setState] = useState<
     | { status: "loading" }
-    | { status: "ready"; data: LiveQuotesPayload }
+    | { status: "ready"; data: NormalizedLiveQuotesPayload }
     | { status: "error" }
   >({ status: "loading" });
+  const [stockRefreshing, setStockRefreshing] = useState(false);
+  const [ethRefreshing, setEthRefreshing] = useState(false);
+
+  const upper = ticker.toUpperCase();
+
+  const fetchQuotes = useCallback(
+    async (opts?: { refresh?: boolean; side?: "stock" | "eth" }) => {
+      const params = new URLSearchParams();
+      if (opts?.refresh) params.set("refresh", "1");
+      if (opts?.side) params.set("side", opts.side);
+      const q = params.toString();
+      const url = `/api/coverage/${encodeURIComponent(upper)}/live-quotes${q ? `?${q}` : ""}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      const json = (await res.json()) as LiveQuotesPayload;
+      return toNormalizedLiveQuotes(json, upper);
+    },
+    [upper]
+  );
 
   useEffect(() => {
     let cancelled = false;
-    const upper = ticker.toUpperCase();
+    setState({ status: "loading" });
 
     async function load() {
       try {
-        const res = await fetch(
-          `/api/coverage/${encodeURIComponent(upper)}/live-quotes`,
-          { cache: "no-store" }
-        );
-        if (!res.ok) {
-          if (!cancelled) setState({ status: "error" });
-          return;
-        }
-        const json = (await res.json()) as {
-          stock: {
-            symbol: string;
-            name: string;
-            price: number;
-            changesPercentage: number;
-          } | null;
-          eth: {
-            symbol: string;
-            name: string;
-            price: number;
-            changesPercentage: number;
-          } | null;
-          ethSymbol: string;
-          includeEthSpot: boolean;
-          updatedAt: number;
-        };
-        const data: LiveQuotesPayload = {
-          stock: normalizeQuote(json.stock, upper),
-          eth: normalizeQuote(json.eth, json.ethSymbol),
-          ethSymbol: json.ethSymbol,
-          includeEthSpot: Boolean(json.includeEthSpot),
-          updatedAt: json.updatedAt,
-        };
+        const data = await fetchQuotes();
         if (!cancelled) setState({ status: "ready", data });
       } catch {
         if (!cancelled) setState({ status: "error" });
@@ -127,12 +104,48 @@ function LivePricesStrip({ ticker }: { ticker: string }) {
     }
 
     load();
-    const id = window.setInterval(load, 60_000);
+    const id = window.setInterval(() => {
+      void fetchQuotes()
+        .then((data) => {
+          if (!cancelled) setState({ status: "ready", data });
+        })
+        .catch(() => {
+          if (!cancelled) setState({ status: "error" });
+        });
+    }, 60_000);
     return () => {
       cancelled = true;
       window.clearInterval(id);
     };
-  }, [ticker]);
+  }, [ticker, fetchQuotes]);
+
+  useEffect(() => {
+    if (state.status === "ready") onQuotesChange?.(state.data);
+  }, [state, onQuotesChange]);
+
+  const refreshStock = useCallback(async () => {
+    setStockRefreshing(true);
+    try {
+      const data = await fetchQuotes({ refresh: true, side: "stock" });
+      setState({ status: "ready", data });
+    } catch {
+      setState({ status: "error" });
+    } finally {
+      setStockRefreshing(false);
+    }
+  }, [fetchQuotes]);
+
+  const refreshEth = useCallback(async () => {
+    setEthRefreshing(true);
+    try {
+      const data = await fetchQuotes({ refresh: true, side: "eth" });
+      setState({ status: "ready", data });
+    } catch {
+      setState({ status: "error" });
+    } finally {
+      setEthRefreshing(false);
+    }
+  }, [fetchQuotes]);
 
   if (state.status === "loading") {
     return (
@@ -149,7 +162,7 @@ function LivePricesStrip({ ticker }: { ticker: string }) {
       <Card>
         <CardContent className="p-5">
           <p className="text-sm text-muted-foreground">
-            Live prices unavailable. Key metrics below may use static research snapshots.
+            Live prices unavailable. Key metrics below use the PR snapshot only.
           </p>
         </CardContent>
       </Card>
@@ -168,17 +181,26 @@ function LivePricesStrip({ ticker }: { ticker: string }) {
         </div>
         <p className="text-xs text-muted-foreground pt-1">
           {data.stock || (data.includeEthSpot && data.eth)
-            ? "Market data via Yahoo Finance · updates every minute"
+            ? "Market data via Yahoo Finance · auto-refresh every minute · use ↻ for an immediate pull"
             : "No live quote returned · check symbol or data provider"}
         </p>
       </CardHeader>
       <CardContent className={`p-5 pt-4 grid grid-cols-1 gap-6 ${cols}`}>
         <QuoteCell
-          title={`${ticker.toUpperCase()} (stock)`}
+          title={`${upper} (stock)`}
           row={data.stock}
+          onRefresh={refreshStock}
+          refreshing={stockRefreshing}
+          refreshLabel={`Refresh ${upper} quote`}
         />
         {data.includeEthSpot ? (
-          <QuoteCell title={`Ethereum (${data.ethSymbol})`} row={data.eth} />
+          <QuoteCell
+            title={`Ethereum (${data.ethSymbol})`}
+            row={data.eth}
+            onRefresh={refreshEth}
+            refreshing={ethRefreshing}
+            refreshLabel={`Refresh ${data.ethSymbol} quote`}
+          />
         ) : null}
       </CardContent>
     </Card>
@@ -188,37 +210,53 @@ function LivePricesStrip({ ticker }: { ticker: string }) {
 function QuoteCell({
   title,
   row,
+  onRefresh,
+  refreshing,
+  refreshLabel,
 }: {
   title: string;
   row: LiveQuoteRow | null;
+  onRefresh: () => void | Promise<void>;
+  refreshing: boolean;
+  refreshLabel: string;
 }) {
-  if (!row) {
-    return (
-      <div>
-        <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-          {title}
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">—</p>
-      </div>
-    );
-  }
-  const up = row.changesPercentage >= 0;
   return (
     <div>
-      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-        {title}
-      </p>
-      <p className="mt-1 text-xl font-semibold tabular-nums text-foreground">
-        {formatCurrency(row.price)}
-      </p>
-      <p
-        className={cn(
-          "mt-0.5 text-xs font-medium tabular-nums",
-          up ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
-        )}
-      >
-        {formatPercent(row.changesPercentage)}
-      </p>
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground min-w-0">
+          {title}
+        </p>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground"
+          onClick={() => void onRefresh()}
+          disabled={refreshing}
+          aria-label={refreshLabel}
+        >
+          <RefreshCw className={cn("h-3.5 w-3.5", refreshing && "animate-spin")} />
+        </Button>
+      </div>
+      {!row ? (
+        <p className="mt-1 text-sm text-muted-foreground">—</p>
+      ) : (
+        <>
+          <p className="mt-1 text-xl font-semibold tabular-nums text-foreground">
+            {formatCurrency(row.price)}
+          </p>
+          <p
+            className={cn(
+              "mt-0.5 text-xs font-medium tabular-nums",
+              row.changesPercentage >= 0
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-red-600 dark:text-red-400"
+            )}
+          >
+            {formatPercent(row.changesPercentage)}
+          </p>
+        </>
+      )}
     </div>
   );
 }
@@ -245,6 +283,15 @@ function isCoverageOverview(x: unknown): x is CoverageOverview {
 
 export function OverviewTab({ ticker }: { ticker: string }) {
   const [state, setState] = useState<OverviewState>({ status: "loading" });
+  const [liveQuotes, setLiveQuotes] = useState<NormalizedLiveQuotesPayload | null>(null);
+
+  const onLiveQuotesChange = useCallback((data: NormalizedLiveQuotesPayload) => {
+    setLiveQuotes(data);
+  }, []);
+
+  useEffect(() => {
+    setLiveQuotes(null);
+  }, [ticker]);
 
   useEffect(() => {
     let cancelled = false;
@@ -268,6 +315,17 @@ export function OverviewTab({ ticker }: { ticker: string }) {
     };
   }, [ticker]);
 
+  const displayMetrics = useMemo((): OverviewMetric[] | null => {
+    if (state.status !== "ready") return null;
+    const { data } = state;
+    if (ticker.toUpperCase() !== "BMNR" || !liveQuotes) return data.metrics;
+    return applyBmnrLivePricesToOverviewMetrics(
+      data.metrics,
+      liveQuotes.stock?.price ?? null,
+      liveQuotes.eth?.price ?? null
+    );
+  }, [ticker, state, liveQuotes]);
+
   if (state.status === "loading") {
     return <p className="text-sm text-muted-foreground">Loading overview…</p>;
   }
@@ -276,10 +334,11 @@ export function OverviewTab({ ticker }: { ticker: string }) {
   }
 
   const data = state.data;
+  const metrics = displayMetrics ?? data.metrics;
 
   return (
     <div className="space-y-4">
-      <LivePricesStrip ticker={ticker} />
+      <LivePricesStrip ticker={ticker} onQuotesChange={onLiveQuotesChange} />
 
       <Card>
         <CardContent className="p-5">
@@ -295,10 +354,17 @@ export function OverviewTab({ ticker }: { ticker: string }) {
       <Card>
         <CardHeader className="p-5 pb-0">
           <CardTitle className="text-sm font-medium">Key Metrics</CardTitle>
+          {ticker.toUpperCase() === "BMNR" ? (
+            <p className="text-xs text-muted-foreground pt-1 leading-relaxed">
+              NAV, premium, market cap, ETH book, and dividend yield follow live stock and ETH prices
+              above when available; holdings, staking, and per-share dividend amounts use the latest PR
+              snapshot.
+            </p>
+          ) : null}
         </CardHeader>
         <CardContent className="p-5 pt-3">
           <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
-            {data.metrics.map((metric) => {
+            {metrics.map((metric) => {
               const isNegative =
                 typeof metric.value === "number" && metric.value < 0;
               const isPercent = metric.format === "percent";

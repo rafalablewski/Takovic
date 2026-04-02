@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { ComparableCompany } from "@/types/coverage";
+import type {
+  ComparableCompany,
+  CompetitorNewsItem,
+  PeerSnapshotBundle,
+} from "@/types/coverage";
+import { PeerSnapshotPanel } from "@/components/coverage/peer-snapshot-panel";
+import { CompetitorIntelligenceFeed } from "@/components/coverage/competitor-intelligence-feed";
 import { GitCompareArrows, Shield, Info } from "lucide-react";
 
 const threatColors: Record<string, string> = {
@@ -21,7 +27,13 @@ const assetColors: Record<string, string> = {
 
 type ComparablesState =
   | { status: "loading" }
-  | { status: "ready"; comparables: ComparableCompany[]; insight: string | null }
+  | {
+      status: "ready";
+      comparables: ComparableCompany[];
+      insight: string | null;
+      competitorNews: CompetitorNewsItem[];
+      peerSnapshot: PeerSnapshotBundle | null;
+    }
   | { status: "empty" };
 
 export function ComparablesTab({ ticker }: { ticker: string }) {
@@ -44,10 +56,32 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
           typeof mod.COMPARABLES_INSIGHT === "string"
             ? mod.COMPARABLES_INSIGHT
             : null;
-        if (comparables.length === 0) {
+        const newsRaw =
+          "COMPETITOR_NEWS" in mod && Array.isArray(mod.COMPETITOR_NEWS)
+            ? (mod.COMPETITOR_NEWS as CompetitorNewsItem[])
+            : [];
+        const peerSnapshot =
+          "PEER_SNAPSHOT" in mod &&
+          mod.PEER_SNAPSHOT &&
+          typeof mod.PEER_SNAPSHOT === "object" &&
+          "cards" in mod.PEER_SNAPSHOT &&
+          Array.isArray((mod.PEER_SNAPSHOT as PeerSnapshotBundle).cards)
+            ? (mod.PEER_SNAPSHOT as PeerSnapshotBundle)
+            : null;
+        if (
+          comparables.length === 0 &&
+          newsRaw.length === 0 &&
+          !peerSnapshot
+        ) {
           setState({ status: "empty" });
         } else {
-          setState({ status: "ready", comparables, insight });
+          setState({
+            status: "ready",
+            comparables,
+            insight,
+            competitorNews: newsRaw,
+            peerSnapshot,
+          });
         }
       })
       .catch(() => {
@@ -71,11 +105,11 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
     );
   }
 
-  const { comparables, insight } = state;
+  const { comparables, insight, competitorNews, peerSnapshot } = state;
 
   return (
-    <div className="space-y-4">
-      {insight ? (
+    <div className="space-y-8">
+      {insight && !peerSnapshot ? (
         <Card>
           <CardContent className="p-5">
             <div className="flex items-start gap-2">
@@ -88,11 +122,22 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
         </Card>
       ) : null}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {comparables.map((comp) => (
-          <CompCard key={comp.ticker} comp={comp} />
-        ))}
-      </div>
+      {peerSnapshot ? (
+        <PeerSnapshotPanel bundle={peerSnapshot} />
+      ) : comparables.length > 0 ? (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-foreground">
+            Peer snapshot
+          </h2>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {comparables.map((comp) => (
+              <CompCard key={comp.ticker} comp={comp} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <CompetitorIntelligenceFeed items={competitorNews} />
     </div>
   );
 }

@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
+import { buildBmnrEthCorrelationMetrics } from "@/lib/coverage/bmnr-overview-live-metrics";
+import { toNormalizedLiveQuotes } from "@/lib/coverage/normalize-live-quotes";
+import type { LiveQuotesPayload, NormalizedLiveQuotesPayload } from "@/types/coverage";
 import type {
   EthereumIntelligence,
   ValueAccrualStep,
@@ -99,6 +102,47 @@ function EthereumTabContent({
   data: EthereumIntelligence;
   ticker: string;
 }) {
+  const upper = ticker.toUpperCase();
+  const isBmnr = upper === "BMNR";
+  const [liveQuotes, setLiveQuotes] = useState<NormalizedLiveQuotesPayload | null>(null);
+
+  useEffect(() => {
+    if (!isBmnr) {
+      setLiveQuotes(null);
+      return;
+    }
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const res = await fetch(
+          `/api/coverage/${encodeURIComponent(upper)}/live-quotes`,
+          { cache: "no-store" }
+        );
+        if (!res.ok) return;
+        const json = (await res.json()) as LiveQuotesPayload;
+        if (!cancelled) setLiveQuotes(toNormalizedLiveQuotes(json, upper));
+      } catch {
+        /* static correlation metrics */
+      }
+    }
+
+    void load();
+    const id = window.setInterval(() => void load(), 60_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(id);
+    };
+  }, [upper, isBmnr]);
+
+  const correlationMetrics = useMemo(() => {
+    if (!isBmnr || !liveQuotes) return data.correlation.metrics;
+    return buildBmnrEthCorrelationMetrics(
+      liveQuotes.stock?.price ?? null,
+      liveQuotes.eth?.price ?? null
+    );
+  }, [isBmnr, liveQuotes, data.correlation.metrics]);
+
   return (
     <div className="space-y-4">
       {/* Description */}
@@ -116,8 +160,15 @@ function EthereumTabContent({
       >
         <div className="space-y-4">
           <p className="text-xs text-muted-foreground">{data.correlation.headline}</p>
+          {isBmnr ? (
+            <p className="text-[10px] text-muted-foreground/80">
+              {liveQuotes
+                ? "Figures use live Yahoo quotes for BMNR and ETH-USD (same as Overview), with holdings from the PR snapshot."
+                : "Loading live quotes… showing filing-era figures until data arrives."}
+            </p>
+          ) : null}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {data.correlation.metrics.map((m) => (
+            {correlationMetrics.map((m) => (
               <div key={m.label} className="rounded-lg border border-border p-3">
                 <p className="text-[10px] text-muted-foreground">{m.label}</p>
                 <p className="mt-0.5 text-sm font-semibold tabular-nums text-foreground">{m.value}</p>

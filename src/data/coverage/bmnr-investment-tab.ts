@@ -522,15 +522,64 @@ export const POSITION_SIZING = {
 };
 
 // ---------------------------------------------------------------------------
-// Analysis archive (17 entries, newest first)
+// Analysis archive (newest first) — align holdings lines with ETH_PURCHASES + timeline
 // ---------------------------------------------------------------------------
 
 export const ANALYSIS_ARCHIVE: AnalysisArchiveEntry[] = [
   {
+    date: "2026-03-30",
+    title: "STRONG BUY",
+    summary:
+      "PR: 4.732M ETH + $10.7B Stack + 3.92% Supply + +71,179 ETH Week + MAVAN Live + Cash $961M + ORBS $102M",
+    verdict: "STRONG BUY",
+  },
+  {
+    date: "2026-03-25",
+    title: "STRONG BUY",
+    summary:
+      "PR: MAVAN Launched — institutional ETH staking; +101,776 ETH routed to MAVAN (week); forward ~$300M/yr staking at scale",
+    verdict: "STRONG BUY",
+  },
+  {
+    date: "2026-03-23",
+    title: "STRONG BUY",
+    summary:
+      "PR: 4.661M ETH + $11.0B Stack + 3.86% Supply + +65,341 ETH Week + Staked 3.14M + CESR/7d 2.75%/2.83%",
+    verdict: "STRONG BUY",
+  },
+  {
+    date: "2026-03-17",
+    title: "STRONG BUY",
+    summary:
+      "8-K: Tom Lee Hong Kong investor presentation (Reg FD, Ex. 99.1) + HQ relocation to Norwalk, CT",
+    verdict: "STRONG BUY",
+  },
+  {
     date: "2026-03-16",
     title: "STRONG BUY",
     summary:
-      "PR: 4.596M ETH Holdings + $11.5B Total + 3.81% Supply + 76% to Alchemy of 5% + ORBS $125M + EF ETH Purchase",
+      "PR: 4.596M ETH + $11.5B Total + 3.81% Supply + 76% to Alchemy of 5% + ORBS +$80M step-up + EF 5K ETH + +60,999 ETH Week",
+    verdict: "STRONG BUY",
+  },
+  {
+    date: "2026-03-12",
+    title: "STRONG BUY",
+    summary:
+      "PR: Eightco (ORBS) $125M — BMNR $75M lead + ARK $25M + Payward $25M; Tom Lee joins ORBS board",
+    verdict: "STRONG BUY",
+  },
+  {
+    date: "2026-03-09",
+    title: "STRONG BUY",
+    summary:
+      "PR: 4.535M ETH + Weekly +60,976 ETH @ ~$1,965 + Stack rebuild post-drawdown week",
+    verdict: "STRONG BUY",
+  },
+  {
+    date: "2026-03-02",
+    title: "STRONG BUY",
+    summary:
+      "PR: 4.474M ETH + Weekly +50,928 ETH @ ~$1,976 + Sustained >45k ETH/week pace",
     verdict: "STRONG BUY",
   },
   {

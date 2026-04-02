@@ -6,7 +6,7 @@
  * instead we use NAV-based projection with staking yield, dilution, and
  * asset growth assumptions.
  *
- * LAST UPDATED: 2026-04-01
+ * LAST UPDATED: 2026-04-02
  * NEXT UPDATE: When BMNR_VALUATION_SNAPSHOT or MSTR profile changes
  */
 
@@ -14,6 +14,7 @@ import { getBmnrCryptoTreasuryProfile } from "@/data/coverage/bmnr-crypto-snapsh
 import type {
   CryptoTreasuryProfile,
   CryptoTreasuryInputs,
+  CryptoTreasuryBmnrScenario,
   SliderParam,
 } from "@/types/analysis";
 
@@ -70,13 +71,16 @@ export function isBtcTreasury(ticker: string): boolean {
 
 const DEFAULT_INPUTS: Record<string, CryptoTreasuryInputs> = {
   ETH: {
-    assetGrowthRate: 0.10,
-    stakingYield: 0.035,
+    /** Terminal-year ETH spot vs today; 0 = flat spot (NAV walkthrough default). */
+    assetGrowthRate: 0,
+    stakingYield: 0,
     navPremium: 1.0,
-    operatingCostRate: 0.01,
+    operatingCostRate: 0,
     dilutionRate: 0.08,
     discountRate: 0.12,
     projectionYears: 5,
+    /** Net compound on ETH stack (staking − operating drag) per year. */
+    netEthHoldingsGrowthRate: 0.025,
   },
   BTC: {
     assetGrowthRate: 0.15,
@@ -86,6 +90,7 @@ const DEFAULT_INPUTS: Record<string, CryptoTreasuryInputs> = {
     dilutionRate: 0.05,
     discountRate: 0.12,
     projectionYears: 5,
+    netEthHoldingsGrowthRate: 0,
   },
 };
 
@@ -96,6 +101,37 @@ export function getDefaultInputs(
 }
 
 // ---------------------------------------------------------------------------
+// BMNR — one-tap scenarios (ETH spot CAGR × terminal NAV multiple)
+// ---------------------------------------------------------------------------
+
+/** Ordered bearish → bullish; applies `assetGrowthRate` + `navPremium` only. */
+export const BMNR_MODEL_SCENARIOS: readonly CryptoTreasuryBmnrScenario[] = [
+  { id: "worst", label: "WORST", assetGrowthRate: -0.3, navPremium: 0.4 },
+  { id: "bear", label: "BEAR", assetGrowthRate: -0.05, navPremium: 0.7 },
+  { id: "base", label: "BASE", assetGrowthRate: 0.1, navPremium: 1.0 },
+  { id: "mgmt", label: "MGMT", assetGrowthRate: 0.2, navPremium: 1.2 },
+  { id: "bull", label: "BULL", assetGrowthRate: 0.35, navPremium: 1.5 },
+  { id: "moon", label: "MOON", assetGrowthRate: 0.6, navPremium: 2.0 },
+];
+
+const BMNR_SCENARIO_EPS = 1e-5;
+
+/** Returns the BMNR scenario whose spot CAGR and NAV multiple match inputs, if any. */
+export function matchBmnrModelScenario(
+  inputs: Pick<CryptoTreasuryInputs, "assetGrowthRate" | "navPremium">
+): CryptoTreasuryBmnrScenario | null {
+  for (const s of BMNR_MODEL_SCENARIOS) {
+    if (
+      Math.abs(s.assetGrowthRate - inputs.assetGrowthRate) < BMNR_SCENARIO_EPS &&
+      Math.abs(s.navPremium - inputs.navPremium) < BMNR_SCENARIO_EPS
+    ) {
+      return s;
+    }
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // Slider parameter definitions (bearish → bullish presets)
 // ---------------------------------------------------------------------------
 
@@ -103,33 +139,16 @@ export function getSliderParams(asset: string): SliderParam[] {
   if (asset === "ETH") {
     return [
       {
-        key: "assetGrowthRate",
-        label: "ETH Annual Growth Rate",
+        key: "netEthHoldingsGrowthRate",
+        label: "Net ETH Holdings Growth",
         description:
-          "Expected annual ETH price appreciation over 5 years. Historical: +90% (2024), -67% (2022).",
+          "Single annual compound on the ETH balance through the horizon (staking and reinvestment net of operating drag). Matches NAV-based treasury math: H_terminal = H₀ × (1 + g)^N. Example base case: 2.5%.",
         presets: [
-          { value: -0.30, label: "-30%" },
-          { value: -0.05, label: "-5%" },
-          { value: 0.10, label: "10%" },
-          { value: 0.20, label: "20%" },
-          { value: 0.35, label: "35%" },
-          { value: 0.60, label: "60%" },
-        ],
-        defaultIndex: 2,
-        suffix: "%",
-        category: "growth",
-      },
-      {
-        key: "stakingYield",
-        label: "Staking Yield (APY)",
-        description:
-          "Annual yield from ETH staking. Base Ethereum staking: 3-4% APY. With restaking (EigenLayer): 4-7%+. BMNR stakes a majority of ETH book (see coverage snapshot / Model tab inputs).",
-        presets: [
-          { value: 0.01, label: "1%" },
-          { value: 0.02, label: "2%" },
+          { value: 0, label: "0%" },
+          { value: 0.015, label: "1.5%" },
+          { value: 0.025, label: "2.5%" },
           { value: 0.035, label: "3.5%" },
-          { value: 0.045, label: "4.5%" },
-          { value: 0.055, label: "5.5%" },
+          { value: 0.05, label: "5%" },
           { value: 0.07, label: "7%" },
         ],
         defaultIndex: 2,
@@ -137,51 +156,51 @@ export function getSliderParams(asset: string): SliderParam[] {
         category: "yield",
       },
       {
-        key: "navPremium",
-        label: "NAV Premium/Discount",
+        key: "assetGrowthRate",
+        label: "Terminal ETH Price CAGR",
         description:
-          "Stock price vs NAV per share. 1.0x = at NAV. <1x = discount (typical for closed-end funds). >1x = premium (like MSTR at 2-3x). Premium justified by: liquidity, management, yield optimization, regulatory wrapper.",
+          "Annual growth applied to **spot ETH** from today to the terminal year. Use **0%** for a flat ETH price to terminal (standard NAV walkthrough). Raise if you want an explicit ETH price path layered on top.",
+        presets: [
+          { value: -0.2, label: "-20%" },
+          { value: -0.05, label: "-5%" },
+          { value: 0, label: "0%" },
+          { value: 0.1, label: "10%" },
+          { value: 0.2, label: "20%" },
+          { value: 0.35, label: "35%" },
+        ],
+        defaultIndex: 2,
+        suffix: "%",
+        category: "growth",
+      },
+      {
+        key: "navPremium",
+        label: "NAV Premium at Terminal",
+        description:
+          "Multiple on terminal NAV/share for the implied stock price before discounting. 1.0x = at NAV. <1x = discount; >1x = premium.",
         presets: [
           { value: 0.40, label: "0.40x" },
           { value: 0.70, label: "0.70x" },
-          { value: 1.00, label: "1.00x" },
-          { value: 1.20, label: "1.20x" },
-          { value: 1.50, label: "1.50x" },
-          { value: 2.00, label: "2.00x" },
+          { value: 1.0, label: "1.00x" },
+          { value: 1.2, label: "1.20x" },
+          { value: 1.5, label: "1.50x" },
+          { value: 2.0, label: "2.00x" },
         ],
         defaultIndex: 2,
         suffix: "x",
         category: "valuation",
       },
       {
-        key: "operatingCostRate",
-        label: "Operating Costs (% of AUM)",
-        description:
-          "Annual operating expenses as % of ETH holdings value. 0.3-0.5% = ETF-like efficient. 1-2% = typical fund. 3%+ = high overhead eroding returns.",
-        presets: [
-          { value: 0.03, label: "3%" },
-          { value: 0.02, label: "2%" },
-          { value: 0.01, label: "1%" },
-          { value: 0.005, label: "0.5%" },
-          { value: 0.003, label: "0.3%" },
-          { value: 0.002, label: "0.2%" },
-        ],
-        defaultIndex: 2,
-        suffix: "%",
-        category: "yield",
-      },
-      {
         key: "dilutionRate",
-        label: "Annual Dilution Rate",
+        label: "Annual Share Dilution",
         description:
-          "Expected share count increase from equity raises, warrants, stock comp. Treasury companies often raise capital to buy more assets. 0% = self-funding. 5-10% = typical. 20%+ = aggressive accumulation.",
+          "Share count compounds at this rate; **ATM proceeds are not modeled as buying more ETH** (NAV-based ETH treasury convention). S₀ × (1 + d)^N diluted shares at terminal.",
         presets: [
           { value: 0.25, label: "25%" },
           { value: 0.15, label: "15%" },
           { value: 0.08, label: "8%" },
           { value: 0.05, label: "5%" },
           { value: 0.03, label: "3%" },
-          { value: 0.00, label: "0%" },
+          { value: 0, label: "0%" },
         ],
         defaultIndex: 2,
         suffix: "%",
@@ -189,18 +208,18 @@ export function getSliderParams(asset: string): SliderParam[] {
       },
       {
         key: "discountRate",
-        label: "Discount Rate / WACC",
+        label: "Discount Rate",
         description:
-          "Required return for discounting future cash flows. Higher for risky assets. 10% = blue chip. 15-20% = volatile crypto exposure. 25%+ = speculative. Should exceed ETH expected return for margin of safety.",
+          "One rate for time value **and** risk. Lower = more bullish (less haircut to terminal value); **0%** = no discount. Presets run bearish → bullish left → right.",
         presets: [
           { value: 0.35, label: "35%" },
-          { value: 0.20, label: "20%" },
+          { value: 0.25, label: "25%" },
+          { value: 0.2, label: "20%" },
           { value: 0.12, label: "12%" },
-          { value: 0.11, label: "11%" },
-          { value: 0.10, label: "10%" },
           { value: 0.08, label: "8%" },
+          { value: 0, label: "0%" },
         ],
-        defaultIndex: 2,
+        defaultIndex: 3,
         suffix: "%",
         category: "valuation",
       },
@@ -281,16 +300,16 @@ export function getSliderParams(asset: string): SliderParam[] {
       key: "discountRate",
       label: "Discount Rate / WACC",
       description:
-        "Required return for discounting future value. Higher for volatile crypto exposure.",
+        "Required return for discounting future value. Lower = more bullish; **0%** = no discount. Presets run bearish → bullish left → right.",
       presets: [
-        { value: 0.30, label: "30%" },
+        { value: 0.35, label: "35%" },
+        { value: 0.25, label: "25%" },
         { value: 0.20, label: "20%" },
         { value: 0.12, label: "12%" },
-        { value: 0.10, label: "10%" },
         { value: 0.08, label: "8%" },
-        { value: 0.06, label: "6%" },
+        { value: 0, label: "0%" },
       ],
-      defaultIndex: 2,
+      defaultIndex: 3,
       suffix: "%",
       category: "valuation",
     },

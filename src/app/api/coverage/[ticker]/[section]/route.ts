@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCoveredStock, isCovered } from "@/data/coverage/registry";
+import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
 import {
   COVERAGE_API_SECTIONS,
   isCoverageApiSection,
@@ -39,10 +40,6 @@ const INVESTMENT_EXPORT_KEYS = [
   "CFA_INVESTMENT_GLOSSARY",
   "INVESTMENT_TAB_FOOTNOTE",
 ] as const;
-
-async function loadCoverageModule(lowerTicker: string): Promise<Record<string, unknown>> {
-  return import(`@/data/coverage/${lowerTicker}`) as Promise<Record<string, unknown>>;
-}
 
 function pickInvestment(mod: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
@@ -105,19 +102,21 @@ async function buildSectionPayload(
       return { ticker: upper, ecosystemNews: mod.ECOSYSTEM_NEWS ?? null };
     }
     case "overview": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return { ticker: upper, overview: mod.OVERVIEW ?? null };
     }
     case "comparables": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return {
         ticker: upper,
         comparables: mod.COMPARABLES ?? null,
         insight: mod.COMPARABLES_INSIGHT ?? null,
+        competitorNews: mod.COMPETITOR_NEWS ?? null,
+        peerSnapshot: mod.PEER_SNAPSHOT ?? null,
       };
     }
     case "financials": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return {
         ticker: upper,
         quarterlyFinancials: mod.QUARTERLY_FINANCIALS ?? null,
@@ -125,19 +124,20 @@ async function buildSectionPayload(
       };
     }
     case "capital-structure": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return { ticker: upper, capitalStructure: mod.CAPITAL_STRUCTURE ?? null };
     }
     case "wall-street": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return {
         ticker: upper,
         analysts: mod.WALL_STREET ?? null,
         note: mod.WALL_STREET_NOTE ?? null,
+        firms: mod.WALL_STREET_FIRMS ?? null,
       };
     }
     case "timeline": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return {
         ticker: upper,
         events: mod.TIMELINE_EVENTS ?? null,
@@ -145,11 +145,11 @@ async function buildSectionPayload(
       };
     }
     case "investment": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return { ticker: upper, investment: pickInvestment(mod) };
     }
     case "eth-purchases": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return {
         ticker: upper,
         purchases: mod.ETH_PURCHASES ?? null,
@@ -163,7 +163,7 @@ async function buildSectionPayload(
       };
     }
     case "ethereum-intelligence": {
-      const mod = await loadCoverageModule(lower);
+      const mod = await importCoverageTickerModule(lower);
       return { ticker: upper, ethereumIntelligence: mod.ETHEREUM_INTELLIGENCE ?? null };
     }
   }
