@@ -444,6 +444,7 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
   );
 
   const assetSymbol = profile.asset;
+  const isEthNavModel = profile.asset === "ETH";
   const currentNAV = effectiveProfile.assetHoldings * effectiveProfile.assetPrice;
   const currentNAVPerShare =
     effectiveProfile.sharesOutstanding > 0
@@ -581,7 +582,9 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
                 </CardTitle>
               </div>
               <CardDescription className="text-xs">
-                Discounted terminal NAV/share over {inputs.projectionYears} years
+                {isEthNavModel
+                  ? `Terminal implied price (NAV/share × premium at year ${inputs.projectionYears}), discounted at ${(inputs.discountRate * 100).toFixed(0)}%. ETH balance grows at net holdings rate; shares dilute without ATM buying ETH; spot CAGR can be 0.`
+                  : `Discounted terminal NAV/share over ${inputs.projectionYears} years`}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-5 pt-4 space-y-4">
@@ -689,7 +692,9 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
             </CardTitle>
           </div>
           <CardDescription className="text-xs">
-            {assetSymbol} holdings, NAV, and implied share price over {inputs.projectionYears} years
+            {isEthNavModel
+              ? `Geometric path to terminal: holdings × (1 + net growth)^y, shares × (1 + dilution)^y, optional spot CAGR.`
+              : `${assetSymbol} holdings, NAV, and implied share price over ${inputs.projectionYears} years`}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-5 pt-4">
@@ -697,7 +702,32 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  {["Year", `${assetSymbol} Price`, `${assetSymbol} Holdings`, "Staking +", "Ops Cost -", "Dilution +", "Total Shares", "NAV", "NAV/Share", "Stock Price"].map((h) => (
+                  {(isEthNavModel
+                    ? [
+                        "Year",
+                        `${assetSymbol} Price`,
+                        `${assetSymbol} Holdings`,
+                        "Δ Holdings",
+                        "Ops −",
+                        "ATM ETH +",
+                        "Total Shares",
+                        "NAV",
+                        "NAV/Share",
+                        "Implied",
+                      ]
+                    : [
+                        "Year",
+                        `${assetSymbol} Price`,
+                        `${assetSymbol} Holdings`,
+                        "Staking +",
+                        "Ops Cost -",
+                        "Dilution +",
+                        "Total Shares",
+                        "NAV",
+                        "NAV/Share",
+                        "Stock Price",
+                      ]
+                  ).map((h) => (
                     <th
                       key={h}
                       className="pb-2 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground first:text-left"
@@ -726,9 +756,19 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
                     <td className="py-2 text-xs font-medium text-muted-foreground">Y{row.year}</td>
                     <td className="py-2 text-right tabular-nums">{formatCurrency(row.assetPrice)}</td>
                     <td className="py-2 text-right tabular-nums">{Math.round(row.assetHoldings).toLocaleString()}</td>
-                    <td className="py-2 text-right tabular-nums text-emerald-600 dark:text-emerald-400">+{row.stakingIncome.toFixed(1)}</td>
-                    <td className="py-2 text-right tabular-nums text-red-600 dark:text-red-400">-{row.operatingCostAssets.toFixed(1)}</td>
-                    <td className="py-2 text-right tabular-nums text-blue-600 dark:text-blue-400">+{Math.round(row.assetsFromDilution).toLocaleString()}</td>
+                    <td className="py-2 text-right tabular-nums text-emerald-600 dark:text-emerald-400">
+                      +{row.stakingIncome.toFixed(1)}
+                    </td>
+                    <td className="py-2 text-right tabular-nums text-red-600 dark:text-red-400">
+                      {isEthNavModel || row.operatingCostAssets < 1e-6
+                        ? "—"
+                        : `-${row.operatingCostAssets.toFixed(1)}`}
+                    </td>
+                    <td className="py-2 text-right tabular-nums text-blue-600 dark:text-blue-400">
+                      {isEthNavModel || row.assetsFromDilution < 1e-6
+                        ? "—"
+                        : `+${Math.round(row.assetsFromDilution).toLocaleString()}`}
+                    </td>
                     <td className="py-2 text-right tabular-nums">{fmtShares(row.totalShares)}</td>
                     <td className="py-2 text-right tabular-nums">{formatCurrency(row.nav, "USD", true)}</td>
                     <td className="py-2 text-right tabular-nums font-medium">{formatCurrency(row.navPerShare)}</td>
@@ -747,16 +787,23 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
           <div className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-sm font-medium">
-              Sensitivity: {assetSymbol} Growth vs Discount Rate
+              Sensitivity:{" "}
+              {isEthNavModel ? "Terminal ETH Spot CAGR" : `${assetSymbol} Growth`} vs Discount
             </CardTitle>
           </div>
           <CardDescription className="text-xs">
-            Fair value per share at different {assetSymbol} growth and discount rate assumptions
+            {isEthNavModel
+              ? "Fair value per share varying terminal ETH spot CAGR (holdings growth held at your base case)."
+              : `Fair value per share at different ${assetSymbol} growth and discount rate assumptions`}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-5 pt-4">
           <SensitivityTable
-            rowLabel={`${assetSymbol} Growth ↓ / WACC →`}
+            rowLabel={
+              isEthNavModel
+                ? "ETH spot CAGR ↓ / Discount →"
+                : `${assetSymbol} Growth ↓ / WACC →`
+            }
             rowValues={results.sensitivityMatrix.assetGrowthRates}
             colValues={results.sensitivityMatrix.discountRates}
             matrix={results.sensitivityMatrix.values}
@@ -775,16 +822,23 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
           <div className="flex items-center gap-2">
             <Layers className="h-4 w-4 text-muted-foreground" />
             <CardTitle className="text-sm font-medium">
-              Sensitivity: NAV Premium vs {assetSymbol} Growth
+              Sensitivity: NAV Premium vs{" "}
+              {isEthNavModel ? "Terminal ETH Spot CAGR" : `${assetSymbol} Growth`}
             </CardTitle>
           </div>
           <CardDescription className="text-xs">
-            Fair value per share at different premium and growth assumptions
+            {isEthNavModel
+              ? "Fair value at different terminal NAV multiples and ETH spot CAGR paths."
+              : "Fair value per share at different premium and growth assumptions"}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-5 pt-4">
           <SensitivityTable
-            rowLabel={`Premium ↓ / ${assetSymbol} Growth →`}
+            rowLabel={
+              isEthNavModel
+                ? "Premium ↓ / ETH spot CAGR →"
+                : `Premium ↓ / ${assetSymbol} Growth →`
+            }
             rowValues={results.premiumSensitivity.navPremiums}
             colValues={results.premiumSensitivity.assetGrowthRates}
             matrix={results.premiumSensitivity.values}
@@ -799,12 +853,11 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
 
       {/* Disclaimer */}
       <p className="text-xs text-muted-foreground leading-relaxed">
-        This crypto treasury valuation projects NAV based on asset price appreciation,
-        staking yield, operating costs, and share dilution assumptions. It does not
-        constitute financial advice. Cryptocurrency prices are highly volatile and
-        past performance does not guarantee future results. Company-specific risks
-        include regulatory changes, custody risk, smart contract risk, and management
-        execution. Always conduct thorough due diligence.
+        {isEthNavModel
+          ? "ETH treasury (NAV-based): terminal ETH balance compounds at the net holdings growth rate; diluted shares compound separately without modeling ATM proceeds buying ETH; terminal implied price equals NAV/share × premium, then discounted by one rate for time value and risk. Not financial advice."
+          : "This crypto treasury valuation projects NAV based on asset price appreciation, staking yield, operating costs, and share dilution (including proceeds reinvested in the asset). It does not constitute financial advice."}{" "}
+        Cryptocurrency prices are highly volatile. Company-specific risks include regulatory changes,
+        custody risk, smart contract risk, and management execution. Always conduct thorough due diligence.
       </p>
     </div>
   );
@@ -1051,6 +1104,12 @@ function getParamHint(
   asset: string
 ): string | null {
   switch (key) {
+    case "netEthHoldingsGrowthRate": {
+      const hT =
+        profile.assetHoldings *
+        Math.pow(1 + value, inputs.projectionYears);
+      return `Terminal ${asset} balance ≈ ${Math.round(hT).toLocaleString()} (${(value * 100).toFixed(1)}%/yr × ${inputs.projectionYears}yr from ${Math.round(profile.assetHoldings).toLocaleString()})`;
+    }
     case "assetGrowthRate": {
       const terminalPrice = profile.assetPrice * Math.pow(1 + value, inputs.projectionYears);
       const sign = value >= 0 ? "+" : "";

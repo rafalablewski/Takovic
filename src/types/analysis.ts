@@ -213,20 +213,32 @@ export interface CryptoTreasuryProfile {
 
 /** User-adjustable parameters for crypto treasury valuation */
 export interface CryptoTreasuryInputs {
-  /** Annual asset price growth rate — decimal (0.10 = 10%) */
+  /**
+   * Annual **spot** growth rate on the crypto price to the terminal year (CAGR).
+   * ETH NAV model: use 0 for “flat spot to terminal” (treasury-style walkthrough).
+   * BTC legacy model: primary BTC price appreciation path.
+   */
   assetGrowthRate: number;
-  /** Staking yield APY — decimal (0.035 = 3.5%) */
+  /** Staking yield APY — decimal (0.035 = 3.5%). Used only for BTC treasury path. */
   stakingYield: number;
   /** NAV premium/discount multiplier (1.0 = at NAV) */
   navPremium: number;
-  /** Annual operating costs as fraction of AUM (0.01 = 1%) */
+  /** Annual operating costs as fraction of AUM. Used only for BTC treasury path. */
   operatingCostRate: number;
-  /** Annual share dilution rate — decimal (0.08 = 8%) */
+  /**
+   * Annual share count growth (dilution). ETH NAV model: proceeds do **not** buy more ETH.
+   * BTC path: dilution raises cash and buys more BTC at the modeled price.
+   */
   dilutionRate: number;
-  /** Discount rate / WACC — decimal (0.12 = 12%) */
+  /** Discount rate — decimal (0.12 = 12%). Captures time value + risk in one number. */
   discountRate: number;
   /** Projection horizon in years */
   projectionYears: number;
+  /**
+   * ETH NAV model only: net annual compound on ETH **holdings** (staking − operating drag, etc.).
+   * Ignored for BTC (use 0).
+   */
+  netEthHoldingsGrowthRate: number;
 }
 
 /** Single year in the projection table */
