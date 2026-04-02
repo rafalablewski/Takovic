@@ -1,0 +1,416 @@
+/**
+ * BMNR competitor news — part 1 of 4 (newest → older).
+ * Merged in bmnr-competitor-news.ts
+ */
+
+import type { CompetitorNewsItem } from "@/types/coverage";
+
+function e(
+  date: string,
+  category: CompetitorNewsItem["category"],
+  competitor: CompetitorNewsItem["competitor"],
+  competitorLabel: string,
+  headline: string,
+  implication: CompetitorNewsItem["implication"],
+  bullets: readonly string[],
+  bmnrComparison: string,
+  source: string,
+  sourceUrl?: string
+): CompetitorNewsItem {
+  return {
+    date,
+    category,
+    competitor,
+    competitorLabel,
+    headline,
+    implication,
+    bullets: [...bullets],
+    bmnrComparison,
+    source,
+    ...(sourceUrl ? { sourceUrl } : {}),
+  };
+}
+
+export const BMNR_COMPETITOR_NEWS_P1: CompetitorNewsItem[] = [
+  e(
+    "2026-02-24",
+    "Partnership",
+    "miscellaneous",
+    "Miscellaneous",
+    "Ondo Global Markets tokenized securities go live on Binance Alpha exchange",
+    "neutral",
+    [
+      "Ondo tokenized U.S. equities now accessible via Binance Alpha to hundreds of millions of users",
+      "10 initial listings: AAPLon, GOOGLon, TSLAon, NVDAon, QQQon, CRCLon, METAon, AMZNon, SPYon, MSFTon",
+      "Ondo Global Markets has surpassed $550M TVL and $11B cumulative trading volume since Sep 2025 launch",
+      "Not available in the U.S. — targets non-U.S. investors for onchain equity exposure",
+      "Direct competitor to Kraken xStocks for tokenized equity market share",
+    ],
+    "Tokenized equity infrastructure growth validates the broader crypto-TradFi convergence thesis. Ondo competes with Kraken xStocks but does not directly impact BMNR ETH treasury strategy. MSFTon tokenized listing may attract traditional investors to crypto rails.",
+    "Ondo Finance"
+  ),
+  e(
+    "2026-02-24",
+    "Technology",
+    "kraken",
+    "Kraken",
+    "Kraken launches world first tokenized equity perpetual futures via xStocks",
+    "neutral",
+    [
+      "World first regulated tokenized equity perpetual futures contracts listed on Kraken derivatives venue",
+      "10 initial perp listings: SPYx, QQQx, GLDx, NVDAx, AAPLx, GOOGLx, TSLAx, HOODx, MSTRx, CRCLx",
+      "Up to 20x leverage with 24/7 trading including weekends and holidays",
+      "Available to non-U.S. clients in 110+ countries via Payward Digital Solutions Ltd (Bermuda licensed)",
+      "xStocks claims leading tokenized equity position by cumulative volume, unique holders, 24hr activity",
+      "MSTRx perps enable leveraged exposure to Strategy/Bitcoin treasury thesis competitor",
+    ],
+    "Kraken expanding xStocks from spot to leveraged perps deepens crypto-native equity trading infrastructure. MSTRx perps give traders leveraged access to BTC treasury competitor Strategy. Does not directly threaten BMNR ETH treasury thesis but grows the tokenized equity ecosystem Kraken operates in.",
+    "Kraken"
+  ),
+  e(
+    "2026-02-12",
+    "Technology",
+    "ethzilla",
+    "ETHZilla",
+    "ETHZilla launches Eurus Aero Token I: First tradable tokenized aviation assets on Ethereum L2",
+    "neutral",
+    [
+      "First-of-its-kind tokenized real-world asset: jet engines on lease with leading US air carrier",
+      "Two CFM56 engines acquired for ~$12.2M, tokenized at $100/token with ~11% target return",
+      "ERC-20 tokens on Ethereum L2 with on-chain verification and automated monthly distributions",
+      "Structured through wholly owned SPV ETHZilla Aerospace LLC via Liquidity.io ecosystem",
+      "Leases extend into 2028 with $3M put/call rights and residual distribution to token holders",
+      "Plans to expand tokenization to manufactured home loans and car loans via Zippy and Karus",
+    ],
+    "ETHZilla (ETHZ, ~102K ETH, Nasdaq) pivoting from pure ETH treasury to RWA tokenization on Ethereum L2. Creates differentiated use case vs BMNR's pure ETH accumulation strategy. BMNR holds 42x more ETH and focuses on scale + staking yield, while ETHZ diversifies into tokenized asset origination. Both strategies validate Ethereum ecosystem but differ in approach: BMNR = concentrated ETH treasury, ETHZ = ETH + RWA tokenization platform.",
+    "PR Newswire"
+  ),
+  e(
+    "2026-02-09",
+    "Yield",
+    "miscellaneous",
+    "Miscellaneous",
+    "GlobalStake launches Bitcoin Yield Gateway for institutional clients with 4-14% net APY",
+    "neutral",
+    [
+      "Aggregates multiple BTC yield strategies (4-14% net APY)",
+      "Enterprise-grade API for custodians and exchanges",
+      "Targets institutional BTC yield market",
+    ],
+    "BTC yield infrastructure expanding alongside ETH staking yield. BMNR's ETH staking yield (3-5%) targets same institutional demand for crypto-native returns.",
+    "PR Newswire"
+  ),
+  e(
+    "2026-02-09",
+    "Strategy",
+    "miscellaneous",
+    "Miscellaneous",
+    "Metalpha (Nasdaq: MATH) adopts BTC allocation plan up to 20% of annual net profit (~$3.2M)",
+    "neutral",
+    [
+      "Adopts BTC allocation plan up to 20% of annual net profit (~$3.2M)",
+      "Initial $1M purchase at ~$54,000/BTC via proprietary Accumulator structure",
+    ],
+    "Another Nasdaq-listed company establishing BTC treasury. Growing trend of corporate crypto treasuries validates BMNR's ETH treasury model.",
+    "PR Newswire"
+  ),
+  e(
+    "2026-02-05",
+    "Strategy",
+    "kraken",
+    "Kraken",
+    "Kraken Institutional announces first bespoke investment solution with Bitwise Asset Management",
+    "positive",
+    [
+      "Bitwise Custom Yield Strategy available to eligible institutional clients",
+      "Delivered by Bitwise as external strategy manager within Kraken's qualified custody, execution and risk framework",
+      "First of multiple managed strategies planned — building infrastructure for diverse crypto opportunities",
+      "All strategies undergo structured internal review and remain subject to ongoing oversight",
+      "Minimal lock-up periods to support flexible liquidity management",
+    ],
+    "Kraken expanding institutional crypto investment products validates demand for managed crypto yield strategies. BMNR's ETH staking yield (3-5%) could appeal to the same institutional audience seeking crypto-native returns. Kraken is also a BMNR institutional investor.",
+    "Kraken Blog"
+  ),
+  e(
+    "2026-02-05",
+    "Regulatory",
+    "kraken",
+    "Kraken",
+    "Kraken releases December 2025 Proof of Reserves confirming 1:1+ client asset backing",
+    "neutral",
+    [
+      "Covers major cryptoassets including BTC, ETH, SOL, USDC, USDT, XRP and ADA",
+      "Uses Merkle tree for cryptographic verification with user-level proof",
+      "Independent third-party accountancy firm attestation — publishes quarterly",
+      "Accounts for total client liabilities including margin, futures, and staked positions",
+      "Pioneered PoR in 2014 — longest-running transparency program among major exchanges",
+    ],
+    "Kraken's PoR covering ETH validates institutional-grade custody for ETH holdings. As BMNR grows its ETH treasury, exchange PoR transparency reinforces trust in the broader ETH custody ecosystem that BMNR depends on.",
+    "Kraken Blog"
+  ),
+  e(
+    "2026-02-05",
+    "Acquisition",
+    "ethzilla",
+    "ETHZilla",
+    "ETHZilla purchases $4.7M manufactured home loan portfolio, plans tokenization on Ethereum L2",
+    "neutral",
+    [
+      "Acquires portfolio of 95 manufactured/modular home loans from Zippy for ~$4.7M via ETHZilla Modular Mortgage LLC",
+      "First-lien mortgages with annualized yield of ~10.36% from seasoned residential credit assets",
+      "Plans to tokenize into cash-flow-generating token on Ethereum L2 via Liquidity.io ecosystem in late Feb/early Mar",
+      "Follows prior purchase of two CFM56-7B24 aircraft engines on lease, also planned for tokenization",
+      "Builds on Dec 2025 acquisition of 15% stake in Zippy — demonstrates repeatable RWA framework",
+    ],
+    "ETHZilla moving from strategic investment to actual asset acquisition and tokenization. Multiple asset classes (manufactured homes + aircraft engines) in pipeline. BMNR focuses on pure ETH staking yield vs ETHZilla's RWA tokenization revenue model.",
+    "ETHZilla Press Release"
+  ),
+  e(
+    "2026-02-05",
+    "Financial",
+    "strategy",
+    "Strategy",
+    "Strategy Q4 2025: 713,502 BTC, $25.3B raised FY2025, largest US equity issuer",
+    "neutral",
+    [
+      "713,502 BTC as of Feb 1, 2026 — $54.26B cost basis ($76,052 avg), $59.75B market value",
+      "Largest US equity issuer in FY2025 — ~8% of total US equity issuance",
+      "$25.3B capital raised in FY2025 via ATM and five preferred IPOs (STRK/STRF/STRD/STRC/STRE)",
+      "STRC scaled to $3.4B at 11.25% dividend, $413M cumulative distributions (9.6% blended)",
+      "$2.25B USD Reserve provides 2.5 years dividend/interest coverage",
+      "Q4: $17.4B operating loss (incl $17.4B unrealized digital asset loss), $12.4B net loss",
+      "FY2025 BTC Yield: 22.8% (101,873 BTC Gain, $8.9B BTC $ Gain)",
+      "ROC tax treatment expected 10+ years — no E&P expected",
+      "Software: $123M revenue (+1.9% YoY), Subscription +62.1% YoY",
+    ],
+    "Strategy raised $25.3B to accumulate BTC yielding 0%. Now pays 9.6-11.25% on $6.9B preferred equity funded by dilution. BMNR's ETH staking generates real 3-5% yield.",
+    "Strategy Q4 2025 Earnings",
+    "https://www.strategy.com"
+  ),
+  e(
+    "2026-02-03",
+    "Strategy",
+    "kraken",
+    "Kraken",
+    "Bitwise launches model portfolio solutions for digital assets with $15B+ client AUM",
+    "positive",
+    [
+      "Seven models across core and thematic strategies",
+      "Bitwise is Kraken Institutional strategy partner",
+      "$15B+ client AUM",
+    ],
+    "Bitwise model portfolios through Kraken Institutional expand institutional access to digital asset strategies. Growing institutional crypto allocation infrastructure supports BMNR investor base.",
+    "PR Newswire"
+  ),
+  e(
+    "2026-02-03",
+    "Technology",
+    "miscellaneous",
+    "Miscellaneous",
+    "Wirex powers Chimera Card launch: Bitcoin-funded non-custodial debit card at 80M+ merchants",
+    "neutral",
+    [
+      "Bitcoin-funded non-custodial debit card accepted at 80M+ merchants globally",
+      "Powered by Wirex BaaS infrastructure",
+    ],
+    "BTC-funded payment cards expand crypto spending utility. Growing real-world crypto payment infrastructure benefits broader ecosystem adoption.",
+    "PR Newswire"
+  ),
+  e(
+    "2026-02-02",
+    "Acquisition",
+    "strategy",
+    "Strategy",
+    "Strategy now holds 713,502 BTC after purchasing 855 BTC",
+    "neutral",
+    [
+      "Purchased 855 BTC for $75.3M at average price of $87,974",
+      "Total holdings now 713,502 BTC at average cost of $76,052",
+      "Aggregate purchase price: $54.26B",
+      "STRC dividend rate increased from 11.00% to 11.25%",
+      "Sold 673,527 MSTR shares for $106.1M net proceeds",
+      "No preferred stock sold during the period",
+    ],
+    "Strategy continues accumulating BTC at 0% yield. BMNR's ETH staking generates 3-5% yield, compounding value without requiring continuous capital raises.",
+    "Strategy 8-K",
+    "https://www.sec.gov"
+  ),
+  e(
+    "2026-02-02",
+    "Funding",
+    "strategy",
+    "Strategy",
+    "Strategy announces 2025 preferred distributions 100% return of capital",
+    "neutral",
+    [
+      "100% of 2025 distributions on preferred equity treated as ROC for tax purposes",
+      "Raised $5.5B in Digital Credit (preferred equity) IPOs in 2025",
+      "Additional $1.9B raised via ATM programs for preferred instruments",
+      "$413M in cumulative distributions paid across all instruments",
+      "9.6% blended annual dividend rate on preferred securities",
+      "Expects ROC treatment to continue for 10+ years (no E&P)",
+    ],
+    "MSTR pays 9.6% dividend on preferred but BTC generates 0% yield — funded by dilution. BMNR's ETH staking generates real 3-5% yield to cover costs.",
+    "Strategy PR",
+    "https://www.strategy.com"
+  ),
+  e(
+    "2026-01-27",
+    "Partnership",
+    "kraken",
+    "Kraken",
+    "Kraken renews long-term partnership with Atlassian Williams F1 Team with front wing branding for 2026",
+    "neutral",
+    [
+      "Partnership since 2023 as Official Crypto and Web3 Partner, now renewed long-term",
+      "Kraken moves to front wing branding on FW48 for 2026 Formula 1 season",
+      "Grid Pass digital collectible program and Presenting Partner of global Fan Zones",
+      "Part of Williams' portfolio of major brand renewals (Duracell, Gulf Oil, VAST Data)",
+    ],
+    "Kraken's mainstream marketing increases crypto adoption broadly. As a BMNR institutional investor, Kraken's growing brand and user base could translate to increased awareness and demand for ETH treasury investment vehicles like BMNR.",
+    "Kraken Blog"
+  ),
+  e(
+    "2026-01-26",
+    "Yield",
+    "kraken",
+    "Kraken",
+    "Kraken launches DeFi Earn with up to 8% APY via audited Veda vaults on Ethereum",
+    "positive",
+    [
+      "Earn up to 8% APY on cash and stablecoins via audited Veda vaults supplying liquidity to Ethereum-based onchain lending",
+      "Three risk-managed vault options: Balanced Yield (Chaos Labs), Boosted Yield (Chaos Labs), Advanced Strategies (Sentora)",
+      "Available in 48 US states (excl. NY, ME), Canada, and European Economic Area",
+      "Withdrawals typically instant with minimal lock-up periods",
+      "Converts user deposits to USDC, then deploys to DeFi lending protocols — increases Ethereum DeFi TVL",
+    ],
+    "Kraken's DeFi Earn validates institutional demand for Ethereum-based yield. Deploys capital to Ethereum lending protocols, growing DeFi TVL and demand for ETH. BMNR's 3-5% ETH staking yield is a complementary but different yield strategy — staking secures the network vs lending generates borrower interest.",
+    "Kraken Blog"
+  ),
+  e(
+    "2026-01-22",
+    "Regulatory",
+    "coinbase",
+    "Coinbase",
+    "Coinbase secures expanded staking license in Singapore",
+    "negative",
+    [
+      "Regulatory approval for institutional staking services",
+      "Expands ETH staking offerings to Asian institutions",
+      "Competitive pressure on independent staking providers",
+      "Part of global regulatory compliance expansion",
+      "Strengthens institutional custody + staking bundle",
+    ],
+    "Coinbase expanding staking services increases competition but validates ETH staking as institutional strategy. BMNR's scale advantage remains.",
+    "Coinbase Blog",
+    "https://www.coinbase.com/blog"
+  ),
+  e(
+    "2026-01-21",
+    "Partnership",
+    "kraken",
+    "Kraken",
+    "Kraken announces memecoin showdown with Atletico Madrid jersey sleeve placement as prize",
+    "neutral",
+    [
+      "Memecoins compete by trading volume on Kraken (Jan 22 – Feb 15, 2026)",
+      "Winner replaces Kraken logo on Atletico de Madrid shirt sleeve for Barcelona match (Apr 4-5)",
+      "Participating tokens: BERT, GIGA, PONKE, UFD, USDUC, USELESS",
+      "Follows successful 2025 memecoin showdown with Williams F1 (Pengu in Singapore)",
+    ],
+    "Kraken's sports marketing drives retail crypto engagement and platform growth. While memecoin activity doesn't directly impact BMNR, growing Kraken's user base as a BMNR institutional investor increases potential distribution channel for ETH treasury products.",
+    "Kraken Blog"
+  ),
+  e(
+    "2026-01-20",
+    "Acquisition",
+    "strategy",
+    "Strategy",
+    "Strategy purchases 22,305 BTC for $2.1B in largest weekly acquisition",
+    "neutral",
+    [
+      "Purchased 22,305 BTC for $2,125.3M at average price of $95,284",
+      "Total holdings now 709,715 BTC at average cost of $75,979",
+      "Aggregate purchase price: $53.92B",
+      "Sold 2,945,371 STRC shares ($294.5M), 38,796 STRK shares ($3.9M)",
+      "Sold 10,399,650 MSTR shares for $1,827.3M net proceeds",
+      "Total net proceeds from ATM: $2,125M",
+    ],
+    "Strategy's massive $2.1B weekly BTC purchase shows aggressive accumulation. No yield generation — purely price appreciation play vs BMNR's staking yield.",
+    "Strategy 8-K",
+    "https://www.sec.gov"
+  ),
+  e(
+    "2026-01-20",
+    "Acquisition",
+    "marathon",
+    "Marathon Digital",
+    "Marathon Digital increases BTC holdings to 46,000+",
+    "neutral",
+    [
+      "Combined mining production and open market purchases",
+      "Mining generates ~15-20 BTC per day at current hashrate",
+      "Follows full HODL strategy - no BTC sales",
+      "Considering expansion into ETH infrastructure",
+      "Q4 2025 production exceeded expectations",
+    ],
+    "MARA's mining produces BTC but at high OpEx cost. BMNR's pure treasury model with staking has lower operational risk.",
+    "Marathon Digital PR",
+    "https://www.mara.com"
+  ),
+  e(
+    "2026-01-18",
+    "Strategy",
+    "riot",
+    "Riot Platforms",
+    "Riot Platforms announces $500M facility expansion",
+    "neutral",
+    [
+      "New mining facility in Texas to increase hashrate 50%",
+      "Expected online by Q3 2026",
+      "Will increase BTC production capacity significantly",
+      "Focus on renewable energy partnerships",
+      "Maintains HODL strategy on mined BTC",
+    ],
+    "Riot's CapEx-intensive mining model contrasts with BMNR's capital-efficient staking. Mining faces halving headwinds; staking does not.",
+    "Riot Platforms PR",
+    "https://www.riotplatforms.com"
+  ),
+  e(
+    "2026-01-15",
+    "Strategy",
+    "kraken",
+    "Kraken",
+    "Kraken economist outlines 2026 outlook: compressed BTC volatility, stablecoins at ATH, RWA tokenization 3x growth",
+    "positive",
+    [
+      "Bitcoin ETFs and Strategy (MSTR) collectively represented ~$44B net spot demand in 2025, yet price disappointed — supply from long-term holders offsetting",
+      "Bitcoin Coin Days Destroyed reached highest level on record in Q4 2025 — meaningful turnover from legacy HODLers",
+      "BTC dominance averaged above 60% in 2025, no sustained breakdown toward sub-50% — typical late-cycle excess not yet seen",
+      "Stablecoin liquidity at all-time highs, systemic risk indicators contained",
+      "Tokenization of RWAs grew from ~$5.6B to ~$19B in single year — expanding beyond Treasuries into commodities, private credit, equities",
+      "DeFi tokenomics evolving: Uniswap-style fee sharing could reprice governance tokens toward durable valuation frameworks",
+      "CLARITY Act could provide framework for digital commodities, accelerating US as crypto capital of the world",
+    ],
+    "Kraken's research directly relevant to BMNR thesis: (1) BTC dominance >60% without alt rotation suggests ETH catch-up potential, (2) DeFi tokenomics maturation (fee sharing) validates ETH staking yield thesis, (3) RWA tokenization 3x growth benefits Ethereum as primary settlement layer, (4) stablecoin ATH supports Ethereum DeFi ecosystem where BMNR's staked ETH operates.",
+    "Kraken Blog"
+  ),
+  e(
+    "2026-01-15",
+    "Financial",
+    "strategy",
+    "Strategy",
+    "Strategy announces Q4 2025 earnings date: February 5, 2026",
+    "neutral",
+    [
+      "Q4 2025 results to be released after market close Feb 5, 2026",
+      "Live video webinar scheduled for 5:00 PM ET",
+      "Now trades under multiple tickers: STRF/STRC/STRK/STRD/MSTR",
+      "Rebranded from MicroStrategy to Strategy",
+      "Describes itself as \"world's first Bitcoin Treasury Company\"",
+    ],
+    "Strategy continues to position as BTC treasury leader. BMNR differentiates with ETH + staking yield model.",
+    "Strategy PR",
+    "https://www.strategy.com"
+  ),
+];

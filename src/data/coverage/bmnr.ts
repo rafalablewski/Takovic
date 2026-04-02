@@ -1,7 +1,7 @@
 /**
  * BMNR coverage data — Bitmine Immersion Technologies
  *
- * LAST UPDATED: 2026-03-31
+ * LAST UPDATED: 2026-04-02
  * NEXT UPDATE: After next 8-K filing or material event
  */
 
@@ -18,6 +18,7 @@ export type {
   AnalystCoverage,
   CasePoint,
   ComparableCompany,
+  CompetitorNewsItem,
   OverviewMetric,
 } from "@/types/coverage";
 
@@ -280,6 +281,11 @@ export const COMPARABLES: ComparableCompany[] = [
 
 export const COMPARABLES_INSIGHT =
   "Each card combines quantitative metrics (holdings, NAV, premium) with qualitative intelligence (threat level, competitive focus). BMNR's ETH staking yield vs BTC treasuries' 0% is the key structural differentiator.";
+
+export {
+  COMPETITOR_NEWS,
+  COMPETITOR_NEWS_METADATA,
+} from "./bmnr-competitor-news";
 
 // ---------------------------------------------------------------------------
 // Financials

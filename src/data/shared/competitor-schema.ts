@@ -2,7 +2,8 @@
  * Shared shape for structured competitor / Comps-tab news entries.
  * Valid competitor IDs and categories for a ticker live in header comments
  * of that ticker's coverage data files (e.g. src/data/coverage/bmnr.ts for
- * comparables context, or ticker-specific competitor news modules when added).
+ * comparables context. BMNR ships structured rows in `COMPETITOR_NEWS` (see
+ * `CompetitorNewsItem` in `@/types/coverage` and `bmnr-competitor-news.ts`).
  *
  * LAST UPDATED: 2026-03-30
  */

@@ -119,3 +119,42 @@ export interface ComparableCompany {
   competitiveFocus: string;
   keyDifferentiator: string;
 }
+
+/** Comps-tab competitor filter buckets (BMNR intelligence) */
+export type CompetitorNewsBucket =
+  | "riot"
+  | "coinbase"
+  | "cleanspark"
+  | "ethzilla"
+  | "kraken"
+  | "marathon"
+  | "miscellaneous"
+  | "strategy";
+
+export type CompetitorNewsStoryCategory =
+  | "Partnership"
+  | "Technology"
+  | "Yield"
+  | "Strategy"
+  | "Regulatory"
+  | "Financial"
+  | "Acquisition"
+  | "Funding";
+
+export type CompetitorNewsImplication = "positive" | "neutral" | "negative";
+
+/** Structured competitor news row for Comps tab */
+export interface CompetitorNewsItem {
+  date: string;
+  category: CompetitorNewsStoryCategory;
+  competitor: CompetitorNewsBucket;
+  /** Display name (e.g. "Kraken", "Marathon Digital") */
+  competitorLabel: string;
+  headline: string;
+  implication: CompetitorNewsImplication;
+  bullets: string[];
+  bmnrComparison: string;
+  source: string;
+  /** Optional link when the source has a public URL */
+  sourceUrl?: string;
+}

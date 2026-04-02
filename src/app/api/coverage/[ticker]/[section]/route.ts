@@ -111,6 +111,7 @@ async function buildSectionPayload(
         ticker: upper,
         comparables: mod.COMPARABLES ?? null,
         insight: mod.COMPARABLES_INSIGHT ?? null,
+        competitorNews: mod.COMPETITOR_NEWS ?? null,
       };
     }
     case "financials": {
