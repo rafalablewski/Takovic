@@ -174,7 +174,7 @@ export function runCryptoTreasuryValuation(
     assetGrowthRates.sort((a, b) => a - b);
   }
 
-  const discountRates = [0.08, 0.1, 0.11, 0.12, 0.2, 0.35];
+  const discountRates = [0, 0.08, 0.1, 0.12, 0.2, 0.35];
   if (!discountRates.some((r) => Math.abs(r - inputs.discountRate) < 0.001)) {
     discountRates.push(inputs.discountRate);
     discountRates.sort((a, b) => a - b);
