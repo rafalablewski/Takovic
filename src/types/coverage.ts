@@ -102,18 +102,6 @@ export interface AnalystCoverage {
   note: string;
 }
 
-/** Single row in a firm’s published note timeline (newest first in data). */
-export interface WallStreetHistoryEntry {
-  date: string;
-  action: string;
-  ratingLabel: string;
-  /** e.g. "$47 ← $47" or "$39" */
-  priceTargetLine: string;
-  attribution: string;
-  headline: string;
-  excerpt?: string;
-}
-
 export interface WallStreetKeyAssumption {
   label: string;
   value: string;
@@ -125,8 +113,8 @@ export interface WallStreetDataTable {
   rows: [string, string][];
 }
 
-/** Expandable research synthesis + structured assumptions (per firm). */
-export interface WallStreetFirmDetail {
+/** Expandable research synthesis + structured assumptions (per published note). */
+export interface WallStreetReportDetail {
   aiSummaryTitle: string;
   aiSummaryParagraphs: string[];
   methodology: string;
@@ -139,6 +127,22 @@ export interface WallStreetFirmDetail {
   /** Optional SOTP-style tables (e.g. Cantor). */
   tableGroups?: { sectionTitle: string; tables: WallStreetDataTable[] }[];
   sourceLine?: string;
+}
+
+/** Single row in a firm’s published note timeline (newest first in data). */
+export interface WallStreetHistoryEntry {
+  /** Stable id for keys / accordions (e.g. `b-riley-2026-01-16`) */
+  entryId?: string;
+  date: string;
+  action: string;
+  ratingLabel: string;
+  /** e.g. "$47 ← $47" or "$39" */
+  priceTargetLine: string;
+  attribution: string;
+  headline: string;
+  excerpt?: string;
+  /** Full research synthesis for this note only (optional per row). */
+  detail?: WallStreetReportDetail;
 }
 
 /** Rich Wall Street card — drives tab UI; `WALL_STREET` can mirror latest row for API. */
@@ -155,7 +159,6 @@ export interface WallStreetFirmCoverage {
   priceTargetHint?: string;
   blurb: string;
   history: WallStreetHistoryEntry[];
-  detail: WallStreetFirmDetail;
 }
 
 // ---------------------------------------------------------------------------
