@@ -112,6 +112,7 @@ async function buildSectionPayload(
         comparables: mod.COMPARABLES ?? null,
         insight: mod.COMPARABLES_INSIGHT ?? null,
         competitorNews: mod.COMPETITOR_NEWS ?? null,
+        peerSnapshot: mod.PEER_SNAPSHOT ?? null,
       };
     }
     case "financials": {

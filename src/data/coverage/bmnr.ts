@@ -20,6 +20,7 @@ export type {
   ComparableCompany,
   CompetitorNewsItem,
   OverviewMetric,
+  PeerSnapshotBundle,
 } from "@/types/coverage";
 
 // ---------------------------------------------------------------------------
@@ -221,66 +222,15 @@ export const CAPITAL_STRUCTURE = {
 export type CapitalStructureData = typeof CAPITAL_STRUCTURE;
 
 // ---------------------------------------------------------------------------
-// Comparable Analysis
+// Comparable Analysis — legacy card grid (empty; see PEER_SNAPSHOT)
 // ---------------------------------------------------------------------------
 
-export const COMPARABLES: ComparableCompany[] = [
-  {
-    ticker: "MSTR",
-    name: "MicroStrategy (Strategy)",
-    asset: "BTC",
-    holdings: "762,099 BTC",
-    holdingsValue: "~$51B",
-    navPremium: "1.75x",
-    stakingYield: "0%",
-    marketCap: "$75.9B",
-    threatLevel: "low",
-    competitiveFocus: "BTC treasury pioneer — different asset, but sets NAV premium precedent",
-    keyDifferentiator: "BTC-only, no staking yield, much larger scale",
-  },
-  {
-    ticker: "COIN",
-    name: "Coinbase",
-    asset: "Mixed",
-    holdings: "N/A (exchange)",
-    holdingsValue: "N/A",
-    navPremium: "N/A",
-    stakingYield: "Staking-as-a-service",
-    marketCap: "$46B",
-    threatLevel: "medium",
-    competitiveFocus: "Could launch ETH treasury strategy or offer competing staking products",
-    keyDifferentiator: "Exchange model, staking infrastructure provider",
-  },
-  {
-    ticker: "ETHE",
-    name: "Grayscale Ethereum Trust",
-    asset: "ETH",
-    holdings: "~2.6M ETH",
-    holdingsValue: "$5.7B",
-    navPremium: "~1.0x",
-    stakingYield: "0%",
-    marketCap: "$5.7B",
-    threatLevel: "high",
-    competitiveFocus: "Direct ETH exposure competitor — cheaper, more liquid, no staking",
-    keyDifferentiator: "ETF structure, no staking yield, institutional access",
-  },
-  {
-    ticker: "ETHD",
-    name: "Various ETH ETFs",
-    asset: "ETH",
-    holdings: "Various",
-    holdingsValue: "$10B+ combined",
-    navPremium: "~1.0x",
-    stakingYield: "0% (pending SEC approval)",
-    marketCap: "N/A",
-    threatLevel: "high",
-    competitiveFocus: "Passive ETH exposure at 1.0x NAV — staking ETFs would narrow BMNR's yield advantage",
-    keyDifferentiator: "Low-cost passive, no staking (yet), high liquidity",
-  },
-];
+export const COMPARABLES: ComparableCompany[] = [];
 
-export const COMPARABLES_INSIGHT =
-  "Each card combines quantitative metrics (holdings, NAV, premium) with qualitative intelligence (threat level, competitive focus). BMNR's ETH staking yield vs BTC treasuries' 0% is the key structural differentiator.";
+export {
+  PEER_SNAPSHOT,
+  PEER_SNAPSHOT_METADATA,
+} from "./bmnr-peer-snapshot";
 
 export {
   COMPETITOR_NEWS,

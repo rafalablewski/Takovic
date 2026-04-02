@@ -120,6 +120,82 @@ export interface ComparableCompany {
   keyDifferentiator: string;
 }
 
+/** Comps peer lens (BMNR extended peer snapshot) */
+export type PeerLensId = "all" | "eth_treasury" | "btc_treasury" | "exchanges";
+
+/** Rich peer row for BMNR-style comps grid */
+export interface PeerSnapshotCard {
+  id: string;
+  name: string;
+  /** e.g. "BMNR · ETH" */
+  tickerLine: string;
+  /** Small badge: ETH, BTC, BTC+ETH */
+  assetBadge: string;
+  threat?: "high" | "medium" | "low";
+  /** e.g. "ETH", "BTC TREASURY", "EXCHANGE" */
+  role: string;
+  /** Which lens filters include this card (`all` shows every card) */
+  lenses: Array<Exclude<PeerLensId, "all">>;
+  holdings: string;
+  navPerShare: string;
+  price: string;
+  premium: string;
+  yieldDisplay: string;
+  marketCap: string;
+  status?: string;
+  focus?: string;
+  narrative?: string;
+  /** True for the covered ticker (e.g. BMNR) */
+  isSubject?: boolean;
+}
+
+export interface PeerYieldAdvantage {
+  title: string;
+  subtitle: string;
+  statLabel: string;
+  statValue: string;
+}
+
+export interface ImpliedValuationRow {
+  method: string;
+  peerBasis: string;
+  multiple: string;
+  impliedValue: string;
+  vsCurrent: string;
+}
+
+export interface SotpRow {
+  component: string;
+  metric: string;
+  multiple: string;
+  value: string;
+}
+
+/** ETH price row labels × NAV multiple column labels */
+export interface NavPremiumSensitivity {
+  caption: string;
+  subtitle?: string;
+  rowLabels: string[];
+  colLabels: string[];
+  /** values[row][col] */
+  values: string[][];
+}
+
+export interface PeerSnapshotBundle {
+  lenses: { id: PeerLensId; label: string }[];
+  cards: PeerSnapshotCard[];
+  yieldAdvantage: PeerYieldAdvantage;
+  valuationFramework: string;
+  impliedValuationTitle: string;
+  impliedValuationCaption: string;
+  impliedValuationRows: ImpliedValuationRow[];
+  sotpTitle: string;
+  sotpRows: SotpRow[];
+  sotpTotalLabel: string;
+  sotpTotalValue: string;
+  navSensitivity: NavPremiumSensitivity;
+}
+
 /** Comps-tab competitor filter buckets (BMNR intelligence) */
 export type CompetitorNewsBucket =
   | "riot"

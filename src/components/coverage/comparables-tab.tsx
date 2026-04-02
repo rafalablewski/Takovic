@@ -10,7 +10,9 @@ import type {
   CompetitorNewsItem,
   CompetitorNewsBucket,
   CompetitorNewsStoryCategory,
+  PeerSnapshotBundle,
 } from "@/types/coverage";
+import { PeerSnapshotPanel } from "@/components/coverage/peer-snapshot-panel";
 import { GitCompareArrows, Shield, Info, ChevronDown, ChevronRight } from "lucide-react";
 
 const threatColors: Record<string, string> = {
@@ -119,6 +121,7 @@ type ComparablesState =
       comparables: ComparableCompany[];
       insight: string | null;
       competitorNews: CompetitorNewsItem[];
+      peerSnapshot: PeerSnapshotBundle | null;
     }
   | { status: "empty" };
 
@@ -156,7 +159,19 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
           "COMPETITOR_NEWS" in mod && Array.isArray(mod.COMPETITOR_NEWS)
             ? (mod.COMPETITOR_NEWS as CompetitorNewsItem[])
             : [];
-        if (comparables.length === 0 && newsRaw.length === 0) {
+        const peerSnapshot =
+          "PEER_SNAPSHOT" in mod &&
+          mod.PEER_SNAPSHOT &&
+          typeof mod.PEER_SNAPSHOT === "object" &&
+          "cards" in mod.PEER_SNAPSHOT &&
+          Array.isArray((mod.PEER_SNAPSHOT as PeerSnapshotBundle).cards)
+            ? (mod.PEER_SNAPSHOT as PeerSnapshotBundle)
+            : null;
+        if (
+          comparables.length === 0 &&
+          newsRaw.length === 0 &&
+          !peerSnapshot
+        ) {
           setState({ status: "empty" });
         } else {
           setState({
@@ -164,6 +179,7 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
             comparables,
             insight,
             competitorNews: newsRaw,
+            peerSnapshot,
           });
         }
       })
@@ -219,14 +235,14 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
     );
   }
 
-  const { comparables, insight, competitorNews } = state;
+  const { comparables, insight, competitorNews, peerSnapshot } = state;
   const { chips: competitorChips, total: newsTotal } =
     buildCompetitorFilterChips(competitorNews);
   const categoryChips = buildCategoryFilterChips(competitorNews);
 
   return (
     <div className="space-y-8">
-      {insight ? (
+      {insight && !peerSnapshot ? (
         <Card>
           <CardContent className="p-5">
             <div className="flex items-start gap-2">
@@ -239,7 +255,9 @@ export function ComparablesTab({ ticker }: { ticker: string }) {
         </Card>
       ) : null}
 
-      {comparables.length > 0 ? (
+      {peerSnapshot ? (
+        <PeerSnapshotPanel bundle={peerSnapshot} />
+      ) : comparables.length > 0 ? (
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-foreground">
             Peer snapshot
