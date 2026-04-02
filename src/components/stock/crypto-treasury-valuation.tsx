@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Card,
   CardHeader,
@@ -9,6 +9,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency, formatPercent, formatLargeNumber, cn } from "@/lib/utils";
 import { runCryptoTreasuryValuation } from "@/lib/analysis/crypto-treasury-valuation";
@@ -17,6 +18,7 @@ import {
   getDefaultInputs,
   getSliderParams,
 } from "@/lib/analysis/crypto-treasury-registry";
+import { isCovered } from "@/data/coverage/registry";
 import type {
   CryptoTreasuryProfile,
   CryptoTreasuryInputs,
@@ -33,6 +35,7 @@ import {
   Target,
   Table2,
   Layers,
+  RefreshCw,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -46,6 +49,321 @@ const verdictColors: Record<string, string> = {
   Overvalued: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400",
   "Significantly Overvalued": "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
 };
+
+type PriceSourceMode = "live" | "custom";
+
+// ---------------------------------------------------------------------------
+// Live Yahoo prices (coverage bundle or generic stock + spot)
+// ---------------------------------------------------------------------------
+
+function useTreasuryLivePrices(ticker: string, profile: CryptoTreasuryProfile) {
+  const upper = ticker.toUpperCase();
+  const spotSymbol = profile.asset === "ETH" ? "ETH-USD" : "BTC-USD";
+  const [liveStock, setLiveStock] = useState<number | null>(null);
+  const [liveAsset, setLiveAsset] = useState<number | null>(null);
+  const [stockRefreshing, setStockRefreshing] = useState(false);
+  const [assetRefreshing, setAssetRefreshing] = useState(false);
+
+  const fetchSpotQuote = useCallback(async (): Promise<number | null> => {
+    const r = await fetch(`/api/stocks/${encodeURIComponent(spotSymbol)}`, {
+      cache: "no-store",
+    });
+    if (!r.ok) return null;
+    const j = (await r.json()) as { quote?: { price?: number } };
+    const p = j.quote?.price;
+    return typeof p === "number" && Number.isFinite(p) ? p : null;
+  }, [spotSymbol]);
+
+  const loadBoth = useCallback(async () => {
+    try {
+      if (isCovered(upper)) {
+        const r = await fetch(
+          `/api/coverage/${encodeURIComponent(upper)}/live-quotes`,
+          { cache: "no-store" }
+        );
+        if (!r.ok) throw new Error("coverage");
+        const j = (await r.json()) as {
+          stock?: { price?: number } | null;
+          eth?: { price?: number } | null;
+          includeEthSpot?: boolean;
+        };
+        const sp =
+          typeof j.stock?.price === "number" && Number.isFinite(j.stock.price)
+            ? j.stock.price
+            : null;
+        setLiveStock(sp);
+        let ap: number | null =
+          profile.asset === "ETH" && j.includeEthSpot && j.eth
+            ? typeof j.eth.price === "number" && Number.isFinite(j.eth.price)
+              ? j.eth.price
+              : null
+            : null;
+        if (ap == null) ap = await fetchSpotQuote();
+        setLiveAsset(ap);
+        return;
+      }
+      const [sr, apVal] = await Promise.all([
+        fetch(`/api/stocks/${encodeURIComponent(upper)}`, { cache: "no-store" }).then(
+          async (res) => {
+            if (!res.ok) return null;
+            const d = (await res.json()) as { quote?: { price?: number } };
+            const p = d.quote?.price;
+            return typeof p === "number" && Number.isFinite(p) ? p : null;
+          }
+        ),
+        fetchSpotQuote(),
+      ]);
+      setLiveStock(sr);
+      setLiveAsset(apVal);
+    } catch {
+      /* keep prior values */
+    }
+  }, [upper, profile.asset, fetchSpotQuote]);
+
+  const refreshStock = useCallback(async () => {
+    setStockRefreshing(true);
+    try {
+      if (isCovered(upper)) {
+        const r = await fetch(
+          `/api/coverage/${encodeURIComponent(upper)}/live-quotes?refresh=1&side=stock`,
+          { cache: "no-store" }
+        );
+        if (r.ok) {
+          const j = (await r.json()) as { stock?: { price?: number } | null };
+          const p = j.stock?.price;
+          if (typeof p === "number" && Number.isFinite(p)) setLiveStock(p);
+        }
+      } else {
+        const r = await fetch(`/api/stocks/${encodeURIComponent(upper)}`, {
+          cache: "no-store",
+        });
+        if (r.ok) {
+          const d = (await r.json()) as { quote?: { price?: number } };
+          const p = d.quote?.price;
+          if (typeof p === "number" && Number.isFinite(p)) setLiveStock(p);
+        }
+      }
+    } finally {
+      setStockRefreshing(false);
+    }
+  }, [upper]);
+
+  const refreshAsset = useCallback(async () => {
+    setAssetRefreshing(true);
+    try {
+      if (isCovered(upper) && profile.asset === "ETH") {
+        const r = await fetch(
+          `/api/coverage/${encodeURIComponent(upper)}/live-quotes?refresh=1&side=eth`,
+          { cache: "no-store" }
+        );
+        if (r.ok) {
+          const j = (await r.json()) as { eth?: { price?: number } | null };
+          const p = j.eth?.price;
+          if (typeof p === "number" && Number.isFinite(p)) setLiveAsset(p);
+        }
+      } else {
+        const p = await fetchSpotQuote();
+        if (p != null) setLiveAsset(p);
+      }
+    } finally {
+      setAssetRefreshing(false);
+    }
+  }, [upper, profile.asset, fetchSpotQuote]);
+
+  useEffect(() => {
+    void loadBoth();
+    const id = window.setInterval(() => void loadBoth(), 60_000);
+    return () => window.clearInterval(id);
+  }, [loadBoth]);
+
+  return {
+    liveStock,
+    liveAsset,
+    refreshStock,
+    refreshAsset,
+    stockRefreshing,
+    assetRefreshing,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Model header — uniform metric cells
+// ---------------------------------------------------------------------------
+
+function ModeToggle({
+  mode,
+  onChange,
+}: {
+  mode: PriceSourceMode;
+  onChange: (m: PriceSourceMode) => void;
+}) {
+  return (
+    <div className="flex rounded-md border border-border bg-muted/40 p-0.5">
+      <button
+        type="button"
+        onClick={() => onChange("live")}
+        className={cn(
+          "flex-1 rounded px-2 py-1 text-[10px] font-semibold uppercase tracking-wide transition-colors",
+          mode === "live"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        Live
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange("custom")}
+        className={cn(
+          "flex-1 rounded px-2 py-1 text-[10px] font-semibold uppercase tracking-wide transition-colors",
+          mode === "custom"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        Custom
+      </button>
+    </div>
+  );
+}
+
+function ModelPriceCell({
+  label,
+  mode,
+  onModeChange,
+  liveDisplay,
+  customValue,
+  onCustomChange,
+  onRefresh,
+  refreshing,
+  footnote,
+}: {
+  label: string;
+  mode: PriceSourceMode;
+  onModeChange: (m: PriceSourceMode) => void;
+  liveDisplay: number;
+  customValue: number;
+  onCustomChange: (n: number) => void;
+  onRefresh: () => void;
+  refreshing: boolean;
+  footnote?: string;
+}) {
+  return (
+    <div className="flex min-w-[10rem] flex-1 flex-col rounded-lg border border-border bg-card/50 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <p className="min-w-0 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          {label}
+        </p>
+        {mode === "live" ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground"
+            onClick={() => void onRefresh()}
+            disabled={refreshing}
+            aria-label={`Refresh ${label}`}
+          >
+            <RefreshCw className={cn("h-3.5 w-3.5", refreshing && "animate-spin")} />
+          </Button>
+        ) : (
+          <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
+        )}
+      </div>
+      <div className="mt-2">
+        <ModeToggle mode={mode} onChange={onModeChange} />
+      </div>
+      {mode === "live" ? (
+        <p className="mt-2 text-lg font-semibold tabular-nums text-foreground">
+          {formatCurrency(liveDisplay)}
+        </p>
+      ) : (
+        <input
+          type="number"
+          min={0}
+          step={0.01}
+          value={Number.isFinite(customValue) ? customValue : 0}
+          onChange={(e) => onCustomChange(parseFloat(e.target.value) || 0)}
+          className="mt-2 h-9 w-full rounded-md border border-border bg-background px-2 text-lg font-semibold tabular-nums text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+        />
+      )}
+      {footnote ? (
+        <p className="mt-1.5 text-[10px] leading-snug text-muted-foreground/80">{footnote}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function ModelHoldingsCell({
+  mode,
+  onModeChange,
+  reportedDisplay,
+  customValue,
+  onCustomChange,
+  assetSymbol,
+}: {
+  mode: PriceSourceMode;
+  onModeChange: (m: PriceSourceMode) => void;
+  reportedDisplay: number;
+  customValue: number;
+  onCustomChange: (n: number) => void;
+  assetSymbol: string;
+}) {
+  return (
+    <div className="flex min-w-[10rem] flex-1 flex-col rounded-lg border border-border bg-card/50 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <p className="min-w-0 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          {assetSymbol} Holdings
+        </p>
+        <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
+      </div>
+      <div className="mt-2">
+        <ModeToggle mode={mode} onChange={onModeChange} />
+      </div>
+      {mode === "live" ? (
+        <p className="mt-2 text-lg font-semibold tabular-nums text-foreground">
+          {reportedDisplay.toLocaleString()}
+        </p>
+      ) : (
+        <input
+          type="number"
+          min={0}
+          step={1}
+          value={Number.isFinite(customValue) ? customValue : 0}
+          onChange={(e) => onCustomChange(parseFloat(e.target.value) || 0)}
+          className="mt-2 h-9 w-full rounded-md border border-border bg-background px-2 text-lg font-semibold tabular-nums text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
+        />
+      )}
+      <p className="mt-1.5 text-[10px] leading-snug text-muted-foreground/80">
+        Live = reported snapshot; custom for what-if holdings.
+      </p>
+    </div>
+  );
+}
+
+function ModelMarketCapCell({ marketCap }: { marketCap: number }) {
+  return (
+    <div className="flex min-w-[10rem] flex-1 flex-col rounded-lg border border-border bg-card/50 p-3">
+      <div className="flex items-start justify-between gap-2">
+        <p className="min-w-0 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          Market Cap
+        </p>
+        <span className="inline-block h-7 w-7 shrink-0" aria-hidden />
+      </div>
+      <div className="mt-2">
+        <div className="flex h-[30px] items-center justify-center rounded-md border border-dashed border-border/70 bg-muted/30 px-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          Derived
+        </div>
+      </div>
+      <p className="mt-2 text-lg font-semibold tabular-nums text-foreground">
+        {formatCurrency(marketCap, "USD", true)}
+      </p>
+      <p className="mt-1.5 text-[10px] leading-snug text-muted-foreground/80">
+        Stock price × shares outstanding.
+      </p>
+    </div>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -62,6 +380,57 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
   const defaultInputs = getDefaultInputs(profile.asset);
   const sliderParams = getSliderParams(profile.asset);
 
+  const {
+    liveStock,
+    liveAsset,
+    refreshStock,
+    refreshAsset,
+    stockRefreshing,
+    assetRefreshing,
+  } = useTreasuryLivePrices(profile.ticker, profile);
+
+  const [stockMode, setStockMode] = useState<PriceSourceMode>("live");
+  const [assetMode, setAssetMode] = useState<PriceSourceMode>("live");
+  const [holdingsMode, setHoldingsMode] = useState<PriceSourceMode>("live");
+  const [customStock, setCustomStock] = useState(profile.currentStockPrice);
+  const [customAsset, setCustomAsset] = useState(profile.assetPrice);
+  const [customHoldings, setCustomHoldings] = useState(profile.assetHoldings);
+
+  useEffect(() => {
+    setCustomStock(profile.currentStockPrice);
+    setCustomAsset(profile.assetPrice);
+    setCustomHoldings(profile.assetHoldings);
+  }, [
+    profile.ticker,
+    profile.currentStockPrice,
+    profile.assetPrice,
+    profile.assetHoldings,
+  ]);
+
+  const stockLiveDisplay = liveStock ?? profile.currentStockPrice;
+  const assetLiveDisplay = liveAsset ?? profile.assetPrice;
+
+  const effectiveStock =
+    stockMode === "live" ? stockLiveDisplay : Math.max(0, customStock);
+  const effectiveAsset =
+    assetMode === "live" ? assetLiveDisplay : Math.max(0, customAsset);
+  const effectiveHoldings =
+    holdingsMode === "live"
+      ? profile.assetHoldings
+      : Math.max(0, customHoldings);
+
+  const effectiveProfile: CryptoTreasuryProfile = useMemo(() => {
+    const shares = profile.sharesOutstanding;
+    const marketCap = effectiveStock * shares;
+    return {
+      ...profile,
+      currentStockPrice: effectiveStock,
+      assetPrice: effectiveAsset,
+      assetHoldings: effectiveHoldings,
+      marketCap,
+    };
+  }, [profile, effectiveStock, effectiveAsset, effectiveHoldings]);
+
   // State: one value per slider key, initialized from default preset index
   const [inputs, setInputs] = useState<CryptoTreasuryInputs>(defaultInputs);
 
@@ -69,30 +438,46 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
     setInputs((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Compute results reactively
   const results: CryptoTreasuryResult = useMemo(
-    () => runCryptoTreasuryValuation(profile, inputs),
-    [profile, inputs]
+    () => runCryptoTreasuryValuation(effectiveProfile, inputs),
+    [effectiveProfile, inputs]
   );
 
   const assetSymbol = profile.asset;
-  const currentNAV = profile.assetHoldings * profile.assetPrice;
+  const currentNAV = effectiveProfile.assetHoldings * effectiveProfile.assetPrice;
   const currentNAVPerShare =
-    profile.sharesOutstanding > 0 ? currentNAV / profile.sharesOutstanding : 0;
+    effectiveProfile.sharesOutstanding > 0
+      ? currentNAV / effectiveProfile.sharesOutstanding
+      : 0;
   const currentPremiumDiscount =
-    currentNAVPerShare > 0 ? profile.currentStockPrice / currentNAVPerShare : 0;
+    currentNAVPerShare > 0
+      ? effectiveProfile.currentStockPrice / currentNAVPerShare
+      : 0;
+
+  const setStockModeSeed = (m: PriceSourceMode) => {
+    if (m === "custom") setCustomStock(stockLiveDisplay);
+    setStockMode(m);
+  };
+  const setAssetModeSeed = (m: PriceSourceMode) => {
+    if (m === "custom") setCustomAsset(assetLiveDisplay);
+    setAssetMode(m);
+  };
+  const setHoldingsModeSeed = (m: PriceSourceMode) => {
+    if (m === "custom") setCustomHoldings(profile.assetHoldings);
+    setHoldingsMode(m);
+  };
 
   return (
     <div className="space-y-6">
-      {/* Company overview bar */}
+      {/* Company overview + model inputs */}
       <Card>
         <CardContent className="p-5">
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <div>
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+            <div className="shrink-0 lg:max-w-[14rem]">
               <p className="text-lg font-semibold text-foreground">
                 {profile.companyName}
               </p>
-              <div className="flex items-center gap-2 mt-0.5">
+              <div className="mt-1 flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="text-[10px]">
                   {profile.ticker}
                 </Badge>
@@ -100,31 +485,43 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
                   {assetSymbol} Treasury
                 </Badge>
               </div>
-            </div>
-            <Separator orientation="vertical" className="h-10 hidden sm:block" />
-            <div>
-              <p className="text-xs text-muted-foreground">Stock Price</p>
-              <p className="text-lg font-semibold tabular-nums">
-                {formatCurrency(profile.currentStockPrice)}
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                Fair value, projections, and sensitivities use the inputs on the right.
               </p>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground">{assetSymbol} Price</p>
-              <p className="text-sm font-medium tabular-nums">
-                {formatCurrency(profile.assetPrice)}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">{assetSymbol} Holdings</p>
-              <p className="text-sm font-medium tabular-nums">
-                {profile.assetHoldings.toLocaleString()}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Market Cap</p>
-              <p className="text-sm font-medium tabular-nums">
-                {formatCurrency(profile.marketCap, "USD", true)}
-              </p>
+            <Separator orientation="vertical" className="hidden h-auto lg:block" />
+            <div className="flex flex-1 flex-wrap gap-3">
+              <ModelPriceCell
+                label="Stock Price"
+                mode={stockMode}
+                onModeChange={setStockModeSeed}
+                liveDisplay={stockLiveDisplay}
+                customValue={customStock}
+                onCustomChange={setCustomStock}
+                onRefresh={refreshStock}
+                refreshing={stockRefreshing}
+                footnote="Live pulls Yahoo via API; custom for scenarios."
+              />
+              <ModelPriceCell
+                label={`${assetSymbol} Price`}
+                mode={assetMode}
+                onModeChange={setAssetModeSeed}
+                liveDisplay={assetLiveDisplay}
+                customValue={customAsset}
+                onCustomChange={setCustomAsset}
+                onRefresh={refreshAsset}
+                refreshing={assetRefreshing}
+                footnote={`Spot (${profile.asset === "ETH" ? "ETH-USD" : "BTC-USD"}).`}
+              />
+              <ModelHoldingsCell
+                mode={holdingsMode}
+                onModeChange={setHoldingsModeSeed}
+                reportedDisplay={profile.assetHoldings}
+                customValue={customHoldings}
+                onCustomChange={setCustomHoldings}
+                assetSymbol={assetSymbol}
+              />
+              <ModelMarketCapCell marketCap={effectiveProfile.marketCap} />
             </div>
           </div>
         </CardContent>
@@ -167,7 +564,7 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
               onChange={(v) => updateInput(param.key, v)}
               assetSymbol={assetSymbol}
               inputs={inputs}
-              profile={profile}
+              profile={effectiveProfile}
             />
           ))}
         </div>
@@ -314,15 +711,15 @@ function CryptoTreasuryInner({ profile }: { profile: CryptoTreasuryProfile }) {
                 {/* Year 0 = current */}
                 <tr className="text-muted-foreground">
                   <td className="py-2 text-xs font-medium">Now</td>
-                  <td className="py-2 text-right tabular-nums">{formatCurrency(profile.assetPrice)}</td>
-                  <td className="py-2 text-right tabular-nums">{profile.assetHoldings.toLocaleString()}</td>
+                  <td className="py-2 text-right tabular-nums">{formatCurrency(effectiveProfile.assetPrice)}</td>
+                  <td className="py-2 text-right tabular-nums">{effectiveProfile.assetHoldings.toLocaleString()}</td>
                   <td className="py-2 text-right">—</td>
                   <td className="py-2 text-right">—</td>
                   <td className="py-2 text-right">—</td>
                   <td className="py-2 text-right tabular-nums">{fmtShares(profile.sharesOutstanding)}</td>
                   <td className="py-2 text-right tabular-nums">{formatCurrency(currentNAV, "USD", true)}</td>
                   <td className="py-2 text-right tabular-nums">{formatCurrency(currentNAVPerShare)}</td>
-                  <td className="py-2 text-right tabular-nums">{formatCurrency(profile.currentStockPrice)}</td>
+                  <td className="py-2 text-right tabular-nums">{formatCurrency(effectiveProfile.currentStockPrice)}</td>
                 </tr>
                 {results.projections.map((row) => (
                   <tr key={row.year} className="transition-colors hover:bg-muted/50">

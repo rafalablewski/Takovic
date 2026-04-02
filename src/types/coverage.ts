@@ -2,6 +2,39 @@
  * Shared types for coverage UI modules (Comps tab, coverage data files).
  */
 
+import type { FMPQuote } from "@/lib/api/yahoo";
+
+// ---------------------------------------------------------------------------
+// Live quotes (coverage overview + GET /api/coverage/[ticker]/live-quotes)
+// ---------------------------------------------------------------------------
+
+/** Display row after normalizing Yahoo quote fields for the overview strip. */
+export interface LiveQuoteRow {
+  symbol: string;
+  label: string;
+  price: number;
+  changesPercentage: number;
+}
+
+/** Serialized API response and Redis cache shape for live quotes. */
+export interface LiveQuotesPayload {
+  stock: FMPQuote | null;
+  eth: FMPQuote | null;
+  ethSymbol: string;
+  /** When true, UI should show an Ethereum spot column (may be null if fetch failed). */
+  includeEthSpot: boolean;
+  updatedAt: number;
+}
+
+/** Client state after mapping API quotes into display rows. */
+export interface NormalizedLiveQuotesPayload {
+  stock: LiveQuoteRow | null;
+  eth: LiveQuoteRow | null;
+  ethSymbol: string;
+  includeEthSpot: boolean;
+  updatedAt: number;
+}
+
 // ---------------------------------------------------------------------------
 // Overview tab
 // ---------------------------------------------------------------------------
