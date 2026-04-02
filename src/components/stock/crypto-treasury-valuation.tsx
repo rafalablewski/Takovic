@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import {
   Card,
   CardHeader,
@@ -193,6 +199,62 @@ function useTreasuryLivePrices(ticker: string, profile: CryptoTreasuryProfile) {
 // Model header — uniform metric cells
 // ---------------------------------------------------------------------------
 
+function formatNumForLooseInput(n: number): string {
+  return Number.isFinite(n) ? String(n) : "";
+}
+
+/**
+ * String-backed input so users can type decimals ("0.", "1.05") without the
+ * controlled number field collapsing; commits on blur.
+ */
+function LooseNumberInput({
+  value,
+  onCommit,
+  min = 0,
+  roundOnCommit,
+  className,
+}: {
+  value: number;
+  onCommit: (n: number) => void;
+  min?: number;
+  /** When set, round to integer on blur (e.g. share counts). */
+  roundOnCommit?: boolean;
+  className?: string;
+}) {
+  const [text, setText] = useState(() => formatNumForLooseInput(value));
+  const lastCommitted = useRef(value);
+
+  useEffect(() => {
+    if (value !== lastCommitted.current) {
+      lastCommitted.current = value;
+      setText(formatNumForLooseInput(value));
+    }
+  }, [value]);
+
+  const handleBlur = () => {
+    const raw = text.replace(/,/g, "").trim();
+    let parsed = parseFloat(raw);
+    if (!Number.isFinite(parsed)) parsed = min;
+    parsed = Math.max(min, parsed);
+    if (roundOnCommit) parsed = Math.round(parsed);
+    lastCommitted.current = parsed;
+    onCommit(parsed);
+    setText(formatNumForLooseInput(parsed));
+  };
+
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      autoComplete="off"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={handleBlur}
+      className={className}
+    />
+  );
+}
+
 function ModeToggle({
   mode,
   onChange,
@@ -281,12 +343,10 @@ function ModelPriceCell({
           {formatCurrency(liveDisplay)}
         </p>
       ) : (
-        <input
-          type="number"
-          min={0}
-          step={0.01}
+        <LooseNumberInput
           value={Number.isFinite(customValue) ? customValue : 0}
-          onChange={(e) => onCustomChange(parseFloat(e.target.value) || 0)}
+          onCommit={onCustomChange}
+          min={0}
           className="mt-2 h-9 w-full rounded-md border border-border bg-background px-2 text-lg font-semibold tabular-nums text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
         />
       )}
@@ -328,12 +388,11 @@ function ModelHoldingsCell({
           {reportedDisplay.toLocaleString()}
         </p>
       ) : (
-        <input
-          type="number"
-          min={0}
-          step={1}
+        <LooseNumberInput
           value={Number.isFinite(customValue) ? customValue : 0}
-          onChange={(e) => onCustomChange(parseFloat(e.target.value) || 0)}
+          onCommit={onCustomChange}
+          min={0}
+          roundOnCommit
           className="mt-2 h-9 w-full rounded-md border border-border bg-background px-2 text-lg font-semibold tabular-nums text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
         />
       )}

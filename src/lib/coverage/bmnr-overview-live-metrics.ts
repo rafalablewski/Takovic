@@ -20,12 +20,15 @@ export function applyBmnrLivePricesToOverviewMetrics(
 
   const navTotal =
     shares * S.navPerShare - S.totalEthValueUsd + S.totalEth * ethPrice;
-  const navPerShareLive = navTotal / shares;
-  const premiumDiscount = (stockPrice - navPerShareLive) / navPerShareLive;
-  const navMultiple = stockPrice / navPerShareLive;
+  const navPerShareLive = shares > 0 ? navTotal / shares : 0;
+  const premiumDiscount =
+    navPerShareLive !== 0 ? (stockPrice - navPerShareLive) / navPerShareLive : 0;
+  const navMultiple =
+    navPerShareLive !== 0 ? stockPrice / navPerShareLive : 0;
   const totalEthValue = S.totalEth * ethPrice;
   const marketCap = stockPrice * shares;
-  const dividendYield = S.annualDiv / stockPrice;
+  const dividendYield =
+    stockPrice > 0 ? S.annualDiv / stockPrice : 0;
   const totalStackLive = S.totalStackUsd - S.totalEthValueUsd + totalEthValue;
 
   const overrides: Record<string, string | number> = {
@@ -61,18 +64,20 @@ export function buildBmnrEthCorrelationMetrics(
   const shares = S.sharesOutstanding;
   const totalEth = S.totalEth;
 
-  const ethPerShare = totalEth / shares;
+  const ethPerShare = shares > 0 ? totalEth / shares : 0;
   const navTotal =
     shares * S.navPerShare - S.totalEthValueUsd + totalEth * eth;
-  const navPerShare = navTotal / shares;
-  const navVsStockPct = ((stock - navPerShare) / navPerShare) * 100;
-  const navDetail =
-    navVsStockPct <= 0
+  const navPerShare = shares > 0 ? navTotal / shares : 0;
+  const navVsStockPct =
+    navPerShare !== 0 ? ((stock - navPerShare) / navPerShare) * 100 : 0;
+  const navDetail = !Number.isFinite(navVsStockPct)
+    ? "—"
+    : navVsStockPct <= 0
       ? `${Math.abs(navVsStockPct).toFixed(1)}% discount`
       : `${navVsStockPct.toFixed(1)}% premium`;
 
-  const impliedEth = stock / ethPerShare;
-  const navSensPer100 = (totalEth * 100) / shares;
+  const impliedEth = ethPerShare > 0 ? stock / ethPerShare : 0;
+  const navSensPer100 = shares > 0 ? (totalEth * 100) / shares : 0;
 
   return [
     {
