@@ -1,7 +1,7 @@
 "use client";
 
-import { Suspense, use, useCallback, useMemo } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useMemo } from "react";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { getCoveredStock, getTabsForStock } from "@/data/coverage/registry";
@@ -38,24 +38,27 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Calculator,
 };
 
-interface PageProps {
-  params: Promise<{ ticker: string }>;
-}
-
-export default function CoveragePage(props: PageProps) {
+export default function CoveragePage() {
   return (
     <Suspense
       fallback={
         <div className="p-6 text-sm text-muted-foreground">Loading coverage…</div>
       }
     >
-      <CoveragePageInner {...props} />
+      <CoveragePageInner />
     </Suspense>
   );
 }
 
-function CoveragePageInner({ params }: PageProps) {
-  const { ticker } = use(params);
+function CoveragePageInner() {
+  const routeParams = useParams();
+  const rawTicker = routeParams.ticker;
+  const ticker =
+    typeof rawTicker === "string"
+      ? rawTicker
+      : Array.isArray(rawTicker)
+        ? rawTicker[0] ?? ""
+        : "";
   const upperTicker = ticker.toUpperCase();
   const stock = getCoveredStock(upperTicker);
   const tabs = getTabsForStock(upperTicker);
