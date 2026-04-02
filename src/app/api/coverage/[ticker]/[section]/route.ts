@@ -133,6 +133,7 @@ async function buildSectionPayload(
         ticker: upper,
         analysts: mod.WALL_STREET ?? null,
         note: mod.WALL_STREET_NOTE ?? null,
+        firms: mod.WALL_STREET_FIRMS ?? null,
       };
     }
     case "timeline": {

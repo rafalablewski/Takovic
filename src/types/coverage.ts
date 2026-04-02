@@ -102,6 +102,62 @@ export interface AnalystCoverage {
   note: string;
 }
 
+/** Single row in a firm’s published note timeline (newest first in data). */
+export interface WallStreetHistoryEntry {
+  date: string;
+  action: string;
+  ratingLabel: string;
+  /** e.g. "$47 ← $47" or "$39" */
+  priceTargetLine: string;
+  attribution: string;
+  headline: string;
+  excerpt?: string;
+}
+
+export interface WallStreetKeyAssumption {
+  label: string;
+  value: string;
+}
+
+export interface WallStreetDataTable {
+  title: string;
+  headers: [string, string];
+  rows: [string, string][];
+}
+
+/** Expandable research synthesis + structured assumptions (per firm). */
+export interface WallStreetFirmDetail {
+  aiSummaryTitle: string;
+  aiSummaryParagraphs: string[];
+  methodology: string;
+  coverageUniverse?: string;
+  institutionalContext?: string;
+  keyAssumptions: WallStreetKeyAssumption[];
+  catalysts: string[];
+  risks: string[];
+  methodologyFooter?: string;
+  /** Optional SOTP-style tables (e.g. Cantor). */
+  tableGroups?: { sectionTitle: string; tables: WallStreetDataTable[] }[];
+  sourceLine?: string;
+}
+
+/** Rich Wall Street card — drives tab UI; `WALL_STREET` can mirror latest row for API. */
+export interface WallStreetFirmCoverage {
+  id: string;
+  firm: string;
+  /** Shown on primary line, e.g. "Fedor Shabalin" or "N/A" */
+  analystName: string;
+  coverageSinceLabel: string;
+  reportCount: number;
+  rating: "Strong Buy" | "Buy" | "Hold" | "Sell" | "Strong Sell";
+  priceTarget: number;
+  /** Short context under PT (e.g. "▼ PT cut Nov 2025") */
+  priceTargetHint?: string;
+  blurb: string;
+  history: WallStreetHistoryEntry[];
+  detail: WallStreetFirmDetail;
+}
+
 // ---------------------------------------------------------------------------
 // Comparables
 // ---------------------------------------------------------------------------

@@ -6,7 +6,6 @@
  */
 
 import type {
-  AnalystCoverage,
   CasePoint,
   ComparableCompany,
   CoverageOverview,
@@ -140,12 +139,11 @@ export {
 // Wall Street Coverage
 // ---------------------------------------------------------------------------
 
-export const WALL_STREET: AnalystCoverage[] = [
-  // BMNR is a micro-cap — limited/no institutional coverage yet
-];
-
-export const WALL_STREET_NOTE =
-  "No institutional analyst coverage has been initiated for BMNR as of March 2026. This is typical for micro-cap crypto treasury companies. Coverage is expected to increase following potential uplisting or significant AUM growth.";
+export {
+  WALL_STREET,
+  WALL_STREET_FIRMS,
+  WALL_STREET_NOTE,
+} from "./bmnr-wall-street";
 
 // ---------------------------------------------------------------------------
 // Capital Structure
