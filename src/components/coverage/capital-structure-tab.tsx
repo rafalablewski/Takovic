@@ -1,33 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn, formatLargeNumber } from "@/lib/utils";
 import { importCoverageTickerModule } from "@/lib/coverage/import-coverage-module";
-import type { CapitalMetric, CapitalStructureData } from "@/data/coverage/bmnr";
-import {
-  Layers,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-  FileText,
-  Banknote,
-} from "lucide-react";
+import type { CapitalMetric, CapitalStructureData } from "@/types/coverage";
+import { Layers } from "lucide-react";
 
-// ---------------------------------------------------------------------------
-// Format helpers
-// ---------------------------------------------------------------------------
+const thClass =
+  "px-3 py-2 text-left text-[10px] font-medium uppercase tracking-wider text-muted-foreground";
+const tdClass = "px-3 py-2 text-xs text-foreground tabular-nums";
+const tdTextClass = "px-3 py-2 text-xs text-foreground";
 
 function fmtHeadline(m: CapitalMetric): string {
   const v = m.value;
   if (typeof v === "string") return v;
   switch (m.format) {
     case "currency":
-      if (Math.abs(v) >= 1e6) return formatLargeNumber(v, { prefix: "$", decimals: Math.abs(v) >= 1e9 ? 2 : 1 });
+      if (Math.abs(v) >= 1e6) {
+        return formatLargeNumber(v, {
+          prefix: "$",
+          decimals: Math.abs(v) >= 1e9 ? 2 : 1,
+        });
+      }
       return `$${v.toLocaleString()}`;
     case "number":
-      if (Math.abs(v) >= 1e6) return formatLargeNumber(v, { decimals: Math.abs(v) >= 1e9 ? 2 : 1 });
+      if (Math.abs(v) >= 1e6) {
+        return formatLargeNumber(v, { decimals: Math.abs(v) >= 1e9 ? 2 : 1 });
+      }
       return v.toLocaleString();
     case "percent":
       return `${(v * 100).toFixed(1)}%`;
@@ -35,51 +36,6 @@ function fmtHeadline(m: CapitalMetric): string {
       return String(v);
   }
 }
-
-// ---------------------------------------------------------------------------
-// Collapsible
-// ---------------------------------------------------------------------------
-
-function Collapsible({
-  title,
-  icon,
-  badge,
-  defaultOpen = false,
-  children,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  badge?: React.ReactNode;
-  defaultOpen?: boolean;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <Card>
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between p-5 text-left"
-      >
-        <div className="flex items-center gap-2">
-          {icon}
-          <span className="text-sm font-medium text-foreground">{title}</span>
-          {badge}
-        </div>
-        {open ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        )}
-      </button>
-      {open && <CardContent className="px-5 pb-5 pt-0">{children}</CardContent>}
-    </Card>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Main
-// ---------------------------------------------------------------------------
 
 type CapitalState =
   | { status: "loading" }
@@ -90,11 +46,11 @@ function isCapitalStructureData(x: unknown): x is CapitalStructureData {
   if (!x || typeof x !== "object") return false;
   const o = x as Record<string, unknown>;
   return (
+    o.schemaVersion === 2 &&
     typeof o.description === "string" &&
     Array.isArray(o.headlines) &&
-    typeof o.summary === "string" &&
-    o.atmProgram != null &&
-    typeof o.atmProgram === "object"
+    Array.isArray(o.detailViews) &&
+    Array.isArray(o.shareClasses)
   );
 }
 
@@ -124,34 +80,45 @@ export function CapitalStructureTab({ ticker }: { ticker: string }) {
   }, [ticker]);
 
   if (state.status === "loading") {
-    return <p className="text-sm text-muted-foreground">Loading capital structure…</p>;
+    return (
+      <p className="text-sm text-muted-foreground">Loading capital structure…</p>
+    );
   }
   if (state.status === "empty") {
-    return <p className="text-sm text-muted-foreground">No capital structure data.</p>;
+    return (
+      <p className="text-sm text-muted-foreground">No capital structure data.</p>
+    );
   }
 
   const { data } = state;
+  const meta = data.metadata;
 
   return (
     <div className="space-y-4">
-      {/* Description */}
+      <p className="text-[10px] text-muted-foreground">
+        Last updated {meta.lastUpdated} · {meta.source}. Next: {meta.nextExpectedUpdate}
+        {meta.notes ? ` · ${meta.notes}` : ""}
+      </p>
+
       <Card>
         <CardContent className="p-5">
-          <p className="text-sm text-muted-foreground leading-relaxed">{data.description}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {data.description}
+          </p>
         </CardContent>
       </Card>
 
-      {/* Key Metrics — Capital Summary */}
       <Card>
         <CardHeader className="p-5 pb-0">
-          <div className="flex items-center gap-2">
-            <Layers className="h-4 w-4 text-muted-foreground" />
-            <CardTitle className="text-sm font-medium">Key Metrics</CardTitle>
-            <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Capital Summary</span>
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <Layers className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Key metrics</CardTitle>
+            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              · Capital summary
+            </span>
           </div>
         </CardHeader>
         <CardContent className="p-5 pt-4 space-y-5">
-          {/* Headline numbers */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {data.headlines.map((h) => (
               <div key={h.label} className="text-center">
@@ -164,134 +131,515 @@ export function CapitalStructureTab({ ticker }: { ticker: string }) {
               </div>
             ))}
           </div>
-
-          {/* Info grid */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 sm:grid-cols-3 border-t border-border pt-4">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 border-t border-border pt-4 sm:grid-cols-3">
             {data.info.map((row) => (
-              <div key={row.label} className="flex items-center justify-between">
+              <div key={row.label} className="flex items-center justify-between gap-2">
                 <span className="text-xs text-muted-foreground">{row.label}</span>
-                <span className="text-sm font-medium tabular-nums text-foreground">{row.value}</span>
+                <span className="text-sm font-medium tabular-nums text-foreground">
+                  {row.value}
+                </span>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Capital Structure summary */}
+      <section className="space-y-2">
+        <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Detail views
+        </h3>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {data.detailViews.map((t) => (
+            <div
+              key={t.title}
+              className="rounded-lg border border-border bg-card p-3 shadow-sm"
+            >
+              <p className="text-xl font-semibold tabular-nums text-foreground">
+                {t.count}
+              </p>
+              <p className="mt-1 text-xs font-medium text-foreground">{t.title}</p>
+              <p className="mt-0.5 text-[10px] text-muted-foreground leading-snug">
+                {t.subtitle}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <Card>
         <CardHeader className="p-5 pb-0">
-          <CardTitle className="text-sm font-medium">Capital Structure</CardTitle>
+          <CardTitle className="text-sm font-medium">Capital structure</CardTitle>
         </CardHeader>
         <CardContent className="p-5 pt-3">
           <p className="text-sm text-muted-foreground leading-relaxed">{data.summary}</p>
         </CardContent>
       </Card>
 
-      {/* Share Structure */}
-      <Collapsible
-        title="Share Structure"
-        icon={<Layers className="h-4 w-4 text-muted-foreground" />}
-      >
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <MetricCell label="Share Class" value={data.shareClass} />
-          <MetricCell label="Outstanding" value={fmtNum(data.sharesOutstanding)} />
-          <MetricCell label="Fully Diluted" value={fmtNum(data.fullyDiluted)} />
-          <MetricCell label="Authorized" value={fmtNum(data.sharesAuthorized)} />
+      <TableCard title={data.shareClassTableTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Class</th>
+                <th className={thClass}>Authorized</th>
+                <th className={thClass}>Outstanding</th>
+                <th className={thClass}>Voting</th>
+                <th className={thClass}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.shareClasses.map((row) => (
+                <tr
+                  key={row.class}
+                  className="border-b border-border last:border-0 hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.class}</td>
+                  <td className={tdClass}>{row.authorized}</td>
+                  <td className={tdClass}>{row.outstanding}</td>
+                  <td className={tdTextClass}>{row.voting}</td>
+                  <td className={tdTextClass}>
+                    <Badge variant="secondary" className="text-[10px] capitalize">
+                      {row.status}
+                    </Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </Collapsible>
+        <p className="mt-3 text-xs text-muted-foreground">{data.shareClassFootnote}</p>
+      </TableCard>
 
-      {/* ATM Program */}
-      <Collapsible
-        title="ATM Program"
-        icon={<Banknote className="h-4 w-4 text-muted-foreground" />}
-        badge={data.atmProgram.active ? <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">Active</Badge> : undefined}
-      >
-        <div className="space-y-2">
-          <p className="text-xs text-muted-foreground">{data.atmProgram.description}</p>
-          <div className="grid grid-cols-2 gap-4">
-            <MetricCell label="Facility" value={data.atmProgram.facility} />
-            <MetricCell label="Usage" value={data.atmProgram.usage} />
+      <TableCard title={data.majorShareholdersTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Shareholder</th>
+                <th className={thClass}>Shares (M)</th>
+                <th className={thClass}>%</th>
+                <th className={thClass}>Type</th>
+                <th className={thClass}>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.majorShareholders.map((row) => (
+                <tr
+                  key={row.shareholder}
+                  className="border-b border-border last:border-0 hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.shareholder}</td>
+                  <td className={tdClass}>{row.sharesM}</td>
+                  <td className={tdClass}>{row.pct}</td>
+                  <td className={tdTextClass}>{row.type}</td>
+                  <td className={tdTextClass}>{row.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {data.majorShareholdersFootnote}
+        </p>
+      </TableCard>
+
+      <TableCard title={data.equityOfferingsTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Date</th>
+                <th className={thClass}>Type</th>
+                <th className={thClass}>Amount</th>
+                <th className={thClass}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.equityOfferings.map((row) => (
+                <tr
+                  key={`${row.date}-${row.type}`}
+                  className="border-b border-border last:border-0 hover:bg-muted/20"
+                >
+                  <td className={tdClass}>{row.date}</td>
+                  <td className={tdTextClass}>{row.type}</td>
+                  <td className={tdClass}>{row.amount}</td>
+                  <td className={tdTextClass}>
+                    <Badge variant="outline" className="text-[10px] capitalize">
+                      {row.status}
+                    </Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs font-medium text-foreground">
+          Total shelf capacity: {data.totalShelfCapacity}
+        </p>
+      </TableCard>
+
+      <TableCard title={data.warrantsTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Type</th>
+                <th className={thClass}>Shares</th>
+                <th className={thClass}>Strike</th>
+                <th className={thClass}>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.warrants.map((row) => (
+                <tr
+                  key={row.type}
+                  className="border-b border-border last:border-0 hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.type}</td>
+                  <td className={tdClass}>{row.shares}</td>
+                  <td className={tdClass}>{row.strike}</td>
+                  <td className={tdTextClass}>{row.source}</td>
+                </tr>
+              ))}
+              <tr className="bg-muted/20 font-medium">
+                <td className={tdTextClass}>{data.warrantsTotalLabel}</td>
+                <td className={tdClass}>{data.warrantsTotalShares}</td>
+                <td className={tdClass} colSpan={2} />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </TableCard>
+
+      <TableCard title={data.equityPlansTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Plan</th>
+                <th className={thClass}>Reserved</th>
+                <th className={thClass}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.equityPlans.map((row) => (
+                <tr
+                  key={row.plan}
+                  className="border-b border-border last:border-0 hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.plan}</td>
+                  <td className={tdClass}>{row.reserved}</td>
+                  <td className={tdTextClass}>{row.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">{data.equityPlansFootnote}</p>
+      </TableCard>
+
+      <TableCard title={data.fullyDilutedTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Component</th>
+                <th className={thClass}>Shares (M)</th>
+                <th className={thClass}>% of total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.fullyDilutedComponents.map((row) => (
+                <tr
+                  key={row.component}
+                  className={cn(
+                    "border-b border-border last:border-0 hover:bg-muted/20",
+                    row.component.includes("Total") && "bg-muted/20 font-medium"
+                  )}
+                >
+                  <td className={tdTextClass}>{row.component}</td>
+                  <td className={tdClass}>{row.sharesM}</td>
+                  <td className={tdClass}>{row.pctOfTotal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">{data.fullyDilutedFootnote}</p>
+      </TableCard>
+
+      <Card>
+        <CardHeader className="p-5 pb-0">
+          <CardTitle className="text-sm font-medium">{data.liquiditySectionTitle}</CardTitle>
+          <CardDescription className="text-xs">
+            Staking yield {data.stakingYieldQ} · Net burn/Q {data.netBurnQ}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-5 pt-4 space-y-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {data.liquidityHero.map((h) => (
+              <div
+                key={h.label}
+                className="rounded-lg border border-border bg-muted/20 p-4 text-center"
+              >
+                <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                  {h.label}
+                </p>
+                <p className="mt-1 text-xl font-semibold tabular-nums text-foreground">
+                  {h.value}
+                </p>
+                {h.sublabel ? (
+                  <p className="mt-0.5 text-[10px] text-muted-foreground">{h.sublabel}</p>
+                ) : null}
+              </div>
+            ))}
           </div>
-        </div>
-      </Collapsible>
 
-      {/* Convertible Notes */}
-      <Collapsible
-        title="Convertible Notes"
-        icon={<FileText className="h-4 w-4 text-muted-foreground" />}
-        badge={data.convertibleNotes.active ? <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 text-[10px]">Active</Badge> : undefined}
-      >
-        <div className="space-y-2">
-          <p className="text-xs text-muted-foreground">{data.convertibleNotes.description}</p>
-          <p className="text-xs text-muted-foreground">{data.convertibleNotes.detail}</p>
-        </div>
-      </Collapsible>
-
-      {/* Registered Directs */}
-      <Collapsible
-        title="Registered Directs"
-        icon={<FileText className="h-4 w-4 text-muted-foreground" />}
-        badge={data.registeredDirects.active ? <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400 text-[10px]">Active</Badge> : undefined}
-      >
-        <div className="space-y-2">
-          <p className="text-xs text-muted-foreground">{data.registeredDirects.description}</p>
-          <MetricCell label="Frequency" value={data.registeredDirects.frequency} />
-        </div>
-      </Collapsible>
-
-      {/* Warrants */}
-      <Collapsible
-        title="Warrants"
-        icon={<FileText className="h-4 w-4 text-muted-foreground" />}
-      >
-        <div className="space-y-2">
-          <p className="text-xs text-muted-foreground">{data.warrants.description}</p>
-          <MetricCell label="Estimated Dilution" value={data.warrants.estimatedDilution} />
-        </div>
-      </Collapsible>
-
-      {/* Dilution Analysis */}
-      <Collapsible
-        title="Dilution Analysis"
-        icon={<AlertTriangle className="h-4 w-4 text-amber-500" />}
-      >
-        <div className="space-y-3">
-          <MetricCell label="Annual Dilution Rate" value={data.dilutionAnalysis.annualRate} highlight="amber" />
-          <div className="rounded-md bg-muted/40 p-3 space-y-1.5">
-            <p className="text-xs">
-              <span className="font-medium text-emerald-600 dark:text-emerald-400">Bull case: </span>
-              <span className="text-muted-foreground">{data.dilutionAnalysis.mitigant}</span>
-            </p>
-            <p className="text-xs">
-              <span className="font-medium text-red-600 dark:text-red-400">Bear case: </span>
-              <span className="text-muted-foreground">{data.dilutionAnalysis.riskScenario}</span>
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold text-foreground">{data.ethStressTitle}</h4>
+            <div className="overflow-x-auto rounded-md border border-border">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/30">
+                    <th className={thClass}>Case</th>
+                    <th className={thClass}>ETH</th>
+                    <th className={thClass}>Runway</th>
+                    <th className={thClass}>Yield</th>
+                    <th className={thClass}>Liquidity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.ethStressRows.map((row) => (
+                    <tr
+                      key={row.label}
+                      className="border-b border-border last:border-0 hover:bg-muted/20"
+                    >
+                      <td className={tdTextClass}>{row.label}</td>
+                      <td className={tdClass}>{row.ethPrice}</td>
+                      <td className={tdTextClass}>{row.runway}</td>
+                      <td className={tdTextClass}>{row.yieldPerQ}</td>
+                      <td className={tdTextClass}>{row.liquidity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {data.ethStressFootnote}
             </p>
           </div>
+
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold text-foreground">
+              {data.runwayScenariosTitle}
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              {data.runwayScenariosIntro}
+            </p>
+            <div className="overflow-x-auto rounded-md border border-border">
+              <table className="w-full border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/30">
+                    <th className={thClass}>Scenario</th>
+                    <th className={thClass}>Cash</th>
+                    <th className={thClass}>Burn/Q</th>
+                    <th className={thClass}>Yield/Q</th>
+                    <th className={thClass}>Runway</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.runwayScenarios.map((row) => (
+                    <tr
+                      key={row.scenario}
+                      className="border-b border-border last:border-0 hover:bg-muted/20"
+                    >
+                      <td className={tdTextClass}>{row.scenario}</td>
+                      <td className={tdClass}>{row.cash}</td>
+                      <td className={tdClass}>{row.burnQ}</td>
+                      <td className={tdClass}>{row.yieldQ}</td>
+                      <td className={tdTextClass}>{row.runway}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {data.runwayScenariosFootnote ? (
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {data.runwayScenariosFootnote}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold text-foreground">
+              {data.treasuryFactorsTitle}
+            </h4>
+            <ul className="space-y-2">
+              {data.treasuryFactors.map((f) => (
+                <li key={f.title} className="text-xs text-muted-foreground leading-relaxed">
+                  <span className="font-medium text-foreground">{f.title}. </span>
+                  {f.body}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <MiniGrid title={data.cashPositionTitle} rows={data.cashPositionGrid} />
+            <MiniGrid title={data.ethTreasuryTitle} rows={data.ethTreasuryGrid} />
+          </div>
+        </CardContent>
+      </Card>
+
+      <section className="space-y-4">
+        <h3 className="text-sm font-medium text-foreground">{data.insiderActivityTitle}</h3>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatTile label="Total shares sold" value={data.insiderTotals.totalSharesSold} />
+          <StatTile label="Total proceeds" value={data.insiderTotals.totalProceeds} />
+          <StatTile label="Avg price" value={data.insiderTotals.avgPrice} />
+          <StatTile label="Period" value={data.insiderTotals.period} />
         </div>
-      </Collapsible>
+        <p className="text-xs text-muted-foreground">{data.insiderSalesIntro}</p>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Insider</th>
+                <th className={thClass}>Shares sold</th>
+                <th className={thClass}>Proceeds</th>
+                <th className={thClass}>Avg price</th>
+                <th className={thClass}>Method</th>
+                <th className={thClass}>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.insiderSales.map((row) => (
+                <tr
+                  key={row.insider}
+                  className="border-b border-border last:border-0 align-top hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.insider}</td>
+                  <td className={tdClass}>{row.sharesSold}</td>
+                  <td className={tdClass}>{row.proceeds}</td>
+                  <td className={tdClass}>{row.avgPrice}</td>
+                  <td className={tdTextClass}>{row.method}</td>
+                  <td className={cn(tdTextClass, "max-w-[220px]")}>{row.notes}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <TableCard title={data.rsuSectionTitle}>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Insider</th>
+                <th className={thClass}>RSUs granted</th>
+                <th className={thClass}>Vested</th>
+                <th className={thClass}>Tax withheld</th>
+                <th className={thClass}>Unvested</th>
+                <th className={thClass}>Vesting</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.rsuGrants.map((row) => (
+                <tr
+                  key={row.insider}
+                  className="border-b border-border last:border-0 hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.insider}</td>
+                  <td className={tdClass}>{row.rsusGranted}</td>
+                  <td className={tdClass}>{row.vested}</td>
+                  <td className={tdClass}>{row.taxWithheld}</td>
+                  <td className={tdClass}>{row.unvested}</td>
+                  <td className={tdTextClass}>{row.vestingSchedule}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {data.rsuFootnote ? (
+          <p className="mt-3 text-xs text-muted-foreground">{data.rsuFootnote}</p>
+        ) : null}
+      </TableCard>
+
+      <TableCard title={data.earlyShareholdersTitle}>
+        <CardDescription className="mb-3 text-xs">{data.earlyShareholdersIntro}</CardDescription>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className={thClass}>Shareholder</th>
+                <th className={thClass}>Shares</th>
+                <th className={thClass}>%</th>
+                <th className={thClass}>Source</th>
+                <th className={thClass}>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.earlyShareholders.map((row) => (
+                <tr
+                  key={row.shareholder}
+                  className="border-b border-border last:border-0 align-top hover:bg-muted/20"
+                >
+                  <td className={tdTextClass}>{row.shareholder}</td>
+                  <td className={tdClass}>{row.shares}</td>
+                  <td className={tdClass}>{row.pct}</td>
+                  <td className={tdTextClass}>{row.source}</td>
+                  <td className={cn(tdTextClass, "max-w-[240px]")}>{row.notes}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </TableCard>
     </div>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function MetricCell({ label, value, highlight }: { label: string; value: string; highlight?: "amber" }) {
+function TableCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div>
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className={cn(
-        "mt-0.5 text-sm font-medium",
-        highlight === "amber" ? "text-amber-600 dark:text-amber-400" : "text-foreground"
-      )}>
-        {value}
-      </p>
+    <Card>
+      <CardHeader className="p-5 pb-0">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-5 pt-3">{children}</CardContent>
+    </Card>
+  );
+}
+
+function MiniGrid({
+  title,
+  rows,
+}: {
+  title: string;
+  rows: { label: string; value: string }[];
+}) {
+  return (
+    <div className="rounded-lg border border-border p-4">
+      <p className="text-xs font-semibold text-foreground">{title}</p>
+      <dl className="mt-3 space-y-2">
+        {rows.map((r) => (
+          <div key={r.label} className="flex items-center justify-between gap-2 text-xs">
+            <dt className="text-muted-foreground">{r.label}</dt>
+            <dd className="font-medium tabular-nums text-foreground">{r.value}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }
 
-function fmtNum(n: number): string {
-  if (n >= 1e6) return formatLargeNumber(n, { decimals: n >= 1e9 ? 2 : 1 });
-  return n.toLocaleString();
+function StatTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-muted/20 p-3">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1 text-sm font-semibold tabular-nums text-foreground">{value}</p>
+    </div>
+  );
 }

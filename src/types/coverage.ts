@@ -234,3 +234,207 @@ export interface CompetitorNewsItem {
   /** Optional link when the source has a public URL */
   sourceUrl?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Capital structure tab (coverage)
+// ---------------------------------------------------------------------------
+
+/** Headline metric in the capital summary strip (numeric formatting in UI). */
+export interface CapitalMetric {
+  label: string;
+  value: string | number;
+  format?: "number" | "currency" | "percent" | "text";
+}
+
+export interface CapitalInfoRow {
+  label: string;
+  value: string;
+}
+
+/** Summary tiles under the capital narrative (counts + subtitle). */
+export interface CapitalDetailViewTile {
+  count: string;
+  title: string;
+  subtitle: string;
+}
+
+export interface CapitalShareClassRow {
+  class: string;
+  authorized: string;
+  outstanding: string;
+  voting: string;
+  status: string;
+}
+
+export interface CapitalShareholderRow {
+  shareholder: string;
+  sharesM: string;
+  pct: string;
+  type: string;
+  source: string;
+}
+
+export interface CapitalEquityOfferingRow {
+  date: string;
+  type: string;
+  amount: string;
+  status: string;
+  /** Billions USD — when set, rolled into total shelf capacity display */
+  amountBillions?: number;
+}
+
+export interface CapitalWarrantRow {
+  type: string;
+  shares: string;
+  strike: string;
+  source: string;
+  /** Shares underlying this tranche; drives FD total and dilution when summed */
+  shareCount?: number;
+}
+
+export interface CapitalEquityPlanRow {
+  plan: string;
+  reserved: string;
+  status: string;
+}
+
+export interface CapitalFullyDilutedRow {
+  component: string;
+  sharesM: string;
+  pctOfTotal: string;
+}
+
+export interface CapitalLiquidityHero {
+  label: string;
+  value: string;
+  sublabel?: string;
+}
+
+export interface CapitalEthStressRow {
+  label: string;
+  ethPrice: string;
+  runway: string;
+  yieldPerQ: string;
+  liquidity: string;
+}
+
+export interface CapitalRunwayScenarioRow {
+  scenario: string;
+  cash: string;
+  burnQ: string;
+  yieldQ: string;
+  runway: string;
+}
+
+export interface CapitalTreasuryFactor {
+  title: string;
+  body: string;
+}
+
+export interface CapitalKeyValue {
+  label: string;
+  value: string;
+}
+
+export interface CapitalInsiderSaleRow {
+  insider: string;
+  sharesSold: string;
+  proceeds: string;
+  avgPrice: string;
+  method: string;
+  notes: string;
+  /** Shares sold (raw count); when all rows carry this, insider totals are computed */
+  sharesSoldNumber?: number;
+  /** Proceeds in USD; when set with sharesSoldNumber, reinforces totals */
+  proceedsUsd?: number;
+}
+
+export interface CapitalRsuRow {
+  insider: string;
+  rsusGranted: string;
+  vested: string;
+  taxWithheld: string;
+  unvested: string;
+  vestingSchedule: string;
+}
+
+export interface CapitalEarlyHolderRow {
+  shareholder: string;
+  shares: string;
+  pct: string;
+  source: string;
+  notes: string;
+}
+
+export interface CoverageDataMetadata {
+  lastUpdated: string;
+  source: string;
+  nextExpectedUpdate: string;
+  notes?: string;
+}
+
+/**
+ * Rich capital structure payload for `CAPITAL_STRUCTURE` on coverage tickers.
+ * `schemaVersion: 2` is required for the full tab UI.
+ */
+export interface CapitalStructureData {
+  schemaVersion: 2;
+  metadata: CoverageDataMetadata;
+  description: string;
+  headlines: CapitalMetric[];
+  info: CapitalInfoRow[];
+  summary: string;
+  detailViews: CapitalDetailViewTile[];
+  shareClassTableTitle: string;
+  shareClassFootnote: string;
+  shareClasses: CapitalShareClassRow[];
+  majorShareholdersTitle: string;
+  majorShareholders: CapitalShareholderRow[];
+  majorShareholdersFootnote: string;
+  equityOfferingsTitle: string;
+  equityOfferings: CapitalEquityOfferingRow[];
+  totalShelfCapacity: string;
+  warrantsTitle: string;
+  warrants: CapitalWarrantRow[];
+  warrantsTotalLabel: string;
+  warrantsTotalShares: string;
+  equityPlansTitle: string;
+  equityPlans: CapitalEquityPlanRow[];
+  equityPlansFootnote: string;
+  fullyDilutedTitle: string;
+  fullyDilutedComponents: CapitalFullyDilutedRow[];
+  fullyDilutedFootnote: string;
+  liquiditySectionTitle: string;
+  liquidityHero: CapitalLiquidityHero[];
+  stakingYieldQ: string;
+  netBurnQ: string;
+  ethStressTitle: string;
+  ethStressFootnote: string;
+  ethStressRows: CapitalEthStressRow[];
+  runwayScenariosTitle: string;
+  runwayScenariosIntro: string;
+  runwayScenarios: CapitalRunwayScenarioRow[];
+  /** Optional second line under the runway table */
+  runwayScenariosFootnote?: string;
+  treasuryFactorsTitle: string;
+  treasuryFactors: CapitalTreasuryFactor[];
+  cashPositionTitle: string;
+  cashPositionGrid: CapitalKeyValue[];
+  ethTreasuryTitle: string;
+  ethTreasuryGrid: CapitalKeyValue[];
+  insiderActivityTitle: string;
+  insiderTotals: {
+    totalSharesSold: string;
+    totalProceeds: string;
+    avgPrice: string;
+    period: string;
+  };
+  insiderSalesIntro: string;
+  insiderSales: CapitalInsiderSaleRow[];
+  rsuSectionTitle: string;
+  rsuGrants: CapitalRsuRow[];
+  rsuFootnote?: string;
+  earlyShareholdersTitle: string;
+  earlyShareholdersIntro: string;
+  earlyShareholders: CapitalEarlyHolderRow[];
+}
