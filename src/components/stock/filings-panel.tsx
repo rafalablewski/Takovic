@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,8 +25,16 @@ import {
   Globe,
   ChevronDown,
   ChevronUp,
+  Sparkles,
 } from "lucide-react";
 import { useIntelligenceData } from "@/components/stock/use-intelligence-data";
+import {
+  FILING_AI_PROVIDERS,
+  FILING_AI_PROVIDER_LABELS,
+  FILING_AI_PROVIDER_STORAGE_KEY,
+  type FilingAiProvider,
+  normalizeFilingAiProvider,
+} from "@/lib/ai/filing-provider-prefs";
 
 const FILING_TYPES = [
   { value: "all", label: "All" },
@@ -208,9 +216,103 @@ export function CompanyInfoBar({ company }: { company: EdgarCompanyInfo }) {
   );
 }
 
-export function SecFilingsList({ filings }: { filings: IntelligenceFiling[] }) {
+type RowStatus =
+  | { state: "idle" }
+  | { state: "loading" }
+  | { state: "done"; summary: string }
+  | { state: "error"; message: string };
+
+function rowKey(filing: IntelligenceFiling, idx: number): string {
+  return filing.accessionNumber
+    ? `${filing.accessionNumber}-${filing.filingDate}`
+    : `${filing.viewUrl}-${filing.filingDate}-${idx}`;
+}
+
+export function SecFilingsList({
+  filings,
+  ticker,
+  companyName,
+}: {
+  filings: IntelligenceFiling[];
+  ticker: string;
+  companyName?: string | null;
+}) {
   const [filterType, setFilterType] = useState("all");
   const [showCount, setShowCount] = useState(20);
+  const [aiProvider, setAiProvider] = useState<FilingAiProvider>(
+    normalizeFilingAiProvider(undefined)
+  );
+  const [rowStatus, setRowStatus] = useState<Record<string, RowStatus>>({});
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(FILING_AI_PROVIDER_STORAGE_KEY);
+      setAiProvider(normalizeFilingAiProvider(raw ?? undefined));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const persistProvider = useCallback((p: FilingAiProvider) => {
+    setAiProvider(p);
+    try {
+      localStorage.setItem(FILING_AI_PROVIDER_STORAGE_KEY, p);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const runAnalyze = useCallback(
+    async (filing: IntelligenceFiling, idx: number) => {
+      const key = rowKey(filing, idx);
+      if (!filing.viewUrl) return;
+      setRowStatus((s) => ({ ...s, [key]: { state: "loading" } }));
+      try {
+        const res = await fetch(
+          `/api/intelligence/${encodeURIComponent(ticker)}/filings/analyze`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              form: filing.form,
+              filingDate: filing.filingDate,
+              source: filing.source,
+              viewUrl: filing.viewUrl,
+              accessionNumber: filing.accessionNumber || null,
+              primaryDocDescription: filing.primaryDocDescription || null,
+              items: filing.items || null,
+              companyName: companyName ?? null,
+              aiProvider,
+            }),
+          }
+        );
+        const data = (await res.json()) as {
+          error?: string;
+          summary?: string;
+        };
+        if (!res.ok) {
+          setRowStatus((s) => ({
+            ...s,
+            [key]: { state: "error", message: data.error || "Request failed" },
+          }));
+          return;
+        }
+        setRowStatus((s) => ({
+          ...s,
+          [key]: { state: "done", summary: data.summary || "" },
+        }));
+      } catch (e) {
+        setRowStatus((s) => ({
+          ...s,
+          [key]: {
+            state: "error",
+            message: e instanceof Error ? e.message : "Network error",
+          },
+        }));
+      }
+    },
+    [ticker, companyName, aiProvider]
+  );
 
   const filtered =
     filterType === "all"
@@ -229,6 +331,23 @@ export function SecFilingsList({ filings }: { filings: IntelligenceFiling[] }) {
 
   return (
     <div className="space-y-4 pt-1">
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-muted-foreground">AI model</span>
+        <select
+          className="rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground"
+          value={aiProvider}
+          onChange={(e) =>
+            persistProvider(normalizeFilingAiProvider(e.target.value))
+          }
+          aria-label="AI provider for filing analysis"
+        >
+          {FILING_AI_PROVIDERS.map((p) => (
+            <option key={p} value={p}>
+              {FILING_AI_PROVIDER_LABELS[p]}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
         <Filter className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
         {FILING_TYPES.map((ft) => {
@@ -260,10 +379,13 @@ export function SecFilingsList({ filings }: { filings: IntelligenceFiling[] }) {
       </div>
 
       <div className="divide-y divide-border/50">
-        {visible.map((filing, idx) => (
+        {visible.map((filing, idx) => {
+          const rk = rowKey(filing, idx);
+          const status = rowStatus[rk] ?? { state: "idle" as const };
+          return (
           <div
             key={`${filing.accessionNumber}-${idx}`}
-            className="flex items-start justify-between gap-3 py-3 first:pt-0"
+            className="flex flex-col gap-2 py-3 first:pt-0 sm:flex-row sm:items-start sm:justify-between sm:gap-3"
           >
             <div className="min-w-0 flex-1 space-y-1.5">
               <div className="flex flex-wrap items-center gap-2">
@@ -312,9 +434,34 @@ export function SecFilingsList({ filings }: { filings: IntelligenceFiling[] }) {
                   </Badge>
                 )}
               </div>
+              {status.state === "done" && status.summary && (
+                <p className="mt-2 rounded-md border border-border/80 bg-muted/30 p-2 text-xs leading-relaxed text-foreground">
+                  {status.summary}
+                </p>
+              )}
+              {status.state === "error" && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                  {status.message}
+                </p>
+              )}
             </div>
 
-            <div className="flex shrink-0 gap-1.5">
+            <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="h-8 gap-1 text-xs"
+                disabled={!filing.viewUrl || status.state === "loading"}
+                onClick={() => runAnalyze(filing, idx)}
+              >
+                {status.state === "loading" ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5" />
+                )}
+                Analyze
+              </Button>
               {filing.viewUrl && (
                 <a
                   href={filing.viewUrl}
@@ -339,7 +486,8 @@ export function SecFilingsList({ filings }: { filings: IntelligenceFiling[] }) {
               )}
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {filtered.length > 20 && (
@@ -415,7 +563,11 @@ export function FilingsPanel({ ticker }: { ticker: string }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 pt-3">
-          <SecFilingsList filings={data.filings} />
+          <SecFilingsList
+            filings={data.filings}
+            ticker={ticker}
+            companyName={data.company?.name ?? null}
+          />
         </CardContent>
       </Card>
     </div>

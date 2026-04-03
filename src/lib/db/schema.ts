@@ -187,6 +187,32 @@ export const newsArticles = pgTable(
   ]
 );
 
+/** SEC filing AI analysis (one row per deduped filing fingerprint). */
+export const filingAnalyses = pgTable(
+  "filing_analyses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    filingFingerprint: varchar("filing_fingerprint", { length: 128 }).notNull(),
+    ticker: varchar("ticker", { length: 10 }).notNull(),
+    accessionNumber: varchar("accession_number", { length: 32 }),
+    form: varchar("form", { length: 32 }).notNull(),
+    filingDate: varchar("filing_date", { length: 16 }).notNull(),
+    source: varchar("source", { length: 8 }).notNull(),
+    documentUrl: text("document_url").notNull(),
+    companyName: text("company_name"),
+    summary: text("summary").notNull(),
+    keyPoints: text("key_points").array(),
+    sentiment: sentimentEnum("sentiment"),
+    aiProvider: varchar("ai_provider", { length: 20 }).notNull(),
+    model: varchar("model", { length: 128 }),
+    analyzedAt: timestamp("analyzed_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("filing_analyses_fingerprint_idx").on(table.filingFingerprint),
+    index("filing_analyses_ticker_idx").on(table.ticker),
+  ]
+);
+
 // User Preferences
 export const userPreferences = pgTable("user_preferences", {
   id: uuid("id").primaryKey().defaultRandom(),
