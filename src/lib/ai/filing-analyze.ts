@@ -137,11 +137,17 @@ function parseFilingJson(raw: string): Omit<FilingAnalysisResult, "model"> {
   return { summary, keyPoints, sentiment };
 }
 
+function clampInt(n: number, min: number, max: number): number {
+  if (!Number.isFinite(n)) return min;
+  return Math.max(min, Math.min(max, Math.floor(n)));
+}
+
 async function openAiCompatibleJson(args: {
   url: string;
   apiKey: string;
   model: string;
   prompt: string;
+  maxTokens: number;
   extraHeaders?: Record<string, string>;
 }): Promise<{ text: string; model: string }> {
   const res = await fetch(args.url, {
@@ -155,8 +161,7 @@ async function openAiCompatibleJson(args: {
       model: args.model,
       messages: [{ role: "user", content: args.prompt }],
       response_format: { type: "json_object" },
-      max_tokens:
-        Number(process.env.FILING_AI_MAX_TOKENS) || 16_384,
+      max_tokens: Math.max(1, Math.floor(args.maxTokens)),
     }),
   });
 
@@ -173,30 +178,46 @@ async function openAiCompatibleJson(args: {
   return { text, model: args.model };
 }
 
+/** DeepSeek chat API caps `max_tokens` at 8192 (as of API error messages). */
+const DEEPSEEK_MAX_TOKENS_CAP = 8192;
+
 async function analyzeWithDeepSeek(prompt: string): Promise<FilingAnalysisResult> {
   const key = process.env.DEEPSEEK_API_KEY;
   if (!key) throw new Error("DEEPSEEK_API_KEY is not configured");
   const model = process.env.DEEPSEEK_MODEL_FILING || "deepseek-chat";
+  const requested =
+    Number(process.env.DEEPSEEK_MAX_TOKENS_FILING || process.env.FILING_AI_MAX_TOKENS) ||
+    DEEPSEEK_MAX_TOKENS_CAP;
   const { text, model: used } = await openAiCompatibleJson({
     url: "https://api.deepseek.com/chat/completions",
     apiKey: key,
     model,
     prompt,
+    maxTokens: clampInt(requested, 1, DEEPSEEK_MAX_TOKENS_CAP),
   });
   const parsed = parseFilingJson(text);
   return { ...parsed, model: used };
 }
+
+/** OpenRouter / model-specific; keep conservative default, override with env. */
+const OPENROUTER_MAX_TOKENS_CAP = Number(
+  process.env.OPENROUTER_MAX_TOKENS_CAP || 16_384
+);
 
 async function analyzeWithOpenRouter(prompt: string): Promise<FilingAnalysisResult> {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new Error("OPENROUTER_API_KEY is not configured");
   const model =
     process.env.OPENROUTER_MODEL_FILING || "openai/gpt-4o-mini";
+  const requested =
+    Number(process.env.OPENROUTER_MAX_TOKENS_FILING || process.env.FILING_AI_MAX_TOKENS) ||
+    8192;
   const { text, model: used } = await openAiCompatibleJson({
     url: "https://openrouter.ai/api/v1/chat/completions",
     apiKey: key,
     model,
     prompt,
+    maxTokens: clampInt(requested, 1, OPENROUTER_MAX_TOKENS_CAP),
     extraHeaders: {
       "HTTP-Referer":
         process.env.OPENROUTER_HTTP_REFERER || "https://takovic.com",
