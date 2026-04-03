@@ -35,6 +35,8 @@ import {
   type FilingAiProvider,
   normalizeFilingAiProvider,
 } from "@/lib/ai/filing-provider-prefs";
+import { filingDedupeKey } from "@/lib/ai/filing-dedupe-key";
+import type { SavedFilingAnalysesMap } from "@/app/api/intelligence/[ticker]/route";
 
 const FILING_TYPES = [
   { value: "all", label: "All" },
@@ -222,20 +224,43 @@ type RowStatus =
   | { state: "done"; summary: string }
   | { state: "error"; message: string };
 
-function rowKey(filing: IntelligenceFiling, idx: number): string {
-  return filing.accessionNumber
-    ? `${filing.accessionNumber}-${filing.filingDate}`
-    : `${filing.viewUrl}-${filing.filingDate}-${idx}`;
+function stableFilingRowKey(
+  ticker: string,
+  filing: IntelligenceFiling
+): string {
+  return filingDedupeKey(ticker, {
+    accessionNumber: filing.accessionNumber,
+    viewUrl: filing.viewUrl,
+    filingDate: filing.filingDate,
+    form: filing.form,
+  });
+}
+
+function resolveRowStatus(
+  ticker: string,
+  filing: IntelligenceFiling,
+  local: RowStatus | undefined,
+  saved: SavedFilingAnalysesMap | undefined
+): RowStatus {
+  if (local?.state === "loading" || local?.state === "error") return local;
+  if (local?.state === "done") return local;
+  const dedupe = stableFilingRowKey(ticker, filing);
+  const fromDb = saved?.[dedupe];
+  if (fromDb?.summary)
+    return { state: "done", summary: fromDb.summary };
+  return { state: "idle" };
 }
 
 export function SecFilingsList({
   filings,
   ticker,
   companyName,
+  savedFilingAnalyses = {},
 }: {
   filings: IntelligenceFiling[];
   ticker: string;
   companyName?: string | null;
+  savedFilingAnalyses?: SavedFilingAnalysesMap;
 }) {
   const [filterType, setFilterType] = useState("all");
   const [showCount, setShowCount] = useState(20);
@@ -263,8 +288,8 @@ export function SecFilingsList({
   }, []);
 
   const runAnalyze = useCallback(
-    async (filing: IntelligenceFiling, idx: number) => {
-      const key = rowKey(filing, idx);
+    async (filing: IntelligenceFiling) => {
+      const key = stableFilingRowKey(ticker, filing);
       if (!filing.viewUrl) return;
       setRowStatus((s) => ({ ...s, [key]: { state: "loading" } }));
       try {
@@ -379,12 +404,17 @@ export function SecFilingsList({
       </div>
 
       <div className="divide-y divide-border/50">
-        {visible.map((filing, idx) => {
-          const rk = rowKey(filing, idx);
-          const status = rowStatus[rk] ?? { state: "idle" as const };
+        {visible.map((filing) => {
+          const rk = stableFilingRowKey(ticker, filing);
+          const status = resolveRowStatus(
+            ticker,
+            filing,
+            rowStatus[rk],
+            savedFilingAnalyses
+          );
           return (
           <div
-            key={`${filing.accessionNumber}-${idx}`}
+            key={rk}
             className="flex flex-col gap-2 py-3 first:pt-0 sm:flex-row sm:items-start sm:justify-between sm:gap-3"
           >
             <div className="min-w-0 flex-1 space-y-1.5">
@@ -453,7 +483,7 @@ export function SecFilingsList({
                 size="sm"
                 className="h-8 gap-1 text-xs"
                 disabled={!filing.viewUrl || status.state === "loading"}
-                onClick={() => runAnalyze(filing, idx)}
+                onClick={() => runAnalyze(filing)}
               >
                 {status.state === "loading" ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -567,6 +597,7 @@ export function FilingsPanel({ ticker }: { ticker: string }) {
             filings={data.filings}
             ticker={ticker}
             companyName={data.company?.name ?? null}
+            savedFilingAnalyses={data.savedFilingAnalyses}
           />
         </CardContent>
       </Card>
