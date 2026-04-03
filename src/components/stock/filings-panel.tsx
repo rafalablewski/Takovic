@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import type { EdgarCompanyInfo } from "@/lib/api/edgar";
 import type { IntelligenceFiling } from "@/app/api/intelligence/[ticker]/route";
@@ -465,9 +467,11 @@ export function SecFilingsList({
                 )}
               </div>
               {status.state === "done" && status.summary && (
-                <p className="mt-2 rounded-md border border-border/80 bg-muted/30 p-2 text-xs leading-relaxed text-foreground">
-                  {status.summary}
-                </p>
+                <ScrollArea className="mt-2 max-h-[min(70vh,28rem)] rounded-md border border-border/80 bg-muted/30">
+                  <div className="p-3 pr-4 text-xs leading-relaxed text-foreground [&_h1]:mb-2 [&_h1]:text-sm [&_h1]:font-semibold [&_h2]:mt-4 [&_h2]:scroll-mt-2 [&_h2]:border-b [&_h2]:border-border/60 [&_h2]:pb-1 [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:text-xs [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:ml-4 [&_ol]:list-decimal [&_p]:my-2 [&_strong]:font-semibold [&_ul]:ml-4 [&_ul]:list-disc [&_hr]:my-3 [&_hr]:border-border">
+                    <ReactMarkdown>{status.summary}</ReactMarkdown>
+                  </div>
+                </ScrollArea>
               )}
               {status.state === "error" && (
                 <p className="mt-1 text-xs text-red-600 dark:text-red-400">

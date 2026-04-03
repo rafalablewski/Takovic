@@ -1,9 +1,11 @@
 /**
- * Multi-provider SEC filing excerpt analysis (JSON: summary, keyPoints, sentiment).
+ * Multi-provider SEC filing excerpt analysis.
+ * Output: JSON with Markdown `report` (equity research template) + sentiment.
  * Default provider: DeepSeek (OpenAI-compatible).
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { FILING_EQUITY_RESEARCH_INSTRUCTIONS } from "@/lib/ai/filing-equity-research-prompt";
 import {
   FILING_AI_PROVIDERS,
   type FilingAiProvider,
@@ -46,17 +48,14 @@ function buildFilingPrompt(input: {
   documentText: string;
 }): string {
   const note = input.truncatedNote
-    ? "The document below is a truncated excerpt; base conclusions on what is visible."
+    ? "\n\nNote: The filing text below is a truncated excerpt only. State assumptions clearly; avoid claiming full-document facts you cannot see."
     : "";
 
-  return `You are a financial analyst. Read the SEC filing excerpt and respond with a single JSON object only (no markdown), using this exact shape:
-{
-  "summary": "2-4 short paragraphs of plain English for investors",
-  "keyPoints": ["3-8 concise bullets"],
-  "sentiment": "bullish" | "somewhat_bullish" | "neutral" | "somewhat_bearish" | "bearish"
-}
+  return `${FILING_EQUITY_RESEARCH_INSTRUCTIONS}
 
-Context:
+---
+
+## Filing metadata (context)
 - Ticker: ${input.ticker}
 - Company: ${input.companyName || "Unknown"}
 - Form: ${input.form}
@@ -64,9 +63,24 @@ Context:
 ${input.items ? `- 8-K items: ${input.items}` : ""}
 ${note}
 
---- DOCUMENT START ---
+---
+
+## Required output format
+Respond with **one JSON object only** (no markdown code fences). Use valid JSON: escape quotes and newlines inside strings.
+
+Schema:
+{
+  "sentiment": "bullish" | "somewhat_bullish" | "neutral" | "somewhat_bearish" | "bearish",
+  "report": "<single string containing your FULL analysis as Markdown, following sections 1–10 above with the same headings and depth>",
+  "executiveSummaryBullets": ["5–10 strings", "TL;DR bullets mirroring section 1"]
+}
+
+- The "report" field must include **all** sections 1–10 with Markdown headings (##) and bullet lists as appropriate.
+- Put the entire Markdown report inside the JSON string (use \\n for newlines).
+
+--- FILING TEXT START ---
 ${input.documentText}
---- DOCUMENT END ---`;
+--- FILING TEXT END ---`;
 }
 
 function parseFilingJson(raw: string): Omit<FilingAnalysisResult, "model"> {
@@ -75,7 +89,9 @@ function parseFilingJson(raw: string): Omit<FilingAnalysisResult, "model"> {
   if (fence) text = fence[1].trim();
 
   let parsed: {
+    report?: string;
     summary?: string;
+    executiveSummaryBullets?: string[];
     keyPoints?: string[];
     sentiment?: string;
   };
@@ -93,14 +109,24 @@ function parseFilingJson(raw: string): Omit<FilingAnalysisResult, "model"> {
     );
   }
 
-  const summary =
-    typeof parsed.summary === "string" && parsed.summary.length > 0
-      ? parsed.summary
-      : "No summary generated.";
+  const report =
+    typeof parsed.report === "string" && parsed.report.trim().length > 0
+      ? parsed.report.trim()
+      : typeof parsed.summary === "string" && parsed.summary.trim().length > 0
+        ? parsed.summary.trim()
+        : "";
 
-  const keyPoints = Array.isArray(parsed.keyPoints)
-    ? parsed.keyPoints.filter((x): x is string => typeof x === "string")
-    : [];
+  const summary = report || "No analysis generated.";
+
+  const bulletSource = Array.isArray(parsed.executiveSummaryBullets)
+    ? parsed.executiveSummaryBullets
+    : Array.isArray(parsed.keyPoints)
+      ? parsed.keyPoints
+      : [];
+
+  const keyPoints = bulletSource.filter(
+    (x): x is string => typeof x === "string" && x.length > 0
+  );
 
   let sentiment: FilingSentiment = "neutral";
   const s = String(parsed.sentiment || "").toLowerCase().replace(/\s/g, "_");
@@ -129,6 +155,8 @@ async function openAiCompatibleJson(args: {
       model: args.model,
       messages: [{ role: "user", content: args.prompt }],
       response_format: { type: "json_object" },
+      max_tokens:
+        Number(process.env.FILING_AI_MAX_TOKENS) || 16_384,
     }),
   });
 
@@ -186,7 +214,7 @@ async function analyzeWithClaude(prompt: string): Promise<FilingAnalysisResult> 
   const client = new Anthropic({ apiKey: key });
   const message = await client.messages.create({
     model,
-    max_tokens: 4096,
+    max_tokens: Number(process.env.CLAUDE_MAX_TOKENS_FILING) || 16_384,
     messages: [{ role: "user", content: prompt }],
   });
   const block = message.content[0];
@@ -207,6 +235,8 @@ async function analyzeWithGemini(prompt: string): Promise<FilingAnalysisResult> 
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
         responseMimeType: "application/json",
+        maxOutputTokens:
+          Number(process.env.GEMINI_MAX_TOKENS_FILING) || 8192,
       },
     }),
   });
