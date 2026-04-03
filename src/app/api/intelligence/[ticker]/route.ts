@@ -8,6 +8,10 @@ import {
 import type { EdgarCompanyInfo, EdgarFiling } from "@/lib/api/edgar";
 import { getSECFilings, getPressReleases } from "@/lib/api/yahoo";
 import type { FMPPressRelease } from "@/lib/api/yahoo";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { filingAnalyses } from "@/lib/db/schema";
+import { filingDedupeKey } from "@/lib/ai/filing-dedupe-key";
 
 /** Serialized filing for the client */
 export interface IntelligenceFiling {
@@ -26,12 +30,19 @@ export interface IntelligenceFiling {
   source: "edgar" | "fmp";
 }
 
+/** Key is filingDedupeKey(ticker, filing); use to restore saved AI summaries after refresh. */
+export type SavedFilingAnalysesMap = Record<
+  string,
+  { summary: string; analyzedAt: string }
+>;
+
 export interface IntelligenceResponse {
   ticker: string;
   company: EdgarCompanyInfo | null;
   filings: IntelligenceFiling[];
   pressReleases: FMPPressRelease[];
   source: "edgar" | "fmp";
+  savedFilingAnalyses: SavedFilingAnalysesMap;
 }
 
 export async function GET(
@@ -112,12 +123,39 @@ export async function GET(
     // FMP may fail for smaller tickers — that's OK
   }
 
+  let savedFilingAnalyses: SavedFilingAnalysesMap = {};
+  try {
+    const rows = await db
+      .select()
+      .from(filingAnalyses)
+      .where(eq(filingAnalyses.ticker, upperTicker));
+
+    for (const row of rows) {
+      const key = filingDedupeKey(upperTicker, {
+        accessionNumber: row.accessionNumber ?? "",
+        viewUrl: row.documentUrl,
+        filingDate: row.filingDate,
+        form: row.form,
+      });
+      savedFilingAnalyses[key] = {
+        summary: row.summary,
+        analyzedAt:
+          row.analyzedAt instanceof Date
+            ? row.analyzedAt.toISOString()
+            : String(row.analyzedAt),
+      };
+    }
+  } catch (e) {
+    console.warn(`filing_analyses load skipped for ${upperTicker}:`, e);
+  }
+
   const response: IntelligenceResponse = {
     ticker: upperTicker,
     company,
     filings,
     pressReleases,
     source,
+    savedFilingAnalyses,
   };
 
   return NextResponse.json(response);

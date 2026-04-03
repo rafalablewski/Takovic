@@ -200,6 +200,7 @@ export function Intelligence({ ticker }: { ticker: string }) {
                 filings={data.filings}
                 ticker={ticker}
                 companyName={data.company?.name ?? null}
+                savedFilingAnalyses={data.savedFilingAnalyses}
               />
             </TabsContent>
 

@@ -1,4 +1,7 @@
 import { createHash } from "node:crypto";
+import { filingDedupeKey } from "@/lib/ai/filing-dedupe-key";
+
+export { filingDedupeKey } from "@/lib/ai/filing-dedupe-key";
 
 export function buildFilingFingerprint(
   ticker: string,
@@ -9,6 +12,7 @@ export function buildFilingFingerprint(
     form: string;
   }
 ): string {
-  const raw = `${ticker.toUpperCase()}|${parts.accessionNumber || parts.viewUrl}|${parts.filingDate}|${parts.form}`;
-  return createHash("sha256").update(raw).digest("hex");
+  return createHash("sha256")
+    .update(filingDedupeKey(ticker, parts))
+    .digest("hex");
 }

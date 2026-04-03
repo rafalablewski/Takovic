@@ -3,7 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import type { EdgarCompanyInfo } from "@/lib/api/edgar";
 import type { FMPPressRelease } from "@/lib/api/yahoo";
-import type { IntelligenceFiling } from "@/app/api/intelligence/[ticker]/route";
+import type {
+  IntelligenceFiling,
+  SavedFilingAnalysesMap,
+} from "@/app/api/intelligence/[ticker]/route";
 
 export interface IntelligenceData {
   ticker: string;
@@ -11,6 +14,7 @@ export interface IntelligenceData {
   filings: IntelligenceFiling[];
   pressReleases: FMPPressRelease[];
   source: "edgar" | "fmp";
+  savedFilingAnalyses: SavedFilingAnalysesMap;
 }
 
 export function useIntelligenceData(ticker: string) {
@@ -24,8 +28,13 @@ export function useIntelligenceData(ticker: string) {
     try {
       const res = await fetch(`/api/intelligence/${ticker}`);
       if (!res.ok) throw new Error("Failed to fetch intelligence data");
-      const json: IntelligenceData = await res.json();
-      setData(json);
+      const json = (await res.json()) as IntelligenceData & {
+        savedFilingAnalyses?: SavedFilingAnalysesMap;
+      };
+      setData({
+        ...json,
+        savedFilingAnalyses: json.savedFilingAnalyses ?? {},
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
