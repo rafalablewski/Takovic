@@ -196,7 +196,11 @@ export function Intelligence({ ticker }: { ticker: string }) {
             </TabsList>
 
             <TabsContent value="sec-filings">
-              <SecFilingsList filings={data.filings} />
+              <SecFilingsList
+                filings={data.filings}
+                ticker={ticker}
+                companyName={data.company?.name ?? null}
+              />
             </TabsContent>
 
             <TabsContent value="press-wire">
