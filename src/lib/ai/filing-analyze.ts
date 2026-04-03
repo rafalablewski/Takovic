@@ -74,11 +74,24 @@ function parseFilingJson(raw: string): Omit<FilingAnalysisResult, "model"> {
   const fence = text.match(/^```(?:json)?\s*([\s\S]*?)```$/i);
   if (fence) text = fence[1].trim();
 
-  const parsed = JSON.parse(text) as {
+  let parsed: {
     summary?: string;
     keyPoints?: string[];
     sentiment?: string;
   };
+  try {
+    parsed = JSON.parse(text) as typeof parsed;
+  } catch (e) {
+    console.error(
+      "Filing AI JSON parse error:",
+      e,
+      "Raw snippet:",
+      text.slice(0, 800)
+    );
+    throw new Error(
+      "The model returned invalid JSON; try again or switch provider."
+    );
+  }
 
   const summary =
     typeof parsed.summary === "string" && parsed.summary.length > 0

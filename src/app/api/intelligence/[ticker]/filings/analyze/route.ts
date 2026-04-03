@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { filingAnalyses } from "@/lib/db/schema";
 import { buildFilingFingerprint } from "@/lib/ai/filing-fingerprint";
@@ -100,8 +99,9 @@ export async function POST(
 
   const now = new Date();
 
+  let row: typeof filingAnalyses.$inferSelect | undefined;
   try {
-    await db
+    const inserted = await db
       .insert(filingAnalyses)
       .values({
         filingFingerprint: fingerprint,
@@ -136,17 +136,13 @@ export async function POST(
           model: analysis.model,
           analyzedAt: now,
         },
-      });
+      })
+      .returning();
+    row = inserted[0];
   } catch (e) {
     console.error("Filing analysis DB error:", e);
     return NextResponse.json({ error: "Failed to save analysis" }, { status: 500 });
   }
-
-  const [row] = await db
-    .select()
-    .from(filingAnalyses)
-    .where(eq(filingAnalyses.filingFingerprint, fingerprint))
-    .limit(1);
 
   return NextResponse.json({
     id: row?.id,
