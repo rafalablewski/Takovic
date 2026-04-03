@@ -54,6 +54,7 @@ export default async function AdminPlatformPage() {
     { path: "CLAUDE.md", note: "Project rules, architecture, entity standards" },
     { path: "AGENTS.md", note: "Next.js agent hints" },
     { path: "src/lib/ai/coverage-prompts/coverage-analyst-template.ts", note: "Coverage analyst template" },
+    { path: "src/lib/ai/filing-equity-research-prompt.ts", note: "SEC/EDGAR filing analysis prompt" },
   ];
 
   return (

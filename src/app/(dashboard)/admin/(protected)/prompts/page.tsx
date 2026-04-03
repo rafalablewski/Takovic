@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { AI_WORKFLOWS } from "@/lib/admin/ai-workflows";
 import { getAllCoveredStocks } from "@/data/coverage/registry";
 import { buildCoverageContext } from "@/lib/ai/prompts";
+import { getSecEdgarFilingAnalysisPromptAdminPreview } from "@/lib/ai/filing-equity-research-prompt";
 import { CopyCoveragePromptButton } from "../copy-coverage-prompt-button";
 
 interface PromptsPageProps {
@@ -29,6 +30,8 @@ export default async function AdminPromptsPage({ searchParams }: PromptsPageProp
   const resolvedPrompt = activeTicker
     ? await buildCoverageContext(activeTicker)
     : null;
+
+  const secEdgarFilingPrompt = getSecEdgarFilingAnalysisPromptAdminPreview();
 
   return (
     <div className="space-y-8">
@@ -161,6 +164,34 @@ export default async function AdminPromptsPage({ searchParams }: PromptsPageProp
               </table>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 space-y-1.5">
+            <CardTitle className="text-base">SEC/EDGAR file analysis</CardTitle>
+            <CardDescription>
+              Same template as{" "}
+              <code className="text-xs">buildFilingPrompt</code> in{" "}
+              <code className="text-xs">filing-analyze.ts</code>, without live
+              filing text. Source:{" "}
+              <code className="text-xs">
+                filing-equity-research-prompt.ts
+              </code>
+              .
+            </CardDescription>
+          </div>
+          <CopyCoveragePromptButton
+            text={secEdgarFilingPrompt}
+            copyLabel="Copy prompt"
+            ariaLabel="Copy SEC EDGAR filing analysis prompt to clipboard"
+          />
+        </CardHeader>
+        <CardContent>
+          <pre className="max-h-[min(480px,60vh)] overflow-auto rounded-md border border-border bg-muted/30 p-4 font-mono text-xs whitespace-pre-wrap text-foreground">
+            {secEdgarFilingPrompt}
+          </pre>
         </CardContent>
       </Card>
 

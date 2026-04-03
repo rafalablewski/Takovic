@@ -5,7 +5,10 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
-import { FILING_EQUITY_RESEARCH_INSTRUCTIONS } from "@/lib/ai/filing-equity-research-prompt";
+import {
+  FILING_EQUITY_RESEARCH_INSTRUCTIONS,
+  FILING_ANALYSIS_JSON_OUTPUT_RULES,
+} from "@/lib/ai/filing-equity-research-prompt";
 import {
   FILING_AI_PROVIDERS,
   type FilingAiProvider,
@@ -65,18 +68,7 @@ ${note}
 
 ---
 
-## Required output format
-Respond with **one JSON object only** (no markdown code fences). Use valid JSON: escape quotes and newlines inside strings.
-
-Schema:
-{
-  "sentiment": "bullish" | "somewhat_bullish" | "neutral" | "somewhat_bearish" | "bearish",
-  "report": "<single string containing your FULL analysis as Markdown, following sections 1–10 above with the same headings and depth>",
-  "executiveSummaryBullets": ["5–10 strings", "TL;DR bullets mirroring section 1"]
-}
-
-- The "report" field must include **all** sections 1–10 with Markdown headings (##) and bullet lists as appropriate.
-- Put the entire Markdown report inside the JSON string (use \\n for newlines).
+${FILING_ANALYSIS_JSON_OUTPUT_RULES}
 
 --- FILING TEXT START ---
 ${input.documentText}

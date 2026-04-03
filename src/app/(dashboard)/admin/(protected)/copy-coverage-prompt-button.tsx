@@ -4,7 +4,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 
-export function CopyCoveragePromptButton({ text }: { text: string }) {
+export function CopyCoveragePromptButton({
+  text,
+  copyLabel = "Copy prompt",
+  ariaLabel = "Copy prompt to clipboard",
+}: {
+  text: string;
+  copyLabel?: string;
+  ariaLabel?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -26,14 +34,14 @@ export function CopyCoveragePromptButton({ text }: { text: string }) {
       className="shrink-0"
       disabled={!text}
       onClick={handleCopy}
-      aria-label={copied ? "Prompt copied" : "Copy coverage analyst prompt to clipboard"}
+      aria-label={copied ? "Copied" : ariaLabel}
     >
       {copied ? (
         <Check className="text-emerald-600 dark:text-emerald-400" />
       ) : (
         <Copy />
       )}
-      {copied ? "Copied" : "Copy prompt"}
+      {copied ? "Copied" : copyLabel}
     </Button>
   );
 }

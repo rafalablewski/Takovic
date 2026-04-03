@@ -46,6 +46,33 @@ export const AI_WORKFLOWS: AiWorkflow[] = [
     modelEnvKeys: ["CLAUDE_MODEL_SENTIMENT"],
     consumers: ["FMP news pipeline (where sentiment is applied)"],
   },
+  {
+    id: "sec-edgar-filing-analysis",
+    name: "SEC/EDGAR file analysis",
+    purpose:
+      "Equity-research-style deep dive on SEC filing excerpts: JSON with Markdown report (10 sections), sentiment, executive bullets; multi-provider.",
+    source:
+      "src/lib/ai/filing-equity-research-prompt.ts + filing-analyze.ts — buildFilingPrompt",
+    modelEnvKeys: [
+      "DEEPSEEK_API_KEY",
+      "DEEPSEEK_MODEL_FILING",
+      "DEEPSEEK_MAX_TOKENS_FILING",
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_MODEL_FILING",
+      "CLAUDE_MAX_TOKENS_FILING",
+      "GOOGLE_API_KEY / GEMINI_API_KEY",
+      "GEMINI_MODEL_FILING",
+      "OPENROUTER_API_KEY",
+      "OPENROUTER_MODEL_FILING",
+      "FILING_AI_MAX_TOKENS",
+      "FILING_AI_MAX_CHARS",
+    ],
+    consumers: [
+      "POST /api/intelligence/[ticker]/filings/analyze",
+      "Intelligence + stock research SEC filings — Analyze button",
+      "Admin → Prompts & AI: full prompt preview + copy",
+    ],
+  },
 ];
 
 export function getAiWorkflowById(id: string): AiWorkflow | undefined {
