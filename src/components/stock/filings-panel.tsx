@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import {
   Card,
   CardContent,
@@ -251,6 +257,89 @@ function resolveRowStatus(
   return { state: "idle" };
 }
 
+function FilingAnalysisBlock({
+  summary,
+  rowKey,
+  analysisExpanded,
+  setAnalysisExpanded,
+}: {
+  summary: string;
+  rowKey: string;
+  analysisExpanded: Record<string, boolean>;
+  setAnalysisExpanded: Dispatch<SetStateAction<Record<string, boolean>>>;
+}) {
+  const longAnalysis = summary.length > 480;
+  const expanded =
+    !longAnalysis || (analysisExpanded[rowKey] ?? false);
+  const toggleExpanded = () =>
+    setAnalysisExpanded((prev) => ({
+      ...prev,
+      [rowKey]: !expanded,
+    }));
+
+  return (
+    <div className="mt-3 space-y-1.5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+          Analysis
+        </span>
+        <div className="flex items-center gap-2">
+          {longAnalysis && expanded && (
+            <span className="text-[10px] text-muted-foreground/90">
+              Scroll for full report
+            </span>
+          )}
+          {longAnalysis && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 gap-1 px-2 text-[11px] text-muted-foreground hover:text-foreground"
+              onClick={toggleExpanded}
+              aria-expanded={expanded}
+            >
+              {expanded ? (
+                <>
+                  Collapse
+                  <ChevronUp className="h-3 w-3" />
+                </>
+              ) : (
+                <>
+                  Expand
+                  <ChevronDown className="h-3 w-3" />
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+      </div>
+      <div
+        className={cn(
+          "relative rounded-lg border border-border/80 bg-muted/30 shadow-inner",
+          expanded
+            ? "max-h-[min(92dvh,72rem)] overflow-y-auto overscroll-y-contain scroll-smooth"
+            : "max-h-32 overflow-hidden"
+        )}
+        aria-label={
+          expanded
+            ? "Filing analysis — scroll to read the full report"
+            : "Filing analysis preview"
+        }
+      >
+        <div className="p-3 pr-2 sm:p-4 sm:pr-3 text-xs leading-relaxed text-foreground [&_h1]:mb-2 [&_h1]:text-sm [&_h1]:font-semibold [&_h2]:mt-4 [&_h2]:scroll-mt-2 [&_h2]:border-b [&_h2]:border-border/60 [&_h2]:pb-1 [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:text-xs [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:ml-4 [&_ol]:list-decimal [&_p]:my-2 [&_strong]:font-semibold [&_ul]:ml-4 [&_ul]:list-disc [&_hr]:my-3 [&_hr]:border-border">
+          <ReactMarkdown>{summary}</ReactMarkdown>
+        </div>
+        {longAnalysis && !expanded && (
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-muted/95 to-transparent"
+            aria-hidden
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function SecFilingsList({
   filings,
   ticker,
@@ -268,6 +357,10 @@ export function SecFilingsList({
     normalizeFilingAiProvider(undefined)
   );
   const [rowStatus, setRowStatus] = useState<Record<string, RowStatus>>({});
+  /** When true, full scrollable analysis; when false, clipped preview (long reports only). */
+  const [analysisExpanded, setAnalysisExpanded] = useState<Record<string, boolean>>(
+    {}
+  );
 
   useEffect(() => {
     try {
@@ -465,24 +558,12 @@ export function SecFilingsList({
                 )}
               </div>
               {status.state === "done" && status.summary && (
-                <div className="mt-3 space-y-1.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Analysis
-                    </span>
-                    <span className="text-[10px] text-muted-foreground/90">
-                      Scroll for full report
-                    </span>
-                  </div>
-                  <div
-                    className="max-h-[min(92dvh,72rem)] overflow-y-auto overscroll-y-contain scroll-smooth rounded-lg border border-border/80 bg-muted/30 shadow-inner"
-                    aria-label="Filing analysis — scroll to read the full report"
-                  >
-                    <div className="p-3 pr-2 sm:p-4 sm:pr-3 text-xs leading-relaxed text-foreground [&_h1]:mb-2 [&_h1]:text-sm [&_h1]:font-semibold [&_h2]:mt-4 [&_h2]:scroll-mt-2 [&_h2]:border-b [&_h2]:border-border/60 [&_h2]:pb-1 [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:text-xs [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:ml-4 [&_ol]:list-decimal [&_p]:my-2 [&_strong]:font-semibold [&_ul]:ml-4 [&_ul]:list-disc [&_hr]:my-3 [&_hr]:border-border">
-                      <ReactMarkdown>{status.summary}</ReactMarkdown>
-                    </div>
-                  </div>
-                </div>
+                <FilingAnalysisBlock
+                  summary={status.summary}
+                  rowKey={rk}
+                  analysisExpanded={analysisExpanded}
+                  setAnalysisExpanded={setAnalysisExpanded}
+                />
               )}
               {status.state === "error" && (
                 <p className="mt-1 text-xs text-red-600 dark:text-red-400">
