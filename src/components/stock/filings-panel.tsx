@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
@@ -223,7 +222,7 @@ export function CompanyInfoBar({ company }: { company: EdgarCompanyInfo }) {
 type RowStatus =
   | { state: "idle" }
   | { state: "loading" }
-  | { state: "done"; summary: string; excerptTruncated?: boolean }
+  | { state: "done"; summary: string }
   | { state: "error"; message: string };
 
 function stableFilingRowKey(
@@ -248,12 +247,7 @@ function resolveRowStatus(
   if (local?.state === "done") return local;
   const dedupe = stableFilingRowKey(ticker, filing);
   const fromDb = saved?.[dedupe];
-  if (fromDb?.summary)
-    return {
-      state: "done",
-      summary: fromDb.summary,
-      excerptTruncated: Boolean(fromDb.excerptTruncated),
-    };
+  if (fromDb?.summary) return { state: "done", summary: fromDb.summary };
   return { state: "idle" };
 }
 
@@ -320,7 +314,6 @@ export function SecFilingsList({
         const data = (await res.json()) as {
           error?: string;
           summary?: string;
-          excerptTruncated?: boolean;
         };
         if (!res.ok) {
           setRowStatus((s) => ({
@@ -331,11 +324,7 @@ export function SecFilingsList({
         }
         setRowStatus((s) => ({
           ...s,
-          [key]: {
-            state: "done",
-            summary: data.summary || "",
-            excerptTruncated: Boolean(data.excerptTruncated),
-          },
+          [key]: { state: "done", summary: data.summary || "" },
         }));
       } catch (e) {
         setRowStatus((s) => ({
@@ -476,22 +465,24 @@ export function SecFilingsList({
                 )}
               </div>
               {status.state === "done" && status.summary && (
-                <>
-                  {status.excerptTruncated && (
-                    <p className="mt-2 flex items-start gap-1.5 rounded-md border border-amber-500/35 bg-amber-500/10 px-2.5 py-2 text-[11px] leading-snug text-amber-950 dark:text-amber-100">
-                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-                      <span>
-                        This analysis used only the first portion of the filing text (size
-                        cap). Open the filing for the full document.
-                      </span>
-                    </p>
-                  )}
-                  <ScrollArea className="mt-2 max-h-[min(70vh,28rem)] rounded-md border border-border/80 bg-muted/30">
-                    <div className="p-3 pr-4 text-xs leading-relaxed text-foreground [&_h1]:mb-2 [&_h1]:text-sm [&_h1]:font-semibold [&_h2]:mt-4 [&_h2]:scroll-mt-2 [&_h2]:border-b [&_h2]:border-border/60 [&_h2]:pb-1 [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:text-xs [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:ml-4 [&_ol]:list-decimal [&_p]:my-2 [&_strong]:font-semibold [&_ul]:ml-4 [&_ul]:list-disc [&_hr]:my-3 [&_hr]:border-border">
+                <div className="mt-3 space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                      Analysis
+                    </span>
+                    <span className="text-[10px] text-muted-foreground/90">
+                      Scroll for full report
+                    </span>
+                  </div>
+                  <div
+                    className="max-h-[min(92dvh,72rem)] overflow-y-auto overscroll-y-contain scroll-smooth rounded-lg border border-border/80 bg-muted/30 shadow-inner"
+                    aria-label="Filing analysis — scroll to read the full report"
+                  >
+                    <div className="p-3 pr-2 sm:p-4 sm:pr-3 text-xs leading-relaxed text-foreground [&_h1]:mb-2 [&_h1]:text-sm [&_h1]:font-semibold [&_h2]:mt-4 [&_h2]:scroll-mt-2 [&_h2]:border-b [&_h2]:border-border/60 [&_h2]:pb-1 [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:mt-3 [&_h3]:text-xs [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:ml-4 [&_ol]:list-decimal [&_p]:my-2 [&_strong]:font-semibold [&_ul]:ml-4 [&_ul]:list-disc [&_hr]:my-3 [&_hr]:border-border">
                       <ReactMarkdown>{status.summary}</ReactMarkdown>
                     </div>
-                  </ScrollArea>
-                </>
+                  </div>
+                </div>
               )}
               {status.state === "error" && (
                 <p className="mt-1 text-xs text-red-600 dark:text-red-400">
