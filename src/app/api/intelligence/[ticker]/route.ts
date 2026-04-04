@@ -33,7 +33,7 @@ export interface IntelligenceFiling {
 /** Key is filingDedupeKey(ticker, filing); use to restore saved AI summaries after refresh. */
 export type SavedFilingAnalysesMap = Record<
   string,
-  { summary: string; analyzedAt: string }
+  { summary: string; analyzedAt: string; excerptTruncated?: boolean }
 >;
 
 export interface IntelligenceResponse {
@@ -143,6 +143,7 @@ export async function GET(
           row.analyzedAt instanceof Date
             ? row.analyzedAt.toISOString()
             : String(row.analyzedAt),
+        excerptTruncated: row.excerptTruncated,
       };
     }
   } catch (e) {

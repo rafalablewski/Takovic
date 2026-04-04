@@ -206,6 +206,8 @@ export const filingAnalyses = pgTable(
     aiProvider: varchar("ai_provider", { length: 20 }).notNull(),
     model: varchar("model", { length: 128 }),
     analyzedAt: timestamp("analyzed_at").notNull().defaultNow(),
+    /** True when SEC document text was capped (FILING_AI_MAX_CHARS / fetch byte cap). */
+    excerptTruncated: boolean("excerpt_truncated").notNull().default(false),
   },
   (table) => [
     uniqueIndex("filing_analyses_fingerprint_idx").on(table.filingFingerprint),
