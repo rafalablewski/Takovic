@@ -118,6 +118,7 @@ export async function POST(
         aiProvider: provider,
         model: analysis.model,
         analyzedAt: now,
+        excerptTruncated: wasTruncated,
       })
       .onConflictDoUpdate({
         target: filingAnalyses.filingFingerprint,
@@ -135,6 +136,7 @@ export async function POST(
           aiProvider: provider,
           model: analysis.model,
           analyzedAt: now,
+          excerptTruncated: wasTruncated,
         },
       })
       .returning();
@@ -153,5 +155,6 @@ export async function POST(
     aiProvider: provider,
     model: analysis.model,
     analyzedAt: now.toISOString(),
+    excerptTruncated: wasTruncated,
   });
 }
