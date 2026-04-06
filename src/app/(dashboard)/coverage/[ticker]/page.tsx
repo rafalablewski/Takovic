@@ -84,6 +84,7 @@ function CoverageNewsTab({ ticker }: { ticker: string }) {
       pressReleases={data.pressReleases}
       ticker={ticker}
       onRefreshPress={() => refetch("press")}
+      savedPressAnalyses={data.savedPressAnalyses}
     />
   );
 }

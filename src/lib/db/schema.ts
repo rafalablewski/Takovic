@@ -215,6 +215,29 @@ export const filingAnalyses = pgTable(
   ]
 );
 
+/** Press-wire AI analysis (one row per deduped press fingerprint). */
+export const pressAnalyses = pgTable(
+  "press_analyses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    pressFingerprint: varchar("press_fingerprint", { length: 512 }).notNull(),
+    ticker: varchar("ticker", { length: 10 }).notNull(),
+    title: text("title").notNull(),
+    publishedAt: varchar("published_at", { length: 64 }),
+    source: varchar("source", { length: 120 }),
+    url: text("url"),
+    pastedText: text("pasted_text"),
+    analysis: text("analysis").notNull(),
+    aiProvider: varchar("ai_provider", { length: 20 }).notNull(),
+    model: varchar("model", { length: 128 }),
+    analyzedAt: timestamp("analyzed_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("press_analyses_fingerprint_idx").on(table.pressFingerprint),
+    index("press_analyses_ticker_idx").on(table.ticker),
+  ]
+);
+
 /** Normalized press-wire items for ticker intelligence. */
 export const pressReleases = pgTable(
   "press_releases",

@@ -6,6 +6,7 @@ import type { FMPPressRelease } from "@/lib/api/yahoo";
 import type {
   IntelligenceFiling,
   SavedFilingAnalysesMap,
+  SavedPressAnalysesMap,
 } from "@/app/api/intelligence/[ticker]/route";
 
 export interface IntelligenceData {
@@ -15,6 +16,7 @@ export interface IntelligenceData {
   pressReleases: FMPPressRelease[];
   source: "edgar" | "fmp";
   savedFilingAnalyses: SavedFilingAnalysesMap;
+  savedPressAnalyses: SavedPressAnalysesMap;
 }
 
 type RefreshTarget = "all" | "sec" | "press";
@@ -40,10 +42,12 @@ export function useIntelligenceData(ticker: string) {
       if (!res.ok) throw new Error("Failed to fetch intelligence data");
       const json = (await res.json()) as IntelligenceData & {
         savedFilingAnalyses?: SavedFilingAnalysesMap;
+        savedPressAnalyses?: SavedPressAnalysesMap;
       };
       setData({
         ...json,
         savedFilingAnalyses: json.savedFilingAnalyses ?? {},
+        savedPressAnalyses: json.savedPressAnalyses ?? {},
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");

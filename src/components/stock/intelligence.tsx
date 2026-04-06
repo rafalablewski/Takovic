@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -29,15 +29,19 @@ import {
   CompanyInfoBar,
   SecFilingsList,
 } from "@/components/stock/filings-panel";
+import { pressDedupeKey } from "@/lib/ai/press-dedupe-key";
+import type { SavedPressAnalysesMap } from "@/app/api/intelligence/[ticker]/route";
 
 export function PressWireContent({
   pressReleases,
   ticker,
   onRefreshPress,
+  savedPressAnalyses,
 }: {
   pressReleases: FMPPressRelease[];
   ticker: string;
   onRefreshPress: () => Promise<void>;
+  savedPressAnalyses?: SavedPressAnalysesMap;
 }) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   const [showCount, setShowCount] = useState(10);
@@ -48,6 +52,11 @@ export function PressWireContent({
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState("");
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [analysisByKey, setAnalysisByKey] = useState<SavedPressAnalysesMap>({});
+
+  useEffect(() => {
+    setAnalysisByKey(savedPressAnalyses ?? {});
+  }, [savedPressAnalyses]);
 
   const visible = pressReleases.slice(0, showCount);
 
@@ -151,9 +160,16 @@ export function PressWireContent({
                   type="button"
                   className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                   onClick={() => {
+                    const key = pressDedupeKey(ticker, {
+                      title: pr.title,
+                      date: pr.date,
+                      url: pr.url ?? null,
+                      source: pr.source ?? null,
+                    });
+                    const existing = analysisByKey[key];
                     setAnalyzeTarget(pr);
                     setAnalyzeText("");
-                    setAnalysisResult("");
+                    setAnalysisResult(existing?.analysis ?? "");
                     setAnalysisError(null);
                     setAnalyzeOpen(true);
                   }}
@@ -240,13 +256,32 @@ export function PressWireContent({
                             title: analyzeTarget.title,
                             source: analyzeTarget.source ?? null,
                             publishedAt: analyzeTarget.date,
+                            url: analyzeTarget.url ?? null,
                             text: analyzeText,
                           }),
                         }
                       );
-                      const data = (await res.json()) as { analysis?: string; error?: string };
+                      const data = (await res.json()) as {
+                        key?: string;
+                        analysis?: string;
+                        analyzedAt?: string;
+                        provider?: string;
+                        model?: string;
+                        error?: string;
+                      };
                       if (!res.ok) throw new Error(data.error || "Analysis failed");
                       setAnalysisResult(data.analysis || "");
+                      if (data.key && data.analysis) {
+                        setAnalysisByKey((prev) => ({
+                          ...prev,
+                          [data.key!]: {
+                            analysis: data.analysis!,
+                            analyzedAt: data.analyzedAt ?? new Date().toISOString(),
+                            aiProvider: data.provider,
+                            model: data.model,
+                          },
+                        }));
+                      }
                     } catch (error) {
                       setAnalysisError(
                         error instanceof Error ? error.message : "Failed to analyze press release"
@@ -404,6 +439,7 @@ export function Intelligence({ ticker }: { ticker: string }) {
                 pressReleases={data.pressReleases}
                 ticker={ticker}
                 onRefreshPress={() => refetch("press")}
+                savedPressAnalyses={data.savedPressAnalyses}
               />
             </TabsContent>
           </Tabs>

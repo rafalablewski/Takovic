@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import { buildCoverageContext } from "@/lib/ai/prompts";
+import { db } from "@/lib/db";
+import { pressAnalyses } from "@/lib/db/schema";
+import { pressDedupeKey } from "@/lib/ai/press-dedupe-key";
 
 const bodySchema = z.object({
   title: z.string().max(500).optional().nullable(),
   source: z.string().max(120).optional().nullable(),
   publishedAt: z.string().max(64).optional().nullable(),
+  url: z.string().url().max(1000).optional().nullable(),
   text: z.string().min(30),
 });
 
@@ -45,7 +49,11 @@ Press release text:
 ${input.text}`;
 }
 
-async function runAnalysis(prompt: string): Promise<{ analysis: string; model: string }> {
+async function runAnalysis(prompt: string): Promise<{
+  analysis: string;
+  model: string;
+  provider: "deepseek" | "anthropic" | "openrouter" | "gemini";
+}> {
   const deepseekKey = process.env.DEEPSEEK_API_KEY;
   if (deepseekKey) {
     const model = process.env.DEEPSEEK_MODEL_FILING || "deepseek-chat";
@@ -66,7 +74,7 @@ async function runAnalysis(prompt: string): Promise<{ analysis: string; model: s
         choices?: { message?: { content?: string } }[];
       };
       const text = data.choices?.[0]?.message?.content?.trim();
-      if (text) return { analysis: text, model };
+      if (text) return { analysis: text, model, provider: "deepseek" };
     }
   }
 
@@ -81,7 +89,7 @@ async function runAnalysis(prompt: string): Promise<{ analysis: string; model: s
     });
     const block = message.content[0];
     const text = block.type === "text" ? block.text.trim() : "";
-    if (text) return { analysis: text, model };
+    if (text) return { analysis: text, model, provider: "anthropic" };
   }
 
   const openrouterKey = process.env.OPENROUTER_API_KEY;
@@ -107,7 +115,7 @@ async function runAnalysis(prompt: string): Promise<{ analysis: string; model: s
         choices?: { message?: { content?: string } }[];
       };
       const text = data.choices?.[0]?.message?.content?.trim();
-      if (text) return { analysis: text, model };
+      if (text) return { analysis: text, model, provider: "openrouter" };
     }
   }
 
@@ -130,7 +138,7 @@ async function runAnalysis(prompt: string): Promise<{ analysis: string; model: s
         candidates?: { content?: { parts?: { text?: string }[] } }[];
       };
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-      if (text) return { analysis: text, model };
+      if (text) return { analysis: text, model, provider: "gemini" };
     }
   }
 
@@ -174,11 +182,49 @@ export async function POST(
 
   try {
     const result = await runAnalysis(prompt);
+    const fingerprint = pressDedupeKey(ticker, {
+      title: body.title ?? "",
+      date: body.publishedAt ?? "",
+      url: body.url ?? "",
+      source: body.source ?? "",
+    });
+    const analyzedAt = new Date();
+    try {
+      await db
+        .insert(pressAnalyses)
+        .values({
+          pressFingerprint: fingerprint,
+          ticker,
+          title: body.title ?? "Untitled",
+          publishedAt: body.publishedAt ?? null,
+          source: body.source ?? null,
+          url: body.url ?? null,
+          pastedText: body.text,
+          analysis: result.analysis,
+          aiProvider: result.provider,
+          model: result.model,
+          analyzedAt,
+        })
+        .onConflictDoUpdate({
+          target: pressAnalyses.pressFingerprint,
+          set: {
+            analysis: result.analysis,
+            pastedText: body.text,
+            aiProvider: result.provider,
+            model: result.model,
+            analyzedAt,
+          },
+        });
+    } catch (dbError) {
+      console.warn(`press_analyses upsert skipped for ${ticker}:`, dbError);
+    }
     return NextResponse.json({
+      key: fingerprint,
       analysis: result.analysis,
+      provider: result.provider,
       model: result.model,
       ticker,
-      analyzedAt: new Date().toISOString(),
+      analyzedAt: analyzedAt.toISOString(),
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : "Analysis failed";
