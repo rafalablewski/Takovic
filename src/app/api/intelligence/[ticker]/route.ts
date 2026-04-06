@@ -14,7 +14,6 @@ import { filingAnalyses, pressAnalyses } from "@/lib/db/schema";
 import { filingDedupeKey } from "@/lib/ai/filing-dedupe-key";
 import { getPressIntelligenceForTicker } from "@/lib/api/press-intelligence";
 import { pressDedupeKey } from "@/lib/ai/press-dedupe-key";
-import { requireIntelligenceAuth } from "@/lib/api/intelligence-auth";
 
 /** Serialized filing for the client */
 export interface IntelligenceFiling {
@@ -57,9 +56,6 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ ticker: string }> }
 ) {
-  const unauthorized = await requireIntelligenceAuth(request);
-  if (unauthorized) return unauthorized;
-
   const { ticker } = await params;
   const upperTicker = ticker.toUpperCase();
   const { searchParams } = new URL(request.url);
