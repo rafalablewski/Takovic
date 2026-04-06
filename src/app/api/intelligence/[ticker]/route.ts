@@ -6,12 +6,13 @@ import {
   buildFilingIndexUrl,
 } from "@/lib/api/edgar";
 import type { EdgarCompanyInfo, EdgarFiling } from "@/lib/api/edgar";
-import { getSECFilings, getPressReleases } from "@/lib/api/yahoo";
+import { getSECFilings } from "@/lib/api/yahoo";
 import type { FMPPressRelease } from "@/lib/api/yahoo";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { filingAnalyses } from "@/lib/db/schema";
 import { filingDedupeKey } from "@/lib/ai/filing-dedupe-key";
+import { getPressIntelligenceForTicker } from "@/lib/api/press-intelligence";
 
 /** Serialized filing for the client */
 export interface IntelligenceFiling {
@@ -46,11 +47,13 @@ export interface IntelligenceResponse {
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ ticker: string }> }
 ) {
   const { ticker } = await params;
   const upperTicker = ticker.toUpperCase();
+  const { searchParams } = new URL(request.url);
+  const refreshPress = searchParams.get("refreshPress") === "1";
 
   let company: EdgarCompanyInfo | null = null;
   let filings: IntelligenceFiling[] = [];
@@ -117,13 +120,22 @@ export async function GET(
   // 3. Press releases from FMP (EDGAR doesn't have these)
   let pressReleases: FMPPressRelease[] = [];
   try {
-    const pr = await getPressReleases(upperTicker, 30);
-    pressReleases = pr ?? [];
+    const press = await getPressIntelligenceForTicker(upperTicker, 100, {
+      refresh: refreshPress,
+    });
+    pressReleases = press.items.map((item) => ({
+      symbol: item.symbol,
+      date: item.date,
+      title: item.title,
+      text: item.text,
+      url: item.url,
+      source: item.source,
+    }));
   } catch {
-    // FMP may fail for smaller tickers — that's OK
+    // Press wire may fail for smaller tickers — that's OK
   }
 
-  let savedFilingAnalyses: SavedFilingAnalysesMap = {};
+  const savedFilingAnalyses: SavedFilingAnalysesMap = {};
   try {
     const rows = await db
       .select()

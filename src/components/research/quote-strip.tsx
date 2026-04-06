@@ -169,7 +169,7 @@ export function QuoteStrip({
             ["options", "Options"],
             ["news", "News"],
             ["analysis", "Analysis"],
-            ["filings", "Filings"],
+            ["edgar", "EDGAR"],
           ] as const
         ).map(([id, label]) => {
           const active = activeTab === id;

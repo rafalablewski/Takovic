@@ -215,6 +215,33 @@ export const filingAnalyses = pgTable(
   ]
 );
 
+/** Normalized press-wire items for ticker intelligence. */
+export const pressReleases = pgTable(
+  "press_releases",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    ticker: varchar("ticker", { length: 10 }).notNull(),
+    source: varchar("source", { length: 100 }).notNull(),
+    externalId: varchar("external_id", { length: 128 }).notNull(),
+    headline: text("headline").notNull(),
+    summary: text("summary"),
+    publishedAt: timestamp("published_at").notNull(),
+    url: text("url"),
+    rawPayload: text("raw_payload"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("press_releases_ticker_source_external_idx").on(
+      table.ticker,
+      table.source,
+      table.externalId
+    ),
+    index("press_releases_ticker_idx").on(table.ticker),
+    index("press_releases_published_idx").on(table.publishedAt),
+  ]
+);
+
 // User Preferences
 export const userPreferences = pgTable("user_preferences", {
   id: uuid("id").primaryKey().defaultRandom(),

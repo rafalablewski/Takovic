@@ -22,7 +22,6 @@ import type {
   FMPQuote,
   FMPProfile,
   FMPIncomeStatement,
-  FMPNews,
   FMPPriceTargetConsensus,
   FMPAnalystRecommendation,
   FMPAnalystEstimate,
@@ -35,10 +34,10 @@ import { QuoteStrip } from "@/components/research/quote-strip";
 import { ChartContainer } from "@/components/research/chart-container";
 import { MetricCard } from "@/components/research/metric-card";
 import { Tag } from "@/components/research/tag";
-import { NewsCard } from "@/components/research/news-card";
 import { DataTable, type DataTableColumn } from "@/components/research/data-table";
 import { FinancialsGrowthChart } from "@/components/research/financials-growth-chart";
 import { FilingsPanel } from "@/components/stock/filings-panel";
+import { SecFilingsList } from "@/components/stock/filings-panel";
 import { DataBlock } from "@/components/layout/data-block";
 import { Section } from "@/components/layout/section";
 import { AnalystsTab } from "@/components/research/analysts-tab";
@@ -51,17 +50,19 @@ import {
   ChevronRight,
   ArrowRight,
 } from "lucide-react";
+import { useIntelligenceData } from "@/components/stock/use-intelligence-data";
 
 const VALID_TABS = new Set([
   "overview",
   "financials",
   "news",
   "analysis",
-  "filings",
+  "edgar",
   "analysts",
   "ownership",
   "dividends",
   "options",
+  "filings",
 ]);
 
 /** Single neutral fill — length encodes score; avoids rainbow UI */
@@ -85,7 +86,6 @@ export type StockDetailClientProps = {
   overviewMetrics: { label: string; value: string }[];
   incomeStatements: FMPIncomeStatement[];
   financialPeriod: "annual" | "quarter";
-  news: FMPNews[];
   snowflakeScores: SnowflakeScores | null;
   aiAnalysis: AiAnalysisPayload;
   consensus: FMPPriceTargetConsensus | null;
@@ -133,7 +133,6 @@ export function StockDetailClient({
   overviewMetrics,
   incomeStatements,
   financialPeriod,
-  news,
   snowflakeScores,
   aiAnalysis,
   consensus,
@@ -156,6 +155,7 @@ export function StockDetailClient({
     () => buildGrowthRows(incomeStatements),
     [incomeStatements]
   );
+  const { data: intelligenceData } = useIntelligenceData(ticker);
 
   const snowflakeItems = snowflakeScores
     ? scoreLabels.map((label, i) => ({
@@ -346,19 +346,39 @@ export function StockDetailClient({
 
       {tab === "news" && (
         <div className="space-y-3 pt-1">
-          {news.length > 0 ? (
-            news.map((item, idx) => (
-              <NewsCard
-                key={`${item.url}-${idx}`}
-                title={item.title}
-                site={item.site}
-                publishedAt={new Date(item.publishedDate)}
-                url={item.url}
-              />
+          {intelligenceData?.pressReleases?.length ? (
+            intelligenceData.pressReleases.map((item, idx) => (
+              <Card key={`${item.url || item.title}-${idx}`}>
+                <CardContent className="space-y-2 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-sm font-medium text-foreground">{item.title}</h3>
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      {item.date ? new Date(item.date).toLocaleDateString("en-US") : "—"}
+                    </span>
+                  </div>
+                  {item.source && (
+                    <p className="text-[11px] text-muted-foreground">Source: {item.source}</p>
+                  )}
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    {item.text || "No summary available."}
+                  </p>
+                  {item.url && (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                    >
+                      Open news
+                      <ArrowRight className="h-3 w-3" />
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
             ))
           ) : (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No recent news available.
+              No press wire releases available.
             </p>
           )}
         </div>
@@ -477,9 +497,18 @@ export function StockDetailClient({
         </div>
       )}
 
-      {tab === "filings" && (
+      {(tab === "edgar" || tab === "filings") && (
         <div className="pt-1">
-          <FilingsPanel ticker={ticker} />
+          {intelligenceData ? (
+            <SecFilingsList
+              filings={intelligenceData.filings}
+              ticker={ticker}
+              companyName={intelligenceData.company?.name ?? null}
+              savedFilingAnalyses={intelligenceData.savedFilingAnalyses}
+            />
+          ) : (
+            <FilingsPanel ticker={ticker} />
+          )}
         </div>
       )}
 

@@ -24,7 +24,11 @@ import {
   DollarSign,
   Calculator,
   Briefcase,
+  FileText,
+  Megaphone,
 } from "lucide-react";
+import { useIntelligenceData } from "@/components/stock/use-intelligence-data";
+import { EdgarContent, PressWireContent } from "@/components/stock/intelligence";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   LayoutDashboard,
@@ -36,7 +40,53 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   GitCompareArrows,
   DollarSign,
   Calculator,
+  FileText,
+  Megaphone,
 };
+
+function CoverageEdgarTab({ ticker }: { ticker: string }) {
+  const { data, loading, error, refetch } = useIntelligenceData(ticker);
+
+  if (loading) {
+    return <p className="text-sm text-muted-foreground">Loading EDGAR filings…</p>;
+  }
+  if (error) {
+    return <p className="text-sm text-red-600 dark:text-red-400">{error}</p>;
+  }
+  if (!data) return null;
+
+  return (
+    <EdgarContent
+      filings={data.filings}
+      ticker={ticker}
+      companyName={data.company?.name ?? null}
+      savedFilingAnalyses={data.savedFilingAnalyses}
+      onRefreshSec={() => refetch("sec")}
+    />
+  );
+}
+
+function CoverageNewsTab({ ticker }: { ticker: string }) {
+  const { data, loading, error, refetch } = useIntelligenceData(ticker);
+
+  if (loading) {
+    return <p className="text-sm text-muted-foreground">Loading press wire…</p>;
+  }
+  if (error) {
+    return <p className="text-sm text-red-600 dark:text-red-400">{error}</p>;
+  }
+  if (!data || data.pressReleases.length === 0) {
+    return <p className="text-sm text-muted-foreground">No press wire releases available.</p>;
+  }
+
+  return (
+    <PressWireContent
+      pressReleases={data.pressReleases}
+      ticker={ticker}
+      onRefreshPress={() => refetch("press")}
+    />
+  );
+}
 
 export default function CoveragePage() {
   return (
@@ -90,7 +140,7 @@ function CoveragePageInner() {
       }
       router.replace(`${pathname}?${p.toString()}`, { scroll: false });
     },
-    [pathname, router, searchParams, stock?.operationsSubTabs]
+    [pathname, router, searchParams, stock]
   );
 
   if (!stock) {
@@ -160,6 +210,8 @@ function CoveragePageInner() {
       {activeTab === "comparables" && <ComparablesTab ticker={upperTicker} />}
       {activeTab === "financials" && <FinancialsTab ticker={upperTicker} />}
       {activeTab === "wall-street" && <WallStreetTab ticker={upperTicker} />}
+      {activeTab === "edgar" && <CoverageEdgarTab ticker={upperTicker} />}
+      {activeTab === "news" && <CoverageNewsTab ticker={upperTicker} />}
       {activeTab === "capital-structure" && <CapitalStructureTab ticker={upperTicker} />}
       {activeTab === "timeline" && <TimelineTab ticker={upperTicker} />}
       {activeTab === "valuation" && <ValuationTab ticker={upperTicker} />}
