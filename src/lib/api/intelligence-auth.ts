@@ -32,25 +32,7 @@ export async function requireIntelligenceAuth(
     }
   }
 
-  const fetchSite = request.headers.get("sec-fetch-site")?.toLowerCase();
-  if (fetchSite === "same-origin" || fetchSite === "same-site") {
-    return null;
-  }
-
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-  if (origin && host) {
-    try {
-      const originHost = new URL(origin).host;
-      if (originHost.toLowerCase() === host.toLowerCase()) {
-        return null;
-      }
-    } catch {
-      // ignore invalid origin header
-    }
-  }
-
-  if (!configuredToken && !adminSecret) {
+  if (!configuredToken && !adminSecret && process.env.NODE_ENV !== "production") {
     return null;
   }
 
