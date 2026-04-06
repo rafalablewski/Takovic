@@ -573,6 +573,11 @@ export function SecFilingsList({
             </div>
 
             <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+              {status.state === "done" && (
+                <Badge variant="secondary" className="h-5 px-1.5 py-0 text-[10px]">
+                  Saved analysis
+                </Badge>
+              )}
               <Button
                 type="button"
                 variant="secondary"

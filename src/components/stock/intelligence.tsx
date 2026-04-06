@@ -109,6 +109,13 @@ export function PressWireContent({
         const isExpanded = expandedIdx === idx;
         const truncated =
           pr.text.length > 300 ? pr.text.slice(0, 300) + "..." : pr.text;
+        const pressKey = pressDedupeKey(ticker, {
+          title: pr.title,
+          date: pr.date,
+          url: pr.url ?? null,
+          source: pr.source ?? null,
+        });
+        const saved = analysisByKey[pressKey];
 
         return (
           <div
@@ -145,6 +152,11 @@ export function PressWireContent({
                     {isExpanded ? "Show less" : "Read more"}
                   </button>
                 )}
+                {saved && (
+                  <Badge variant="secondary" className="h-5 px-1.5 py-0 text-[10px]">
+                    Saved analysis
+                  </Badge>
+                )}
                 {pr.url && (
                   <a
                     href={pr.url}
@@ -160,16 +172,9 @@ export function PressWireContent({
                   type="button"
                   className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                   onClick={() => {
-                    const key = pressDedupeKey(ticker, {
-                      title: pr.title,
-                      date: pr.date,
-                      url: pr.url ?? null,
-                      source: pr.source ?? null,
-                    });
-                    const existing = analysisByKey[key];
                     setAnalyzeTarget(pr);
                     setAnalyzeText("");
-                    setAnalysisResult(existing?.analysis ?? "");
+                    setAnalysisResult(saved?.analysis ?? "");
                     setAnalysisError(null);
                     setAnalyzeOpen(true);
                   }}
