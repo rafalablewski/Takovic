@@ -53,10 +53,32 @@ export function PressWireContent({
   const [analysisResult, setAnalysisResult] = useState("");
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [analysisByKey, setAnalysisByKey] = useState<SavedPressAnalysesMap>({});
+  const localStorageKey = `press-analysis:${ticker.toUpperCase()}`;
+
+  const mergeSavedAnalyses = (server: SavedPressAnalysesMap | undefined) => {
+    const base = server ?? {};
+    try {
+      const raw = localStorage.getItem(localStorageKey);
+      if (!raw) return base;
+      const local = JSON.parse(raw) as SavedPressAnalysesMap;
+      return { ...base, ...local };
+    } catch {
+      return base;
+    }
+  };
 
   useEffect(() => {
-    setAnalysisByKey(savedPressAnalyses ?? {});
-  }, [savedPressAnalyses]);
+    setAnalysisByKey(mergeSavedAnalyses(savedPressAnalyses));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedPressAnalyses, localStorageKey]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(localStorageKey, JSON.stringify(analysisByKey));
+    } catch {
+      // ignore localStorage errors
+    }
+  }, [analysisByKey, localStorageKey]);
 
   const visible = pressReleases.slice(0, showCount);
 
@@ -141,6 +163,12 @@ export function PressWireContent({
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {isExpanded ? pr.text : truncated}
               </p>
+
+              {saved?.analysis && (
+                <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-md border border-border bg-muted/30 p-3 text-xs text-foreground">
+                  {saved.analysis}
+                </pre>
+              )}
 
               <div className="flex items-center gap-3">
                 {pr.text.length > 300 && (
