@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { filingAnalyses } from "@/lib/db/schema";
@@ -10,6 +10,7 @@ import {
   type AiProvider,
 } from "@/lib/ai/filing-analyze";
 import { fetchFilingDocumentText } from "@/lib/api/sec-document";
+import { requireIntelligenceAuth } from "@/lib/api/intelligence-auth";
 
 const bodySchema = z.object({
   form: z.string().min(1).max(32),
@@ -24,9 +25,12 @@ const bodySchema = z.object({
 });
 
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ ticker: string }> }
 ) {
+  const unauthorized = await requireIntelligenceAuth(request);
+  if (unauthorized) return unauthorized;
+
   const { ticker: tickerParam } = await params;
   const ticker = tickerParam.toUpperCase();
 
