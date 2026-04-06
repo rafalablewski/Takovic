@@ -5,6 +5,7 @@ import { pressReleases } from "@/lib/db/schema";
 import {
   getPressIntelligenceForTicker,
 } from "@/lib/api/press-intelligence";
+import { requireIntelligenceAuth } from "@/lib/api/intelligence-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,11 @@ export async function GET(request: NextRequest) {
 
   if (!ticker) {
     return NextResponse.json({ error: "Missing ticker" }, { status: 400 });
+  }
+
+  if (mode === "refresh") {
+    const unauthorized = await requireIntelligenceAuth(request);
+    if (unauthorized) return unauthorized;
   }
 
   if (mode === "methodology") {
