@@ -39,7 +39,14 @@ export function useIntelligenceData(ticker: string) {
       const res = await fetch(`/api/intelligence/${ticker}${query}`, {
         cache: "no-store",
       });
-      if (!res.ok) throw new Error("Failed to fetch intelligence data");
+      if (!res.ok) {
+        const detail = await res.text().catch(() => "");
+        throw new Error(
+          `Failed to fetch intelligence data (${res.status})${
+            detail ? `: ${detail.slice(0, 200)}` : ""
+          }`
+        );
+      }
       const json = (await res.json()) as IntelligenceData & {
         savedFilingAnalyses?: SavedFilingAnalysesMap;
         savedPressAnalyses?: SavedPressAnalysesMap;

@@ -58,16 +58,26 @@ export async function GET(
 ) {
   const { ticker } = await params;
   const upperTicker = ticker.toUpperCase();
-  const { searchParams } = new URL(request.url);
-  const refreshPress = searchParams.get("refreshPress") === "1";
-
-  let company: EdgarCompanyInfo | null = null;
-  let filings: IntelligenceFiling[] = [];
-  let source: "edgar" | "fmp" = "edgar";
-
-  // 1. Try EDGAR first
+  const fallback: IntelligenceResponse = {
+    ticker: upperTicker,
+    company: null,
+    filings: [],
+    pressReleases: [],
+    source: "fmp",
+    savedFilingAnalyses: {},
+    savedPressAnalyses: {},
+  };
   try {
-    const cik = await resolveCIK(upperTicker);
+    const { searchParams } = new URL(request.url);
+    const refreshPress = searchParams.get("refreshPress") === "1";
+
+    let company: EdgarCompanyInfo | null = null;
+    let filings: IntelligenceFiling[] = [];
+    let source: "edgar" | "fmp" = "edgar";
+
+    // 1. Try EDGAR first
+    try {
+      const cik = await resolveCIK(upperTicker);
 
     if (cik) {
       const submissions = await getCompanySubmissions(cik);
@@ -91,15 +101,15 @@ export async function GET(
         source: "edgar" as const,
       }));
     }
-  } catch (edgarError) {
-    console.warn(`EDGAR failed for ${upperTicker}, falling back to FMP:`, edgarError);
-  }
+    } catch (edgarError) {
+      console.warn(`EDGAR failed for ${upperTicker}, falling back to FMP:`, edgarError);
+    }
 
-  // 2. If EDGAR returned no filings, fall back to FMP
-  if (filings.length === 0) {
-    try {
-      const fmpFilings = await getSECFilings(upperTicker, undefined, 50);
-      source = "fmp";
+    // 2. If EDGAR returned no filings, fall back to FMP
+    if (filings.length === 0) {
+      try {
+        const fmpFilings = await getSECFilings(upperTicker, undefined, 50);
+        source = "fmp";
 
       if (fmpFilings && fmpFilings.length > 0) {
         filings = fmpFilings.map((f) => ({
@@ -118,36 +128,36 @@ export async function GET(
           source: "fmp" as const,
         }));
       }
-    } catch (fmpError) {
-      console.warn(`FMP filings also failed for ${upperTicker}:`, fmpError);
+      } catch (fmpError) {
+        console.warn(`FMP filings also failed for ${upperTicker}:`, fmpError);
+      }
     }
-  }
 
-  // 3. Press releases from FMP (EDGAR doesn't have these)
-  let pressReleases: FMPPressRelease[] = [];
-  try {
-    const press = await getPressIntelligenceForTicker(upperTicker, 100, {
-      refresh: refreshPress,
-    });
-    pressReleases = press.items.map((item) => ({
-      symbol: item.symbol,
-      date: item.date,
-      title: item.title,
-      text: item.text,
-      url: item.url,
-      source: item.source,
-    }));
-  } catch {
-    // Press wire may fail for smaller tickers — that's OK
-  }
+    // 3. Press releases from FMP (EDGAR doesn't have these)
+    let pressReleases: FMPPressRelease[] = [];
+    try {
+      const press = await getPressIntelligenceForTicker(upperTicker, 100, {
+        refresh: refreshPress,
+      });
+      pressReleases = press.items.map((item) => ({
+        symbol: item.symbol,
+        date: item.date,
+        title: item.title,
+        text: item.text,
+        url: item.url,
+        source: item.source,
+      }));
+    } catch {
+      // Press wire may fail for smaller tickers — that's OK
+    }
 
-  const savedFilingAnalyses: SavedFilingAnalysesMap = {};
-  const savedPressAnalyses: SavedPressAnalysesMap = {};
-  try {
-    const rows = await db
-      .select()
-      .from(filingAnalyses)
-      .where(eq(filingAnalyses.ticker, upperTicker));
+    const savedFilingAnalyses: SavedFilingAnalysesMap = {};
+    const savedPressAnalyses: SavedPressAnalysesMap = {};
+    try {
+      const rows = await db
+        .select()
+        .from(filingAnalyses)
+        .where(eq(filingAnalyses.ticker, upperTicker));
 
     for (const row of rows) {
       const key = filingDedupeKey(upperTicker, {
@@ -165,15 +175,15 @@ export async function GET(
         excerptTruncated: row.excerptTruncated,
       };
     }
-  } catch (e) {
-    console.warn(`filing_analyses load skipped for ${upperTicker}:`, e);
-  }
+    } catch (e) {
+      console.warn(`filing_analyses load skipped for ${upperTicker}:`, e);
+    }
 
-  try {
-    const rows = await db
-      .select()
-      .from(pressAnalyses)
-      .where(eq(pressAnalyses.ticker, upperTicker));
+    try {
+      const rows = await db
+        .select()
+        .from(pressAnalyses)
+        .where(eq(pressAnalyses.ticker, upperTicker));
 
     for (const row of rows) {
       const key = pressDedupeKey(upperTicker, {
@@ -192,19 +202,23 @@ export async function GET(
         aiProvider: row.aiProvider ?? undefined,
       };
     }
+    } catch (e) {
+      console.warn(`press_analyses load skipped for ${upperTicker}:`, e);
+    }
+
+    const response: IntelligenceResponse = {
+      ticker: upperTicker,
+      company,
+      filings,
+      pressReleases,
+      source,
+      savedFilingAnalyses,
+      savedPressAnalyses,
+    };
+
+    return NextResponse.json(response);
   } catch (e) {
-    console.warn(`press_analyses load skipped for ${upperTicker}:`, e);
+    console.error(`intelligence route fatal for ${upperTicker}:`, e);
+    return NextResponse.json(fallback);
   }
-
-  const response: IntelligenceResponse = {
-    ticker: upperTicker,
-    company,
-    filings,
-    pressReleases,
-    source,
-    savedFilingAnalyses,
-    savedPressAnalyses,
-  };
-
-  return NextResponse.json(response);
 }
