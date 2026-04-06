@@ -79,28 +79,28 @@ export async function GET(
     try {
       const cik = await resolveCIK(upperTicker);
 
-    if (cik) {
-      const submissions = await getCompanySubmissions(cik);
-      company = submissions.company;
+      if (cik) {
+        const submissions = await getCompanySubmissions(cik);
+        company = submissions.company;
 
-      filings = submissions.filings.map((f: EdgarFiling) => ({
-        form: f.form,
-        filingDate: f.filingDate,
-        acceptanceDateTime: f.acceptanceDateTime,
-        reportDate: f.reportDate,
-        accessionNumber: f.accessionNumber,
-        primaryDocument: f.primaryDocument,
-        primaryDocDescription: f.primaryDocDescription,
-        items: f.items,
-        size: f.size,
-        isXBRL: f.isXBRL,
-        viewUrl: f.primaryDocument
-          ? buildFilingUrl(cik, f.accessionNumber, f.primaryDocument)
-          : "",
-        indexUrl: buildFilingIndexUrl(cik, f.accessionNumber),
-        source: "edgar" as const,
-      }));
-    }
+        filings = submissions.filings.map((f: EdgarFiling) => ({
+          form: f.form,
+          filingDate: f.filingDate,
+          acceptanceDateTime: f.acceptanceDateTime,
+          reportDate: f.reportDate,
+          accessionNumber: f.accessionNumber,
+          primaryDocument: f.primaryDocument,
+          primaryDocDescription: f.primaryDocDescription,
+          items: f.items,
+          size: f.size,
+          isXBRL: f.isXBRL,
+          viewUrl: f.primaryDocument
+            ? buildFilingUrl(cik, f.accessionNumber, f.primaryDocument)
+            : "",
+          indexUrl: buildFilingIndexUrl(cik, f.accessionNumber),
+          source: "edgar" as const,
+        }));
+      }
     } catch (edgarError) {
       console.warn(`EDGAR failed for ${upperTicker}, falling back to FMP:`, edgarError);
     }
@@ -111,23 +111,23 @@ export async function GET(
         const fmpFilings = await getSECFilings(upperTicker, undefined, 50);
         source = "fmp";
 
-      if (fmpFilings && fmpFilings.length > 0) {
-        filings = fmpFilings.map((f) => ({
-          form: f.type,
-          filingDate: f.fillingDate,
-          acceptanceDateTime: f.acceptedDate,
-          reportDate: "",
-          accessionNumber: "",
-          primaryDocument: "",
-          primaryDocDescription: "",
-          items: "",
-          size: 0,
-          isXBRL: false,
-          viewUrl: f.finalLink || "",
-          indexUrl: f.link || "",
-          source: "fmp" as const,
-        }));
-      }
+        if (fmpFilings && fmpFilings.length > 0) {
+          filings = fmpFilings.map((f) => ({
+            form: f.type,
+            filingDate: f.fillingDate,
+            acceptanceDateTime: f.acceptedDate,
+            reportDate: "",
+            accessionNumber: "",
+            primaryDocument: "",
+            primaryDocDescription: "",
+            items: "",
+            size: 0,
+            isXBRL: false,
+            viewUrl: f.finalLink || "",
+            indexUrl: f.link || "",
+            source: "fmp" as const,
+          }));
+        }
       } catch (fmpError) {
         console.warn(`FMP filings also failed for ${upperTicker}:`, fmpError);
       }
@@ -159,22 +159,22 @@ export async function GET(
         .from(filingAnalyses)
         .where(eq(filingAnalyses.ticker, upperTicker));
 
-    for (const row of rows) {
-      const key = filingDedupeKey(upperTicker, {
-        accessionNumber: row.accessionNumber ?? "",
-        viewUrl: row.documentUrl,
-        filingDate: row.filingDate,
-        form: row.form,
-      });
-      savedFilingAnalyses[key] = {
-        summary: row.summary,
-        analyzedAt:
-          row.analyzedAt instanceof Date
-            ? row.analyzedAt.toISOString()
-            : String(row.analyzedAt),
-        excerptTruncated: row.excerptTruncated,
-      };
-    }
+      for (const row of rows) {
+        const key = filingDedupeKey(upperTicker, {
+          accessionNumber: row.accessionNumber ?? "",
+          viewUrl: row.documentUrl,
+          filingDate: row.filingDate,
+          form: row.form,
+        });
+        savedFilingAnalyses[key] = {
+          summary: row.summary,
+          analyzedAt:
+            row.analyzedAt instanceof Date
+              ? row.analyzedAt.toISOString()
+              : String(row.analyzedAt),
+          excerptTruncated: row.excerptTruncated,
+        };
+      }
     } catch (e) {
       console.warn(`filing_analyses load skipped for ${upperTicker}:`, e);
     }
@@ -185,23 +185,23 @@ export async function GET(
         .from(pressAnalyses)
         .where(eq(pressAnalyses.ticker, upperTicker));
 
-    for (const row of rows) {
-      const key = pressDedupeKey(upperTicker, {
-        title: row.title,
-        date: row.publishedAt,
-        url: row.url,
-        source: row.source,
-      });
-      savedPressAnalyses[key] = {
-        analysis: row.analysis,
-        analyzedAt:
-          row.analyzedAt instanceof Date
-            ? row.analyzedAt.toISOString()
-            : String(row.analyzedAt),
-        model: row.model ?? undefined,
-        aiProvider: row.aiProvider ?? undefined,
-      };
-    }
+      for (const row of rows) {
+        const key = pressDedupeKey(upperTicker, {
+          title: row.title,
+          date: row.publishedAt,
+          url: row.url,
+          source: row.source,
+        });
+        savedPressAnalyses[key] = {
+          analysis: row.analysis,
+          analyzedAt:
+            row.analyzedAt instanceof Date
+              ? row.analyzedAt.toISOString()
+              : String(row.analyzedAt),
+          model: row.model ?? undefined,
+          aiProvider: row.aiProvider ?? undefined,
+        };
+      }
     } catch (e) {
       console.warn(`press_analyses load skipped for ${upperTicker}:`, e);
     }
