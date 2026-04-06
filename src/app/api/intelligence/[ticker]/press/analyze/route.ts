@@ -1,10 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import { buildCoverageContext } from "@/lib/ai/prompts";
 import { db } from "@/lib/db";
 import { pressAnalyses } from "@/lib/db/schema";
 import { pressDedupeKey } from "@/lib/ai/press-dedupe-key";
+import { requireIntelligenceAuth } from "@/lib/api/intelligence-auth";
 
 const bodySchema = z.object({
   title: z.string().max(500).optional().nullable(),
@@ -80,7 +81,7 @@ async function runAnalysis(prompt: string): Promise<{
 
   const claudeKey = process.env.ANTHROPIC_API_KEY;
   if (claudeKey) {
-    const model = process.env.CLAUDE_MODEL_FILING || "claude-sonnet-4-6";
+    const model = process.env.CLAUDE_MODEL_FILING || "claude-3-5-sonnet-latest";
     const client = new Anthropic({ apiKey: claudeKey });
     const message = await client.messages.create({
       model,
@@ -148,9 +149,12 @@ async function runAnalysis(prompt: string): Promise<{
 }
 
 export async function POST(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ ticker: string }> }
 ) {
+  const unauthorized = await requireIntelligenceAuth(request);
+  if (unauthorized) return unauthorized;
+
   const { ticker: tickerParam } = await params;
   const ticker = tickerParam.toUpperCase();
 
@@ -227,8 +231,8 @@ export async function POST(
       analyzedAt: analyzedAt.toISOString(),
     });
   } catch (error) {
-    const msg = error instanceof Error ? error.message : "Analysis failed";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    console.error("Press analysis failed:", error);
+    return NextResponse.json({ error: "Analysis failed" }, { status: 500 });
   }
 }
 

@@ -201,7 +201,7 @@ export function PressWireContent({
                   className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                   onClick={() => {
                     setAnalyzeTarget(pr);
-                    setAnalyzeText("");
+                    setAnalyzeText(pr.text ?? "");
                     setAnalysisResult(saved?.analysis ?? "");
                     setAnalysisError(null);
                     setAnalyzeOpen(true);

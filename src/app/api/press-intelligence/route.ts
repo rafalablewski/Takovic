@@ -5,10 +5,14 @@ import { pressReleases } from "@/lib/db/schema";
 import {
   getPressIntelligenceForTicker,
 } from "@/lib/api/press-intelligence";
+import { requireIntelligenceAuth } from "@/lib/api/intelligence-auth";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  const unauthorized = await requireIntelligenceAuth(request);
+  if (unauthorized) return unauthorized;
+
   const { searchParams } = new URL(request.url);
   const ticker = (searchParams.get("ticker") || "").trim().toUpperCase();
   const mode = (searchParams.get("mode") || "db").trim().toLowerCase();
