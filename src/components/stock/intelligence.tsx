@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -19,20 +19,66 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronUp,
+  ExternalLink,
+  RotateCw,
+  Sparkles,
+  X,
 } from "lucide-react";
 import { useIntelligenceData } from "@/components/stock/use-intelligence-data";
 import {
   CompanyInfoBar,
   SecFilingsList,
 } from "@/components/stock/filings-panel";
+import { pressDedupeKey } from "@/lib/ai/press-dedupe-key";
+import type { SavedPressAnalysesMap } from "@/app/api/intelligence/[ticker]/route";
 
-function PressWireTab({
+export function PressWireContent({
   pressReleases,
+  ticker,
+  onRefreshPress,
+  savedPressAnalyses,
 }: {
   pressReleases: FMPPressRelease[];
+  ticker: string;
+  onRefreshPress: () => Promise<void>;
+  savedPressAnalyses?: SavedPressAnalysesMap;
 }) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   const [showCount, setShowCount] = useState(10);
+  const [refreshingPress, setRefreshingPress] = useState(false);
+  const [analyzeOpen, setAnalyzeOpen] = useState(false);
+  const [analyzeTarget, setAnalyzeTarget] = useState<FMPPressRelease | null>(null);
+  const [analyzeText, setAnalyzeText] = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState("");
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [analysisByKey, setAnalysisByKey] = useState<SavedPressAnalysesMap>({});
+  const localStorageKey = `press-analysis:${ticker.toUpperCase()}`;
+
+  const mergeSavedAnalyses = (server: SavedPressAnalysesMap | undefined) => {
+    const base = server ?? {};
+    try {
+      const raw = localStorage.getItem(localStorageKey);
+      if (!raw) return base;
+      const local = JSON.parse(raw) as SavedPressAnalysesMap;
+      return { ...base, ...local };
+    } catch {
+      return base;
+    }
+  };
+
+  useEffect(() => {
+    setAnalysisByKey(mergeSavedAnalyses(savedPressAnalyses));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedPressAnalyses, localStorageKey]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(localStorageKey, JSON.stringify(analysisByKey));
+    } catch {
+      // ignore localStorage errors
+    }
+  }, [analysisByKey, localStorageKey]);
 
   const visible = pressReleases.slice(0, showCount);
 
@@ -59,10 +105,39 @@ function PressWireTab({
 
   return (
     <div className="space-y-3 pt-3">
+      <div className="mb-3 flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="text-xs"
+          disabled={refreshingPress}
+          onClick={async () => {
+            setRefreshingPress(true);
+            try {
+              await onRefreshPress();
+            } finally {
+              setRefreshingPress(false);
+            }
+          }}
+        >
+          <RotateCw
+            className={`mr-1 h-3.5 w-3.5 ${refreshingPress ? "animate-spin" : ""}`}
+          />
+          Refresh Press Wire
+        </Button>
+      </div>
       {visible.map((pr, idx) => {
         const isExpanded = expandedIdx === idx;
         const truncated =
           pr.text.length > 300 ? pr.text.slice(0, 300) + "..." : pr.text;
+        const pressKey = pressDedupeKey(ticker, {
+          title: pr.title,
+          date: pr.date,
+          url: pr.url ?? null,
+          source: pr.source ?? null,
+        });
+        const saved = analysisByKey[pressKey];
 
         return (
           <div
@@ -79,19 +154,63 @@ function PressWireTab({
                 </span>
               </div>
 
+              {pr.source && (
+                <p className="text-[11px] text-muted-foreground">
+                  Source: {pr.source}
+                </p>
+              )}
+
               <p className="text-xs leading-relaxed text-muted-foreground">
                 {isExpanded ? pr.text : truncated}
               </p>
 
-              {pr.text.length > 300 && (
+              {saved?.analysis && (
+                <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-md border border-border bg-muted/30 p-3 text-xs text-foreground">
+                  {saved.analysis}
+                </pre>
+              )}
+
+              <div className="flex items-center gap-3">
+                {pr.text.length > 300 && (
+                  <button
+                    type="button"
+                    onClick={() => setExpandedIdx(isExpanded ? null : idx)}
+                    className="text-xs font-medium text-primary hover:underline"
+                  >
+                    {isExpanded ? "Show less" : "Read more"}
+                  </button>
+                )}
+                {saved && (
+                  <Badge variant="secondary" className="h-5 px-1.5 py-0 text-[10px]">
+                    Saved analysis
+                  </Badge>
+                )}
+                {pr.url && (
+                  <a
+                    href={pr.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  >
+                    Open news
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
                 <button
                   type="button"
-                  onClick={() => setExpandedIdx(isExpanded ? null : idx)}
-                  className="text-xs font-medium text-primary hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                  onClick={() => {
+                    setAnalyzeTarget(pr);
+                    setAnalyzeText(pr.text ?? "");
+                    setAnalysisResult(saved?.analysis ?? "");
+                    setAnalysisError(null);
+                    setAnalyzeOpen(true);
+                  }}
                 >
-                  {isExpanded ? "Show less" : "Read more"}
+                  <Sparkles className="h-3 w-3" />
+                  Analyze
                 </button>
-              )}
+              </div>
             </div>
           </div>
         );
@@ -124,12 +243,155 @@ function PressWireTab({
           )}
         </div>
       )}
+
+      {analyzeOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-3xl rounded-lg border border-border bg-background p-4 shadow-lg">
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Press Wire Analysis</h3>
+                <p className="text-xs text-muted-foreground">
+                  {analyzeTarget?.title || "Selected press release"}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => setAnalyzeOpen(false)}
+                aria-label="Close analysis modal"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <textarea
+                value={analyzeText}
+                onChange={(e) => setAnalyzeText(e.target.value)}
+                placeholder="Paste full press release text here..."
+                className="min-h-44 w-full rounded-md border border-border bg-background p-3 text-xs text-foreground outline-none ring-ring focus:ring-1"
+              />
+              <div className="flex justify-end">
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={analyzing || analyzeText.trim().length < 30 || !analyzeTarget}
+                  onClick={async () => {
+                    if (!analyzeTarget) return;
+                    setAnalyzing(true);
+                    setAnalysisError(null);
+                    try {
+                      const res = await fetch(
+                        `/api/intelligence/${encodeURIComponent(ticker)}/press/analyze`,
+                        {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            title: analyzeTarget.title,
+                            source: analyzeTarget.source ?? null,
+                            publishedAt: analyzeTarget.date,
+                            url: analyzeTarget.url ?? null,
+                            text: analyzeText,
+                          }),
+                        }
+                      );
+                      const data = (await res.json()) as {
+                        key?: string;
+                        analysis?: string;
+                        analyzedAt?: string;
+                        provider?: string;
+                        model?: string;
+                        error?: string;
+                      };
+                      if (!res.ok) throw new Error(data.error || "Analysis failed");
+                      setAnalysisResult(data.analysis || "");
+                      if (data.key && data.analysis) {
+                        setAnalysisByKey((prev) => ({
+                          ...prev,
+                          [data.key!]: {
+                            analysis: data.analysis!,
+                            analyzedAt: data.analyzedAt ?? new Date().toISOString(),
+                            aiProvider: data.provider,
+                            model: data.model,
+                          },
+                        }));
+                      }
+                    } catch (error) {
+                      setAnalysisError(
+                        error instanceof Error ? error.message : "Failed to analyze press release"
+                      );
+                    } finally {
+                      setAnalyzing(false);
+                    }
+                  }}
+                >
+                  <Sparkles className={`mr-1 h-3.5 w-3.5 ${analyzing ? "animate-pulse" : ""}`} />
+                  {analyzing ? "Analyzing..." : "Analyze with AI"}
+                </Button>
+              </div>
+              {analysisError && (
+                <p className="text-xs text-red-600 dark:text-red-400">{analysisError}</p>
+              )}
+              {analysisResult && (
+                <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-md border border-border bg-muted/30 p-3 text-xs text-foreground">
+                  {analysisResult}
+                </pre>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
+export function EdgarContent({
+  filings,
+  ticker,
+  companyName,
+  savedFilingAnalyses,
+  onRefreshSec,
+}: {
+  filings: import("@/app/api/intelligence/[ticker]/route").IntelligenceFiling[];
+  ticker: string;
+  companyName?: string | null;
+  savedFilingAnalyses?: import("@/app/api/intelligence/[ticker]/route").SavedFilingAnalysesMap;
+  onRefreshSec: () => Promise<void>;
+}) {
+  const [refreshingSec, setRefreshingSec] = useState(false);
+  return (
+    <>
+      <div className="mb-3 flex justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="text-xs"
+          disabled={refreshingSec}
+          onClick={async () => {
+            setRefreshingSec(true);
+            try {
+              await onRefreshSec();
+            } finally {
+              setRefreshingSec(false);
+            }
+          }}
+        >
+          <RotateCw className={`mr-1 h-3.5 w-3.5 ${refreshingSec ? "animate-spin" : ""}`} />
+          Refresh SEC Filings
+        </Button>
+      </div>
+      <SecFilingsList
+        filings={filings}
+        ticker={ticker}
+        companyName={companyName ?? null}
+        savedFilingAnalyses={savedFilingAnalyses}
+      />
+    </>
+  );
+}
+
 export function Intelligence({ ticker }: { ticker: string }) {
-  const { data, loading, error } = useIntelligenceData(ticker);
+  const { data, loading, error, refetch } = useIntelligenceData(ticker);
 
   if (loading) {
     return (
@@ -196,16 +458,22 @@ export function Intelligence({ ticker }: { ticker: string }) {
             </TabsList>
 
             <TabsContent value="sec-filings">
-              <SecFilingsList
+              <EdgarContent
                 filings={data.filings}
                 ticker={ticker}
                 companyName={data.company?.name ?? null}
                 savedFilingAnalyses={data.savedFilingAnalyses}
+                onRefreshSec={() => refetch("sec")}
               />
             </TabsContent>
 
             <TabsContent value="press-wire">
-              <PressWireTab pressReleases={data.pressReleases} />
+              <PressWireContent
+                pressReleases={data.pressReleases}
+                ticker={ticker}
+                onRefreshPress={() => refetch("press")}
+                savedPressAnalyses={data.savedPressAnalyses}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>

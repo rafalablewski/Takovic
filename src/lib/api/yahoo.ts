@@ -881,6 +881,8 @@ export interface FMPPressRelease {
   date: string;
   title: string;
   text: string;
+  url?: string;
+  source?: string;
 }
 
 export interface FMPScreenerResult {

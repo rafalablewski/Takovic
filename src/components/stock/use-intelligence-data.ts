@@ -6,6 +6,7 @@ import type { FMPPressRelease } from "@/lib/api/yahoo";
 import type {
   IntelligenceFiling,
   SavedFilingAnalysesMap,
+  SavedPressAnalysesMap,
 } from "@/app/api/intelligence/[ticker]/route";
 
 export interface IntelligenceData {
@@ -15,25 +16,38 @@ export interface IntelligenceData {
   pressReleases: FMPPressRelease[];
   source: "edgar" | "fmp";
   savedFilingAnalyses: SavedFilingAnalysesMap;
+  savedPressAnalyses: SavedPressAnalysesMap;
 }
+
+type RefreshTarget = "all" | "sec" | "press";
 
 export function useIntelligenceData(ticker: string) {
   const [data, setData] = useState<IntelligenceData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (target: RefreshTarget = "all") => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/intelligence/${ticker}`);
+      const query =
+        target === "sec"
+          ? "?refreshSec=1"
+          : target === "press"
+            ? "?refreshPress=1"
+            : "";
+      const res = await fetch(`/api/intelligence/${ticker}${query}`, {
+        cache: "no-store",
+      });
       if (!res.ok) throw new Error("Failed to fetch intelligence data");
       const json = (await res.json()) as IntelligenceData & {
         savedFilingAnalyses?: SavedFilingAnalysesMap;
+        savedPressAnalyses?: SavedPressAnalysesMap;
       };
       setData({
         ...json,
         savedFilingAnalyses: json.savedFilingAnalyses ?? {},
+        savedPressAnalyses: json.savedPressAnalyses ?? {},
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
@@ -43,7 +57,7 @@ export function useIntelligenceData(ticker: string) {
   }, [ticker]);
 
   useEffect(() => {
-    fetchData();
+    fetchData("all");
   }, [fetchData]);
 
   return { data, loading, error, refetch: fetchData };

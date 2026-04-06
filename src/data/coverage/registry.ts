@@ -30,6 +30,8 @@ export const TABS_AFTER_CUSTOM: CoverageTab[] = [
   { id: "timeline", label: "Timeline", description: "SEC filings, events, milestones", icon: "Clock" },
   { id: "analysis", label: "Investment", description: "Scorecard, moat, risks, growth drivers", icon: "BarChart3" },
   { id: "wall-street", label: "Wall Street", description: "Analyst ratings, price targets, reports", icon: "Building2" },
+  { id: "edgar", label: "EDGAR", description: "Latest SEC filings from intelligence feed", icon: "FileText" },
+  { id: "news", label: "News", description: "Company press wire from intelligence feed", icon: "Megaphone" },
 ];
 
 /** All universal tabs combined (for stocks with no custom tabs) */

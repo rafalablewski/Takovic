@@ -14,7 +14,6 @@ import {
   getKeyMetrics,
   getIncomeStatement,
   getBalanceSheet,
-  getStockNews,
   getAnalystEstimates,
   getPriceTargetConsensus,
   getAnalystRecommendations,
@@ -49,7 +48,6 @@ export default async function StockPage({
     metrics,
     incomeStatements,
     balanceSheets,
-    news,
     analystEstimates,
     priceTargetConsensus,
     analystRecommendations,
@@ -65,7 +63,6 @@ export default async function StockPage({
       metrics,
       incomeStatements,
       balanceSheets,
-      news,
       analystEstimates,
       priceTargetConsensus,
       analystRecommendations,
@@ -79,7 +76,6 @@ export default async function StockPage({
         getKeyMetrics(upperTicker, "annual", 1),
         getIncomeStatement(upperTicker, financialPeriod, 12),
         getBalanceSheet(upperTicker, "annual", 1),
-        getStockNews(upperTicker, 20),
         getAnalystEstimates(upperTicker).catch(() => []),
         getPriceTargetConsensus(upperTicker).catch(() => null),
         getAnalystRecommendations(upperTicker).catch(() => []),
@@ -245,7 +241,6 @@ export default async function StockPage({
         overviewMetrics={overviewMetrics}
         incomeStatements={incomeStatements ?? []}
         financialPeriod={financialPeriod}
-        news={news ?? []}
         snowflakeScores={snowflakeScores}
         aiAnalysis={aiAnalysis}
         consensus={priceTargetConsensus}

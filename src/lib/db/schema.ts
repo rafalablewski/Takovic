@@ -215,6 +215,56 @@ export const filingAnalyses = pgTable(
   ]
 );
 
+/** Press-wire AI analysis (one row per deduped press fingerprint). */
+export const pressAnalyses = pgTable(
+  "press_analyses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    pressFingerprint: varchar("press_fingerprint", { length: 512 }).notNull(),
+    ticker: varchar("ticker", { length: 10 }).notNull(),
+    title: text("title").notNull(),
+    publishedAt: varchar("published_at", { length: 64 }),
+    source: varchar("source", { length: 120 }),
+    url: text("url"),
+    pastedText: text("pasted_text"),
+    analysis: text("analysis").notNull(),
+    aiProvider: varchar("ai_provider", { length: 20 }).notNull(),
+    model: varchar("model", { length: 128 }),
+    analyzedAt: timestamp("analyzed_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("press_analyses_fingerprint_idx").on(table.pressFingerprint),
+    index("press_analyses_ticker_idx").on(table.ticker),
+  ]
+);
+
+/** Normalized press-wire items for ticker intelligence. */
+export const pressReleases = pgTable(
+  "press_releases",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    ticker: varchar("ticker", { length: 10 }).notNull(),
+    source: varchar("source", { length: 100 }).notNull(),
+    externalId: varchar("external_id", { length: 128 }).notNull(),
+    headline: text("headline").notNull(),
+    summary: text("summary"),
+    publishedAt: timestamp("published_at").notNull(),
+    url: text("url"),
+    rawPayload: text("raw_payload"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("press_releases_ticker_source_external_idx").on(
+      table.ticker,
+      table.source,
+      table.externalId
+    ),
+    index("press_releases_ticker_idx").on(table.ticker),
+    index("press_releases_published_idx").on(table.publishedAt),
+  ]
+);
+
 // User Preferences
 export const userPreferences = pgTable("user_preferences", {
   id: uuid("id").primaryKey().defaultRandom(),
