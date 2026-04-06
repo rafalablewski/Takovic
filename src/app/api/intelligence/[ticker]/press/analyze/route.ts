@@ -152,7 +152,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ ticker: string }> }
 ) {
-  const unauthorized = await requireIntelligenceAuth(request);
+  const unauthorized = await requireIntelligenceAuth(request, {
+    allowSameOrigin: true,
+  });
   if (unauthorized) return unauthorized;
 
   const { ticker: tickerParam } = await params;
